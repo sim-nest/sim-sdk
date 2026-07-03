@@ -1,0 +1,11 @@
+[package]
+name = "native-abi-borrow-to-destroy"
+version = "0.0.0"
+edition = "2024"
+license = "MPL-2.0"
+publish = false
+
+[workspace]
+
+[dependencies]
+sim = { version = "0.1.0", path = "../../..", default-features = false, features = ["core"] }

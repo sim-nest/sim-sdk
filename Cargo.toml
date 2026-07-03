@@ -1,0 +1,458 @@
+[package]
+name = "sim"
+version = "0.1.0"
+edition = "2024"
+license = "MPL-2.0"
+description = "SIM workspace package for sim."
+readme = "README.md"
+publish = false
+repository = "https://github.com/sim-nest/sim-sdk"
+homepage = "https://github.com/sim-nest/sim-sdk"
+
+[workspace]
+resolver = "3"
+members = [
+  ".",
+  "crates/sim-conformance",
+  "xtask",
+]
+
+[workspace.package]
+edition = "2024"
+license = "MPL-2.0"
+repository = "https://github.com/sim-nest/sim-sdk"
+homepage = "https://github.com/sim-nest/sim-sdk"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[dependencies]
+proc-macro2 = { version = "1", features = ["span-locations"], optional = true }
+serde = { version = "1", features = ["derive"], optional = true }
+serde_json = { version = "1", optional = true }
+sim-citizen = { optional = true, version = "0.1.0" }
+sim-citizen-derive = { optional = true, version = "0.1.0" }
+sim-cli-loaders = { optional = true, version = "0.1.0", default-features = false }
+sim-codec = { optional = true, version = "0.1.0" }
+sim-codec-algol = { optional = true, version = "0.1.0" }
+sim-codec-binary = { optional = true, version = "0.1.0" }
+sim-codec-binary-base64 = { optional = true, version = "0.1.0" }
+sim-codec-bitwise = { optional = true, version = "0.1.0" }
+sim-codec-bitwise-base64 = { optional = true, version = "0.1.0" }
+sim-codec-chat = { optional = true, version = "0.1.0" }
+sim-codec-json = { optional = true, version = "0.1.0" }
+sim-codec-lisp = { optional = true, version = "0.1.0" }
+sim-codec-mcp = { optional = true, version = "0.1.0" }
+sim-cookbook = { optional = true, version = "0.1.0" }
+sim-kernel = { optional = true, version = "0.1.0" }
+sim-lib-agent = { optional = true, version = "0.1.0" }
+sim-lib-agent-runner-core = { optional = true, version = "0.1.0" }
+sim-lib-agent-runner-http = { optional = true, version = "0.1.0" }
+sim-lib-agent-runner-process = { optional = true, version = "0.1.0" }
+sim-lib-audio-dsp = { optional = true, version = "0.1.0" }
+sim-lib-audio-graph-core = { optional = true, version = "0.1.0" }
+sim-lib-audio-graph-live = { optional = true, version = "0.1.0" }
+sim-lib-music-synth = { optional = true, version = "0.1.0" }
+sim-lib-binding = { optional = true, version = "0.1.0" }
+sim-lib-control = { optional = true, version = "0.1.0" }
+sim-lib-cookbook = { optional = true, version = "0.1.0" }
+sim-lib-core = { optional = true, version = "0.1.0" }
+sim-lib-daw-session = { optional = true, version = "0.1.0" }
+sim-lib-discrete = { optional = true, version = "0.1.0" }
+sim-lib-dispatch = { optional = true, version = "0.1.0" }
+sim-lib-femm-assembly = { optional = true, version = "0.1.0" }
+sim-lib-femm-codec = { optional = true, version = "0.1.0" }
+sim-lib-femm-core = { optional = true, version = "0.1.0" }
+sim-lib-femm-field = { optional = true, version = "0.1.0" }
+sim-lib-femm-fixtures = { optional = true, version = "0.1.0" }
+sim-lib-femm-flow = { optional = true, version = "0.1.0" }
+sim-lib-femm-function = { optional = true, version = "0.1.0" }
+sim-lib-femm-geometry = { optional = true, version = "0.1.0" }
+sim-lib-femm-material = { optional = true, version = "0.1.0" }
+sim-lib-femm-mesh = { optional = true, version = "0.1.0" }
+sim-lib-femm-ode = { optional = true, version = "0.1.0" }
+sim-lib-femm-physics = { optional = true, version = "0.1.0" }
+sim-lib-femm-post = { optional = true, version = "0.1.0" }
+sim-lib-femm-prelude = { optional = true, version = "0.1.0" }
+sim-lib-femm-sensitiv = { optional = true, version = "0.1.0" }
+sim-lib-femm-solve = { optional = true, version = "0.1.0" }
+sim-lib-femm-space = { optional = true, version = "0.1.0" }
+sim-lib-femm-tape = { optional = true, version = "0.1.0" }
+sim-lib-intent = { optional = true, version = "0.1.0" }
+sim-lib-lang-cl = { optional = true, version = "0.1.0" }
+sim-lib-lang-clojure = { optional = true, version = "0.1.0" }
+sim-lib-lang-islisp = { optional = true, version = "0.1.0" }
+sim-lib-lang-julia = { optional = true, version = "0.1.0" }
+sim-lib-lang-lua = { optional = true, version = "0.1.0" }
+sim-lib-lang-ruby = { optional = true, version = "0.1.0" }
+sim-lib-lang-scheme = { optional = true, version = "0.1.0" }
+sim-lib-lang-typed-lazy = { optional = true, version = "0.1.0" }
+sim-lib-logic = { optional = true, version = "0.1.0" }
+sim-lib-mcp = { optional = true, version = "0.1.0" }
+sim-lib-midi-ble = { optional = true, version = "0.1.0" }
+sim-lib-midi-core = { optional = true, version = "0.1.0" }
+sim-lib-midi-live = { optional = true, version = "0.1.0" }
+sim-lib-midi-rtmidi = { optional = true, version = "0.1.0" }
+sim-lib-midi-shapes = { optional = true, version = "0.1.0" }
+sim-lib-midi-smf = { optional = true, version = "0.1.0" }
+sim-lib-midi-sysex = { optional = true, version = "0.1.0" }
+sim-lib-midi-wasm-frame = { optional = true, version = "0.1.0" }
+sim-lib-music-analysis = { optional = true, version = "0.1.0" }
+sim-lib-music-combinators = { optional = true, version = "0.1.0" }
+sim-lib-music-core = { optional = true, version = "0.1.0" }
+sim-lib-music-lift = { optional = true, version = "0.1.0" }
+sim-lib-music-lower = { optional = true, version = "0.1.0" }
+sim-lib-music-notation = { optional = true, version = "0.1.0" }
+sim-lib-music-shapes = { optional = true, version = "0.1.0" }
+sim-lib-music-transform = { optional = true, version = "0.1.0" }
+sim-lib-music-wasm-frame = { optional = true, version = "0.1.0" }
+sim-lib-mutation = { optional = true, version = "0.1.0" }
+sim-lib-namespace = { optional = true, version = "0.1.0" }
+sim-lib-numbers-ad = { optional = true, version = "0.1.0" }
+sim-lib-numbers-arith = { optional = true, version = "0.1.0" }
+sim-lib-numbers-bigint = { optional = true, version = "0.1.0" }
+sim-lib-numbers-bool = { optional = true, version = "0.1.0" }
+sim-lib-numbers-cas = { optional = true, version = "0.1.0" }
+sim-lib-numbers-cas-diff = { optional = true, version = "0.1.0" }
+sim-lib-numbers-cas-eval = { optional = true, version = "0.1.0" }
+sim-lib-numbers-codec = { optional = true, version = "0.1.0" }
+sim-lib-numbers-complex = { optional = true, version = "0.1.0" }
+sim-lib-numbers-core = { optional = true, version = "0.1.0" }
+sim-lib-numbers-exotic = { optional = true, version = "0.1.0" }
+sim-lib-numbers-f64 = { optional = true, version = "0.1.0" }
+sim-lib-numbers-fixed = { optional = true, version = "0.1.0" }
+sim-lib-numbers-float = { optional = true, version = "0.1.0" }
+sim-lib-numbers-func = { optional = true, version = "0.1.0" }
+sim-lib-numbers-i64 = { optional = true, version = "0.1.0" }
+sim-lib-numbers-numeric = { optional = true, version = "0.1.0" }
+sim-lib-numbers-prelude = { optional = true, version = "0.1.0" }
+sim-lib-numbers-quad = { optional = true, version = "0.1.0" }
+sim-lib-numbers-rational = { optional = true, version = "0.1.0" }
+sim-lib-numbers-rk = { optional = true, version = "0.1.0" }
+sim-lib-numbers-tensor = { optional = true, version = "0.1.0" }
+sim-lib-numbers-tensor-bcast = { optional = true, version = "0.1.0" }
+sim-lib-numbers-tensor-bit = { optional = true, version = "0.1.0" }
+sim-lib-numbers-tensor-cmplxf = { optional = true, version = "0.1.0" }
+sim-lib-numbers-tensor-f64 = { optional = true, version = "0.1.0" }
+sim-lib-numbers-tensor-i64 = { optional = true, version = "0.1.0" }
+sim-lib-numbers-tensor-linalg = { optional = true, version = "0.1.0" }
+sim-lib-numbers-tensor-rat64 = { optional = true, version = "0.1.0" }
+sim-lib-openai-server = { optional = true, version = "0.1.0" }
+sim-lib-pattern = { optional = true, version = "0.1.0" }
+sim-lib-pitch-chord = { optional = true, version = "0.1.0" }
+sim-lib-pitch-core = { optional = true, version = "0.1.0" }
+sim-lib-pitch-dissonance = { optional = true, version = "0.1.0" }
+sim-lib-pitch-namer = { optional = true, version = "0.1.0" }
+sim-lib-pitch-namer-forte = { optional = true, version = "0.1.0" }
+sim-lib-pitch-namer-jazz = { optional = true, version = "0.1.0" }
+sim-lib-pitch-namer-riemann = { optional = true, version = "0.1.0" }
+sim-lib-pitch-namer-roman = { optional = true, version = "0.1.0" }
+sim-lib-pitch-scale = { optional = true, version = "0.1.0" }
+sim-lib-pitch-set = { optional = true, version = "0.1.0" }
+sim-lib-pitch-shapes = { optional = true, version = "0.1.0" }
+sim-lib-pitch-wasm-frame = { optional = true, version = "0.1.0" }
+sim-lib-plugin-clap = { optional = true, version = "0.1.0" }
+sim-lib-plugin-core = { optional = true, version = "0.1.0" }
+sim-lib-plugin-lv2 = { optional = true, version = "0.1.0" }
+sim-lib-plugin-vst3 = { optional = true, version = "0.1.0" }
+sim-lib-rank = { optional = true, version = "0.1.0" }
+sim-lib-scene = { optional = true, version = "0.1.0" }
+sim-lib-sequence = { optional = true, version = "0.1.0" }
+sim-lib-server = { optional = true, version = "0.1.0" }
+sim-lib-skill = { optional = true, version = "0.1.0" }
+sim-lib-sound-audio-lift = { optional = true, version = "0.1.0" }
+sim-lib-sound-bridge = { optional = true, version = "0.1.0" }
+sim-lib-sound-core = { optional = true, version = "0.1.0" }
+sim-lib-sound-dissonance = { optional = true, version = "0.1.0" }
+sim-lib-sound-gm = { optional = true, version = "0.1.0" }
+sim-lib-sound-render = { optional = true, version = "0.1.0" }
+sim-lib-sound-shapes = { optional = true, version = "0.1.0" }
+sim-lib-sound-spectrum = { optional = true, version = "0.1.0" }
+sim-lib-sound-timbre = { optional = true, version = "0.1.0" }
+sim-lib-sound-tuning = { optional = true, version = "0.1.0" }
+sim-lib-sound-wasm-frame = { optional = true, version = "0.1.0" }
+sim-lib-standard-core = { optional = true, version = "0.1.0" }
+sim-lib-stream-alsa = { optional = true, version = "0.1.0" }
+sim-lib-stream-asio = { optional = true, version = "0.1.0" }
+sim-lib-stream-audio = { optional = true, version = "0.1.0" }
+sim-lib-stream-bridge = { optional = true, version = "0.1.0" }
+sim-lib-stream-clock = { optional = true, version = "0.1.0" }
+sim-lib-stream-combinators = { optional = true, version = "0.1.0" }
+sim-lib-stream-core = { optional = true, version = "0.1.0" }
+sim-lib-stream-coreaudio = { optional = true, version = "0.1.0" }
+sim-lib-stream-fabric = { optional = true, version = "0.1.0" }
+sim-lib-stream-file = { optional = true, version = "0.1.0" }
+sim-lib-stream-host = { optional = true, version = "0.1.0" }
+sim-lib-stream-jack = { optional = true, version = "0.1.0" }
+sim-lib-stream-midi = { optional = true, version = "0.1.0" }
+sim-lib-stream-pipewire = { optional = true, version = "0.1.0" }
+sim-lib-stream-portaudio = { optional = true, version = "0.1.0" }
+sim-lib-stream-prelude = { optional = true, version = "0.1.0" }
+sim-lib-topology = { optional = true, version = "0.1.0" }
+sim-lib-view = { optional = true, version = "0.1.0" }
+sim-lib-view-agent = { optional = true, version = "0.1.0" }
+sim-lib-view-codec = { optional = true, version = "0.1.0" }
+sim-lib-view-daw = { optional = true, version = "0.1.0" }
+sim-lib-view-doc = { optional = true, version = "0.1.0" }
+sim-lib-view-math = { optional = true, version = "0.1.0" }
+sim-lib-view-wasm-frame = { optional = true, version = "0.1.0" }
+sim-lib-web-bridge = { optional = true, version = "0.1.0" }
+sim-lib-web-layout = { optional = true, version = "0.1.0" }
+sim-list-cell = { optional = true, version = "0.1.0" }
+sim-list-lazy = { optional = true, version = "0.1.0" }
+sim-macros = { optional = true, version = "0.1.0" }
+sim-mcp-server = { optional = true, version = "0.1.0" }
+sim-shape = { optional = true, version = "0.1.0" }
+sim-table-db = { optional = true, version = "0.1.0" }
+sim-table-fs = { optional = true, version = "0.1.0" }
+sim-table-hash = { optional = true, version = "0.1.0" }
+sim-table-lazy = { optional = true, version = "0.1.0" }
+sim-table-override = { optional = true, version = "0.1.0" }
+sim-table-remote = { optional = true, version = "0.1.0" }
+sim-wasm-abi = { optional = true, version = "0.1.0" }
+
+[dev-dependencies]
+wat = "1.245.1"
+
+[features]
+agent = ["dep:sim-lib-agent", "server"]
+agent-net = ["agent", "sim-lib-agent/agent-net"]
+agent-runner-core = ["dep:sim-lib-agent-runner-core", "core"]
+agent-runner-http = ["dep:sim-lib-agent-runner-http", "dep:sim-lib-agent", "sim-lib-agent/runner-http", "agent-runner-core", "agent"]
+agent-runner-http-tls = ["agent-runner-http", "sim-lib-agent-runner-http/tls"]
+agent-runner-ollama = ["dep:sim-lib-agent-runner-http", "dep:sim-lib-agent", "sim-lib-agent/runner-ollama", "agent-runner-core", "agent"]
+agent-runner-process = ["dep:sim-lib-agent-runner-process", "dep:sim-lib-agent", "sim-lib-agent/runner-process", "agent-runner-core", "agent"]
+audio-dsp = ["dep:sim-lib-audio-dsp", "audio-graph-core", "sound-core"]
+audio-graph-core = ["dep:sim-lib-audio-graph-core", "stream-audio"]
+audio-graph-live = ["dep:sim-lib-audio-graph-live", "audio-graph-core", "stream-clock", "stream-host"]
+music-synth = ["dep:sim-lib-music-synth", "audio-dsp", "pitch-core", "midi-core"]
+citizen = ["dep:sim-citizen", "dep:sim-citizen-derive", "core", "sim-lib-discrete?/citizen"]
+citizen-strict = ["citizen"]
+codec-algol = ["dep:sim-codec", "dep:sim-codec-algol", "shape", "core"]
+codec-binary = ["dep:sim-codec", "dep:sim-codec-binary", "core"]
+codec-binary-base64 = ["dep:sim-codec", "dep:sim-codec-binary-base64", "codec-binary", "core"]
+codec-bitwise = ["dep:sim-codec", "dep:sim-codec-bitwise", "core"]
+codec-bitwise-base64 = ["dep:sim-codec", "dep:sim-codec-bitwise-base64", "codec-bitwise", "core"]
+codec-chat = ["dep:sim-codec", "dep:sim-codec-chat", "core"]
+codec-json = ["dep:sim-codec", "dep:sim-codec-json", "dep:serde", "dep:serde_json", "core"]
+codec-lisp = ["dep:sim-codec", "dep:sim-codec-lisp", "dep:proc-macro2", "core"]
+codec-mcp = ["dep:sim-codec-mcp", "codec-json"]
+control = ["dep:sim-lib-control", "core"]
+cookbook = ["dep:sim-cookbook", "dep:sim-lib-cookbook", "core", "codec-lisp", "sim-lib-agent?/cookbook"]
+core = ["dep:sim-kernel", "dep:sim-lib-core"]
+daw-session = ["dep:sim-lib-daw-session", "audio-graph-live", "plugin-core", "stream-audio", "topology-core"]
+default = ["core", "codec-lisp", "numbers-f64"]
+discrete = ["discrete-algebra", "discrete-graph", "discrete-comb", "discrete-spectral"]
+discrete-algebra = ["dep:sim-lib-discrete", "sim-lib-discrete/algebra", "core"]
+discrete-comb = ["dep:sim-lib-discrete", "sim-lib-discrete/comb", "core"]
+discrete-graph = ["dep:sim-lib-discrete", "sim-lib-discrete/graph", "core"]
+discrete-music = ["discrete-spectral", "music-analysis", "sim-lib-music-analysis/discrete-fwht"]
+discrete-rank = ["dep:sim-lib-discrete", "sim-lib-discrete/rank", "rank", "core"]
+discrete-runtime = ["dep:sim-lib-discrete", "sim-lib-discrete/runtime", "discrete", "core"]
+discrete-spectral = ["dep:sim-lib-discrete", "sim-lib-discrete/spectral", "core"]
+dynamic-native = ["dep:sim-cli-loaders", "sim-cli-loaders/dynamic-native", "codec-binary", "shape"]
+femm-assembly = ["dep:sim-lib-femm-assembly", "femm-space", "numbers-ad", "core"]
+femm-codec = ["dep:sim-lib-femm-codec", "femm-core", "femm-geometry", "femm-material", "femm-mesh", "femm-space", "femm-assembly", "femm-solve", "femm-flow", "femm-physics", "femm-post", "femm-field", "femm-function", "femm-sensitiv", "femm-tape", "femm-ode", "numbers-codec", "core"]
+femm-core = ["dep:sim-lib-femm-core", "numbers-numeric", "core"]
+femm-field = ["dep:sim-lib-femm-field", "femm-core", "femm-post", "numbers-func", "numbers-tensor", "core"]
+femm-fixtures = ["dep:sim-lib-femm-fixtures", "femm-prelude", "core"]
+femm-flow = ["dep:sim-lib-femm-flow", "femm-core", "femm-assembly", "femm-solve", "numbers-func", "numbers-numeric", "core"]
+femm-function = ["dep:sim-lib-femm-function", "femm-core", "femm-field", "numbers-func", "core"]
+femm-geometry = ["dep:sim-lib-femm-geometry", "femm-core", "core"]
+femm-material = ["dep:sim-lib-femm-material", "femm-core", "numbers-ad", "core"]
+femm-mesh = ["dep:sim-lib-femm-mesh", "femm-geometry", "femm-material", "core"]
+femm-ode = ["dep:sim-lib-femm-ode", "femm-core", "femm-function", "femm-tape", "numbers-rk", "numbers-tensor", "core"]
+femm-physics = ["dep:sim-lib-femm-physics", "femm-core", "femm-assembly", "numbers-complex", "core"]
+femm-post = ["dep:sim-lib-femm-post", "femm-core", "femm-flow", "femm-mesh", "femm-physics", "core"]
+femm-prelude = ["dep:sim-lib-femm-prelude", "femm-core", "femm-geometry", "femm-material", "femm-mesh", "femm-space", "femm-assembly", "femm-solve", "femm-flow", "femm-physics", "femm-post", "femm-field", "femm-function", "femm-sensitiv", "femm-tape", "femm-ode", "femm-codec", "numbers-prelude"]
+femm-sensitiv = ["dep:sim-lib-femm-sensitiv", "femm-core", "femm-function", "femm-solve", "numbers-ad", "numbers-numeric", "core"]
+femm-solve = ["dep:sim-lib-femm-solve", "femm-core", "numbers-complex", "core"]
+femm-space = ["dep:sim-lib-femm-space", "femm-mesh", "core"]
+femm-tape = ["dep:sim-lib-femm-tape", "femm-core", "femm-function", "femm-post", "femm-solve", "core"]
+intent = ["dep:sim-lib-intent", "core", "shape"]
+list-cell = ["dep:sim-list-cell", "core"]
+list-lazy = ["dep:sim-list-lazy", "core"]
+logic = ["logic-core", "logic-numbers"]
+logic-agent = ["logic-core", "agent"]
+logic-core = ["dep:sim-lib-logic", "shape", "codec-lisp"]
+logic-numbers = ["logic-core", "numbers-arith", "numbers-f64", "numbers-i64", "numbers-rational"]
+logic-server = ["logic-core", "server"]
+logic-wasm = ["logic-core", "wasm"]
+mcp = ["dep:sim-lib-mcp", "codec-mcp", "core", "shape"]
+mcp-binary = ["mcp-stdio", "dep:sim-mcp-server"]
+mcp-cassette = ["mcp", "sim-lib-mcp/cassette"]
+mcp-client = ["mcp-skill", "sim-lib-mcp/client"]
+mcp-http = ["mcp-stream", "server", "server-net-http", "sim-lib-mcp/http"]
+mcp-sampling = ["mcp", "agent-runner-core", "sim-lib-mcp/sampling"]
+mcp-skill = ["mcp", "skill", "sim-lib-mcp/skill"]
+mcp-stdio = ["mcp", "sim-lib-mcp/stdio"]
+mcp-stream = ["mcp", "stream-core", "stream-fabric", "stream-combinators", "sim-lib-mcp/stream", "sim-lib-mcp/progress"]
+midi = ["midi-core", "midi-smf", "midi-live", "midi-sysex", "midi-shapes"]
+midi-ble = ["dep:sim-lib-midi-ble", "midi-rtmidi", "stream-host", "core"]
+midi-core = ["dep:sim-lib-midi-core", "core"]
+midi-live = ["dep:sim-lib-midi-live", "midi-core", "core"]
+midi-rtmidi = ["dep:sim-lib-midi-rtmidi", "midi-core", "stream-host", "core"]
+midi-shapes = ["dep:sim-lib-midi-shapes", "midi-core", "midi-smf", "shape", "core"]
+midi-smf = ["dep:sim-lib-midi-smf", "midi-core", "core", "sim-table-fs?/midi"]
+midi-sysex = ["dep:sim-lib-midi-sysex", "midi-core", "core"]
+midi-wasm-frame = ["dep:sim-lib-midi-wasm-frame", "midi", "wasm"]
+music = ["music-core", "music-combinators", "music-analysis", "music-transform", "music-lower", "music-lift", "music-notation", "music-shapes", "pitch", "midi"]
+music-analysis = ["dep:sim-lib-music-analysis", "music-core", "pitch-set", "core"]
+music-combinators = ["dep:sim-lib-music-combinators", "music-core", "core"]
+music-core = ["dep:sim-lib-music-core", "pitch-core", "midi-core", "numbers-rational", "core"]
+music-lift = ["dep:sim-lib-music-lift", "music-core", "music-analysis", "midi-smf", "pitch-namer", "core"]
+music-lower = ["dep:sim-lib-music-lower", "music-core", "midi-smf", "core"]
+music-notation = ["dep:sim-lib-music-notation", "music-core", "pitch-core", "sim-table-fs?/notation", "core"]
+music-shapes = ["dep:sim-lib-music-shapes", "music-core", "music-transform", "music-analysis", "music-lower", "music-lift", "sim-table-fs?/music", "shape", "core"]
+music-stack = ["pitch", "midi", "music", "sound", "sound-gm", "sound-audio-lift", "sound-music"]
+music-stack-wasm-frame = ["music-stack", "pitch-wasm-frame", "midi-wasm-frame", "music-wasm-frame", "sound-wasm-frame"]
+music-transform = ["dep:sim-lib-music-transform", "music-core", "pitch-scale", "core"]
+music-wasm-frame = ["dep:sim-lib-music-wasm-frame", "music", "wasm"]
+numbers-ad = ["dep:sim-lib-numbers-ad"]
+numbers-arith = ["dep:sim-lib-numbers-arith", "core"]
+numbers-bigint = ["dep:sim-lib-numbers-bigint", "numbers-arith", "numbers-i64", "numbers-core", "core"]
+numbers-bool = ["dep:sim-lib-numbers-bool", "numbers-core", "core"]
+numbers-cas = ["dep:sim-lib-numbers-cas", "numbers-arith", "numbers-core", "core"]
+numbers-cas-diff = ["dep:sim-lib-numbers-cas-diff", "numbers-cas", "core"]
+numbers-cas-eval = ["dep:sim-lib-numbers-cas-eval", "numbers-cas", "core"]
+numbers-codec = ["dep:sim-lib-numbers-codec", "numbers-bigint", "numbers-bool", "numbers-cas", "numbers-complex", "numbers-core", "numbers-exotic", "numbers-f64", "numbers-fixed", "numbers-float", "numbers-func", "numbers-i64", "numbers-numeric", "numbers-quad", "numbers-rational", "numbers-rk", "numbers-tensor", "numbers-tensor-bcast", "numbers-tensor-bit", "numbers-tensor-cmplxf", "numbers-tensor-f64", "numbers-tensor-i64", "numbers-tensor-linalg", "numbers-tensor-rat64", "core"]
+numbers-complex = ["dep:sim-lib-numbers-complex", "numbers-arith", "core"]
+numbers-core = ["dep:sim-lib-numbers-core"]
+numbers-exotic = ["dep:sim-lib-numbers-exotic", "numbers-arith", "numbers-f64", "numbers-core", "core"]
+numbers-f64 = ["dep:sim-lib-numbers-f64", "numbers-arith", "numbers-core", "core"]
+numbers-fixed = ["dep:sim-lib-numbers-fixed", "numbers-i64", "numbers-core", "core"]
+numbers-float = ["dep:sim-lib-numbers-float", "numbers-f64", "numbers-core", "core"]
+numbers-func = ["dep:sim-lib-numbers-func", "numbers-arith", "numbers-core", "numbers-cas-diff", "numbers-cas-eval", "core"]
+numbers-i64 = ["dep:sim-lib-numbers-i64", "numbers-arith", "numbers-f64", "numbers-core", "core"]
+numbers-numeric = ["dep:sim-lib-numbers-numeric", "numbers-f64", "numbers-func", "core"]
+numbers-prelude = ["dep:sim-lib-numbers-prelude", "numbers-ad", "numbers-arith", "numbers-bigint", "numbers-bool", "numbers-cas", "numbers-cas-diff", "numbers-cas-eval", "numbers-codec", "numbers-complex", "numbers-core", "numbers-exotic", "numbers-f64", "numbers-fixed", "numbers-float", "numbers-func", "numbers-i64", "numbers-numeric", "numbers-quad", "numbers-rational", "numbers-rk", "numbers-tensor", "numbers-tensor-bcast", "numbers-tensor-bit", "numbers-tensor-cmplxf", "numbers-tensor-f64", "numbers-tensor-i64", "numbers-tensor-linalg", "numbers-tensor-rat64"]
+numbers-quad = ["dep:sim-lib-numbers-quad", "numbers-numeric", "numbers-f64", "core"]
+numbers-rational = ["dep:sim-lib-numbers-rational", "numbers-arith", "numbers-bigint", "numbers-core", "core"]
+numbers-rk = ["dep:sim-lib-numbers-rk", "numbers-numeric", "numbers-f64", "numbers-tensor", "core"]
+numbers-tensor = ["dep:sim-lib-numbers-tensor", "numbers-core", "core"]
+numbers-tensor-bcast = ["dep:sim-lib-numbers-tensor-bcast", "numbers-arith", "numbers-tensor", "core"]
+numbers-tensor-bit = ["dep:sim-lib-numbers-tensor-bit", "numbers-bool", "numbers-tensor"]
+numbers-tensor-cmplxf = ["dep:sim-lib-numbers-tensor-cmplxf", "numbers-complex", "numbers-f64", "numbers-tensor"]
+numbers-tensor-f64 = ["dep:sim-lib-numbers-tensor-f64", "numbers-f64", "numbers-tensor"]
+numbers-tensor-i64 = ["dep:sim-lib-numbers-tensor-i64", "numbers-bigint", "numbers-i64", "numbers-tensor"]
+numbers-tensor-linalg = ["dep:sim-lib-numbers-tensor-linalg", "numbers-arith", "numbers-cas", "numbers-tensor", "core"]
+numbers-tensor-rat64 = ["dep:sim-lib-numbers-tensor-rat64", "numbers-rational", "numbers-tensor"]
+openai-server = ["dep:sim-lib-openai-server", "core"]
+openai-server-http = ["openai-server", "server-net-http", "sim-lib-openai-server/http"]
+pitch = ["pitch-core", "pitch-set", "pitch-scale", "pitch-chord", "pitch-namer", "pitch-dissonance", "pitch-shapes"]
+pitch-chord = ["dep:sim-lib-pitch-chord", "pitch-scale", "pitch-set", "core"]
+pitch-core = ["dep:sim-lib-pitch-core", "core"]
+pitch-dissonance = ["dep:sim-lib-pitch-dissonance", "pitch-namer", "pitch-set", "pitch-scale", "core"]
+pitch-namer = ["dep:sim-lib-pitch-namer", "pitch-namer-forte", "pitch-namer-jazz", "pitch-namer-roman", "pitch-namer-riemann", "pitch-set", "pitch-scale", "pitch-chord", "core"]
+pitch-namer-forte = ["dep:sim-lib-pitch-namer-forte", "pitch-set", "core"]
+pitch-namer-jazz = ["dep:sim-lib-pitch-namer-jazz", "pitch-core", "pitch-set", "pitch-chord", "core"]
+pitch-namer-riemann = ["dep:sim-lib-pitch-namer-riemann", "pitch-chord", "core"]
+pitch-namer-roman = ["dep:sim-lib-pitch-namer-roman", "pitch-scale", "pitch-chord", "core"]
+pitch-scale = ["dep:sim-lib-pitch-scale", "pitch-set", "core"]
+pitch-set = ["dep:sim-lib-pitch-set", "pitch-core", "core"]
+pitch-shapes = ["dep:sim-lib-pitch-shapes", "pitch-core", "pitch-set", "pitch-scale", "pitch-chord", "shape", "core"]
+pitch-wasm-frame = ["dep:sim-lib-pitch-wasm-frame", "pitch", "wasm"]
+plugin-clap = ["dep:sim-lib-plugin-clap", "plugin-core", "audio-dsp"]
+plugin-core = ["dep:sim-lib-plugin-core", "audio-graph-core"]
+plugin-lv2 = ["dep:sim-lib-plugin-lv2", "plugin-core", "audio-dsp"]
+plugin-vst3 = ["dep:sim-lib-plugin-vst3", "plugin-core", "audio-dsp"]
+proc-macros = ["dep:sim-macros", "core", "shape"]
+rank = ["dep:sim-lib-rank", "core"]
+rank-codec-fallback = ["rank", "sim-lib-rank/rank-codec-fallback"]
+rank-expr = ["rank", "sim-lib-rank/rank-expr"]
+rank-learn = ["rank", "sim-lib-rank/rank-learn"]
+rank-music = ["rank", "sim-lib-rank/rank-music"]
+rank-scatter = ["rank", "sim-lib-rank/rank-scatter"]
+scene = ["dep:sim-lib-scene", "core", "shape", "codec-lisp"]
+server = ["dep:sim-lib-server", "core", "codec-binary", "codec-lisp", "codec-chat"]
+server-net-http = ["server", "sim-lib-server/server-net-http"]
+shape = ["dep:sim-shape", "core"]
+skill = ["dep:sim-lib-skill", "core", "shape", "codec-json"]
+skill-agent = ["skill", "agent", "sim-lib-skill/agent"]
+skill-cache = ["skill", "sim-lib-skill/cache"]
+skill-cassette = ["skill", "sim-lib-skill/cassette"]
+skill-http = ["skill", "sim-lib-skill/http"]
+skill-mcp = ["skill", "codec-mcp", "sim-lib-skill/mcp"]
+skill-openai = ["skill", "openai-server", "sim-lib-skill/openai"]
+skill-process = ["skill", "sim-lib-skill/process"]
+skill-runner = ["skill", "agent", "sim-lib-skill/runner"]
+skill-serve = ["skill-mcp", "mcp-skill", "server", "sim-lib-skill/serve"]
+sound = ["sound-core", "sound-spectrum", "sound-timbre", "sound-tuning", "sound-dissonance", "sound-bridge", "sound-render", "sound-shapes", "pitch", "midi"]
+sound-audio-lift = ["dep:sim-lib-sound-audio-lift", "sound-spectrum", "sound-tuning", "pitch", "core"]
+sound-bridge = ["dep:sim-lib-sound-bridge", "sound-core", "sound-timbre", "sound-tuning", "midi-core", "core"]
+sound-core = ["dep:sim-lib-sound-core", "pitch-core", "midi-core", "core"]
+sound-dissonance = ["dep:sim-lib-sound-dissonance", "sound-core", "sound-spectrum", "sound-tuning", "core"]
+sound-fft = ["sound-spectrum"]
+sound-gm = ["dep:sim-lib-sound-gm", "sound-timbre", "sound-bridge", "core"]
+sound-music = ["sound", "music", "sim-lib-sound-audio-lift?/sound-music"]
+sound-render = ["dep:sim-lib-sound-render", "sound-core", "sound-bridge", "core"]
+sound-shapes = ["dep:sim-lib-sound-shapes", "sound-audio-lift", "sound-core", "sound-spectrum", "sound-timbre", "sound-tuning", "sound-dissonance", "sound-bridge", "sound-render", "sim-table-fs?/sound", "sim-table-fs?/tuning", "shape", "core"]
+sound-spectrum = ["dep:sim-lib-sound-spectrum", "sound-core", "core"]
+sound-timbre = ["dep:sim-lib-sound-timbre", "sound-core", "sound-spectrum", "core"]
+sound-tuning = ["dep:sim-lib-sound-tuning", "sound-core", "pitch-core", "sim-table-fs?/tuning", "core"]
+sound-wasm-frame = ["dep:sim-lib-sound-wasm-frame", "sim-lib-sound-wasm-frame/sound-music", "sound", "sound-music", "wasm"]
+standard = ["standard-core", "standard-binding", "standard-sequence", "standard-pattern", "standard-dispatch", "standard-namespace", "standard-mutation", "standard-scheme", "standard-islisp", "standard-clojure", "standard-cl", "standard-julia", "standard-lua", "standard-ruby", "standard-typed-lazy"]
+standard-binding = ["dep:sim-lib-binding", "standard-core"]
+standard-cl = ["dep:sim-lib-lang-cl", "standard-core", "standard-binding", "standard-dispatch", "standard-namespace", "standard-mutation", "control"]
+standard-clojure = ["dep:sim-lib-lang-clojure", "standard-core", "standard-sequence", "standard-namespace", "control"]
+standard-core = ["dep:sim-lib-standard-core", "core"]
+standard-dispatch = ["dep:sim-lib-dispatch", "standard-core", "shape"]
+standard-islisp = ["dep:sim-lib-lang-islisp", "standard-core", "standard-dispatch"]
+standard-julia = ["dep:sim-lib-lang-julia", "standard-core", "standard-dispatch", "codec-algol"]
+standard-lua = ["dep:sim-lib-lang-lua", "standard-core", "standard-mutation", "control", "codec-algol"]
+standard-mutation = ["dep:sim-lib-mutation", "standard-core"]
+standard-namespace = ["dep:sim-lib-namespace", "standard-core"]
+standard-pattern = ["dep:sim-lib-pattern", "standard-core", "shape"]
+standard-ruby = ["dep:sim-lib-lang-ruby", "standard-core", "standard-dispatch", "control", "codec-algol"]
+standard-scheme = ["dep:sim-lib-lang-scheme", "standard-core", "standard-binding", "standard-sequence", "standard-pattern", "control"]
+standard-sequence = ["dep:sim-lib-sequence", "standard-core"]
+standard-typed-lazy = ["dep:sim-lib-lang-typed-lazy", "standard-core", "standard-pattern", "control", "codec-algol"]
+stream-alsa = ["dep:sim-lib-stream-alsa", "audio-graph-core", "stream-audio", "stream-host"]
+stream-asio = ["dep:sim-lib-stream-asio", "audio-graph-core", "stream-audio", "stream-host"]
+stream-audio = ["dep:sim-lib-stream-audio", "stream-core"]
+stream-bridge = ["dep:sim-lib-stream-bridge", "stream-prelude", "stream-audio", "stream-midi", "sound-render", "sound-audio-lift", "sound-gm"]
+stream-clock = ["dep:sim-lib-stream-clock", "stream-core"]
+stream-combinators = ["dep:sim-lib-stream-combinators", "stream-core"]
+stream-core = ["dep:sim-lib-stream-core", "core"]
+stream-coreaudio = ["dep:sim-lib-stream-coreaudio", "audio-graph-core", "stream-audio", "stream-host"]
+stream-fabric = ["dep:sim-lib-stream-fabric", "stream-core"]
+stream-file = ["dep:sim-lib-stream-file", "stream-audio", "stream-midi", "midi-smf"]
+stream-host = ["dep:sim-lib-stream-host", "stream-midi", "sim-lib-stream-host/rtp-midi"]
+stream-jack = ["dep:sim-lib-stream-jack", "audio-graph-core", "stream-audio", "stream-clock", "stream-host"]
+stream-midi = ["dep:sim-lib-stream-midi", "stream-core", "midi-core"]
+stream-pipewire = ["dep:sim-lib-stream-pipewire", "audio-graph-core", "stream-audio", "stream-host"]
+stream-portaudio = ["dep:sim-lib-stream-portaudio", "audio-graph-core", "stream-audio", "stream-host"]
+stream-prelude = ["dep:sim-lib-stream-prelude", "stream-audio", "stream-midi", "stream-combinators"]
+table-db = ["dep:sim-table-db", "core"]
+table-fs = ["dep:sim-table-fs", "codec-lisp", "codec-json", "codec-binary", "codec-binary-base64", "codec-chat", "codec-algol", "core"]
+table-hash = ["dep:sim-table-hash", "core"]
+table-lazy = ["dep:sim-table-lazy", "core"]
+table-override = ["dep:sim-table-override", "core"]
+table-remote = ["dep:sim-table-remote", "server"]
+topology = ["topology-core", "topology-agent", "topology-stream", "topology-table", "topology-list", "topology-codec"]
+topology-agent = ["topology-core", "agent"]
+topology-codec = ["topology-core", "codec-lisp", "codec-json", "codec-binary"]
+topology-core = ["dep:sim-lib-topology"]
+topology-list = ["topology-core", "list-cell"]
+topology-stream = ["topology-core", "stream-core", "stream-host"]
+topology-table = ["topology-core", "table-hash"]
+view = ["dep:sim-lib-view", "scene", "intent", "codec-json"]
+view-agent = ["view", "agent", "topology-core", "dep:sim-lib-view-agent"]
+view-codec = ["view", "codec-lisp", "codec-json", "codec-binary", "dep:sim-lib-view-codec"]
+view-daw = ["view", "daw-session", "audio-graph-core", "plugin-core", "dep:sim-lib-view-daw"]
+view-doc = ["view", "dep:sim-lib-view-doc"]
+view-math = ["view", "numbers-numeric", "dep:sim-lib-view-math"]
+wasm = ["dep:sim-cli-loaders", "sim-cli-loaders/wasm", "dep:sim-wasm-abi", "core"]
+web = ["web-bridge"]
+web-bridge = ["dep:sim-lib-web-bridge", "view", "web-layout"]
+web-full = ["web", "view-agent", "view-doc", "view-math", "view-codec", "view-daw"]
+web-layout = ["dep:sim-lib-web-layout", "view"]
+web-wasm-frame = ["web", "dep:sim-lib-view-wasm-frame", "wasm"]
+
+[[example]]
+name = "codec_roundtrip"
+required-features = ["core", "shape", "codec-lisp", "codec-json", "codec-binary", "numbers-prelude"]
+
+[[example]]
+name = "repl"
+required-features = ["core", "shape", "codec-lisp", "numbers-prelude"]
