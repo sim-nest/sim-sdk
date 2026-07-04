@@ -102,7 +102,7 @@ fn sim_repl_evaluates_through_bootloader_surface() {
         .arg("--manifest-path")
         .arg(&meta_manifest)
         .arg("-p")
-        .arg("sim-cli")
+        .arg("sim-run")
         .arg("--features")
         .arg("dynamic-native")
         .arg("--bin")
