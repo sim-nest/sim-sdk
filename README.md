@@ -26,7 +26,8 @@ constellation):
 
 ```toml
 [dependencies]
-sim = "0.1"   # default features: core, codec-lisp, numbers-f64
+# Published as `sim-nest` (the name `sim` was taken); imported as `sim`.
+sim = { package = "sim-nest", version = "0.1" }   # default features: core, codec-lisp, numbers-f64
 ```
 
 Boot a runtime in a few lines:
@@ -50,13 +51,14 @@ number domains, the music/audio/FEMM/web stacks) -- see "Default features" and
 cargo test -p sim-conformance
 ```
 
-Pre-publish note: until the libraries publish to crates.io, `sim = "0.1"` does
-not yet resolve from a public registry; contributors build through the
-constellation workspace. See [`DEVELOPING.md`](DEVELOPING.md) for the current
-build reality (only `sim-kernel` builds from a lone clone today) and how to
-contribute. The architecture narrative and the data-flow overview live on the
-front page (`sim-say`); the sections below are the developer's architecture
-reference.
+Naming note: the umbrella crate is published on crates.io as `sim-nest` (the
+bare name `sim` was already taken), but it keeps the library import identifier
+`sim` -- so you depend on it as `sim = { package = "sim-nest", version = "0.1" }`
+and write `use sim::...` throughout, and the `#[sim::sim_lib]` proc-macros resolve
+against it unchanged. The whole constellation is live on crates.io at `0.1.0`. See
+[`DEVELOPING.md`](DEVELOPING.md) for the contributor build. The architecture
+narrative and the data-flow overview live on the front page (`sim-say`); the
+sections below are the developer's architecture reference.
 
 ## Architecture
 
@@ -516,13 +518,11 @@ and registry receipt path as other SIM behavior.
 
 ## Building and validating
 
-`sim-kernel` builds and tests from a lone clone today (it is the dependency
-root). The rest of the constellation -- including this `sim` umbrella crate --
-builds together as one Cargo workspace assembled by the project's build tooling;
-a lone clone of a non-kernel repo does not resolve its cross-repo dependencies
-yet. A public single-repo build (and `cargo add sim`) lights up at the first
-crates.io publish. See [`DEVELOPING.md`](DEVELOPING.md) for how to work on SIM
-today.
+The whole constellation is published on crates.io at `0.1.0`, so `cargo add
+sim-nest` (imported as `sim`) resolves the umbrella from a public registry, and
+every library resolves standalone. Each public repo also builds and tests from a
+lone clone against crates.io. See [`DEVELOPING.md`](DEVELOPING.md) for how to work
+on SIM across the constellation.
 
 Inside the workspace (or after publish), build a tailored runtime by selecting
 features:

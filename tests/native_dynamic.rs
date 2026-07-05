@@ -21,7 +21,7 @@ use sim::{
 };
 
 const NATIVE_PLUGIN_PATCHES: &[(&str, &str, &str)] = &[
-    ("sim", "sim-sdk", "."),
+    ("sim-nest", "sim-sdk", "."),
     ("sim-kernel", "sim-kernel", "."),
     ("sim-citizen", "sim-citizen", "crates/sim-citizen"),
     (
@@ -29,7 +29,7 @@ const NATIVE_PLUGIN_PATCHES: &[(&str, &str, &str)] = &[
         "sim-citizen",
         "crates/sim-citizen-derive",
     ),
-    ("sim-run-loaders", "sim-cli", "crates/sim-run-loaders"),
+    ("sim-run-loaders", "sim-run", "crates/sim-run-loaders"),
     ("sim-cookbook", "sim-foundation", "crates/sim-cookbook"),
     ("sim-value", "sim-foundation", "crates/sim-value"),
     ("sim-macros", "sim-foundation", "crates/sim-macros"),
