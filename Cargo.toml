@@ -1,6 +1,6 @@
 [package]
 name = "sim-nest"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2024"
 license = "MPL-2.0"
 description = "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features."
@@ -56,6 +56,8 @@ serde_json = { version = "1", optional = true }
 sim-citizen = { optional = true, version = "0.1.0" }
 sim-citizen-derive = { optional = true, version = "0.1.0" }
 sim-run-loaders = { optional = true, version = "0.1.0", default-features = false }
+sim-run-core = { optional = true, version = "0.1.2" }
+sim-web-shell = { optional = true, version = "0.1.2", default-features = false }
 sim-codec = { optional = true, version = "0.1.0" }
 sim-codec-algol = { optional = true, version = "0.1.0" }
 sim-codec-binary = { optional = true, version = "0.1.0" }
@@ -111,7 +113,7 @@ sim-lib-lang-ruby = { optional = true, version = "0.1.0" }
 sim-lib-lang-scheme = { optional = true, version = "0.1.0" }
 sim-lib-lang-typed-lazy = { optional = true, version = "0.1.0" }
 sim-lib-logic = { optional = true, version = "0.1.0" }
-sim-lib-mcp = { optional = true, version = "0.1.0" }
+sim-lib-mcp = { optional = true, version = "0.1.2" }
 sim-lib-midi-ble = { optional = true, version = "0.1.0" }
 sim-lib-midi-core = { optional = true, version = "0.1.0" }
 sim-lib-midi-live = { optional = true, version = "0.1.0" }
@@ -387,6 +389,10 @@ rank-learn = ["rank", "sim-lib-rank/rank-learn"]
 rank-music = ["rank", "sim-lib-rank/rank-music"]
 rank-scatter = ["rank", "sim-lib-rank/rank-scatter"]
 scene = ["dep:sim-lib-scene", "core", "shape", "codec-lisp"]
+# The batteries-included `sim` binary: one install that serves both MCP and the web
+# shell through the same sim-run bootloader (behavior stays in the loaded libs). This
+# is the lawful composition point -- downstream of the serve libs, so no repo cycle.
+serve-cli = ["dep:sim-run-core", "mcp", "sim-lib-mcp/serve", "web", "dep:sim-web-shell"]
 server = ["dep:sim-lib-server", "core", "codec-binary", "codec-lisp", "codec-chat"]
 server-net-http = ["server", "sim-lib-server/server-net-http"]
 shape = ["dep:sim-shape", "core"]
@@ -471,6 +477,13 @@ web-bridge = ["dep:sim-lib-web-bridge", "view", "web-layout"]
 web-full = ["web", "view-agent", "view-doc", "view-math", "view-codec", "view-daw"]
 web-layout = ["dep:sim-lib-web-layout", "view"]
 web-wasm-frame = ["web", "dep:sim-lib-view-wasm-frame", "wasm"]
+
+# The batteries-included `sim` binary. `cargo install sim-nest --features serve-cli`
+# installs a `sim` that serves MCP and the web shell without the wrapper crates.
+[[bin]]
+name = "sim"
+path = "src/bin/sim.rs"
+required-features = ["serve-cli"]
 
 [[example]]
 name = "codec_roundtrip"
