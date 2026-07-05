@@ -45,20 +45,27 @@ install_core_runtime(&mut cx);
 
 Widen the feature set as you reach for more of the constellation (more codecs,
 number domains, the music/audio/FEMM/web stacks) -- see "Default features" and
-"Optional feature families" below. Run the architecture conformance suite with:
+"Optional feature families" below. Confirm your build resolves the umbrella with:
 
 ```bash
-cargo test -p sim-conformance
+cargo build      # or `cargo add sim-nest --features standard,server,wasm` first
 ```
+
+(The full architecture conformance suite `sim-conformance` is a maintainer gate run
+across the whole constellation, not a published crate; contributors run it from the
+repo checkout.)
 
 Naming note: the umbrella crate is published on crates.io as `sim-nest` (the
 bare name `sim` was already taken), but it keeps the library import identifier
 `sim` -- so you depend on it as `sim = { package = "sim-nest", version = "0.1" }`
-and write `use sim::...` throughout, and the `#[sim::sim_lib]` proc-macros resolve
-against it unchanged. The whole constellation is live on crates.io at `0.1.0`. See
-[`DEVELOPING.md`](DEVELOPING.md) for the contributor build. The architecture
-narrative and the data-flow overview live on the front page (`sim-say`); the
-sections below are the developer's architecture reference.
+(or simply `sim-nest = "0.1"`) and write `use sim::...` throughout, and the
+`#[sim::sim_lib]` proc-macros resolve against it unchanged. Do NOT write
+`use sim_nest::...` -- the crate's library name is `sim`, so `sim_nest` will not
+resolve (cargo's error even suggests `cargo add sim_nest`, which is wrong). The
+whole constellation is live on crates.io. See [`DEVELOPING.md`](DEVELOPING.md) for
+the contributor build. The architecture narrative and the data-flow overview live on
+the front page (`sim-say`); the sections below are the developer's architecture
+reference.
 
 ## Architecture
 
@@ -524,19 +531,19 @@ every library resolves standalone. Each public repo also builds and tests from a
 lone clone against crates.io. See [`DEVELOPING.md`](DEVELOPING.md) for how to work
 on SIM across the constellation.
 
-Inside the workspace (or after publish), build a tailored runtime by selecting
-features:
+Build a tailored runtime by selecting features on the dependency (the crate is
+`sim-nest`, imported as `sim`):
 
-```bash
-cargo build -p sim --no-default-features --features "core,codec-lisp,numbers-f64"
-cargo build -p sim --no-default-features --features "core,codec-lisp,numbers-f64,server"
+```toml
+[dependencies]
+sim = { package = "sim-nest", version = "0.1", default-features = false, features = ["core", "codec-lisp", "numbers-f64", "server"] }
 ```
 
-The repository validation gate (run in the workspace) is:
+Contributors, from a repo checkout, run the repository validation gate:
 
 ```bash
-cargo fmt --check && cargo test --workspace && cargo clippy --workspace -- -D warnings && cargo doc --workspace --no-deps
-cargo run -p xtask -- simdoc --check
+cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps
+cargo run -p xtask -- simdoc --check    # `xtask` is a repo-local dev tool, not a published crate
 ```
 
 `cargo run -p xtask -- simdoc` builds the public documentation lanes (API docs,

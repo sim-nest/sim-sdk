@@ -1,4 +1,11 @@
-//! # sim: the SIM umbrella crate
+//! # sim-nest -- the SIM umbrella crate (imported as `sim`)
+//!
+//! Published on crates.io as **`sim-nest`** (the bare name `sim` is taken), but the
+//! library import identifier is `sim`. Add it as `sim-nest = "0.1"` (or, to make the
+//! rename explicit, `sim = { package = "sim-nest", version = "0.1" }`) and write
+//! `use sim::...` throughout; the `#[sim::sim_lib]` / `#[sim::sim_fn]` proc-macros
+//! resolve against it unchanged. Note: `use sim_nest::...` will NOT resolve -- the
+//! crate's library name is `sim`, so import `sim`, not `sim_nest`.
 //!
 //! SIM is an expandable Rust runtime built around a small protocol kernel plus
 //! a large set of loadable libraries. The kernel defines contracts; libraries
@@ -256,6 +263,12 @@ pub mod runtime;
 pub mod shapes;
 #[cfg(feature = "proc-macros")]
 pub use sim_macros::*;
+// The macros' native_export output emits `::sim::codec_binary::{decode_frame,
+// encode_frame}`, so the feature that enables the macros must also expose that
+// module. `proc-macros` pulls `codec-binary`; this contract asserts it, so a future
+// edit that drops it fails to compile instead of shipping macros that cannot expand.
+#[cfg(all(feature = "proc-macros", not(feature = "codec-binary")))]
+compile_error!("feature `proc-macros` requires `codec-binary` (macros emit `::sim::codec_binary`)");
 #[cfg(feature = "wasm")]
 pub use sim_wasm_abi as wasm_abi;
 #[cfg(test)]

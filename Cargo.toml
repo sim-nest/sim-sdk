@@ -1,6 +1,6 @@
 [package]
 name = "sim-nest"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 license = "MPL-2.0"
 description = "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features."
@@ -8,6 +8,15 @@ readme = "README.md"
 publish = true
 repository = "https://github.com/sim-nest/sim-sdk"
 homepage = "https://github.com/sim-nest/sim-sdk"
+keywords = ["sim", "runtime", "kernel", "codec", "plugin"]
+categories = ["development-tools", "wasm", "encoding"]
+
+# The umbrella's value is "everything behind features", so docs.rs must build with
+# all features or the re-exports are invisible on the crate's primary discovery
+# surface. The facade is thin re-exports, so an all-features doc build is cheap.
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 # Published to crates.io as `sim-nest` (the name `sim` is taken), but the library
 # import identifier stays `sim` so the proc-macros (which emit `::sim::` paths) and
@@ -370,7 +379,7 @@ plugin-clap = ["dep:sim-lib-plugin-clap", "plugin-core", "audio-dsp"]
 plugin-core = ["dep:sim-lib-plugin-core", "audio-graph-core"]
 plugin-lv2 = ["dep:sim-lib-plugin-lv2", "plugin-core", "audio-dsp"]
 plugin-vst3 = ["dep:sim-lib-plugin-vst3", "plugin-core", "audio-dsp"]
-proc-macros = ["dep:sim-macros", "core", "shape"]
+proc-macros = ["dep:sim-macros", "core", "shape", "codec-binary"]
 rank = ["dep:sim-lib-rank", "core"]
 rank-codec-fallback = ["rank", "sim-lib-rank/rank-codec-fallback"]
 rank-expr = ["rank", "sim-lib-rank/rank-expr"]
