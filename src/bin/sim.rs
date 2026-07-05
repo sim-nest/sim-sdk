@@ -67,10 +67,7 @@ fn normalize_aliases(mut args: Vec<OsString>) -> Vec<OsString> {
 }
 
 fn splice_codec(args: &mut Vec<OsString>, at: usize, codec: &str) {
-    args.splice(
-        at..at,
-        [OsString::from("--codec"), OsString::from(codec)],
-    );
+    args.splice(at..at, [OsString::from("--codec"), OsString::from(codec)]);
 }
 
 fn has_codec(args: &[OsString]) -> bool {
