@@ -17,7 +17,7 @@ pub use native::{NativeDylibLoader, encode_native_manifest_response};
 /// Native dynamic-library loader compatibility exports.
 #[cfg(all(feature = "dynamic-native", not(target_arch = "wasm32")))]
 pub mod native {
-    pub use sim_cli_loaders::{
+    pub use sim_run_loaders::{
         NativeDylibLoader, encode_native_manifest_response, validate_native_abi_header,
     };
 }
@@ -28,7 +28,7 @@ pub use registry::{
     standard_loader_registry_with_wasm, standard_loader_registry_with_wasm_and_sources,
 };
 #[cfg(feature = "wasm")]
-pub use sim_cli_loaders::{WasmLoader, wasm_load_capability};
+pub use sim_run_loaders::{WasmLoader, wasm_load_capability};
 #[cfg(feature = "codec-lisp")]
 pub use source::LispSourceLoader;
 #[cfg(all(feature = "codec-lisp", feature = "codec-binary"))]

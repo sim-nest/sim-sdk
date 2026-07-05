@@ -22,7 +22,7 @@ pub(crate) static CONFORMANCE_CONTRACT: LazyLock<String> = LazyLock::new(|| {
     let manifest_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     for candidate in [
         manifest_dir.join("../../SIM.md"),
-        manifest_dir.join("../sim/SIM.md"),
+        manifest_dir.join("../sim-nest/SIM.md"),
         manifest_dir.join("../sim-sdk/SIM.md"),
     ] {
         if let Ok(text) = std::fs::read_to_string(&candidate)

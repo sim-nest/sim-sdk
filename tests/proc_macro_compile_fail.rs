@@ -36,7 +36,7 @@ const UI_PATCHES: &[(&str, &str, &str)] = &[
         "sim-citizen",
         "crates/sim-citizen-derive",
     ),
-    ("sim-cli-loaders", "sim-cli", "crates/sim-cli-loaders"),
+    ("sim-run-loaders", "sim-cli", "crates/sim-run-loaders"),
     ("sim-cookbook", "sim-foundation", "crates/sim-cookbook"),
     ("sim-value", "sim-foundation", "crates/sim-value"),
     ("sim-lib-core", "sim-runtime", "crates/sim-lib-core"),

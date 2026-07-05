@@ -1,13 +1,20 @@
 [package]
-name = "sim"
+name = "sim-nest"
 version = "0.1.0"
 edition = "2024"
 license = "MPL-2.0"
-description = "SIM workspace package for sim."
+description = "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features."
 readme = "README.md"
-publish = false
+publish = true
 repository = "https://github.com/sim-nest/sim-sdk"
 homepage = "https://github.com/sim-nest/sim-sdk"
+
+# Published to crates.io as `sim-nest` (the name `sim` is taken), but the library
+# import identifier stays `sim` so the proc-macros (which emit `::sim::` paths) and
+# every `use sim::...` keep working unchanged. Consumers write
+# `sim = { package = "sim-nest", ... }`.
+[lib]
+name = "sim"
 
 [workspace]
 resolver = "3"
@@ -39,7 +46,7 @@ serde = { version = "1", features = ["derive"], optional = true }
 serde_json = { version = "1", optional = true }
 sim-citizen = { optional = true, version = "0.1.0" }
 sim-citizen-derive = { optional = true, version = "0.1.0" }
-sim-cli-loaders = { optional = true, version = "0.1.0", default-features = false }
+sim-run-loaders = { optional = true, version = "0.1.0", default-features = false }
 sim-codec = { optional = true, version = "0.1.0" }
 sim-codec-algol = { optional = true, version = "0.1.0" }
 sim-codec-binary = { optional = true, version = "0.1.0" }
@@ -257,7 +264,7 @@ discrete-music = ["discrete-spectral", "music-analysis", "sim-lib-music-analysis
 discrete-rank = ["dep:sim-lib-discrete", "sim-lib-discrete/rank", "rank", "core"]
 discrete-runtime = ["dep:sim-lib-discrete", "sim-lib-discrete/runtime", "discrete", "core"]
 discrete-spectral = ["dep:sim-lib-discrete", "sim-lib-discrete/spectral", "core"]
-dynamic-native = ["dep:sim-cli-loaders", "sim-cli-loaders/dynamic-native", "codec-binary", "shape"]
+dynamic-native = ["dep:sim-run-loaders", "sim-run-loaders/dynamic-native", "codec-binary", "shape"]
 femm-assembly = ["dep:sim-lib-femm-assembly", "femm-space", "numbers-ad", "core"]
 femm-codec = ["dep:sim-lib-femm-codec", "femm-core", "femm-geometry", "femm-material", "femm-mesh", "femm-space", "femm-assembly", "femm-solve", "femm-flow", "femm-physics", "femm-post", "femm-field", "femm-function", "femm-sensitiv", "femm-tape", "femm-ode", "numbers-codec", "core"]
 femm-core = ["dep:sim-lib-femm-core", "numbers-numeric", "core"]
@@ -449,7 +456,7 @@ view-codec = ["view", "codec-lisp", "codec-json", "codec-binary", "dep:sim-lib-v
 view-daw = ["view", "daw-session", "audio-graph-core", "plugin-core", "dep:sim-lib-view-daw"]
 view-doc = ["view", "dep:sim-lib-view-doc"]
 view-math = ["view", "numbers-numeric", "dep:sim-lib-view-math"]
-wasm = ["dep:sim-cli-loaders", "sim-cli-loaders/wasm", "dep:sim-wasm-abi", "core"]
+wasm = ["dep:sim-run-loaders", "sim-run-loaders/wasm", "dep:sim-wasm-abi", "core"]
 web = ["web-bridge"]
 web-bridge = ["dep:sim-lib-web-bridge", "view", "web-layout"]
 web-full = ["web", "view-agent", "view-doc", "view-math", "view-codec", "view-daw"]

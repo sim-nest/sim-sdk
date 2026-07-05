@@ -253,7 +253,7 @@ fn expand_macro_form(
 enum ResolvedMacro<'a> {
     Sdk(&'a MacroObject),
     #[cfg(all(feature = "dynamic-native", not(target_arch = "wasm32")))]
-    Native(&'a sim_cli_loaders::NativeAbiMacro),
+    Native(&'a sim_run_loaders::NativeAbiMacro),
 }
 
 impl<'a> ResolvedMacro<'a> {
@@ -264,7 +264,7 @@ impl<'a> ResolvedMacro<'a> {
         #[cfg(all(feature = "dynamic-native", not(target_arch = "wasm32")))]
         if let Some(mac) = value
             .object()
-            .downcast_ref::<sim_cli_loaders::NativeAbiMacro>()
+            .downcast_ref::<sim_run_loaders::NativeAbiMacro>()
         {
             return Some(Self::Native(mac));
         }
