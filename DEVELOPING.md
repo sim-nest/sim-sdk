@@ -1,8 +1,8 @@
 # Developing SIM
 
 This is the honest, current picture for someone who wants to work on SIM. It is
-deliberately frank about what is and is not buildable today, because SIM is
-pre-publish.
+deliberately frank about what is and is not buildable standalone versus through
+the workspace.
 
 ## The shape
 
