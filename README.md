@@ -1,8 +1,13 @@
 # sim-sdk
 
 `sim-sdk` is the **developer entry point** for SIM and the home of the umbrella
-`sim` crate. New to SIM? Read the overview first on the front page (`sim-say`);
-this README is for writing code against the runtime.
+`sim` crate: it gives you one dependency to build applications and libraries
+against the SIM runtime. New to SIM? Read the overview first on the front page
+(`sim-say`); this README is for writing code against the runtime.
+
+Just want to run SIM? Install the `sim` command from `sim-run`
+(`cargo install sim-run`) and see `sim-say` -- you do not need this crate to use
+SIM, only to build against it.
 
 This repo owns two crates plus the architecture contract:
 
@@ -50,6 +55,11 @@ number domains, the music/audio/FEMM/web stacks) -- see "Default features" and
 ```bash
 cargo build      # or `cargo add sim-nest --features standard,server,wasm` first
 ```
+
+For a complete, runnable version of this boot-and-eval loop, see
+[`examples/repl.rs`](examples/repl.rs) -- a tiny REPL that installs the number
+domains and the Lisp codec, then reads, evaluates, and prints each line
+(`cargo run --example repl --features shape,numbers-prelude`).
 
 (The full architecture conformance suite `sim-conformance` is a maintainer gate run
 across the whole constellation, not a published crate; contributors run it from the
