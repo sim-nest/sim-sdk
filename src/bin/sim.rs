@@ -41,6 +41,13 @@ fn main() -> ExitCode {
     if is_help_request(&args) {
         print!("{COMMANDS_HELP}");
     }
+    // Report THIS binary's version. The bootloader core's own `--version` prints the
+    // sim-run-core crate version, not the installed `sim-nest` facade's, so intercept
+    // and short-circuit with the facade version the user actually installed.
+    if is_version_request(&args) {
+        print!("sim {}\n", env!("CARGO_PKG_VERSION"));
+        return ExitCode::SUCCESS;
+    }
     // `sim repl` needs an eval stack; the serve verbs must not pay for it (and its
     // eager lisp codec would collide with the web boot codec). Compose one or the
     // other by the requested verb, exactly as the native `sim-run` bootloader branches.
@@ -115,6 +122,22 @@ fn is_help_request(args: &[OsString]) -> bool {
         let arg = arg.to_string_lossy();
         arg == "--help" || arg == "-h"
     })
+}
+
+/// True for a version request (`sim version` / `sim --version` / `sim -V`). A bare
+/// `version` verb counts; a version flag trailing another verb belongs to that verb.
+fn is_version_request(args: &[OsString]) -> bool {
+    match args
+        .iter()
+        .skip(1)
+        .find(|arg| !arg.to_string_lossy().starts_with('-'))
+    {
+        Some(verb) => verb == "version",
+        None => args.iter().skip(1).any(|arg| {
+            let arg = arg.to_string_lossy();
+            arg == "--version" || arg == "-V"
+        }),
+    }
 }
 
 /// Canonical verbs are `mcp` and `serve`. Inject the boot codec each verb needs and
