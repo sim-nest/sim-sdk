@@ -57,6 +57,7 @@ sim-citizen = { optional = true, version = "0.1.0" }
 sim-citizen-derive = { optional = true, version = "0.1.0" }
 sim-run-loaders = { optional = true, version = "0.1.0", default-features = false }
 sim-run-core = { optional = true, version = "0.1.2" }
+sim-lib-repl = { optional = true, version = "0.1.1" }
 sim-web-shell = { optional = true, version = "0.1.2", default-features = false }
 sim-codec = { optional = true, version = "0.1.0" }
 sim-codec-algol = { optional = true, version = "0.1.0" }
@@ -394,7 +395,11 @@ scene = ["dep:sim-lib-scene", "core", "shape", "codec-lisp"]
 # The batteries-included `sim` binary: one install that serves both MCP and the web
 # shell through the same sim-run bootloader (behavior stays in the loaded libs). This
 # is the lawful composition point -- downstream of the serve libs, so no repo cycle.
-serve-cli = ["dep:sim-run-core", "mcp", "sim-lib-mcp/serve", "web", "dep:sim-web-shell"]
+# The batteries-included `sim` binary: one install that serves both MCP and the web
+# shell AND runs an interactive/piped `sim repl`. The repl verb needs a static eval
+# stack (numbers-prelude + the core runtime + the lisp codec) linked into the binary
+# so it works from a plain `cargo install` -- no on-disk native dylib bundle.
+serve-cli = ["dep:sim-run-core", "dep:sim-lib-repl", "mcp", "sim-lib-mcp/serve", "web", "dep:sim-web-shell", "numbers-prelude"]
 server = ["dep:sim-lib-server", "core", "codec-binary", "codec-lisp", "codec-chat"]
 server-net-http = ["server", "sim-lib-server/server-net-http"]
 shape = ["dep:sim-shape", "core"]
