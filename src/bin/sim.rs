@@ -20,8 +20,27 @@ use std::sync::Arc;
 
 use sim_run_core::Bootloader;
 
+/// The batteries commands, listed ahead of the bootloader's option help so a bare
+/// `sim --help` shows what a newcomer can actually run. The core `--help` (below this)
+/// documents the `--codec`/`--load`/`--eval` bootloader options.
+const COMMANDS_HELP: &str = "\
+The SIM runtime command line.
+
+Commands:
+  sim repl              Start a read-eval-print loop (Lisp).
+  sim webui             Serve the browser Web UI.
+  sim mcp               Serve an MCP server over stdio.
+  sim <expression>      Evaluate a payload through the boot codec.
+
+";
+
 fn main() -> ExitCode {
     let args = normalize_aliases(std::env::args_os().collect());
+    // A bare `sim --help` / `sim -h` (no verb) lists the batteries commands before the
+    // bootloader prints its option help; a `sim <verb> --help` is left to the verb.
+    if is_help_request(&args) {
+        print!("{COMMANDS_HELP}");
+    }
     // `sim repl` needs an eval stack; the serve verbs must not pay for it (and its
     // eager lisp codec would collide with the web boot codec). Compose one or the
     // other by the requested verb, exactly as the native `sim-run` bootloader branches.
@@ -80,6 +99,22 @@ fn verb_is(args: &[OsString], want: &str) -> bool {
         .skip(1)
         .find(|arg| !arg.to_string_lossy().starts_with('-'))
         .is_some_and(|arg| arg == want)
+}
+
+/// True for a bare help request with no subcommand (`sim --help` / `sim -h`). A help
+/// flag that follows a verb belongs to that verb, so it is not treated as bare here.
+fn is_help_request(args: &[OsString]) -> bool {
+    let has_verb = args
+        .iter()
+        .skip(1)
+        .any(|arg| !arg.to_string_lossy().starts_with('-'));
+    if has_verb {
+        return false;
+    }
+    args.iter().skip(1).any(|arg| {
+        let arg = arg.to_string_lossy();
+        arg == "--help" || arg == "-h"
+    })
 }
 
 /// Canonical verbs are `mcp` and `serve`. Inject the boot codec each verb needs and
