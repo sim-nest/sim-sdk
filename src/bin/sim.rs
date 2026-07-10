@@ -45,17 +45,19 @@ fn main() -> ExitCode {
     // sim-run-core crate version, not the installed `sim-nest` facade's, so intercept
     // and short-circuit with the facade version the user actually installed.
     if is_version_request(&args) {
-        print!("sim {}\n", env!("CARGO_PKG_VERSION"));
+        println!("sim {}", env!("CARGO_PKG_VERSION"));
         return ExitCode::SUCCESS;
     }
-    // `sim repl` needs an eval stack; the serve verbs must not pay for it (and its
-    // eager lisp codec would collide with the web boot codec). Compose one or the
-    // other by the requested verb, exactly as the native `sim-run` bootloader branches.
+    // Both `sim repl` and the web shell's cookbook EVALUATE, so both need the eval
+    // stack (core runtime + numbers + an eager policy) in the boot `Cx` -- otherwise a
+    // recipe fails with "requires libs not loaded: core". `configure_web_bootloader`
+    // supplies the Lisp boot codec itself, so the shared base only installs the eval
+    // stack (never a second codec) to avoid colliding with it.
     let bootloader = if verb_is(&args, "repl") {
         configure_repl_bootloader(Bootloader::standard())
     } else {
         sim_web_shell::configure_web_bootloader(sim_lib_mcp::configure_mcp_bootloader(
-            Bootloader::standard(),
+            Bootloader::standard().with_context(install_eval_stack),
         ))
     };
     match bootloader.run(args) {
@@ -68,22 +70,27 @@ fn main() -> ExitCode {
     }
 }
 
+/// Installs the statically-linked eval stack into the boot `Cx`: an eager eval policy
+/// (the bootloader's default is noop), the core runtime (the `core` lib the cookbook
+/// recipes require), and the numbers prelude. Shared by `sim repl` and the web shell's
+/// cookbook so both evaluate from a plain `cargo install` -- no native dylib bundle. The
+/// Lisp codec is NOT installed here; each caller registers it as a host factory (repl
+/// does; `configure_web_bootloader` does) so it is not loaded twice.
+fn install_eval_stack(cx: &mut sim::kernel::Cx) {
+    cx.set_eval_policy(Arc::new(sim::kernel::EagerPolicy));
+    sim::runtime::install_core_runtime(cx);
+    sim::numbers_prelude::NumbersPreludeLib::new()
+        .install_all(cx)
+        .expect("numbers prelude installs");
+}
+
 /// Wires `sim repl` with a statically-linked eval stack so it works from a plain
-/// `cargo install` -- no `SIM_REPL_BUNDLE_DIR` native dylibs. Installs an eager eval
-/// policy, the core runtime, the numbers prelude, and the Lisp codec into the boot
-/// `Cx`, then dispatches the `repl` verb to `sim-lib-repl`'s `cli/main/repl`
-/// entrypoint. Mirrors `sim-sdk/examples/repl.rs`, the proven in-process recipe.
+/// `cargo install` -- no `SIM_REPL_BUNDLE_DIR` native dylibs. Installs the eval stack
+/// and the Lisp codec into the boot `Cx`, then dispatches the `repl` verb to
+/// `sim-lib-repl`'s `cli/main/repl` entrypoint. Mirrors `sim-sdk/examples/repl.rs`.
 fn configure_repl_bootloader(loader: Bootloader) -> Bootloader {
     loader
-        // The eval stack goes into the boot `Cx` directly: an eager policy (the
-        // bootloader's default is noop), the core runtime, and the numbers prelude.
-        .with_context(|cx| {
-            cx.set_eval_policy(Arc::new(sim::kernel::EagerPolicy));
-            sim::runtime::install_core_runtime(cx);
-            sim::numbers_prelude::NumbersPreludeLib::new()
-                .install_all(cx)
-                .expect("repl numbers prelude installs");
-        })
+        .with_context(install_eval_stack)
         // The Lisp codec is registered as a host factory so the boot-codec resolver
         // finds `codec/lisp` (it falls back to a host source when the crates.io
         // resolver has nothing), mirroring `configure_web_bootloader`.
