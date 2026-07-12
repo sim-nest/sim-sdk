@@ -235,7 +235,7 @@ sim-table-hash = { optional = true, version = "0.1.0" }
 sim-table-lazy = { optional = true, version = "0.1.0" }
 sim-table-override = { optional = true, version = "0.1.0" }
 sim-table-remote = { optional = true, version = "0.1.0" }
-sim-value = { optional = true, version = "0.1.0" }
+sim-value = { optional = true, version = "0.1.2" }
 sim-wasm-abi = { optional = true, version = "0.1.0" }
 
 [dev-dependencies]

@@ -39,6 +39,7 @@ fn cookbook_all_seeded_recipes_run_green_under_all_features() {
     cx.load_lib(&json).unwrap();
     sim::lib_stream_core::install_stream_core_shapes_lib(&mut cx).unwrap();
     cx.grant(sim::kernel::read_eval_capability());
+    cx.grant(sim::kernel::read_construct_capability());
 
     let store = sim_lib_cookbook::seeded_recipe_store().unwrap();
     assert!(!store.is_empty());

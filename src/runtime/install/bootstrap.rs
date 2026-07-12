@@ -111,6 +111,41 @@ pub fn install_core_runtime(cx: &mut Cx) {
         crate::numbers_tensor::TensorNumbersLib::new(),
         "core runtime should install the default numbers/tensor domain",
     );
+    #[cfg(feature = "numbers-tensor-bit")]
+    install_registered_lib(
+        cx,
+        Symbol::qualified("numbers", "tensor-bit"),
+        crate::numbers_tensor_bit::BitTensorLib::new(),
+        "core runtime should install bit tensor domains",
+    );
+    #[cfg(feature = "numbers-tensor-cmplxf")]
+    install_registered_lib(
+        cx,
+        Symbol::qualified("numbers", "tensor-cmplxf"),
+        crate::numbers_tensor_cmplxf::ComplexFTensorLib::new(),
+        "core runtime should install complex tensor domains",
+    );
+    #[cfg(feature = "numbers-tensor-f64")]
+    install_registered_lib(
+        cx,
+        Symbol::qualified("numbers", "tensor-f64"),
+        crate::numbers_tensor_f64::F64TensorLib::new(),
+        "core runtime should install f64 tensor domains",
+    );
+    #[cfg(feature = "numbers-tensor-i64")]
+    install_registered_lib(
+        cx,
+        Symbol::qualified("numbers", "tensor-i64"),
+        crate::numbers_tensor_i64::I64TensorLib::new(),
+        "core runtime should install i64 tensor domains",
+    );
+    #[cfg(feature = "numbers-tensor-rat64")]
+    install_registered_lib(
+        cx,
+        Symbol::qualified("numbers", "tensor-rat64"),
+        crate::numbers_tensor_rat64::Rat64TensorLib::new(),
+        "core runtime should install rational tensor domains",
+    );
     #[cfg(feature = "numbers-cas")]
     install_number_domain(
         cx,
@@ -222,6 +257,11 @@ fn install_number_domain<L: Lib>(cx: &mut Cx, symbol: Symbol, lib: L, message: &
 #[cfg(any(
     feature = "numbers-fixed",
     feature = "numbers-tensor-bcast",
+    feature = "numbers-tensor-bit",
+    feature = "numbers-tensor-cmplxf",
+    feature = "numbers-tensor-f64",
+    feature = "numbers-tensor-i64",
+    feature = "numbers-tensor-rat64",
     feature = "numbers-quad",
     feature = "numbers-rk"
 ))]
