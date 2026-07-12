@@ -272,30 +272,7 @@ fn realize_keyword(expr: &sim_kernel::Expr) -> Result<&str> {
 
 fn parse_capability_names(cx: &mut Cx, value: Value) -> Result<Vec<sim_kernel::CapabilityName>> {
     let expr = value.object().as_expr(cx)?;
-    match expr {
-        sim_kernel::Expr::Nil => Ok(Vec::new()),
-        sim_kernel::Expr::List(items) | sim_kernel::Expr::Vector(items) => {
-            items.into_iter().map(capability_name_from_expr).collect()
-        }
-        sim_kernel::Expr::Symbol(_) | sim_kernel::Expr::String(_) => {
-            Ok(vec![capability_name_from_expr(expr)?])
-        }
-        _ => Err(Error::TypeMismatch {
-            expected: "capability list",
-            found: "non-list",
-        }),
-    }
-}
-
-fn capability_name_from_expr(expr: sim_kernel::Expr) -> Result<sim_kernel::CapabilityName> {
-    match expr {
-        sim_kernel::Expr::Symbol(symbol) => Ok(sim_kernel::CapabilityName::new(symbol.to_string())),
-        sim_kernel::Expr::String(text) => Ok(sim_kernel::CapabilityName::new(text)),
-        _ => Err(Error::TypeMismatch {
-            expected: "capability symbol or string",
-            found: "non-capability",
-        }),
-    }
+    sim_value::capability_names_from_expr(&expr)
 }
 
 fn parse_duration_value(cx: &mut Cx, value: Value) -> Result<Duration> {

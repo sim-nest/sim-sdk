@@ -38,6 +38,12 @@ pub(super) fn install_optional_runtime_libs(cx: &mut Cx) {
             .expect("core runtime should install the logic runtime library");
     }
 
+    #[cfg(feature = "discrete-runtime")]
+    {
+        sim_lib_discrete::install_discrete_lib(cx)
+            .expect("core runtime should install the discrete runtime library");
+    }
+
     #[cfg(feature = "cookbook")]
     {
         sim_lib_cookbook::install_seeded_cookbook_lib(cx)
