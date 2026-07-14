@@ -460,6 +460,7 @@ fn build_decode_cx() -> Cx {
         .unwrap();
     let lisp = sim::codec_lisp::LispCodecLib::new(cx.registry_mut().fresh_codec_id()).unwrap();
     cx.load_lib(&lisp).unwrap();
+    cx.load_lib(&sim::lib_control::ControlLib).unwrap();
     sim::install_agent_lib(&mut cx).unwrap();
     cx
 }
@@ -507,7 +508,7 @@ fn unwrap_quote(form: &Expr) -> Option<Expr> {
 
 fn lower_lisp_eval_surface(expr: Expr) -> Expr {
     match expr {
-        Expr::List(items) if items.len() > 1 => {
+        Expr::List(items) if !items.is_empty() => {
             let mut items = items
                 .into_iter()
                 .map(lower_lisp_eval_surface)
