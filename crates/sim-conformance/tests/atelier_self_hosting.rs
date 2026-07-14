@@ -228,11 +228,11 @@ fn assert_setup_evaluates_to_expected(cx: &mut Cx, path: &Path, doc: &RecipeDoc)
         .parent()
         .unwrap_or_else(|| panic!("{} has no parent", path.display()));
 
-    // Evaluate the recipe's `(quote ...)` setup form through the lisp codec
-    // instead of string-stripping the parentheses, then compare semantically.
+    // Decode the setup form through the lisp codec, accepting either the direct
+    // setup expression or the older quoted wrapper, then compare semantically.
     let setup_path = recipe_dir.join(required_string(doc, path, "setup"));
     let setup_text = read_ascii(&setup_path);
-    let evaluated = evaluate_quoted_setup(cx, &setup_text, &setup_path);
+    let evaluated = evaluate_setup(cx, &setup_text, &setup_path);
 
     let expected_path = recipe_dir.join(required_string(doc, path, "expected"));
     let expected_text = read_ascii(&expected_path);
@@ -261,6 +261,7 @@ fn build_decode_cx() -> Cx {
         .unwrap();
     let lisp = sim::codec_lisp::LispCodecLib::new(cx.registry_mut().fresh_codec_id()).unwrap();
     cx.load_lib(&lisp).unwrap();
+    sim::install_agent_lib(&mut cx).unwrap();
     cx
 }
 
@@ -274,29 +275,74 @@ fn decode_lisp(cx: &mut Cx, text: &str, source: &Path) -> Expr {
     .unwrap_or_else(|err| panic!("{}: lisp decode failed: {err:?}", source.display()))
 }
 
-fn evaluate_quoted_setup(cx: &mut Cx, setup_text: &str, source: &Path) -> Expr {
+fn evaluate_setup(cx: &mut Cx, setup_text: &str, source: &Path) -> Expr {
     let form = decode_lisp(cx, setup_text.trim(), source);
-    unwrap_quote(form).unwrap_or_else(|| {
+    if let Some(expr) = unwrap_quote(&form) {
+        return expr;
+    }
+
+    let value = cx
+        .eval_expr(lower_lisp_eval_surface(form))
+        .unwrap_or_else(|err| panic!("{}: setup evaluation failed: {err:?}", source.display()));
+    value.object().as_expr(cx).unwrap_or_else(|err| {
         panic!(
-            "{}: setup must be a single (quote ...) form",
+            "{}: setup result is not an expression: {err:?}",
             source.display()
         )
     })
 }
 
-fn unwrap_quote(form: Expr) -> Option<Expr> {
+fn unwrap_quote(form: &Expr) -> Option<Expr> {
     match form {
         Expr::Quote {
             mode: QuoteMode::Quote,
             expr,
-        } => Some(*expr),
-        Expr::List(mut items) if items.len() == 2 && is_quote_head(&items[0]) => {
-            Some(items.remove(1))
-        }
-        Expr::Call { operator, mut args } if is_quote_head(&operator) && args.len() == 1 => {
-            Some(args.remove(0))
+        } => Some(expr.as_ref().clone()),
+        Expr::List(items) if items.len() == 2 && is_quote_head(&items[0]) => Some(items[1].clone()),
+        Expr::Call { operator, args } if is_quote_head(operator.as_ref()) && args.len() == 1 => {
+            Some(args[0].clone())
         }
         _ => None,
+    }
+}
+
+fn lower_lisp_eval_surface(expr: Expr) -> Expr {
+    match expr {
+        Expr::List(items) if items.len() > 1 => {
+            let mut items = items
+                .into_iter()
+                .map(lower_lisp_eval_surface)
+                .collect::<Vec<_>>();
+            let operator = Box::new(items.remove(0));
+            Expr::Call {
+                operator,
+                args: items,
+            }
+        }
+        Expr::List(items) => Expr::List(items.into_iter().map(lower_lisp_eval_surface).collect()),
+        Expr::Vector(items) => {
+            Expr::Vector(items.into_iter().map(lower_lisp_eval_surface).collect())
+        }
+        Expr::Map(entries) => Expr::Map(
+            entries
+                .into_iter()
+                .map(|(key, value)| (lower_lisp_eval_surface(key), lower_lisp_eval_surface(value)))
+                .collect(),
+        ),
+        Expr::Set(items) => Expr::Set(items.into_iter().map(lower_lisp_eval_surface).collect()),
+        Expr::Block(items) => Expr::Block(items.into_iter().map(lower_lisp_eval_surface).collect()),
+        Expr::Annotated { expr, annotations } => Expr::Annotated {
+            expr: Box::new(lower_lisp_eval_surface(*expr)),
+            annotations: annotations
+                .into_iter()
+                .map(|(name, value)| (name, lower_lisp_eval_surface(value)))
+                .collect(),
+        },
+        Expr::Extension { tag, payload } => Expr::Extension {
+            tag,
+            payload: Box::new(lower_lisp_eval_surface(*payload)),
+        },
+        other => other,
     }
 }
 
