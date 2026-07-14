@@ -38,6 +38,18 @@ pub(super) fn install_optional_runtime_libs(cx: &mut Cx) {
             .expect("core runtime should install the logic runtime library");
     }
 
+    #[cfg(feature = "rank")]
+    {
+        crate::lib_rank::install_rank_lib(cx)
+            .expect("core runtime should install the rank runtime library");
+    }
+
+    #[cfg(feature = "numbers-stats")]
+    {
+        cx.load_lib(&crate::lib_numbers_stats::StatsNumbersLib::new())
+            .expect("core runtime should install the statistics runtime library");
+    }
+
     #[cfg(feature = "discrete-runtime")]
     {
         sim_lib_discrete::install_discrete_lib(cx)
@@ -96,6 +108,12 @@ pub(super) fn install_optional_runtime_libs(cx: &mut Cx) {
     {
         crate::lib_daw_session::install_daw_session_lib(cx)
             .expect("core runtime should install DAW session browse surfaces");
+    }
+
+    #[cfg(feature = "topology-core")]
+    {
+        crate::lib_topology::install_topology_lib(cx)
+            .expect("core runtime should install topology runtime functions");
     }
 
     #[cfg(feature = "stream-portaudio")]

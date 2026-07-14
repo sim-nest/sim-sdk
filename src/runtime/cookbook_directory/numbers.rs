@@ -120,6 +120,13 @@ macro_rules! cookbook_directory_numbers {
             || Box::new(crate::numbers_rk::RkNumbersLib::new())
         );
         $m!(
+            "numbers/stats",
+            "Statistics numbers",
+            "numbers-stats",
+            Some(crate::lib_numbers_stats::RECIPES),
+            || Box::new(crate::lib_numbers_stats::StatsNumbersLib::new())
+        );
+        $m!(
             "numbers/tensor",
             "Tensor numbers",
             "numbers-tensor",

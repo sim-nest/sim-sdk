@@ -155,6 +155,7 @@ sim-lib-numbers-prelude = { optional = true, version = "0.1.1" }
 sim-lib-numbers-quad = { optional = true, version = "0.1.1" }
 sim-lib-numbers-rational = { optional = true, version = "0.1.1" }
 sim-lib-numbers-rk = { optional = true, version = "0.1.1" }
+sim-lib-numbers-stats = { optional = true, version = "0.1.1" }
 sim-lib-numbers-tensor = { optional = true, version = "0.1.3" }
 sim-lib-numbers-tensor-bcast = { optional = true, version = "0.1.2" }
 sim-lib-numbers-tensor-bit = { optional = true, version = "0.1.2" }
@@ -267,7 +268,7 @@ codec-lisp = ["dep:sim-codec", "dep:sim-codec-lisp", "dep:proc-macro2", "core"]
 codec-mcp = ["dep:sim-codec-mcp", "codec-json"]
 control = ["dep:sim-lib-control", "core"]
 cookbook = ["dep:sim-cookbook", "dep:sim-lib-cookbook", "core", "codec-lisp", "sim-lib-agent?/cookbook"]
-cookbook-all = ["cookbook", "shape", "citizen", "codec-algol", "codec-binary", "codec-binary-base64", "codec-bitwise", "codec-bitwise-base64", "codec-chat", "codec-json", "codec-mcp", "agent", "audio-dsp", "audio-graph-live", "daw-session", "discrete-rank", "discrete-runtime", "femm-core", "femm-field", "femm-function", "femm-ode", "intent", "list-cell", "list-lazy", "logic-core", "mcp", "midi-core", "midi-live", "midi-ble", "midi-rtmidi", "midi-shapes", "music-lift", "music-notation", "music-shapes", "music-synth", "numbers-i64", "numbers-arith", "numbers-bigint", "numbers-bool", "numbers-f64", "numbers-rational", "numbers-complex", "numbers-func", "numbers-cas", "numbers-cas-diff", "numbers-cas-eval", "numbers-exotic", "numbers-fixed", "numbers-float", "numbers-numeric", "numbers-quad", "numbers-rk", "numbers-tensor", "numbers-tensor-bcast", "numbers-tensor-bit", "numbers-tensor-cmplxf", "numbers-tensor-f64", "numbers-tensor-i64", "numbers-tensor-linalg", "numbers-tensor-rat64", "openai-server", "pitch-dissonance", "pitch-namer", "pitch-shapes", "plugin-clap", "plugin-vst3", "rank", "scene", "server", "skill", "sound-audio-lift", "sound-bridge", "sound-dissonance", "sound-render", "sound-shapes", "sound-timbre", "sound-tuning", "standard-binding", "control", "standard-sequence", "standard-pattern", "standard-scheme", "standard-cl", "standard-clojure", "stream-alsa", "stream-asio", "stream-bridge", "stream-core", "stream-coreaudio", "stream-jack", "stream-pipewire", "stream-portaudio", "stream-prelude", "table-hash", "table-lazy", "topology-core"]
+cookbook-all = ["cookbook", "shape", "citizen", "codec-algol", "codec-binary", "codec-binary-base64", "codec-bitwise", "codec-bitwise-base64", "codec-chat", "codec-json", "codec-mcp", "agent", "audio-dsp", "audio-graph-live", "daw-session", "discrete-rank", "discrete-runtime", "femm-core", "femm-field", "femm-function", "femm-ode", "intent", "list-cell", "list-lazy", "logic-core", "mcp", "midi-core", "midi-live", "midi-ble", "midi-rtmidi", "midi-shapes", "music-lift", "music-notation", "music-shapes", "music-synth", "numbers-i64", "numbers-arith", "numbers-bigint", "numbers-bool", "numbers-f64", "numbers-rational", "numbers-complex", "numbers-func", "numbers-cas", "numbers-cas-diff", "numbers-cas-eval", "numbers-exotic", "numbers-fixed", "numbers-float", "numbers-numeric", "numbers-quad", "numbers-rk", "numbers-stats", "numbers-tensor", "numbers-tensor-bcast", "numbers-tensor-bit", "numbers-tensor-cmplxf", "numbers-tensor-f64", "numbers-tensor-i64", "numbers-tensor-linalg", "numbers-tensor-rat64", "openai-server", "pitch-dissonance", "pitch-namer", "pitch-shapes", "plugin-clap", "plugin-vst3", "rank", "scene", "server", "skill", "sound-audio-lift", "sound-bridge", "sound-dissonance", "sound-render", "sound-shapes", "sound-timbre", "sound-tuning", "standard-binding", "control", "standard-sequence", "standard-pattern", "standard-scheme", "standard-cl", "standard-clojure", "stream-alsa", "stream-asio", "stream-bridge", "stream-core", "stream-coreaudio", "stream-jack", "stream-pipewire", "stream-portaudio", "stream-prelude", "table-hash", "table-lazy", "topology-core"]
 core = ["dep:sim-kernel", "dep:sim-value", "dep:sim-lib-core"]
 daw-session = ["dep:sim-lib-daw-session", "audio-graph-live", "plugin-core", "stream-audio", "topology-core"]
 default = ["core", "codec-lisp", "numbers-f64"]
@@ -358,6 +359,7 @@ numbers-prelude = ["dep:sim-lib-numbers-prelude", "numbers-ad", "numbers-arith",
 numbers-quad = ["dep:sim-lib-numbers-quad", "numbers-numeric", "numbers-f64", "core"]
 numbers-rational = ["dep:sim-lib-numbers-rational", "numbers-arith", "numbers-bigint", "numbers-core", "core"]
 numbers-rk = ["dep:sim-lib-numbers-rk", "numbers-numeric", "numbers-f64", "numbers-tensor", "core"]
+numbers-stats = ["dep:sim-lib-numbers-stats", "numbers-core", "core"]
 numbers-tensor = ["dep:sim-lib-numbers-tensor", "numbers-core", "core"]
 numbers-tensor-bcast = ["dep:sim-lib-numbers-tensor-bcast", "numbers-arith", "numbers-tensor", "core"]
 numbers-tensor-bit = ["dep:sim-lib-numbers-tensor-bit", "numbers-bool", "numbers-tensor"]

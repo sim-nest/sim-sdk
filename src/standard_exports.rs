@@ -53,6 +53,8 @@ pub use sim_lib_mcp::{self as lib_mcp, install_mcp_lib};
 pub use sim_lib_mutation as lib_mutation;
 #[cfg(feature = "standard-namespace")]
 pub use sim_lib_namespace as lib_namespace;
+#[cfg(feature = "numbers-stats")]
+pub use sim_lib_numbers_stats as lib_numbers_stats;
 #[cfg(feature = "openai-server")]
 pub use sim_lib_openai_server as lib_openai_server;
 #[cfg(feature = "standard-pattern")]
@@ -87,6 +89,9 @@ pub use sim_lib_stream_host as lib_stream_host;
 pub use sim_lib_stream_midi as lib_stream_midi;
 #[cfg(feature = "stream-prelude")]
 pub use sim_lib_stream_prelude as lib_stream_prelude;
+#[cfg(feature = "topology-core")]
+#[allow(unused_imports)]
+pub use sim_lib_topology as lib_topology;
 #[cfg(feature = "web-bridge")]
 pub use sim_lib_web_bridge as lib_web_bridge;
 #[cfg(feature = "list-cell")]
