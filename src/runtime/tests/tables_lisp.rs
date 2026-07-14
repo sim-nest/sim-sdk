@@ -11,14 +11,7 @@ use sim_codec_lisp::LispCodecLib;
 use sim_kernel::CapabilityName;
 use sim_kernel::Symbol;
 #[cfg(feature = "table-remote")]
-use sim_kernel::capability::{
-    table_db_capability, table_db_mkdir_capability, table_db_read_capability,
-    table_db_rmdir_capability, table_db_write_capability,
-};
-#[cfg(feature = "table-remote")]
 use sim_kernel::eval_remote_capability;
-#[cfg(feature = "table-remote")]
-use sim_kernel::table_remote_capability;
 #[cfg(any(feature = "table-hash", feature = "table-remote"))]
 use sim_kernel::{Cx, Expr, ReadPolicy};
 #[cfg(feature = "table-remote")]
@@ -31,6 +24,41 @@ use sim_table_remote::wrap_remote_table_site;
 use std::sync::Arc;
 
 use super::support::eval_cx;
+
+#[cfg(feature = "table-fs")]
+fn table_fs_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("table.fs")
+}
+
+#[cfg(any(feature = "table-db", feature = "table-remote"))]
+fn table_db_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("table.db")
+}
+
+#[cfg(feature = "table-remote")]
+fn table_db_read_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("table.db.read")
+}
+
+#[cfg(feature = "table-remote")]
+fn table_db_write_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("table.db.write")
+}
+
+#[cfg(feature = "table-remote")]
+fn table_db_mkdir_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("table.db.mkdir")
+}
+
+#[cfg(feature = "table-remote")]
+fn table_db_rmdir_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("table.db.rmdir")
+}
+
+#[cfg(feature = "table-remote")]
+fn table_remote_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("table.remote")
+}
 
 #[cfg(all(
     feature = "codec-lisp",
@@ -156,7 +184,7 @@ fn table_db_constructor_requires_capability() {
     assert!(matches!(
         err,
         sim_kernel::Error::CapabilityDenied { capability }
-            if capability == sim_kernel::capability::table_db_capability()
+            if capability == table_db_capability()
     ));
 }
 
@@ -175,10 +203,10 @@ fn table_fs_constructor_builds_directory_backend() {
     assert!(matches!(
         err,
         sim_kernel::Error::CapabilityDenied { capability }
-            if capability == sim_kernel::capability::table_fs_capability()
+            if capability == table_fs_capability()
     ));
 
-    cx.grant(sim_kernel::capability::table_fs_capability());
+    cx.grant(table_fs_capability());
     let dir = cx
         .call_function(
             &Symbol::qualified("table", "fs"),

@@ -1,9 +1,6 @@
 use std::{collections::BTreeSet, sync::Arc};
 
-use sim_kernel::{
-    Args, Cx, DefaultFactory, EagerPolicy, Error, Expr, Symbol, Value, browse_internal_capability,
-    browse_run_tests_capability,
-};
+use sim_kernel::{Args, Cx, DefaultFactory, EagerPolicy, Error, Expr, Symbol, Value};
 
 use crate::runtime::{
     SimTest, TestExpected,
@@ -11,7 +8,7 @@ use crate::runtime::{
         BROWSE_TEST_FIELDS, CARD_V2_FIELDS, COVERAGE_FIELDS, FACET_FIELDS, HELP_FIELDS,
         REDACTION_FIELDS, TEST_REPORT_FIELDS,
     },
-    install_core_runtime,
+    browse_internal_capability, browse_run_tests_capability, install_core_runtime,
 };
 
 use super::support::table_value;

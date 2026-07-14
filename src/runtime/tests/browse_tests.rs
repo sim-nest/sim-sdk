@@ -2,13 +2,12 @@ use std::sync::Arc;
 
 use sim_kernel::{
     Args, CapabilityName, Cx, DefaultFactory, EagerPolicy, Expr, Symbol, Test, Value,
-    browse_run_tests_capability,
 };
 
 use crate::runtime::{
     SimTest, TestExpected,
     browse::schema::{BROWSE_TEST_FIELDS, CARD_V2_FIELDS},
-    install_core_runtime,
+    browse_run_tests_capability, install_core_runtime,
 };
 
 use super::support::table_value;

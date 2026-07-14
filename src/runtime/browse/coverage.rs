@@ -1,10 +1,11 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use sim_kernel::{
-    CapabilityName, Cx, Datum, DatumStore, Ref, Result, Symbol, Value, browse_run_tests_capability,
-    card::ref_value, effect_test_run_kind, force_list_to_vec,
+    CapabilityName, Cx, Datum, DatumStore, Ref, Result, Symbol, Value, card::ref_value,
+    effect_test_run_kind, force_list_to_vec,
 };
 
+use super::super::browse_run_tests_capability;
 use super::schema::CoverageBuilder;
 
 pub(super) fn coverage_from_tests(cx: &mut Cx, tests: Value) -> Result<Value> {

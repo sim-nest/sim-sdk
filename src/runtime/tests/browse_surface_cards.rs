@@ -1,10 +1,8 @@
 use std::{collections::BTreeSet, sync::Arc};
 
-use sim_kernel::{
-    Args, Cx, DefaultFactory, Expr, NoopEvalPolicy, Symbol, Value, browse_internal_capability,
-};
+use sim_kernel::{Args, Cx, DefaultFactory, Expr, NoopEvalPolicy, Symbol, Value};
 
-use crate::runtime::install_core_runtime;
+use crate::runtime::{browse_internal_capability, install_core_runtime};
 
 use super::support::table_value;
 

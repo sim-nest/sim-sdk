@@ -1,5 +1,7 @@
-use sim_kernel::{Cx, Error, PreparedArgs, Result, Symbol, Value, config_table_impl_capability};
+use sim_kernel::{Cx, Error, PreparedArgs, Result, Symbol, Value};
 use sim_shape::Bindings;
+
+use super::super::config_table_impl_capability;
 
 #[cfg(feature = "table-remote")]
 use sim_lib_server::Connection;

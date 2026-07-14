@@ -1,8 +1,9 @@
 use sim_kernel::{
-    CapabilityName, Cx, Expr, Ref, Result, Symbol, Value, browse_internal_capability,
-    catalog::registry_catalog_view, force_list_to_vec, registry_catalog_read_capability,
+    CapabilityName, Cx, Expr, Ref, Result, Symbol, Value, catalog::registry_catalog_view,
+    force_list_to_vec, registry_catalog_read_capability,
 };
 
+use super::super::browse_internal_capability;
 use super::registry::registry_catalog_subject;
 use super::schema::{FacetBuilder, RedactionBuilder};
 

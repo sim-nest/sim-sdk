@@ -1,6 +1,7 @@
-use sim_kernel::{Expr, NumberLiteral, QuoteMode, Symbol, config_list_impl_capability};
+use sim_kernel::{Expr, NumberLiteral, QuoteMode, Symbol};
 
 use super::support::{call_expr, eval_cx};
+use crate::runtime::config_list_impl_capability;
 
 fn number(text: &str) -> Expr {
     Expr::Number(NumberLiteral {
