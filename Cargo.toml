@@ -267,6 +267,7 @@ codec-lisp = ["dep:sim-codec", "dep:sim-codec-lisp", "dep:proc-macro2", "core"]
 codec-mcp = ["dep:sim-codec-mcp", "codec-json"]
 control = ["dep:sim-lib-control", "core"]
 cookbook = ["dep:sim-cookbook", "dep:sim-lib-cookbook", "core", "codec-lisp", "sim-lib-agent?/cookbook"]
+cookbook-all = ["cookbook", "shape", "citizen", "codec-algol", "codec-binary", "codec-binary-base64", "codec-bitwise", "codec-bitwise-base64", "codec-chat", "codec-json", "codec-mcp", "agent", "audio-dsp", "audio-graph-live", "daw-session", "discrete-rank", "discrete-runtime", "femm-core", "femm-field", "femm-function", "femm-ode", "intent", "list-cell", "list-lazy", "logic-core", "mcp", "midi-core", "midi-live", "midi-ble", "midi-rtmidi", "midi-shapes", "music-lift", "music-notation", "music-shapes", "music-synth", "numbers-i64", "numbers-arith", "numbers-bigint", "numbers-bool", "numbers-f64", "numbers-rational", "numbers-complex", "numbers-func", "numbers-cas", "numbers-cas-diff", "numbers-cas-eval", "numbers-exotic", "numbers-fixed", "numbers-float", "numbers-numeric", "numbers-quad", "numbers-rk", "numbers-tensor", "numbers-tensor-bcast", "numbers-tensor-bit", "numbers-tensor-cmplxf", "numbers-tensor-f64", "numbers-tensor-i64", "numbers-tensor-linalg", "numbers-tensor-rat64", "openai-server", "pitch-dissonance", "pitch-namer", "pitch-shapes", "plugin-clap", "plugin-vst3", "rank", "scene", "server", "skill", "sound-audio-lift", "sound-bridge", "sound-dissonance", "sound-render", "sound-shapes", "sound-timbre", "sound-tuning", "standard-binding", "control", "standard-sequence", "standard-pattern", "standard-scheme", "standard-cl", "standard-clojure", "stream-alsa", "stream-asio", "stream-bridge", "stream-core", "stream-coreaudio", "stream-jack", "stream-pipewire", "stream-portaudio", "stream-prelude", "table-hash", "table-lazy", "topology-core"]
 core = ["dep:sim-kernel", "dep:sim-value", "dep:sim-lib-core"]
 daw-session = ["dep:sim-lib-daw-session", "audio-graph-live", "plugin-core", "stream-audio", "topology-core"]
 default = ["core", "codec-lisp", "numbers-f64"]
@@ -393,13 +394,10 @@ rank-music = ["rank", "sim-lib-rank/rank-music"]
 rank-scatter = ["rank", "sim-lib-rank/rank-scatter"]
 scene = ["dep:sim-lib-scene", "core", "shape", "codec-lisp"]
 # The batteries-included `sim` binary: one install that serves both MCP and the web
-# shell through the same sim-run bootloader (behavior stays in the loaded libs). This
-# is the lawful composition point -- downstream of the serve libs, so no repo cycle.
-# The batteries-included `sim` binary: one install that serves both MCP and the web
 # shell AND runs an interactive/piped `sim repl`. The repl verb needs a static eval
 # stack (numbers-prelude + the core runtime + the lisp codec) linked into the binary
 # so it works from a plain `cargo install` -- no on-disk native dylib bundle.
-serve-cli = ["dep:sim-run-core", "dep:sim-lib-repl", "mcp", "sim-lib-mcp/serve", "web", "dep:sim-web-shell", "numbers-prelude"]
+serve-cli = ["dep:sim-run-core", "dep:sim-lib-repl", "mcp", "sim-lib-mcp/serve", "web", "dep:sim-web-shell", "numbers-prelude", "cookbook-all"]
 server = ["dep:sim-lib-server", "core", "codec-binary", "codec-lisp", "codec-chat"]
 server-net-http = ["server", "sim-lib-server/server-net-http"]
 shape = ["dep:sim-shape", "core"]

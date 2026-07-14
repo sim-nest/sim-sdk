@@ -1,5 +1,7 @@
 mod browse;
 #[cfg(feature = "cookbook")]
+pub mod cookbook_directory;
+#[cfg(feature = "cookbook")]
 mod cookbook_discovery;
 mod eval_policy;
 mod help;
