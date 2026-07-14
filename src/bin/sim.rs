@@ -48,16 +48,11 @@ fn main() -> ExitCode {
         println!("sim {}", env!("CARGO_PKG_VERSION"));
         return ExitCode::SUCCESS;
     }
-    // Both `sim repl` and the web shell's cookbook EVALUATE, so both need the eval
-    // stack (core runtime + numbers + an eager policy) in the boot `Cx` -- otherwise a
-    // recipe fails with "requires libs not loaded: core". `configure_web_bootloader`
-    // supplies the Lisp boot codec itself, so the shared base only installs the eval
-    // stack (never a second codec) to avoid colliding with it.
     let bootloader = if verb_is(&args, "repl") {
         configure_repl_bootloader(Bootloader::standard())
     } else {
-        sim_web_shell::configure_web_bootloader(sim_lib_mcp::configure_mcp_bootloader(
-            Bootloader::standard().with_context(install_eval_stack),
+        configure_webui_bootloader(sim_lib_mcp::configure_mcp_bootloader(
+            Bootloader::standard().with_context(install_web_minimum_loaded),
         ))
     };
     match bootloader.run(args) {
@@ -70,12 +65,18 @@ fn main() -> ExitCode {
     }
 }
 
-/// Installs the statically-linked eval stack into the boot `Cx`: an eager eval policy
-/// (the bootloader's default is noop), the core runtime (the `core` lib the cookbook
-/// recipes require), and the numbers prelude. Shared by `sim repl` and the web shell's
-/// cookbook so both evaluate from a plain `cargo install` -- no native dylib bundle. The
-/// Lisp codec is NOT installed here; each caller registers it as a host factory (repl
-/// does; `configure_web_bootloader` does) so it is not loaded twice.
+/// Installs the product minimum-loaded set for `sim webui`: an eager eval policy and
+/// the core runtime. The Lisp codec is registered as the boot codec by
+/// `configure_web_bootloader_with_cookbook`; every other cookbook lib stays visible
+/// as a load recipe.
+fn install_web_minimum_loaded(cx: &mut sim::kernel::Cx) {
+    cx.set_eval_policy(Arc::new(sim::kernel::EagerPolicy));
+    sim::runtime::install_core_runtime(cx);
+}
+
+/// Installs the statically-linked eval stack into the REPL boot `Cx`: an eager eval
+/// policy, the core runtime, and the numbers prelude. The Lisp codec is not
+/// installed here; `configure_repl_bootloader` registers it as a host factory.
 fn install_eval_stack(cx: &mut sim::kernel::Cx) {
     cx.set_eval_policy(Arc::new(sim::kernel::EagerPolicy));
     sim::runtime::install_core_runtime(cx);
@@ -105,6 +106,29 @@ fn configure_repl_bootloader(loader: Bootloader) -> Bootloader {
             "lib/repl",
             || Box::new(sim_lib_repl::ReplLib::new()),
         )
+}
+
+/// Wires `sim webui` with the product cookbook directory and effective
+/// `sim/cookbook` overrides.
+fn configure_webui_bootloader(loader: Bootloader) -> Bootloader {
+    sim_web_shell::configure_web_bootloader_with_cookbook(
+        loader,
+        vec![sim_lib_cookbook::cookbook_lib_symbol()],
+        Arc::new(cookbook_web_state),
+    )
+}
+
+fn cookbook_web_state(
+    config: &sim_run_core::RuntimeConfigState,
+) -> sim_lib_server::CookbookWebState {
+    let provider = sim_lib_cookbook::ConfigCookbookProvider::new_with_base(
+        config.effective(),
+        sim::runtime::cookbook_directory::default_cookbook_config(),
+        &sim::runtime::cookbook_directory::SimNestCookbookResolver,
+    );
+    let (directory, mut diagnostics) = provider.loadable_libs();
+    diagnostics.extend(config.diagnostics().iter().cloned());
+    sim_lib_server::CookbookWebState::from_loadable_libs(directory, diagnostics)
 }
 
 /// True when the first non-flag payload token equals `want` (the requested verb).
