@@ -26,6 +26,7 @@
     feature = "table-db",
     feature = "table-fs",
     feature = "table-hash",
+    feature = "table-http",
     feature = "table-lazy",
     feature = "table-override",
     feature = "table-remote",
@@ -127,6 +128,7 @@ fn workspace_citizen_conformance_covers_existing_families() {
         "table/DbDir",
         "table/FsDir",
         "table/HashTable",
+        "table/HttpDir",
         "table/LazyTable",
         "table/RemoteDir",
         "femm/Field",
@@ -235,6 +237,7 @@ fn link_workspace_citizen_crates() {
     let _ = sim::table_db::db_dir_class_symbol();
     let _ = sim::table_fs::fs_dir_class_symbol();
     let _ = sim::table_hash::hash_table_class_symbol();
+    let _ = sim::table_http::http_dir_class_symbol();
     let _ = sim::table_lazy::lazy_table_class_symbol();
     let _ =
         sim::table_override::install_override_table_lib as fn(&mut Cx) -> sim::kernel::Result<()>;

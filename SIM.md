@@ -91,6 +91,9 @@ Covered by executable conformance in this suite, with the listed feature set on:
 
 - the kernel codec, class, number, capability, eval-policy, loader, lifecycle,
   and wasm-ABI contracts;
+- the CORE host primitives for table-backed filesystem read/write/edit/search,
+  bounded process execution, direct HTTP table reads, and legacy fs/net
+  capability aliases;
 - the stream-core, stream-combinators, stream-fabric, stream-file, stream-host,
   and web-bridge transport surfaces;
 - the topology placement surface and the CLI boot surface.

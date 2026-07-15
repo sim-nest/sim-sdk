@@ -33,6 +33,8 @@ pub use sim_lib_control as lib_control;
 pub use sim_lib_core as lib_core;
 #[cfg(feature = "standard-dispatch")]
 pub use sim_lib_dispatch as lib_dispatch;
+#[cfg(feature = "exec")]
+pub use sim_lib_exec as lib_exec;
 #[cfg(feature = "standard-cl")]
 pub use sim_lib_lang_cl as lib_lang_cl;
 #[cfg(feature = "standard-clojure")]
@@ -110,6 +112,8 @@ pub use sim_table_db as table_db;
 pub use sim_table_fs as table_fs;
 #[cfg(feature = "table-hash")]
 pub use sim_table_hash as table_hash;
+#[cfg(feature = "table-http")]
+pub use sim_table_http as table_http;
 #[cfg(feature = "table-lazy")]
 pub use sim_table_lazy as table_lazy;
 #[cfg(feature = "table-override")]

@@ -243,9 +243,10 @@ The large optional surface is organized into families. Each feature is gated in
   `numbers-rational`, `numbers-complex`, `numbers-bigint`, `numbers-tensor-*`,
   the `numbers-cas-*` symbolic stack, and the `numbers-prelude` aggregate, among
   many more.
-- **`list-*` / `table-*`** -- pluggable list and table backends: `list-cell`,
-  `list-lazy`, `table-hash`, `table-override`, `table-lazy`, `table-fs`,
-  `table-db`, `table-remote`.
+- **`list-*` / `table-*` / `exec`** -- pluggable list and table backends plus
+  bounded host-process execution: `list-cell`, `list-lazy`, `table-hash`,
+  `table-override`, `table-lazy`, `table-fs`, `table-http`, `table-db`,
+  `table-remote`, and `exec`.
 - **`control`** -- control-flow and policy library.
 - **`standard-*`** -- the standard distribution and language surface libs
   (`standard-core`, binding, sequence, pattern, dispatch, namespace, mutation,
