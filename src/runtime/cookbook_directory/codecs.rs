@@ -47,6 +47,13 @@ macro_rules! cookbook_directory_codecs {
             || Box::new(crate::codec_chat::ChatCodecLib::new(codec_id(6)))
         );
         $m!(
+            "codec/bridge",
+            "Bridge codec",
+            "codec-bridge",
+            Some(crate::codec_bridge::RECIPES),
+            || Box::new(crate::codec_bridge::BridgeCodecLib::new(codec_id(19)))
+        );
+        $m!(
             "codec/ollama",
             "Ollama chat codec",
             "codec-chat",

@@ -58,6 +58,13 @@ macro_rules! cookbook_directory_runtime_libs {
             || Box::new(crate::lib_agent::AgentLib)
         );
         $m!(
+            "bridge",
+            "Bridge runtime",
+            "bridge",
+            Some(crate::lib_bridge::RECIPES),
+            || Box::new(crate::lib_bridge::BridgeLib)
+        );
+        $m!(
             "mcp",
             "MCP runtime",
             "mcp",

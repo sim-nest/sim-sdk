@@ -122,6 +122,8 @@ pub use sim_lib_stream_portaudio as lib_stream_portaudio;
 pub use sim_lib_topology as lib_topology;
 #[cfg(feature = "view")]
 pub use sim_lib_view as lib_view;
+#[cfg(feature = "view-bridge")]
+pub use sim_lib_view_bridge as lib_view_bridge;
 #[cfg(feature = "view-daw")]
 pub use sim_lib_view_daw as lib_view_daw;
 #[cfg(feature = "view-doc")]

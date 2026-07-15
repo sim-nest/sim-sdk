@@ -120,7 +120,7 @@ pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod classes;
 #[rustfmt::skip]
-#[cfg(all(test, feature = "shape", feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-algol"))]
+#[cfg(all(test, feature = "shape", feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-algol", feature = "codec-bridge", feature = "bridge"))]
 mod codec_matrix_tests;
 /// Stable hashing of lib manifests, shapes, and codecs for compatibility
 /// checks across versions of the constellation.

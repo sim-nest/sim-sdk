@@ -1,5 +1,5 @@
 #[rustfmt::skip]
-#[cfg(any(feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-bitwise", feature = "codec-bitwise-base64", feature = "codec-chat", feature = "codec-mcp", feature = "codec-algol"))]
+#[cfg(any(feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-bitwise", feature = "codec-bitwise-base64", feature = "codec-bridge", feature = "codec-chat", feature = "codec-mcp", feature = "codec-algol"))]
 pub use sim_codec as codec;
 #[cfg(feature = "codec-algol")]
 pub use sim_codec_algol as codec_algol;
@@ -11,6 +11,8 @@ pub use sim_codec_binary_base64 as codec_binary_base64;
 pub use sim_codec_bitwise as codec_bitwise;
 #[cfg(feature = "codec-bitwise-base64")]
 pub use sim_codec_bitwise_base64 as codec_bitwise_base64;
+#[cfg(feature = "codec-bridge")]
+pub use sim_codec_bridge as codec_bridge;
 #[cfg(feature = "codec-chat")]
 pub use sim_codec_chat as codec_chat;
 #[cfg(feature = "codec-json")]
@@ -23,6 +25,8 @@ pub use sim_codec_mcp as codec_mcp;
 pub use sim_kernel as kernel;
 #[cfg(feature = "standard-binding")]
 pub use sim_lib_binding as lib_binding;
+#[cfg(feature = "bridge")]
+pub use sim_lib_bridge as lib_bridge;
 #[cfg(feature = "control")]
 pub use sim_lib_control as lib_control;
 #[cfg(feature = "core")]
