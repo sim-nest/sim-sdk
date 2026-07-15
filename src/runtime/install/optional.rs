@@ -281,10 +281,17 @@ pub(super) fn append_optional_core_function_exports(exports: &mut Vec<Export>) {
 
     #[cfg(feature = "table-fs")]
     {
-        exports.push(Export::Function {
-            symbol: sim_kernel::Symbol::qualified("table", "fs"),
-            function_id: None,
-        });
+        for symbol in [
+            sim_kernel::Symbol::qualified("table", "fs"),
+            sim_kernel::Symbol::qualified("dir", "edit"),
+            sim_kernel::Symbol::qualified("find", "grep"),
+            sim_kernel::Symbol::qualified("find", "glob"),
+        ] {
+            exports.push(Export::Function {
+                symbol,
+                function_id: None,
+            });
+        }
     }
 
     #[cfg(feature = "table-db")]

@@ -10,11 +10,13 @@ pub(crate) use build::{
 
 #[cfg(feature = "table-db")]
 pub(crate) use build::table_db_function;
-#[cfg(feature = "table-fs")]
-pub(crate) use build::table_fs_function;
 #[cfg(feature = "table-hash")]
 pub(crate) use build::table_hash_function;
 #[cfg(feature = "table-lazy")]
 pub(crate) use build::table_lazy_function;
 #[cfg(feature = "table-remote")]
 pub(crate) use build::table_remote_function;
+#[cfg(feature = "table-fs")]
+pub(crate) use build::{
+    dir_edit_function, find_glob_function, find_grep_function, table_fs_function,
+};

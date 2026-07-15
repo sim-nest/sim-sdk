@@ -1,18 +1,18 @@
-#[cfg(any(feature = "table-hash", feature = "table-remote"))]
+#[cfg(any(feature = "table-hash", feature = "table-remote", feature = "table-fs"))]
 use sim_codec::{Input, decode_with_codec};
 #[cfg(all(feature = "codec-binary", feature = "table-remote"))]
 use sim_codec_binary::BinaryCodecLib;
 #[cfg(all(
     feature = "codec-lisp",
-    any(feature = "table-hash", feature = "table-remote")
+    any(feature = "table-hash", feature = "table-remote", feature = "table-fs")
 ))]
 use sim_codec_lisp::LispCodecLib;
-#[cfg(feature = "table-remote")]
+#[cfg(any(feature = "table-fs", feature = "table-remote"))]
 use sim_kernel::CapabilityName;
 use sim_kernel::Symbol;
 #[cfg(feature = "table-remote")]
 use sim_kernel::eval_remote_capability;
-#[cfg(any(feature = "table-hash", feature = "table-remote"))]
+#[cfg(any(feature = "table-hash", feature = "table-remote", feature = "table-fs"))]
 use sim_kernel::{Cx, Expr, ReadPolicy};
 #[cfg(feature = "table-remote")]
 use sim_lib_server::{Connection, EvalSite, LocalEvalSite, ServerAddress};
@@ -24,10 +24,32 @@ use sim_table_remote::wrap_remote_table_site;
 use std::sync::Arc;
 
 use super::support::eval_cx;
+#[cfg(all(feature = "table-fs", feature = "codec-lisp"))]
+use super::support::table_value;
 
 #[cfg(feature = "table-fs")]
 fn table_fs_capability() -> sim_kernel::CapabilityName {
     sim_kernel::CapabilityName::new("table.fs")
+}
+
+#[cfg(feature = "table-fs")]
+fn table_fs_read_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("fs/read")
+}
+
+#[cfg(feature = "table-fs")]
+fn table_fs_write_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("fs/write")
+}
+
+#[cfg(feature = "table-fs")]
+fn table_fs_edit_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("edit")
+}
+
+#[cfg(feature = "table-fs")]
+fn table_fs_find_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("find")
 }
 
 #[cfg(any(feature = "table-db", feature = "table-remote"))]
@@ -62,7 +84,7 @@ fn table_remote_capability() -> sim_kernel::CapabilityName {
 
 #[cfg(all(
     feature = "codec-lisp",
-    any(feature = "table-hash", feature = "table-remote")
+    any(feature = "table-hash", feature = "table-remote", feature = "table-fs")
 ))]
 fn install_lisp_codec(cx: &mut Cx) {
     let symbol = Symbol::qualified("codec", "lisp");
@@ -82,7 +104,7 @@ fn install_binary_codec(cx: &mut Cx) {
 }
 
 #[cfg(feature = "codec-lisp")]
-#[cfg(any(feature = "table-hash", feature = "table-remote"))]
+#[cfg(any(feature = "table-hash", feature = "table-remote", feature = "table-fs"))]
 fn lower_lisp_eval_surface(expr: Expr) -> Expr {
     match expr {
         Expr::List(items) if items.len() > 1 => {
@@ -124,7 +146,7 @@ fn lower_lisp_eval_surface(expr: Expr) -> Expr {
 }
 
 #[cfg(feature = "codec-lisp")]
-#[cfg(any(feature = "table-hash", feature = "table-remote"))]
+#[cfg(any(feature = "table-hash", feature = "table-remote", feature = "table-fs"))]
 fn eval_lisp(cx: &mut Cx, text: &str) -> sim_kernel::Value {
     install_lisp_codec(cx);
     let expr = decode_with_codec(
@@ -145,11 +167,19 @@ fn number_text(expr: Expr) -> String {
     }
 }
 
-#[cfg(feature = "table-remote")]
+#[cfg(any(feature = "table-fs", feature = "table-remote"))]
 fn grant(cx: &mut Cx, capabilities: &[CapabilityName]) {
     for capability in capabilities {
         cx.grant(capability.clone());
     }
+}
+
+#[cfg(all(feature = "table-fs", feature = "codec-lisp"))]
+fn unique_suffix() -> u128 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_nanos()
 }
 
 #[test]
@@ -214,6 +244,96 @@ fn table_fs_constructor_builds_directory_backend() {
         )
         .unwrap();
     assert!(dir.object().as_dir().is_some());
+    let _ = std::fs::remove_dir_all(path);
+}
+
+#[test]
+#[cfg(all(feature = "table-fs", feature = "codec-lisp"))]
+fn lisp_dir_edit_patches_filesystem_leaf() {
+    let mut cx = eval_cx();
+    grant(
+        &mut cx,
+        &[
+            table_fs_capability(),
+            table_fs_read_capability(),
+            table_fs_write_capability(),
+            table_fs_edit_capability(),
+        ],
+    );
+    let path = std::env::temp_dir().join(format!(
+        "sim-sdk-table-edit-{}-{}",
+        std::process::id(),
+        unique_suffix()
+    ));
+    let source = format!(
+        r#"{{
+  (set (table/fs "{}") 'note "alpha beta")
+  (dir/edit (table/fs "{}") 'note "beta" "gamma")
+  (get (table/fs "{}") 'note)
+}}"#,
+        path.display(),
+        path.display(),
+        path.display()
+    );
+
+    let value = eval_lisp(&mut cx, &source);
+
+    assert_eq!(
+        value.object().as_expr(&mut cx).unwrap(),
+        Expr::String("alpha gamma".to_owned())
+    );
+    let _ = std::fs::remove_dir_all(path);
+}
+
+#[test]
+#[cfg(all(feature = "table-fs", feature = "codec-lisp"))]
+fn lisp_find_grep_returns_matches_as_data() {
+    let mut cx = eval_cx();
+    grant(
+        &mut cx,
+        &[
+            table_fs_capability(),
+            table_fs_read_capability(),
+            table_fs_write_capability(),
+            table_fs_find_capability(),
+        ],
+    );
+    let path = std::env::temp_dir().join(format!(
+        "sim-sdk-table-find-{}-{}",
+        std::process::id(),
+        unique_suffix()
+    ));
+    let source = format!(
+        r#"{{
+  (set (table/fs "{}") 'alpha "one needle")
+  (set (table/fs "{}") 'beta "plain hay")
+  (find/grep (table/fs "{}") "needle" "*.siml" 10)
+}}"#,
+        path.display(),
+        path.display(),
+        path.display()
+    );
+
+    let value = eval_lisp(&mut cx, &source);
+    let expr = value.object().as_expr(&mut cx).unwrap();
+    let matches = table_value(&expr, &Symbol::new("matches")).expect("matches");
+    let Expr::List(items) = matches else {
+        panic!("matches should be a list");
+    };
+
+    assert_eq!(items.len(), 1);
+    assert_eq!(
+        table_value(&items[0], &Symbol::new("path")),
+        Some(&Expr::String("alpha.siml".to_owned()))
+    );
+    assert_eq!(
+        table_value(&items[0], &Symbol::new("text")),
+        Some(&Expr::String("one needle".to_owned()))
+    );
+    assert_eq!(
+        table_value(&expr, &Symbol::new("truncated")),
+        Some(&Expr::Bool(false))
+    );
     let _ = std::fs::remove_dir_all(path);
 }
 

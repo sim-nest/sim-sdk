@@ -109,6 +109,27 @@ pub(super) fn register_core_table_functions(
     link_function(cx, linker, Symbol::new("rmdir"), rmdir_function)?;
     link_function(cx, linker, Symbol::qualified("core", "dir?"), dir_function)?;
     link_function(cx, linker, Symbol::new("dir?"), dir_function)?;
+    #[cfg(feature = "table-fs")]
+    link_function(
+        cx,
+        linker,
+        Symbol::qualified("dir", "edit"),
+        crate::runtime::tables::dir_edit_function,
+    )?;
+    #[cfg(feature = "table-fs")]
+    link_function(
+        cx,
+        linker,
+        Symbol::qualified("find", "grep"),
+        crate::runtime::tables::find_grep_function,
+    )?;
+    #[cfg(feature = "table-fs")]
+    link_function(
+        cx,
+        linker,
+        Symbol::qualified("find", "glob"),
+        crate::runtime::tables::find_glob_function,
+    )?;
     Ok(())
 }
 

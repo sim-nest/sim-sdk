@@ -5,8 +5,6 @@ use sim_shape::{AnyShape, Bindings, CaptureShape, FunctionCase, FunctionObject, 
 
 #[cfg(feature = "table-db")]
 use super::ops::table_db_impl;
-#[cfg(feature = "table-fs")]
-use super::ops::table_fs_impl;
 #[cfg(feature = "table-hash")]
 use super::ops::table_hash_impl;
 #[cfg(feature = "table-lazy")]
@@ -18,6 +16,8 @@ use super::ops::{
     mkdir_impl, opendir_impl, rmdir_impl, set_impl, table_catalog_impl, table_impl,
     table_impl_name_impl,
 };
+#[cfg(feature = "table-fs")]
+use super::ops::{dir_edit_impl, find_glob_impl, find_grep_impl, table_fs_impl};
 
 fn variadic_function(
     case_id: sim_kernel::CaseId,
@@ -160,6 +160,33 @@ pub(crate) fn table_fs_function(
     symbol: Symbol,
 ) -> FunctionObject {
     unary_any_function(case_id, function_id, symbol, table_fs_impl)
+}
+
+#[cfg(feature = "table-fs")]
+pub(crate) fn dir_edit_function(
+    case_id: sim_kernel::CaseId,
+    function_id: FunctionId,
+    symbol: Symbol,
+) -> FunctionObject {
+    variadic_function(case_id, function_id, symbol, dir_edit_impl)
+}
+
+#[cfg(feature = "table-fs")]
+pub(crate) fn find_grep_function(
+    case_id: sim_kernel::CaseId,
+    function_id: FunctionId,
+    symbol: Symbol,
+) -> FunctionObject {
+    variadic_function(case_id, function_id, symbol, find_grep_impl)
+}
+
+#[cfg(feature = "table-fs")]
+pub(crate) fn find_glob_function(
+    case_id: sim_kernel::CaseId,
+    function_id: FunctionId,
+    symbol: Symbol,
+) -> FunctionObject {
+    variadic_function(case_id, function_id, symbol, find_glob_impl)
 }
 
 #[cfg(feature = "table-db")]
