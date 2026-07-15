@@ -1,6 +1,6 @@
 macro_rules! cookbook_directory_data {
     ($m:ident) => {
-        $m!("list/cell", "Cons list backend", "list-cell", None, || {
+        $m!("list/cons", "Cons list backend", "list-cell", None, || {
             Box::new(crate::list_cell::ConsListLib)
         });
         $m!("list/lazy", "Lazy list backend", "list-lazy", None, || {

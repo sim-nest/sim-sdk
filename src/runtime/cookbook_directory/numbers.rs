@@ -92,7 +92,7 @@ macro_rules! cookbook_directory_numbers {
             || Box::new(crate::numbers_fixed::FixedNumbersLib::new())
         );
         $m!(
-            "numbers/float",
+            "numbers/f32",
             "Float numbers",
             "numbers-float",
             Some(crate::numbers_float::RECIPES),

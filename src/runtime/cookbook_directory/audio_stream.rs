@@ -85,7 +85,7 @@ macro_rules! cookbook_directory_audio_stream {
             || Box::new(crate::lib_stream_bridge::StreamBridgeLib)
         );
         $m!(
-            "stream-core",
+            "stream-core-shapes",
             "Stream core shapes",
             "stream-core",
             Some(crate::lib_stream_core::RECIPES),

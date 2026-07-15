@@ -1,8 +1,5 @@
 macro_rules! cookbook_directory_codecs {
     ($m:ident) => {
-        $m!("citizen/all", "Citizen registry", "citizen", None, || {
-            Box::new(crate::citizen::CitizenLib::all())
-        });
         $m!(
             "codec/json",
             "JSON codec",
@@ -55,13 +52,6 @@ macro_rules! cookbook_directory_codecs {
             "codec-chat",
             None,
             || Box::new(crate::codec_chat::OllamaCodecLib::new(codec_id(7)))
-        );
-        $m!(
-            "codec/openai",
-            "OpenAI chat codec",
-            "codec-chat",
-            None,
-            || Box::new(crate::codec_chat::OpenAiCodecLib::new(codec_id(8)))
         );
         $m!(
             "codec/anthropic",

@@ -194,7 +194,7 @@ mod tests {
             );
         }
 
-        let no_directory_rows = BTreeSet::from(["cookbook", "shape", "discrete-rank"]);
+        let no_directory_rows = BTreeSet::from(["citizen", "cookbook", "shape", "discrete-rank"]);
         for feature in cookbook_features {
             assert!(
                 row_features.contains(feature) || no_directory_rows.contains(feature),
