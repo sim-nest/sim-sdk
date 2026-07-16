@@ -1,18 +1,5073 @@
 {
-  "schema": "sim.repo-contract.v1",
-  "repo": "sim-sdk",
-  "lanes": [
-    "target/doc/",
-    "docs/agents/cards.jsonl",
-    "docs/humans/",
-    "docs/diagrams/src/",
-    "docs/diagrams/generated/"
+  "card_count": 192,
+  "cards": [
+    {
+      "id": "agent/effects",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "agent effect requirement surface"
+    },
+    {
+      "id": "agent/memory",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "agent memory surface"
+    },
+    {
+      "id": "agent/model-runner",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "agent model runner surface"
+    },
+    {
+      "id": "agent/tool-surface",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "agent callable tool surface"
+    },
+    {
+      "id": "browse/Coverage",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "test and example coverage summary for one Card"
+    },
+    {
+      "id": "browse/Facet",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "typed extension payload attached to a Card"
+    },
+    {
+      "id": "browse/Help",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "fixed-field help document embedded in a Card"
+    },
+    {
+      "id": "browse/Redaction",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "placeholder for hidden but known browse data"
+    },
+    {
+      "id": "browse/Test",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "fixed-field executable test or worked example"
+    },
+    {
+      "id": "browse/TestReport",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "fixed-field result of an explicit test run"
+    },
+    {
+      "id": "browse/catalog",
+      "kind": "browse-root",
+      "owner": "workspace",
+      "summary": "root browse catalog"
+    },
+    {
+      "id": "citizen/OverrideTable",
+      "kind": "citizen-class",
+      "owner": "sim-table-override",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent-runner/ModelBid",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-runner-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent-runner/ModelCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-runner-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent-runner/ModelRequest",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-runner-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent-runner/ModelResponse",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-runner-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent-runner/ModelUsage",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-runner-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/audio-dsp/Config",
+      "kind": "citizen-class",
+      "owner": "sim-lib-audio-dsp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/audio-graph/NodeConfig",
+      "kind": "citizen-class",
+      "owner": "sim-lib-audio-graph-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/audio-graph/Patch",
+      "kind": "citizen-class",
+      "owner": "sim-lib-audio-graph-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/audio-synth/Preset",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-synth",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/daw-session/DawSession",
+      "kind": "citizen-class",
+      "owner": "sim-lib-daw-session",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/BitVectorSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/BoundedIntVectorSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/Combination",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/CombinationSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/Edge",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/FwhtSignal",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/FwhtSignalSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/Graph",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/Matrix",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/MstCertificate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/Permutation",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/PermutationSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/SimpleGraphSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/SparseMatrix",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/SubsetSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/doc/Article",
+      "kind": "citizen-class",
+      "owner": "sim-lib-view-doc",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Field",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/FuncPayload",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Function",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Geometry",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Material",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Mesh",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Model",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Ode",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Physics",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Post",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Sensitivity",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Solution",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Solve",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Space",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Tape",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/forge/CompiledIntent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-forge",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/intent/Intent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-intent",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/list/ConsList",
+      "kind": "citizen-class",
+      "owner": "sim-list-cell",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/list/LazyConsList",
+      "kind": "citizen-class",
+      "owner": "sim-list-lazy",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/list/LazyIterList",
+      "kind": "citizen-class",
+      "owner": "sim-list-lazy",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/AuditEntry",
+      "kind": "citizen-class",
+      "owner": "sim-lib-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/Cassette",
+      "kind": "citizen-class",
+      "owner": "sim-lib-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/CassetteEntry",
+      "kind": "citizen-class",
+      "owner": "sim-lib-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/Error",
+      "kind": "citizen-class",
+      "owner": "sim-codec-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/ErrorEnvelope",
+      "kind": "citizen-class",
+      "owner": "sim-codec-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/Notification",
+      "kind": "citizen-class",
+      "owner": "sim-codec-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/Request",
+      "kind": "citizen-class",
+      "owner": "sim-codec-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/Response",
+      "kind": "citizen-class",
+      "owner": "sim-codec-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/midi/ChannelMessage",
+      "kind": "citizen-class",
+      "owner": "sim-lib-midi-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/midi/MetaEvent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-midi-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/midi/MidiEvent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-midi-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/midi/SmfFile",
+      "kind": "citizen-class",
+      "owner": "sim-lib-midi-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/midi/SmfTrack",
+      "kind": "citizen-class",
+      "owner": "sim-lib-midi-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Chord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Melody",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Note",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Par",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Score",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Seq",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/numbers/Cas",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-cas",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/numbers/Complex",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-complex",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/numbers/Func",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-func",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/numbers/Rational",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-rational",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/numbers/Tensor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-tensor",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/GatewayEvent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/GatewayKey",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/GatewayRequest",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/GatewayResponse",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/GatewayRun",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/Plan",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/Chord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/Interval",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/Pitch",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/PitchClassMask",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/Scale",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/plugin-core/PluginDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-plugin-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/rank/Coord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-rank",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/rank/Node",
+      "kind": "citizen-class",
+      "owner": "sim-lib-rank",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/rank/Space",
+      "kind": "citizen-class",
+      "owner": "sim-lib-rank",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/scene/Scene",
+      "kind": "citizen-class",
+      "owner": "sim-lib-scene",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/server/Address",
+      "kind": "citizen-class",
+      "owner": "sim-lib-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/server/Frame",
+      "kind": "citizen-class",
+      "owner": "sim-lib-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/AcceptOnNoDiagnosticsHook",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/And",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Any",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Class",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/DiscardOnDiagnosticPrefixHook",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/ExactExpr",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/ExprKind",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Hooked",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/List",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Not",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Or",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Repeat",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/ScoreFloorHook",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Table",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/TraceMarkHook",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Venn",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/Card",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpCallParams",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpPromptArgument",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpPromptDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpPromptGetParams",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpResourceDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpResourceReadParams",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpToolDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpToolResult",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/Envelope",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/Partial",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/Spectrum",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/Timbre",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/Tone",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/TuningDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/standard/FidelityBadge",
+      "kind": "citizen-class",
+      "owner": "sim-lib-standard-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/standard/Profile",
+      "kind": "citizen-class",
+      "owner": "sim-lib-standard-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream-bridge/LiftMidiOptions",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-bridge",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream-bridge/RenderOptions",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-bridge",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/Clock",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-clock",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/Metadata",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/Packet",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/PcmFormat",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-audio",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/DbDir",
+      "kind": "citizen-class",
+      "owner": "sim-table-db",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/FsDir",
+      "kind": "citizen-class",
+      "owner": "sim-table-fs",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/HashTable",
+      "kind": "citizen-class",
+      "owner": "sim-table-hash",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/HttpDir",
+      "kind": "citizen-class",
+      "owner": "sim-table-http",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/LazyTable",
+      "kind": "citizen-class",
+      "owner": "sim-table-lazy",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/RemoteDir",
+      "kind": "citizen-class",
+      "owner": "sim-table-remote",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/topology/Edge",
+      "kind": "citizen-class",
+      "owner": "sim-lib-topology",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/topology/Node",
+      "kind": "citizen-class",
+      "owner": "sim-lib-topology",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/topology/Package",
+      "kind": "citizen-class",
+      "owner": "sim-lib-topology",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/view/LensDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-view",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/web/Workspace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-web-layout",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "codec/algol",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".sima"
+    },
+    {
+      "id": "codec/binary",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".simb"
+    },
+    {
+      "id": "codec/binary-base64",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".simb64"
+    },
+    {
+      "id": "codec/chat",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".simchat"
+    },
+    {
+      "id": "codec/extensions",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "codec extension names facet"
+    },
+    {
+      "id": "codec/json",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".simj"
+    },
+    {
+      "id": "codec/lisp",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".siml"
+    },
+    {
+      "id": "codec/positions",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "codec position behavior facet"
+    },
+    {
+      "id": "core/Card",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "Card fixed-field browse envelope"
+    },
+    {
+      "id": "core/args",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "core/browse",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "returns a Card for a subject or the root browse catalog"
+    },
+    {
+      "id": "core/browse-neighbors",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "returns visible graph refs directly reachable from one Card"
+    },
+    {
+      "id": "core/browse-path",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "returns the shortest visible browse graph path between refs"
+    },
+    {
+      "id": "core/coverage",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "core/examples",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects example browse/Test values for one subject"
+    },
+    {
+      "id": "core/facets",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "core/help",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "returns and publishes authored Help for one subject"
+    },
+    {
+      "id": "core/help-object",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "core/result",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "core/tests",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "model-runner/ai/infer.v1",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "ai/bid.v1"
+    },
+    {
+      "id": "numbers/dispatch",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "number dispatch operations facet"
+    },
+    {
+      "id": "numbers/domain",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "number domain shape facet"
+    },
+    {
+      "id": "rank/coordinate",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "rank"
+    },
+    {
+      "id": "rank/space",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "rank"
+    },
+    {
+      "id": "registry/catalog",
+      "kind": "browse-registry",
+      "owner": "workspace",
+      "summary": "registry catalog browse card"
+    },
+    {
+      "id": "server/connection",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "server connection surface"
+    },
+    {
+      "id": "server/metrics",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "server metrics facet"
+    },
+    {
+      "id": "server/server",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "live evaluation server surface"
+    },
+    {
+      "id": "server/session",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "server session surface"
+    },
+    {
+      "id": "server/transport",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "server transport facet"
+    },
+    {
+      "id": "server/trigger",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "server trigger surface"
+    },
+    {
+      "id": "standard/fidelity",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "standard fidelity facet"
+    },
+    {
+      "id": "standard/organ",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "standard"
+    },
+    {
+      "id": "standard/profile",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "standard"
+    },
+    {
+      "id": "standard/standard/install.v1",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "standard/diff.v1"
+    },
+    {
+      "id": "stream/data",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "stream"
+    },
+    {
+      "id": "stream/data/model-event",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "stream"
+    },
+    {
+      "id": "stream/data/rank-frontier",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "stream"
+    },
+    {
+      "id": "stream/events",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "stream event surface facet"
+    },
+    {
+      "id": "stream/queue-policy",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "stream"
+    },
+    {
+      "id": "stream/stream",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "core"
+    }
   ],
-  "contracts": [
-    "docs/generated/provenance.json",
-    "docs/generated/repo-contract.json",
-    "docs/generated/rustdoc-index.json",
-    "docs/generated/card-index.json",
-    "docs/generated/feature-map.json"
-  ]
+  "citizen_count": 139,
+  "citizens": [
+    {
+      "arity": 1,
+      "crate": "sim-table-override",
+      "symbol": "OverrideTable",
+      "version": 0
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-agent-runner-core",
+      "symbol": "agent-runner/ModelBid",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-agent-runner-core",
+      "symbol": "agent-runner/ModelCard",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-agent-runner-core",
+      "symbol": "agent-runner/ModelRequest",
+      "version": 1
+    },
+    {
+      "arity": 6,
+      "crate": "sim-lib-agent-runner-core",
+      "symbol": "agent-runner/ModelResponse",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-agent-runner-core",
+      "symbol": "agent-runner/ModelUsage",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-audio-dsp",
+      "symbol": "audio-dsp/Config",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-audio-graph-core",
+      "symbol": "audio-graph/NodeConfig",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-audio-graph-core",
+      "symbol": "audio-graph/Patch",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-music-synth",
+      "symbol": "audio-synth/Preset",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-daw-session",
+      "symbol": "daw-session/DawSession",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/BitVectorSpace",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/BoundedIntVectorSpace",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/Combination",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/CombinationSpace",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/Edge",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/FwhtSignal",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/FwhtSignalSpace",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/Graph",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/Matrix",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/MstCertificate",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/Permutation",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/PermutationSpace",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/SimpleGraphSpace",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/SparseMatrix",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-discrete",
+      "symbol": "discrete/SubsetSpace",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-view-doc",
+      "symbol": "doc/Article",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Field",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/FuncPayload",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Function",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Geometry",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Material",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Mesh",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Model",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Ode",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Physics",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Post",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Sensitivity",
+      "version": 1
+    },
+    {
+      "arity": 7,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Solution",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Solve",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Space",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-femm-codec",
+      "symbol": "femm/Tape",
+      "version": 1
+    },
+    {
+      "arity": 9,
+      "crate": "sim-lib-forge",
+      "symbol": "forge/CompiledIntent",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-intent",
+      "symbol": "intent/Intent",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-list-cell",
+      "symbol": "list/ConsList",
+      "version": 0
+    },
+    {
+      "arity": 1,
+      "crate": "sim-list-lazy",
+      "symbol": "list/LazyConsList",
+      "version": 0
+    },
+    {
+      "arity": 1,
+      "crate": "sim-list-lazy",
+      "symbol": "list/LazyIterList",
+      "version": 0
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-mcp",
+      "symbol": "mcp/AuditEntry",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-mcp",
+      "symbol": "mcp/Cassette",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-mcp",
+      "symbol": "mcp/CassetteEntry",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-codec-mcp",
+      "symbol": "mcp/Error",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-codec-mcp",
+      "symbol": "mcp/ErrorEnvelope",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-codec-mcp",
+      "symbol": "mcp/Notification",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-codec-mcp",
+      "symbol": "mcp/Request",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-codec-mcp",
+      "symbol": "mcp/Response",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-midi-shapes",
+      "symbol": "midi/ChannelMessage",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-midi-shapes",
+      "symbol": "midi/MetaEvent",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-midi-shapes",
+      "symbol": "midi/MidiEvent",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-midi-shapes",
+      "symbol": "midi/SmfFile",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-midi-shapes",
+      "symbol": "midi/SmfTrack",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-music-shapes",
+      "symbol": "music/Chord",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-music-shapes",
+      "symbol": "music/Melody",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-music-shapes",
+      "symbol": "music/Note",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-music-shapes",
+      "symbol": "music/Par",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-music-shapes",
+      "symbol": "music/Score",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-music-shapes",
+      "symbol": "music/Seq",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-numbers-cas",
+      "symbol": "numbers/Cas",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-numbers-complex",
+      "symbol": "numbers/Complex",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-numbers-func",
+      "symbol": "numbers/Func",
+      "version": 0
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-numbers-rational",
+      "symbol": "numbers/Rational",
+      "version": 0
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-numbers-tensor",
+      "symbol": "numbers/Tensor",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-openai-server",
+      "symbol": "openai/GatewayEvent",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-openai-server",
+      "symbol": "openai/GatewayKey",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-openai-server",
+      "symbol": "openai/GatewayRequest",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-openai-server",
+      "symbol": "openai/GatewayResponse",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-openai-server",
+      "symbol": "openai/GatewayRun",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-openai-server",
+      "symbol": "openai/Plan",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-pitch-shapes",
+      "symbol": "pitch/Chord",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-pitch-shapes",
+      "symbol": "pitch/Interval",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-pitch-shapes",
+      "symbol": "pitch/Pitch",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-pitch-shapes",
+      "symbol": "pitch/PitchClassMask",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-pitch-shapes",
+      "symbol": "pitch/Scale",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-plugin-core",
+      "symbol": "plugin-core/PluginDescriptor",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-rank",
+      "symbol": "rank/Coord",
+      "version": 0
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-rank",
+      "symbol": "rank/Node",
+      "version": 0
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-rank",
+      "symbol": "rank/Space",
+      "version": 0
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-scene",
+      "symbol": "scene/Scene",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-server",
+      "symbol": "server/Address",
+      "version": 1
+    },
+    {
+      "arity": 6,
+      "crate": "sim-lib-server",
+      "symbol": "server/Frame",
+      "version": 1
+    },
+    {
+      "arity": 0,
+      "crate": "sim-shape",
+      "symbol": "shape/AcceptOnNoDiagnosticsHook",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-shape",
+      "symbol": "shape/And",
+      "version": 1
+    },
+    {
+      "arity": 0,
+      "crate": "sim-shape",
+      "symbol": "shape/Any",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-shape",
+      "symbol": "shape/Class",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-shape",
+      "symbol": "shape/DiscardOnDiagnosticPrefixHook",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-shape",
+      "symbol": "shape/ExactExpr",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-shape",
+      "symbol": "shape/ExprKind",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-shape",
+      "symbol": "shape/Hooked",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-shape",
+      "symbol": "shape/List",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-shape",
+      "symbol": "shape/Not",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-shape",
+      "symbol": "shape/Or",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-shape",
+      "symbol": "shape/Repeat",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-shape",
+      "symbol": "shape/ScoreFloorHook",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-shape",
+      "symbol": "shape/Table",
+      "version": 1
+    },
+    {
+      "arity": 0,
+      "crate": "sim-shape",
+      "symbol": "shape/TraceMarkHook",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-shape",
+      "symbol": "shape/Venn",
+      "version": 1
+    },
+    {
+      "arity": 9,
+      "crate": "sim-lib-skill",
+      "symbol": "skill/Card",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-skill",
+      "symbol": "skill/McpCallParams",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-skill",
+      "symbol": "skill/McpPromptArgument",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-skill",
+      "symbol": "skill/McpPromptDescriptor",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-skill",
+      "symbol": "skill/McpPromptGetParams",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-skill",
+      "symbol": "skill/McpResourceDescriptor",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-skill",
+      "symbol": "skill/McpResourceReadParams",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-skill",
+      "symbol": "skill/McpToolDescriptor",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-skill",
+      "symbol": "skill/McpToolResult",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-sound-shapes",
+      "symbol": "sound/Envelope",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-sound-shapes",
+      "symbol": "sound/Partial",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-sound-shapes",
+      "symbol": "sound/Spectrum",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-sound-shapes",
+      "symbol": "sound/Timbre",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-sound-shapes",
+      "symbol": "sound/Tone",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-sound-shapes",
+      "symbol": "sound/TuningDescriptor",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-standard-core",
+      "symbol": "standard/FidelityBadge",
+      "version": 0
+    },
+    {
+      "arity": 10,
+      "crate": "sim-lib-standard-core",
+      "symbol": "standard/Profile",
+      "version": 0
+    },
+    {
+      "arity": 7,
+      "crate": "sim-lib-stream-bridge",
+      "symbol": "stream-bridge/LiftMidiOptions",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-stream-bridge",
+      "symbol": "stream-bridge/RenderOptions",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-stream-clock",
+      "symbol": "stream/Clock",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-stream-core",
+      "symbol": "stream/Metadata",
+      "version": 0
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-stream-core",
+      "symbol": "stream/Packet",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-stream-audio",
+      "symbol": "stream/PcmFormat",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-table-db",
+      "symbol": "table/DbDir",
+      "version": 0
+    },
+    {
+      "arity": 1,
+      "crate": "sim-table-fs",
+      "symbol": "table/FsDir",
+      "version": 0
+    },
+    {
+      "arity": 1,
+      "crate": "sim-table-hash",
+      "symbol": "table/HashTable",
+      "version": 0
+    },
+    {
+      "arity": 5,
+      "crate": "sim-table-http",
+      "symbol": "table/HttpDir",
+      "version": 0
+    },
+    {
+      "arity": 1,
+      "crate": "sim-table-lazy",
+      "symbol": "table/LazyTable",
+      "version": 0
+    },
+    {
+      "arity": 3,
+      "crate": "sim-table-remote",
+      "symbol": "table/RemoteDir",
+      "version": 0
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-topology",
+      "symbol": "topology/Edge",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-topology",
+      "symbol": "topology/Node",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-topology",
+      "symbol": "topology/Package",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-view",
+      "symbol": "view/LensDescriptor",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-web-layout",
+      "symbol": "web/Workspace",
+      "version": 1
+    }
+  ],
+  "generator": "xtask repo-contract v1",
+  "group_count": 1,
+  "group_order": [
+    "workspace"
+  ],
+  "groups": {
+    "workspace": [
+      "sim-nest",
+      "xtask"
+    ]
+  },
+  "non_citizen_exemption_count": 0,
+  "non_citizen_exemptions": [],
+  "package_count": 2,
+  "packages": [
+    {
+      "crate_name": "sim",
+      "dependencies": [],
+      "description": "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features.",
+      "features": [
+        {
+          "edges": [
+            "dep:sim-lib-agent",
+            "server"
+          ],
+          "name": "agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "agent",
+            "sim-lib-agent/agent-net"
+          ],
+          "name": "agent-net",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-runner-core",
+            "core"
+          ],
+          "name": "agent-runner-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-runner-http",
+            "dep:sim-lib-agent",
+            "sim-lib-agent/runner-http",
+            "agent-runner-core",
+            "agent"
+          ],
+          "name": "agent-runner-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "agent-runner-http",
+            "sim-lib-agent-runner-http/tls"
+          ],
+          "name": "agent-runner-http-tls",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-runner-http",
+            "dep:sim-lib-agent",
+            "sim-lib-agent/runner-ollama",
+            "agent-runner-core",
+            "agent"
+          ],
+          "name": "agent-runner-ollama",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-runner-process",
+            "dep:sim-lib-agent",
+            "sim-lib-agent/runner-process",
+            "agent-runner-core",
+            "agent"
+          ],
+          "name": "agent-runner-process",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-audio-dsp",
+            "audio-graph-core",
+            "sound-core"
+          ],
+          "name": "audio-dsp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-audio-graph-core",
+            "stream-audio"
+          ],
+          "name": "audio-graph-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-audio-graph-live",
+            "audio-graph-core",
+            "stream-clock",
+            "stream-host"
+          ],
+          "name": "audio-graph-live",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-bridge",
+            "agent-runner-core",
+            "codec-bridge",
+            "stream-fabric",
+            "shape",
+            "core"
+          ],
+          "name": "bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-citizen",
+            "dep:sim-citizen-derive",
+            "core",
+            "sim-lib-discrete?/citizen"
+          ],
+          "name": "citizen",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "citizen"
+          ],
+          "name": "citizen-strict",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-algol",
+            "shape",
+            "core"
+          ],
+          "name": "codec-algol",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-binary",
+            "core"
+          ],
+          "name": "codec-binary",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-binary-base64",
+            "codec-binary",
+            "core"
+          ],
+          "name": "codec-binary-base64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-bitwise",
+            "core"
+          ],
+          "name": "codec-bitwise",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-bitwise-base64",
+            "codec-bitwise",
+            "core"
+          ],
+          "name": "codec-bitwise-base64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-bridge",
+            "core"
+          ],
+          "name": "codec-bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-chat",
+            "core"
+          ],
+          "name": "codec-chat",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-json",
+            "dep:serde",
+            "dep:serde_json",
+            "core"
+          ],
+          "name": "codec-json",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-lisp",
+            "dep:proc-macro2",
+            "core"
+          ],
+          "name": "codec-lisp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec-mcp",
+            "codec-json"
+          ],
+          "name": "codec-mcp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-control",
+            "core"
+          ],
+          "name": "control",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-cookbook",
+            "dep:sim-lib-cookbook",
+            "core",
+            "codec-lisp",
+            "sim-lib-agent?/cookbook"
+          ],
+          "name": "cookbook",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "cookbook",
+            "shape",
+            "citizen",
+            "bridge",
+            "codec-algol",
+            "codec-binary",
+            "codec-binary-base64",
+            "codec-bitwise",
+            "codec-bitwise-base64",
+            "codec-bridge",
+            "codec-chat",
+            "codec-json",
+            "codec-mcp",
+            "agent",
+            "audio-dsp",
+            "audio-graph-live",
+            "daw-session",
+            "discrete-rank",
+            "discrete-runtime",
+            "exec",
+            "femm-core",
+            "femm-field",
+            "femm-function",
+            "femm-ode",
+            "intent",
+            "list-cell",
+            "list-lazy",
+            "logic-core",
+            "mcp",
+            "midi-core",
+            "midi-live",
+            "midi-ble",
+            "midi-rtmidi",
+            "midi-shapes",
+            "music-lift",
+            "music-notation",
+            "music-shapes",
+            "music-synth",
+            "numbers-i64",
+            "numbers-arith",
+            "numbers-bigint",
+            "numbers-bool",
+            "numbers-f64",
+            "numbers-rational",
+            "numbers-complex",
+            "numbers-func",
+            "numbers-cas",
+            "numbers-cas-diff",
+            "numbers-cas-eval",
+            "numbers-exotic",
+            "numbers-fixed",
+            "numbers-float",
+            "numbers-numeric",
+            "numbers-quad",
+            "numbers-rk",
+            "numbers-stats",
+            "numbers-tensor",
+            "numbers-tensor-bcast",
+            "numbers-tensor-bit",
+            "numbers-tensor-cmplxf",
+            "numbers-tensor-f64",
+            "numbers-tensor-i64",
+            "numbers-tensor-linalg",
+            "numbers-tensor-rat64",
+            "openai-server",
+            "pitch-dissonance",
+            "pitch-namer",
+            "pitch-shapes",
+            "plugin-clap",
+            "plugin-vst3",
+            "rank",
+            "scene",
+            "server",
+            "skill",
+            "sound-audio-lift",
+            "sound-bridge",
+            "sound-dissonance",
+            "sound-render",
+            "sound-shapes",
+            "sound-timbre",
+            "sound-tuning",
+            "standard-binding",
+            "control",
+            "standard-sequence",
+            "standard-pattern",
+            "standard-scheme",
+            "standard-cl",
+            "standard-clojure",
+            "stream-alsa",
+            "stream-asio",
+            "stream-bridge",
+            "stream-core",
+            "stream-coreaudio",
+            "stream-jack",
+            "stream-pipewire",
+            "stream-portaudio",
+            "stream-prelude",
+            "table-fs",
+            "table-hash",
+            "table-http",
+            "table-lazy",
+            "topology-core"
+          ],
+          "name": "cookbook-all",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-kernel",
+            "dep:sim-value",
+            "dep:sim-lib-core"
+          ],
+          "name": "core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-daw-session",
+            "audio-graph-live",
+            "plugin-core",
+            "stream-audio",
+            "topology-core"
+          ],
+          "name": "daw-session",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "core",
+            "codec-lisp",
+            "numbers-f64"
+          ],
+          "name": "default",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "discrete-algebra",
+            "discrete-graph",
+            "discrete-comb",
+            "discrete-spectral"
+          ],
+          "name": "discrete",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/algebra",
+            "core"
+          ],
+          "name": "discrete-algebra",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/comb",
+            "core"
+          ],
+          "name": "discrete-comb",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/graph",
+            "core"
+          ],
+          "name": "discrete-graph",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "discrete-spectral",
+            "music-analysis",
+            "sim-lib-music-analysis/discrete-fwht"
+          ],
+          "name": "discrete-music",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/rank",
+            "rank",
+            "core"
+          ],
+          "name": "discrete-rank",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/runtime",
+            "discrete",
+            "core"
+          ],
+          "name": "discrete-runtime",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/spectral",
+            "core"
+          ],
+          "name": "discrete-spectral",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-run-loaders",
+            "sim-run-loaders/dynamic-native",
+            "codec-binary",
+            "shape"
+          ],
+          "name": "dynamic-native",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-exec",
+            "core"
+          ],
+          "name": "exec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-assembly",
+            "femm-space",
+            "numbers-ad",
+            "core"
+          ],
+          "name": "femm-assembly",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-codec",
+            "femm-core",
+            "femm-geometry",
+            "femm-material",
+            "femm-mesh",
+            "femm-space",
+            "femm-assembly",
+            "femm-solve",
+            "femm-flow",
+            "femm-physics",
+            "femm-post",
+            "femm-field",
+            "femm-function",
+            "femm-sensitiv",
+            "femm-tape",
+            "femm-ode",
+            "numbers-codec",
+            "core"
+          ],
+          "name": "femm-codec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-core",
+            "numbers-numeric",
+            "core"
+          ],
+          "name": "femm-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-field",
+            "femm-core",
+            "femm-post",
+            "numbers-func",
+            "numbers-tensor",
+            "core"
+          ],
+          "name": "femm-field",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-fixtures",
+            "femm-prelude",
+            "core"
+          ],
+          "name": "femm-fixtures",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-flow",
+            "femm-core",
+            "femm-assembly",
+            "femm-solve",
+            "numbers-func",
+            "numbers-numeric",
+            "core"
+          ],
+          "name": "femm-flow",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-function",
+            "femm-core",
+            "femm-field",
+            "numbers-func",
+            "core"
+          ],
+          "name": "femm-function",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-geometry",
+            "femm-core",
+            "core"
+          ],
+          "name": "femm-geometry",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-material",
+            "femm-core",
+            "numbers-ad",
+            "core"
+          ],
+          "name": "femm-material",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-mesh",
+            "femm-geometry",
+            "femm-material",
+            "core"
+          ],
+          "name": "femm-mesh",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-ode",
+            "femm-core",
+            "femm-function",
+            "femm-tape",
+            "numbers-rk",
+            "numbers-tensor",
+            "core"
+          ],
+          "name": "femm-ode",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-physics",
+            "femm-core",
+            "femm-assembly",
+            "numbers-complex",
+            "core"
+          ],
+          "name": "femm-physics",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-post",
+            "femm-core",
+            "femm-flow",
+            "femm-mesh",
+            "femm-physics",
+            "core"
+          ],
+          "name": "femm-post",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-prelude",
+            "femm-core",
+            "femm-geometry",
+            "femm-material",
+            "femm-mesh",
+            "femm-space",
+            "femm-assembly",
+            "femm-solve",
+            "femm-flow",
+            "femm-physics",
+            "femm-post",
+            "femm-field",
+            "femm-function",
+            "femm-sensitiv",
+            "femm-tape",
+            "femm-ode",
+            "femm-codec",
+            "numbers-prelude"
+          ],
+          "name": "femm-prelude",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-sensitiv",
+            "femm-core",
+            "femm-function",
+            "femm-solve",
+            "numbers-ad",
+            "numbers-numeric",
+            "core"
+          ],
+          "name": "femm-sensitiv",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-solve",
+            "femm-core",
+            "numbers-complex",
+            "core"
+          ],
+          "name": "femm-solve",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-space",
+            "femm-mesh",
+            "core"
+          ],
+          "name": "femm-space",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-tape",
+            "femm-core",
+            "femm-function",
+            "femm-post",
+            "femm-solve",
+            "core"
+          ],
+          "name": "femm-tape",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-forge",
+            "bridge",
+            "codec-json"
+          ],
+          "name": "forge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-intent",
+            "core",
+            "shape"
+          ],
+          "name": "intent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-list-cell",
+            "core"
+          ],
+          "name": "list-cell",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-list-lazy",
+            "core"
+          ],
+          "name": "list-lazy",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "logic-core",
+            "logic-numbers"
+          ],
+          "name": "logic",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "logic-core",
+            "agent"
+          ],
+          "name": "logic-agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-logic",
+            "shape",
+            "codec-lisp"
+          ],
+          "name": "logic-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "logic-core",
+            "numbers-arith",
+            "numbers-f64",
+            "numbers-i64",
+            "numbers-rational"
+          ],
+          "name": "logic-numbers",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "logic-core",
+            "server"
+          ],
+          "name": "logic-server",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "logic-core",
+            "wasm"
+          ],
+          "name": "logic-wasm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-mcp",
+            "codec-mcp",
+            "core",
+            "shape"
+          ],
+          "name": "mcp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp-stdio",
+            "dep:sim-mcp-server"
+          ],
+          "name": "mcp-binary",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "sim-lib-mcp/cassette"
+          ],
+          "name": "mcp-cassette",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp-skill",
+            "sim-lib-mcp/client"
+          ],
+          "name": "mcp-client",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp-stream",
+            "server",
+            "server-net-http",
+            "sim-lib-mcp/http"
+          ],
+          "name": "mcp-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "agent-runner-core",
+            "sim-lib-mcp/sampling"
+          ],
+          "name": "mcp-sampling",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "skill",
+            "sim-lib-mcp/skill"
+          ],
+          "name": "mcp-skill",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "sim-lib-mcp/stdio"
+          ],
+          "name": "mcp-stdio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "stream-core",
+            "stream-fabric",
+            "stream-combinators",
+            "sim-lib-mcp/stream",
+            "sim-lib-mcp/progress"
+          ],
+          "name": "mcp-stream",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "midi-core",
+            "midi-smf",
+            "midi-live",
+            "midi-sysex",
+            "midi-shapes"
+          ],
+          "name": "midi",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-ble",
+            "midi-rtmidi",
+            "stream-host",
+            "core"
+          ],
+          "name": "midi-ble",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-core",
+            "core"
+          ],
+          "name": "midi-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-live",
+            "midi-core",
+            "core"
+          ],
+          "name": "midi-live",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-rtmidi",
+            "midi-core",
+            "stream-host",
+            "core"
+          ],
+          "name": "midi-rtmidi",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-shapes",
+            "midi-core",
+            "midi-smf",
+            "shape",
+            "core"
+          ],
+          "name": "midi-shapes",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-smf",
+            "midi-core",
+            "core",
+            "sim-table-fs?/midi"
+          ],
+          "name": "midi-smf",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-sysex",
+            "midi-core",
+            "core"
+          ],
+          "name": "midi-sysex",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-wasm-frame",
+            "midi",
+            "wasm"
+          ],
+          "name": "midi-wasm-frame",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "music-core",
+            "music-combinators",
+            "music-analysis",
+            "music-transform",
+            "music-lower",
+            "music-lift",
+            "music-notation",
+            "music-shapes",
+            "pitch",
+            "midi"
+          ],
+          "name": "music",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-analysis",
+            "music-core",
+            "pitch-set",
+            "core"
+          ],
+          "name": "music-analysis",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-combinators",
+            "music-core",
+            "core"
+          ],
+          "name": "music-combinators",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-core",
+            "pitch-core",
+            "midi-core",
+            "numbers-rational",
+            "core"
+          ],
+          "name": "music-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-lift",
+            "music-core",
+            "music-analysis",
+            "midi-smf",
+            "pitch-namer",
+            "core"
+          ],
+          "name": "music-lift",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-lower",
+            "music-core",
+            "midi-smf",
+            "core"
+          ],
+          "name": "music-lower",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-notation",
+            "music-core",
+            "pitch-core",
+            "sim-table-fs?/notation",
+            "core"
+          ],
+          "name": "music-notation",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-shapes",
+            "music-core",
+            "music-transform",
+            "music-analysis",
+            "music-lower",
+            "music-lift",
+            "sim-table-fs?/music",
+            "shape",
+            "core"
+          ],
+          "name": "music-shapes",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "pitch",
+            "midi",
+            "music",
+            "sound",
+            "sound-gm",
+            "sound-audio-lift",
+            "sound-music"
+          ],
+          "name": "music-stack",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "music-stack",
+            "pitch-wasm-frame",
+            "midi-wasm-frame",
+            "music-wasm-frame",
+            "sound-wasm-frame"
+          ],
+          "name": "music-stack-wasm-frame",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-synth",
+            "audio-dsp",
+            "pitch-core",
+            "midi-core"
+          ],
+          "name": "music-synth",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-transform",
+            "music-core",
+            "pitch-scale",
+            "core"
+          ],
+          "name": "music-transform",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-wasm-frame",
+            "music",
+            "wasm"
+          ],
+          "name": "music-wasm-frame",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-ad"
+          ],
+          "name": "numbers-ad",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-arith",
+            "core"
+          ],
+          "name": "numbers-arith",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-bigint",
+            "numbers-arith",
+            "numbers-i64",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-bigint",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-bool",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-bool",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-cas",
+            "numbers-arith",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-cas",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-cas-diff",
+            "numbers-cas",
+            "core"
+          ],
+          "name": "numbers-cas-diff",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-cas-eval",
+            "numbers-cas",
+            "core"
+          ],
+          "name": "numbers-cas-eval",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-codec",
+            "numbers-bigint",
+            "numbers-bool",
+            "numbers-cas",
+            "numbers-complex",
+            "numbers-core",
+            "numbers-exotic",
+            "numbers-f64",
+            "numbers-fixed",
+            "numbers-float",
+            "numbers-func",
+            "numbers-i64",
+            "numbers-numeric",
+            "numbers-quad",
+            "numbers-rational",
+            "numbers-rk",
+            "numbers-tensor",
+            "numbers-tensor-bcast",
+            "numbers-tensor-bit",
+            "numbers-tensor-cmplxf",
+            "numbers-tensor-f64",
+            "numbers-tensor-i64",
+            "numbers-tensor-linalg",
+            "numbers-tensor-rat64",
+            "core"
+          ],
+          "name": "numbers-codec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-complex",
+            "numbers-arith",
+            "core"
+          ],
+          "name": "numbers-complex",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-core"
+          ],
+          "name": "numbers-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-exotic",
+            "numbers-arith",
+            "numbers-f64",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-exotic",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-f64",
+            "numbers-arith",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-f64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-fixed",
+            "numbers-i64",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-fixed",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-float",
+            "numbers-f64",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-float",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-func",
+            "numbers-arith",
+            "numbers-core",
+            "numbers-cas-diff",
+            "numbers-cas-eval",
+            "core"
+          ],
+          "name": "numbers-func",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-i64",
+            "numbers-arith",
+            "numbers-f64",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-i64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-numeric",
+            "numbers-f64",
+            "numbers-func",
+            "core"
+          ],
+          "name": "numbers-numeric",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-prelude",
+            "numbers-ad",
+            "numbers-arith",
+            "numbers-bigint",
+            "numbers-bool",
+            "numbers-cas",
+            "numbers-cas-diff",
+            "numbers-cas-eval",
+            "numbers-codec",
+            "numbers-complex",
+            "numbers-core",
+            "numbers-exotic",
+            "numbers-f64",
+            "numbers-fixed",
+            "numbers-float",
+            "numbers-func",
+            "numbers-i64",
+            "numbers-numeric",
+            "numbers-quad",
+            "numbers-rational",
+            "numbers-rk",
+            "numbers-tensor",
+            "numbers-tensor-bcast",
+            "numbers-tensor-bit",
+            "numbers-tensor-cmplxf",
+            "numbers-tensor-f64",
+            "numbers-tensor-i64",
+            "numbers-tensor-linalg",
+            "numbers-tensor-rat64"
+          ],
+          "name": "numbers-prelude",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-quad",
+            "numbers-numeric",
+            "numbers-f64",
+            "core"
+          ],
+          "name": "numbers-quad",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-rational",
+            "numbers-arith",
+            "numbers-bigint",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-rational",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-rk",
+            "numbers-numeric",
+            "numbers-f64",
+            "numbers-tensor",
+            "core"
+          ],
+          "name": "numbers-rk",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-stats",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-stats",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-tensor",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-bcast",
+            "numbers-arith",
+            "numbers-tensor",
+            "core"
+          ],
+          "name": "numbers-tensor-bcast",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-bit",
+            "numbers-bool",
+            "numbers-tensor"
+          ],
+          "name": "numbers-tensor-bit",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-cmplxf",
+            "numbers-complex",
+            "numbers-f64",
+            "numbers-tensor"
+          ],
+          "name": "numbers-tensor-cmplxf",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-f64",
+            "numbers-f64",
+            "numbers-tensor"
+          ],
+          "name": "numbers-tensor-f64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-i64",
+            "numbers-bigint",
+            "numbers-i64",
+            "numbers-tensor"
+          ],
+          "name": "numbers-tensor-i64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-linalg",
+            "numbers-arith",
+            "numbers-cas",
+            "numbers-tensor",
+            "core"
+          ],
+          "name": "numbers-tensor-linalg",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-rat64",
+            "numbers-rational",
+            "numbers-tensor"
+          ],
+          "name": "numbers-tensor-rat64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-openai-server",
+            "core"
+          ],
+          "name": "openai-server",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "openai-server",
+            "server-net-http",
+            "sim-lib-openai-server/http"
+          ],
+          "name": "openai-server-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "pitch-core",
+            "pitch-set",
+            "pitch-scale",
+            "pitch-chord",
+            "pitch-namer",
+            "pitch-dissonance",
+            "pitch-shapes"
+          ],
+          "name": "pitch",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-chord",
+            "pitch-scale",
+            "pitch-set",
+            "core"
+          ],
+          "name": "pitch-chord",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-core",
+            "core"
+          ],
+          "name": "pitch-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-dissonance",
+            "pitch-namer",
+            "pitch-set",
+            "pitch-scale",
+            "core"
+          ],
+          "name": "pitch-dissonance",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-namer",
+            "pitch-namer-forte",
+            "pitch-namer-jazz",
+            "pitch-namer-roman",
+            "pitch-namer-riemann",
+            "pitch-set",
+            "pitch-scale",
+            "pitch-chord",
+            "core"
+          ],
+          "name": "pitch-namer",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-namer-forte",
+            "pitch-set",
+            "core"
+          ],
+          "name": "pitch-namer-forte",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-namer-jazz",
+            "pitch-core",
+            "pitch-set",
+            "pitch-chord",
+            "core"
+          ],
+          "name": "pitch-namer-jazz",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-namer-riemann",
+            "pitch-chord",
+            "core"
+          ],
+          "name": "pitch-namer-riemann",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-namer-roman",
+            "pitch-scale",
+            "pitch-chord",
+            "core"
+          ],
+          "name": "pitch-namer-roman",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-scale",
+            "pitch-set",
+            "core"
+          ],
+          "name": "pitch-scale",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-set",
+            "pitch-core",
+            "core"
+          ],
+          "name": "pitch-set",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-shapes",
+            "pitch-core",
+            "pitch-set",
+            "pitch-scale",
+            "pitch-chord",
+            "shape",
+            "core"
+          ],
+          "name": "pitch-shapes",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-wasm-frame",
+            "pitch",
+            "wasm"
+          ],
+          "name": "pitch-wasm-frame",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-plugin-clap",
+            "plugin-core",
+            "audio-dsp"
+          ],
+          "name": "plugin-clap",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-plugin-core",
+            "audio-graph-core"
+          ],
+          "name": "plugin-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-plugin-lv2",
+            "plugin-core",
+            "audio-dsp"
+          ],
+          "name": "plugin-lv2",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-plugin-vst3",
+            "plugin-core",
+            "audio-dsp"
+          ],
+          "name": "plugin-vst3",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-macros",
+            "core",
+            "shape",
+            "codec-binary"
+          ],
+          "name": "proc-macros",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-rank",
+            "core"
+          ],
+          "name": "rank",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "rank",
+            "sim-lib-rank/rank-codec-fallback"
+          ],
+          "name": "rank-codec-fallback",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "rank",
+            "sim-lib-rank/rank-expr"
+          ],
+          "name": "rank-expr",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "rank",
+            "sim-lib-rank/rank-learn"
+          ],
+          "name": "rank-learn",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "rank",
+            "sim-lib-rank/rank-music"
+          ],
+          "name": "rank-music",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "rank",
+            "sim-lib-rank/rank-scatter"
+          ],
+          "name": "rank-scatter",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-scene",
+            "core",
+            "shape",
+            "codec-lisp"
+          ],
+          "name": "scene",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-run-core",
+            "dep:sim-lib-repl",
+            "mcp",
+            "sim-lib-mcp/serve",
+            "web",
+            "dep:sim-web-shell",
+            "numbers-prelude",
+            "cookbook-all"
+          ],
+          "name": "serve-cli",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-server",
+            "core",
+            "codec-binary",
+            "codec-lisp",
+            "codec-chat"
+          ],
+          "name": "server",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "server",
+            "sim-lib-server/server-net-http"
+          ],
+          "name": "server-net-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-shape",
+            "core"
+          ],
+          "name": "shape",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-skill",
+            "core",
+            "shape",
+            "codec-json"
+          ],
+          "name": "skill",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "agent",
+            "sim-lib-skill/agent"
+          ],
+          "name": "skill-agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "sim-lib-skill/cache"
+          ],
+          "name": "skill-cache",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "sim-lib-skill/cassette"
+          ],
+          "name": "skill-cassette",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "sim-lib-skill/http"
+          ],
+          "name": "skill-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "codec-mcp",
+            "sim-lib-skill/mcp"
+          ],
+          "name": "skill-mcp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "openai-server",
+            "sim-lib-skill/openai"
+          ],
+          "name": "skill-openai",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "sim-lib-skill/process"
+          ],
+          "name": "skill-process",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "agent",
+            "sim-lib-skill/runner"
+          ],
+          "name": "skill-runner",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill-mcp",
+            "mcp-skill",
+            "server",
+            "sim-lib-skill/serve"
+          ],
+          "name": "skill-serve",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "sound-core",
+            "sound-spectrum",
+            "sound-timbre",
+            "sound-tuning",
+            "sound-dissonance",
+            "sound-bridge",
+            "sound-render",
+            "sound-shapes",
+            "pitch",
+            "midi"
+          ],
+          "name": "sound",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-audio-lift",
+            "sound-spectrum",
+            "sound-tuning",
+            "pitch",
+            "core"
+          ],
+          "name": "sound-audio-lift",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-bridge",
+            "sound-core",
+            "sound-timbre",
+            "sound-tuning",
+            "midi-core",
+            "core"
+          ],
+          "name": "sound-bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-core",
+            "pitch-core",
+            "midi-core",
+            "core"
+          ],
+          "name": "sound-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-dissonance",
+            "sound-core",
+            "sound-spectrum",
+            "sound-tuning",
+            "core"
+          ],
+          "name": "sound-dissonance",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "sound-spectrum"
+          ],
+          "name": "sound-fft",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-gm",
+            "sound-timbre",
+            "sound-bridge",
+            "core"
+          ],
+          "name": "sound-gm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "sound",
+            "music",
+            "sim-lib-sound-audio-lift?/sound-music"
+          ],
+          "name": "sound-music",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-render",
+            "sound-core",
+            "sound-bridge",
+            "core"
+          ],
+          "name": "sound-render",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-shapes",
+            "sound-audio-lift",
+            "sound-core",
+            "sound-spectrum",
+            "sound-timbre",
+            "sound-tuning",
+            "sound-dissonance",
+            "sound-bridge",
+            "sound-render",
+            "sim-table-fs?/sound",
+            "sim-table-fs?/tuning",
+            "shape",
+            "core"
+          ],
+          "name": "sound-shapes",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-spectrum",
+            "sound-core",
+            "core"
+          ],
+          "name": "sound-spectrum",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-timbre",
+            "sound-core",
+            "sound-spectrum",
+            "core"
+          ],
+          "name": "sound-timbre",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-tuning",
+            "sound-core",
+            "pitch-core",
+            "sim-table-fs?/tuning",
+            "core"
+          ],
+          "name": "sound-tuning",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-wasm-frame",
+            "sim-lib-sound-wasm-frame/sound-music",
+            "sound",
+            "sound-music",
+            "wasm"
+          ],
+          "name": "sound-wasm-frame",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "standard-core",
+            "standard-binding",
+            "standard-sequence",
+            "standard-pattern",
+            "standard-dispatch",
+            "standard-namespace",
+            "standard-mutation",
+            "standard-scheme",
+            "standard-islisp",
+            "standard-clojure",
+            "standard-cl",
+            "standard-julia",
+            "standard-lua",
+            "standard-ruby",
+            "standard-typed-lazy"
+          ],
+          "name": "standard",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-binding",
+            "standard-core"
+          ],
+          "name": "standard-binding",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-cl",
+            "standard-core",
+            "standard-binding",
+            "standard-dispatch",
+            "standard-namespace",
+            "standard-mutation",
+            "control"
+          ],
+          "name": "standard-cl",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-clojure",
+            "standard-core",
+            "standard-sequence",
+            "standard-namespace",
+            "control"
+          ],
+          "name": "standard-clojure",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-standard-core",
+            "core"
+          ],
+          "name": "standard-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-dispatch",
+            "standard-core",
+            "shape"
+          ],
+          "name": "standard-dispatch",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-islisp",
+            "standard-core",
+            "standard-dispatch"
+          ],
+          "name": "standard-islisp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-julia",
+            "standard-core",
+            "standard-dispatch",
+            "codec-algol"
+          ],
+          "name": "standard-julia",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-lua",
+            "standard-core",
+            "standard-mutation",
+            "control",
+            "codec-algol"
+          ],
+          "name": "standard-lua",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-mutation",
+            "standard-core"
+          ],
+          "name": "standard-mutation",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-namespace",
+            "standard-core"
+          ],
+          "name": "standard-namespace",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pattern",
+            "standard-core",
+            "shape"
+          ],
+          "name": "standard-pattern",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-ruby",
+            "standard-core",
+            "standard-dispatch",
+            "control",
+            "codec-algol"
+          ],
+          "name": "standard-ruby",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-scheme",
+            "standard-core",
+            "standard-binding",
+            "standard-sequence",
+            "standard-pattern",
+            "control"
+          ],
+          "name": "standard-scheme",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sequence",
+            "standard-core"
+          ],
+          "name": "standard-sequence",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-typed-lazy",
+            "standard-core",
+            "standard-pattern",
+            "control",
+            "codec-algol"
+          ],
+          "name": "standard-typed-lazy",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-alsa",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-host"
+          ],
+          "name": "stream-alsa",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-asio",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-host"
+          ],
+          "name": "stream-asio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-audio",
+            "stream-core"
+          ],
+          "name": "stream-audio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-bridge",
+            "stream-prelude",
+            "stream-audio",
+            "stream-midi",
+            "sound-render",
+            "sound-audio-lift",
+            "sound-gm"
+          ],
+          "name": "stream-bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-clock",
+            "stream-core"
+          ],
+          "name": "stream-clock",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-combinators",
+            "stream-core"
+          ],
+          "name": "stream-combinators",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-core",
+            "core"
+          ],
+          "name": "stream-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-coreaudio",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-host"
+          ],
+          "name": "stream-coreaudio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-fabric",
+            "stream-core"
+          ],
+          "name": "stream-fabric",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-file",
+            "stream-audio",
+            "stream-midi",
+            "midi-smf"
+          ],
+          "name": "stream-file",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-host",
+            "stream-midi",
+            "sim-lib-stream-host/rtp-midi"
+          ],
+          "name": "stream-host",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-jack",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-clock",
+            "stream-host"
+          ],
+          "name": "stream-jack",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-midi",
+            "stream-core",
+            "midi-core"
+          ],
+          "name": "stream-midi",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-pipewire",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-host"
+          ],
+          "name": "stream-pipewire",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-portaudio",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-host"
+          ],
+          "name": "stream-portaudio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-prelude",
+            "stream-audio",
+            "stream-midi",
+            "stream-combinators"
+          ],
+          "name": "stream-prelude",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-db",
+            "core"
+          ],
+          "name": "table-db",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-fs",
+            "codec-lisp",
+            "codec-json",
+            "codec-binary",
+            "codec-binary-base64",
+            "codec-chat",
+            "codec-algol",
+            "core"
+          ],
+          "name": "table-fs",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-hash",
+            "core"
+          ],
+          "name": "table-hash",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-http",
+            "codec-lisp",
+            "core"
+          ],
+          "name": "table-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-lazy",
+            "core"
+          ],
+          "name": "table-lazy",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-override",
+            "core"
+          ],
+          "name": "table-override",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-remote",
+            "server"
+          ],
+          "name": "table-remote",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "topology-agent",
+            "topology-stream",
+            "topology-table",
+            "topology-list",
+            "topology-codec"
+          ],
+          "name": "topology",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "agent"
+          ],
+          "name": "topology-agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "codec-lisp",
+            "codec-json",
+            "codec-binary"
+          ],
+          "name": "topology-codec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-topology"
+          ],
+          "name": "topology-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "list-cell"
+          ],
+          "name": "topology-list",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "stream-core",
+            "stream-host"
+          ],
+          "name": "topology-stream",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "table-hash"
+          ],
+          "name": "topology-table",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-view",
+            "scene",
+            "intent",
+            "codec-json"
+          ],
+          "name": "view",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "agent",
+            "topology-core",
+            "dep:sim-lib-view-agent"
+          ],
+          "name": "view-agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "codec-bridge",
+            "dep:sim-lib-view-bridge"
+          ],
+          "name": "view-bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "codec-lisp",
+            "codec-json",
+            "codec-binary",
+            "dep:sim-lib-view-codec"
+          ],
+          "name": "view-codec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "daw-session",
+            "audio-graph-core",
+            "plugin-core",
+            "dep:sim-lib-view-daw"
+          ],
+          "name": "view-daw",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "dep:sim-lib-view-doc"
+          ],
+          "name": "view-doc",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "numbers-numeric",
+            "dep:sim-lib-view-math"
+          ],
+          "name": "view-math",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-run-loaders",
+            "sim-run-loaders/wasm",
+            "dep:sim-wasm-abi",
+            "core"
+          ],
+          "name": "wasm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "web-bridge"
+          ],
+          "name": "web",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-web-bridge",
+            "view",
+            "web-layout"
+          ],
+          "name": "web-bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "web",
+            "view-agent",
+            "view-doc",
+            "view-math",
+            "view-codec",
+            "view-daw"
+          ],
+          "name": "web-full",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-web-layout",
+            "view"
+          ],
+          "name": "web-layout",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "web",
+            "dep:sim-lib-view-wasm-frame",
+            "wasm"
+          ],
+          "name": "web-wasm-frame",
+          "workspace_edges": []
+        }
+      ],
+      "group": "workspace",
+      "manifest": "Cargo.toml",
+      "name": "sim-nest",
+      "publish": "true",
+      "root": "",
+      "rustdoc_summary": "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features.",
+      "target_kinds": [
+        "bin",
+        "example",
+        "lib",
+        "test"
+      ],
+      "targets": [
+        {
+          "crate_types": [
+            "lib"
+          ],
+          "kind": [
+            "lib"
+          ],
+          "name": "sim",
+          "src": "src/lib.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "bin"
+          ],
+          "name": "sim",
+          "src": "src/bin/sim.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "example"
+          ],
+          "name": "codec_roundtrip",
+          "src": "examples/codec_roundtrip.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "example"
+          ],
+          "name": "repl",
+          "src": "examples/repl.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "citizen",
+          "src": "tests/citizen.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "cli_surface",
+          "src": "tests/cli_surface.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "cookbook",
+          "src": "tests/cookbook.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "cross_repo_contracts",
+          "src": "tests/cross_repo_contracts.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "direct_surfaces",
+          "src": "tests/direct_surfaces.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "native_dynamic",
+          "src": "tests/native_dynamic.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "proc_macro_compile_fail",
+          "src": "tests/proc_macro_compile_fail.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "proc_macros",
+          "src": "tests/proc_macros.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r24_midi_features",
+          "src": "tests/r24_midi_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r25_portaudio_features",
+          "src": "tests/r25_portaudio_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r26_alsa_features",
+          "src": "tests/r26_alsa_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r27_pipewire_features",
+          "src": "tests/r27_pipewire_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r28_jack_features",
+          "src": "tests/r28_jack_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r29_audio_graph_live_features",
+          "src": "tests/r29_audio_graph_live_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r30_audio_dsp_features",
+          "src": "tests/r30_audio_dsp_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r31_audio_synth_features",
+          "src": "tests/r31_audio_synth_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r32_plugin_clap_features",
+          "src": "tests/r32_plugin_clap_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r33_plugin_lv2_features",
+          "src": "tests/r33_plugin_lv2_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r34_plugin_vst3_features",
+          "src": "tests/r34_plugin_vst3_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r35_platform_audio_features",
+          "src": "tests/r35_platform_audio_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "r36_daw_session_features",
+          "src": "tests/r36_daw_session_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "server_agent_e2e",
+          "src": "tests/server_agent_e2e.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "server_agent_e2e_support",
+          "src": "tests/server_agent_e2e_support.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "server_agent_swarm_e2e",
+          "src": "tests/server_agent_swarm_e2e.rs"
+        }
+      ]
+    },
+    {
+      "crate_name": "xtask",
+      "dependencies": [],
+      "description": "SIM workspace package for xtask.",
+      "features": [],
+      "group": "workspace",
+      "manifest": "xtask/Cargo.toml",
+      "name": "xtask",
+      "publish": "false",
+      "root": "xtask",
+      "rustdoc_summary": "SIM workspace package for xtask.",
+      "target_kinds": [
+        "bin"
+      ],
+      "targets": [
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "bin"
+          ],
+          "name": "xtask",
+          "src": "xtask/src/main.rs"
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "api_docs": "target/doc/",
+    "generated_by": "cargo run -p xtask -- simdoc",
+    "generation_timestamp": "2026-07-16T04:29:57+02:00",
+    "generator": "xtask repo-contract v1",
+    "git_commit": "b3ce2cbcf505ab0ab52f3e1e0dbf4ddfc91b407a",
+    "repo": "sim-sdk",
+    "schema": "sim.provenance.v1",
+    "source_commit": "b3ce2cbcf505ab0ab52f3e1e0dbf4ddfc91b407a",
+    "source_remote": "https://github.com/sim-nest/sim-sdk",
+    "validation_commands": [
+      "cargo fmt --all --check",
+      "cargo test",
+      "cargo clippy --all-targets -- -D warnings",
+      "cargo doc --no-deps",
+      "cargo run -p xtask -- simdoc --check",
+      "cargo run -p xtask -- check-file-sizes",
+      "cargo run -p xtask -- repo-contract --check --repo .",
+      "cargo run -p xtask -- validation-matrix --check --repo .",
+      "cargo run -p xtask -- crate-catalog --check --repo ."
+    ],
+    "workspace_hash": "743688de63921db8",
+    "workspace_hash_algorithm": "fnv1a64",
+    "workspace_hash_input_count": 173,
+    "workspace_hash_inputs": [
+      "Cargo.toml",
+      "crates/sim-conformance/Cargo.toml",
+      "crates/sim-conformance/tests/agents30.rs",
+      "crates/sim-conformance/tests/atelier_self_hosting.rs",
+      "crates/sim-conformance/tests/cli_boot.rs",
+      "crates/sim-conformance/tests/core_primitives.rs",
+      "crates/sim-conformance/tests/lib_lifecycle.rs",
+      "crates/sim-conformance/tests/placement_matrix.rs",
+      "crates/sim-conformance/tests/spec/cli_boot.rs",
+      "crates/sim-conformance/tests/spec/forge_eval.rs",
+      "crates/sim-conformance/tests/spec/instrument_streams.rs",
+      "crates/sim-conformance/tests/spec/lib_lifecycle.rs",
+      "crates/sim-conformance/tests/spec/placement.rs",
+      "crates/sim-conformance/tests/spec/rust_intelligence.rs",
+      "crates/sim-conformance/tests/spec/stream_matrix.rs",
+      "crates/sim-conformance/tests/spec/support.rs",
+      "crates/sim-conformance/tests/spec/surface_protocol.rs",
+      "crates/sim-conformance/tests/spec.rs",
+      "docs/generated/citizens.md",
+      "src/bin/sim.rs",
+      "src/classes/lib_support.rs",
+      "src/classes/model.rs",
+      "src/classes/tests.rs",
+      "src/classes.rs",
+      "src/codec_matrix_tests/bridge_roundtrip.rs",
+      "src/codec_matrix_tests/numbers_r10_14.rs",
+      "src/codec_matrix_tests/roadmap11.rs",
+      "src/codec_matrix_tests/roundtrip.rs",
+      "src/codec_matrix_tests/support.rs",
+      "src/codec_matrix_tests/table_roundtrip.rs",
+      "src/codec_matrix_tests/tree.rs",
+      "src/codec_matrix_tests/value_roundtrip.rs",
+      "src/codec_matrix_tests.rs",
+      "src/compat.rs",
+      "src/feature_contract_tests/cfg_sentinels.rs",
+      "src/feature_contract_tests/support.rs",
+      "src/feature_contract_tests.rs",
+      "src/femm_exports.rs",
+      "src/functions.rs",
+      "src/lib.rs",
+      "src/loaders/binary_pack.rs",
+      "src/loaders/reexport.rs",
+      "src/loaders/registry.rs",
+      "src/loaders/shared.rs",
+      "src/loaders/source/compile.rs",
+      "src/loaders/source.rs",
+      "src/loaders/tests/binary_pack.rs",
+      "src/loaders/tests/native.rs",
+      "src/loaders/tests/registry.rs",
+      "src/loaders/tests/source.rs",
+      "src/loaders/tests/support.rs",
+      "src/loaders/tests/wasm.rs",
+      "src/loaders/tests.rs",
+      "src/loaders.rs",
+      "src/macros/expand.rs",
+      "src/macros/model.rs",
+      "src/macros/runtime.rs",
+      "src/macros/template.rs",
+      "src/macros/tests.rs",
+      "src/macros.rs",
+      "src/music_stack.rs",
+      "src/music_stack_tests.rs",
+      "src/numbers_exports.rs",
+      "src/roadmap11_exports.rs",
+      "src/runtime/browse/coverage.rs",
+      "src/runtime/browse/evidence.rs",
+      "src/runtime/browse/facets.rs",
+      "src/runtime/browse/fields.rs",
+      "src/runtime/browse/graph.rs",
+      "src/runtime/browse/help_normalize.rs",
+      "src/runtime/browse/libs.rs",
+      "src/runtime/browse/predicates.rs",
+      "src/runtime/browse/projections.rs",
+      "src/runtime/browse/ref_parse.rs",
+      "src/runtime/browse/reflection/shape_help.rs",
+      "src/runtime/browse/reflection.rs",
+      "src/runtime/browse/registry.rs",
+      "src/runtime/browse/schema.rs",
+      "src/runtime/browse/surface_cards.rs",
+      "src/runtime/browse/surface_facets/codec_domain.rs",
+      "src/runtime/browse/surface_facets/k6.rs",
+      "src/runtime/browse/surface_facets/server_agent.rs",
+      "src/runtime/browse/surface_facets.rs",
+      "src/runtime/browse/test_values.rs",
+      "src/runtime/browse.rs",
+      "src/runtime/capabilities.rs",
+      "src/runtime/cookbook_directory/audio_stream.rs",
+      "src/runtime/cookbook_directory/codecs.rs",
+      "src/runtime/cookbook_directory/data.rs",
+      "src/runtime/cookbook_directory/femm.rs",
+      "src/runtime/cookbook_directory/music.rs",
+      "src/runtime/cookbook_directory/numbers.rs",
+      "src/runtime/cookbook_directory/runtime_libs.rs",
+      "src/runtime/cookbook_directory.rs",
+      "src/runtime/cookbook_discovery.rs",
+      "src/runtime/eval_policy.rs",
+      "src/runtime/help.rs",
+      "src/runtime/install/bootstrap.rs",
+      "src/runtime/install/exports.rs",
+      "src/runtime/install/optional.rs",
+      "src/runtime/install/register.rs",
+      "src/runtime/install/register_browse.rs",
+      "src/runtime/install/register_shapes.rs",
+      "src/runtime/install/register_tables.rs",
+      "src/runtime/install.rs",
+      "src/runtime/lambda.rs",
+      "src/runtime/lists.rs",
+      "src/runtime/realize.rs",
+      "src/runtime/shape_ops.rs",
+      "src/runtime/shape_ops_impl/algebra.rs",
+      "src/runtime/shape_ops_impl/compare.rs",
+      "src/runtime/shape_ops_impl/hooks.rs",
+      "src/runtime/shape_ops_impl/spec.rs",
+      "src/runtime/shape_ops_impl.rs",
+      "src/runtime/tables/build.rs",
+      "src/runtime/tables/helpers.rs",
+      "src/runtime/tables/ops.rs",
+      "src/runtime/tables.rs",
+      "src/runtime/test_runs.rs",
+      "src/runtime/testing.rs",
+      "src/runtime/tests/behavior.rs",
+      "src/runtime/tests/browse_conformance.rs",
+      "src/runtime/tests/browse_facets.rs",
+      "src/runtime/tests/browse_graph.rs",
+      "src/runtime/tests/browse_help.rs",
+      "src/runtime/tests/browse_projections.rs",
+      "src/runtime/tests/browse_reflection.rs",
+      "src/runtime/tests/browse_roundtrip.rs",
+      "src/runtime/tests/browse_schema.rs",
+      "src/runtime/tests/browse_surface_cards.rs",
+      "src/runtime/tests/browse_tests.rs",
+      "src/runtime/tests/cards.rs",
+      "src/runtime/tests/cookbook_discovery.rs",
+      "src/runtime/tests/eval_policy.rs",
+      "src/runtime/tests/lists.rs",
+      "src/runtime/tests/lists_lazy.rs",
+      "src/runtime/tests/number_dispatch.rs",
+      "src/runtime/tests/number_dispatch_support.rs",
+      "src/runtime/tests/numbers.rs",
+      "src/runtime/tests/numbers_r10_10.rs",
+      "src/runtime/tests/numbers_r10_11.rs",
+      "src/runtime/tests/numbers_r10_12.rs",
+      "src/runtime/tests/numbers_r10_13.rs",
+      "src/runtime/tests/numbers_r10_14.rs",
+      "src/runtime/tests/numbers_r10_3.rs",
+      "src/runtime/tests/numbers_r10_4.rs",
+      "src/runtime/tests/numbers_r10_5.rs",
+      "src/runtime/tests/numbers_r10_6.rs",
+      "src/runtime/tests/numbers_r10_7.rs",
+      "src/runtime/tests/numbers_r10_8.rs",
+      "src/runtime/tests/numbers_r8_09.rs",
+      "src/runtime/tests/numbers_surfaces.rs",
+      "src/runtime/tests/realize.rs",
+      "src/runtime/tests/roadmap11_r11_18.rs",
+      "src/runtime/tests/shape_r12.rs",
+      "src/runtime/tests/shape_r4.rs",
+      "src/runtime/tests/shape_r4_browse.rs",
+      "src/runtime/tests/shape_r4_compare.rs",
+      "src/runtime/tests/shape_r4_hooks.rs",
+      "src/runtime/tests/support.rs",
+      "src/runtime/tests/tables.rs",
+      "src/runtime/tests/tables_core.rs",
+      "src/runtime/tests/tables_lisp.rs",
+      "src/runtime/tests.rs",
+      "src/runtime.rs",
+      "src/shapes.rs",
+      "src/skill_tests.rs",
+      "src/standard_exports.rs",
+      "tests/native-abi-ui/borrow-to-destroy/Cargo.toml",
+      "tests/native-plugin/Cargo.toml",
+      "tests/proc-macro-ui/invalid-shape/Cargo.toml",
+      "tests/proc-macro-ui/missing-constructor/Cargo.toml",
+      "xtask/Cargo.toml"
+    ]
+  },
+  "recipe_book_count": 0,
+  "recipes": []
 }

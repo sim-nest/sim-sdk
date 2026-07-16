@@ -1,5 +1,2549 @@
 {
-  "schema": "sim.feature-map.v1",
-  "repo": "sim-sdk",
-  "packages": []
+  "generator": "xtask repo-contract v1",
+  "packages": [
+    {
+      "features": [
+        {
+          "edges": [
+            "dep:sim-lib-agent",
+            "server"
+          ],
+          "name": "agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "agent",
+            "sim-lib-agent/agent-net"
+          ],
+          "name": "agent-net",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-runner-core",
+            "core"
+          ],
+          "name": "agent-runner-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-runner-http",
+            "dep:sim-lib-agent",
+            "sim-lib-agent/runner-http",
+            "agent-runner-core",
+            "agent"
+          ],
+          "name": "agent-runner-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "agent-runner-http",
+            "sim-lib-agent-runner-http/tls"
+          ],
+          "name": "agent-runner-http-tls",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-runner-http",
+            "dep:sim-lib-agent",
+            "sim-lib-agent/runner-ollama",
+            "agent-runner-core",
+            "agent"
+          ],
+          "name": "agent-runner-ollama",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-runner-process",
+            "dep:sim-lib-agent",
+            "sim-lib-agent/runner-process",
+            "agent-runner-core",
+            "agent"
+          ],
+          "name": "agent-runner-process",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-audio-dsp",
+            "audio-graph-core",
+            "sound-core"
+          ],
+          "name": "audio-dsp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-audio-graph-core",
+            "stream-audio"
+          ],
+          "name": "audio-graph-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-audio-graph-live",
+            "audio-graph-core",
+            "stream-clock",
+            "stream-host"
+          ],
+          "name": "audio-graph-live",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-bridge",
+            "agent-runner-core",
+            "codec-bridge",
+            "stream-fabric",
+            "shape",
+            "core"
+          ],
+          "name": "bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-citizen",
+            "dep:sim-citizen-derive",
+            "core",
+            "sim-lib-discrete?/citizen"
+          ],
+          "name": "citizen",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "citizen"
+          ],
+          "name": "citizen-strict",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-algol",
+            "shape",
+            "core"
+          ],
+          "name": "codec-algol",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-binary",
+            "core"
+          ],
+          "name": "codec-binary",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-binary-base64",
+            "codec-binary",
+            "core"
+          ],
+          "name": "codec-binary-base64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-bitwise",
+            "core"
+          ],
+          "name": "codec-bitwise",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-bitwise-base64",
+            "codec-bitwise",
+            "core"
+          ],
+          "name": "codec-bitwise-base64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-bridge",
+            "core"
+          ],
+          "name": "codec-bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-chat",
+            "core"
+          ],
+          "name": "codec-chat",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-json",
+            "dep:serde",
+            "dep:serde_json",
+            "core"
+          ],
+          "name": "codec-json",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-lisp",
+            "dep:proc-macro2",
+            "core"
+          ],
+          "name": "codec-lisp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec-mcp",
+            "codec-json"
+          ],
+          "name": "codec-mcp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-control",
+            "core"
+          ],
+          "name": "control",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-cookbook",
+            "dep:sim-lib-cookbook",
+            "core",
+            "codec-lisp",
+            "sim-lib-agent?/cookbook"
+          ],
+          "name": "cookbook",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "cookbook",
+            "shape",
+            "citizen",
+            "bridge",
+            "codec-algol",
+            "codec-binary",
+            "codec-binary-base64",
+            "codec-bitwise",
+            "codec-bitwise-base64",
+            "codec-bridge",
+            "codec-chat",
+            "codec-json",
+            "codec-mcp",
+            "agent",
+            "audio-dsp",
+            "audio-graph-live",
+            "daw-session",
+            "discrete-rank",
+            "discrete-runtime",
+            "exec",
+            "femm-core",
+            "femm-field",
+            "femm-function",
+            "femm-ode",
+            "intent",
+            "list-cell",
+            "list-lazy",
+            "logic-core",
+            "mcp",
+            "midi-core",
+            "midi-live",
+            "midi-ble",
+            "midi-rtmidi",
+            "midi-shapes",
+            "music-lift",
+            "music-notation",
+            "music-shapes",
+            "music-synth",
+            "numbers-i64",
+            "numbers-arith",
+            "numbers-bigint",
+            "numbers-bool",
+            "numbers-f64",
+            "numbers-rational",
+            "numbers-complex",
+            "numbers-func",
+            "numbers-cas",
+            "numbers-cas-diff",
+            "numbers-cas-eval",
+            "numbers-exotic",
+            "numbers-fixed",
+            "numbers-float",
+            "numbers-numeric",
+            "numbers-quad",
+            "numbers-rk",
+            "numbers-stats",
+            "numbers-tensor",
+            "numbers-tensor-bcast",
+            "numbers-tensor-bit",
+            "numbers-tensor-cmplxf",
+            "numbers-tensor-f64",
+            "numbers-tensor-i64",
+            "numbers-tensor-linalg",
+            "numbers-tensor-rat64",
+            "openai-server",
+            "pitch-dissonance",
+            "pitch-namer",
+            "pitch-shapes",
+            "plugin-clap",
+            "plugin-vst3",
+            "rank",
+            "scene",
+            "server",
+            "skill",
+            "sound-audio-lift",
+            "sound-bridge",
+            "sound-dissonance",
+            "sound-render",
+            "sound-shapes",
+            "sound-timbre",
+            "sound-tuning",
+            "standard-binding",
+            "control",
+            "standard-sequence",
+            "standard-pattern",
+            "standard-scheme",
+            "standard-cl",
+            "standard-clojure",
+            "stream-alsa",
+            "stream-asio",
+            "stream-bridge",
+            "stream-core",
+            "stream-coreaudio",
+            "stream-jack",
+            "stream-pipewire",
+            "stream-portaudio",
+            "stream-prelude",
+            "table-fs",
+            "table-hash",
+            "table-http",
+            "table-lazy",
+            "topology-core"
+          ],
+          "name": "cookbook-all",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-kernel",
+            "dep:sim-value",
+            "dep:sim-lib-core"
+          ],
+          "name": "core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-daw-session",
+            "audio-graph-live",
+            "plugin-core",
+            "stream-audio",
+            "topology-core"
+          ],
+          "name": "daw-session",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "core",
+            "codec-lisp",
+            "numbers-f64"
+          ],
+          "name": "default",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "discrete-algebra",
+            "discrete-graph",
+            "discrete-comb",
+            "discrete-spectral"
+          ],
+          "name": "discrete",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/algebra",
+            "core"
+          ],
+          "name": "discrete-algebra",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/comb",
+            "core"
+          ],
+          "name": "discrete-comb",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/graph",
+            "core"
+          ],
+          "name": "discrete-graph",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "discrete-spectral",
+            "music-analysis",
+            "sim-lib-music-analysis/discrete-fwht"
+          ],
+          "name": "discrete-music",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/rank",
+            "rank",
+            "core"
+          ],
+          "name": "discrete-rank",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/runtime",
+            "discrete",
+            "core"
+          ],
+          "name": "discrete-runtime",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-discrete",
+            "sim-lib-discrete/spectral",
+            "core"
+          ],
+          "name": "discrete-spectral",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-run-loaders",
+            "sim-run-loaders/dynamic-native",
+            "codec-binary",
+            "shape"
+          ],
+          "name": "dynamic-native",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-exec",
+            "core"
+          ],
+          "name": "exec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-assembly",
+            "femm-space",
+            "numbers-ad",
+            "core"
+          ],
+          "name": "femm-assembly",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-codec",
+            "femm-core",
+            "femm-geometry",
+            "femm-material",
+            "femm-mesh",
+            "femm-space",
+            "femm-assembly",
+            "femm-solve",
+            "femm-flow",
+            "femm-physics",
+            "femm-post",
+            "femm-field",
+            "femm-function",
+            "femm-sensitiv",
+            "femm-tape",
+            "femm-ode",
+            "numbers-codec",
+            "core"
+          ],
+          "name": "femm-codec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-core",
+            "numbers-numeric",
+            "core"
+          ],
+          "name": "femm-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-field",
+            "femm-core",
+            "femm-post",
+            "numbers-func",
+            "numbers-tensor",
+            "core"
+          ],
+          "name": "femm-field",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-fixtures",
+            "femm-prelude",
+            "core"
+          ],
+          "name": "femm-fixtures",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-flow",
+            "femm-core",
+            "femm-assembly",
+            "femm-solve",
+            "numbers-func",
+            "numbers-numeric",
+            "core"
+          ],
+          "name": "femm-flow",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-function",
+            "femm-core",
+            "femm-field",
+            "numbers-func",
+            "core"
+          ],
+          "name": "femm-function",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-geometry",
+            "femm-core",
+            "core"
+          ],
+          "name": "femm-geometry",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-material",
+            "femm-core",
+            "numbers-ad",
+            "core"
+          ],
+          "name": "femm-material",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-mesh",
+            "femm-geometry",
+            "femm-material",
+            "core"
+          ],
+          "name": "femm-mesh",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-ode",
+            "femm-core",
+            "femm-function",
+            "femm-tape",
+            "numbers-rk",
+            "numbers-tensor",
+            "core"
+          ],
+          "name": "femm-ode",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-physics",
+            "femm-core",
+            "femm-assembly",
+            "numbers-complex",
+            "core"
+          ],
+          "name": "femm-physics",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-post",
+            "femm-core",
+            "femm-flow",
+            "femm-mesh",
+            "femm-physics",
+            "core"
+          ],
+          "name": "femm-post",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-prelude",
+            "femm-core",
+            "femm-geometry",
+            "femm-material",
+            "femm-mesh",
+            "femm-space",
+            "femm-assembly",
+            "femm-solve",
+            "femm-flow",
+            "femm-physics",
+            "femm-post",
+            "femm-field",
+            "femm-function",
+            "femm-sensitiv",
+            "femm-tape",
+            "femm-ode",
+            "femm-codec",
+            "numbers-prelude"
+          ],
+          "name": "femm-prelude",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-sensitiv",
+            "femm-core",
+            "femm-function",
+            "femm-solve",
+            "numbers-ad",
+            "numbers-numeric",
+            "core"
+          ],
+          "name": "femm-sensitiv",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-solve",
+            "femm-core",
+            "numbers-complex",
+            "core"
+          ],
+          "name": "femm-solve",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-space",
+            "femm-mesh",
+            "core"
+          ],
+          "name": "femm-space",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-femm-tape",
+            "femm-core",
+            "femm-function",
+            "femm-post",
+            "femm-solve",
+            "core"
+          ],
+          "name": "femm-tape",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-forge",
+            "bridge",
+            "codec-json"
+          ],
+          "name": "forge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-intent",
+            "core",
+            "shape"
+          ],
+          "name": "intent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-list-cell",
+            "core"
+          ],
+          "name": "list-cell",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-list-lazy",
+            "core"
+          ],
+          "name": "list-lazy",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "logic-core",
+            "logic-numbers"
+          ],
+          "name": "logic",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "logic-core",
+            "agent"
+          ],
+          "name": "logic-agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-logic",
+            "shape",
+            "codec-lisp"
+          ],
+          "name": "logic-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "logic-core",
+            "numbers-arith",
+            "numbers-f64",
+            "numbers-i64",
+            "numbers-rational"
+          ],
+          "name": "logic-numbers",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "logic-core",
+            "server"
+          ],
+          "name": "logic-server",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "logic-core",
+            "wasm"
+          ],
+          "name": "logic-wasm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-mcp",
+            "codec-mcp",
+            "core",
+            "shape"
+          ],
+          "name": "mcp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp-stdio",
+            "dep:sim-mcp-server"
+          ],
+          "name": "mcp-binary",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "sim-lib-mcp/cassette"
+          ],
+          "name": "mcp-cassette",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp-skill",
+            "sim-lib-mcp/client"
+          ],
+          "name": "mcp-client",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp-stream",
+            "server",
+            "server-net-http",
+            "sim-lib-mcp/http"
+          ],
+          "name": "mcp-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "agent-runner-core",
+            "sim-lib-mcp/sampling"
+          ],
+          "name": "mcp-sampling",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "skill",
+            "sim-lib-mcp/skill"
+          ],
+          "name": "mcp-skill",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "sim-lib-mcp/stdio"
+          ],
+          "name": "mcp-stdio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "stream-core",
+            "stream-fabric",
+            "stream-combinators",
+            "sim-lib-mcp/stream",
+            "sim-lib-mcp/progress"
+          ],
+          "name": "mcp-stream",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "midi-core",
+            "midi-smf",
+            "midi-live",
+            "midi-sysex",
+            "midi-shapes"
+          ],
+          "name": "midi",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-ble",
+            "midi-rtmidi",
+            "stream-host",
+            "core"
+          ],
+          "name": "midi-ble",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-core",
+            "core"
+          ],
+          "name": "midi-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-live",
+            "midi-core",
+            "core"
+          ],
+          "name": "midi-live",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-rtmidi",
+            "midi-core",
+            "stream-host",
+            "core"
+          ],
+          "name": "midi-rtmidi",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-shapes",
+            "midi-core",
+            "midi-smf",
+            "shape",
+            "core"
+          ],
+          "name": "midi-shapes",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-smf",
+            "midi-core",
+            "core",
+            "sim-table-fs?/midi"
+          ],
+          "name": "midi-smf",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-sysex",
+            "midi-core",
+            "core"
+          ],
+          "name": "midi-sysex",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-midi-wasm-frame",
+            "midi",
+            "wasm"
+          ],
+          "name": "midi-wasm-frame",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "music-core",
+            "music-combinators",
+            "music-analysis",
+            "music-transform",
+            "music-lower",
+            "music-lift",
+            "music-notation",
+            "music-shapes",
+            "pitch",
+            "midi"
+          ],
+          "name": "music",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-analysis",
+            "music-core",
+            "pitch-set",
+            "core"
+          ],
+          "name": "music-analysis",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-combinators",
+            "music-core",
+            "core"
+          ],
+          "name": "music-combinators",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-core",
+            "pitch-core",
+            "midi-core",
+            "numbers-rational",
+            "core"
+          ],
+          "name": "music-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-lift",
+            "music-core",
+            "music-analysis",
+            "midi-smf",
+            "pitch-namer",
+            "core"
+          ],
+          "name": "music-lift",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-lower",
+            "music-core",
+            "midi-smf",
+            "core"
+          ],
+          "name": "music-lower",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-notation",
+            "music-core",
+            "pitch-core",
+            "sim-table-fs?/notation",
+            "core"
+          ],
+          "name": "music-notation",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-shapes",
+            "music-core",
+            "music-transform",
+            "music-analysis",
+            "music-lower",
+            "music-lift",
+            "sim-table-fs?/music",
+            "shape",
+            "core"
+          ],
+          "name": "music-shapes",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "pitch",
+            "midi",
+            "music",
+            "sound",
+            "sound-gm",
+            "sound-audio-lift",
+            "sound-music"
+          ],
+          "name": "music-stack",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "music-stack",
+            "pitch-wasm-frame",
+            "midi-wasm-frame",
+            "music-wasm-frame",
+            "sound-wasm-frame"
+          ],
+          "name": "music-stack-wasm-frame",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-synth",
+            "audio-dsp",
+            "pitch-core",
+            "midi-core"
+          ],
+          "name": "music-synth",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-transform",
+            "music-core",
+            "pitch-scale",
+            "core"
+          ],
+          "name": "music-transform",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-wasm-frame",
+            "music",
+            "wasm"
+          ],
+          "name": "music-wasm-frame",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-ad"
+          ],
+          "name": "numbers-ad",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-arith",
+            "core"
+          ],
+          "name": "numbers-arith",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-bigint",
+            "numbers-arith",
+            "numbers-i64",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-bigint",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-bool",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-bool",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-cas",
+            "numbers-arith",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-cas",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-cas-diff",
+            "numbers-cas",
+            "core"
+          ],
+          "name": "numbers-cas-diff",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-cas-eval",
+            "numbers-cas",
+            "core"
+          ],
+          "name": "numbers-cas-eval",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-codec",
+            "numbers-bigint",
+            "numbers-bool",
+            "numbers-cas",
+            "numbers-complex",
+            "numbers-core",
+            "numbers-exotic",
+            "numbers-f64",
+            "numbers-fixed",
+            "numbers-float",
+            "numbers-func",
+            "numbers-i64",
+            "numbers-numeric",
+            "numbers-quad",
+            "numbers-rational",
+            "numbers-rk",
+            "numbers-tensor",
+            "numbers-tensor-bcast",
+            "numbers-tensor-bit",
+            "numbers-tensor-cmplxf",
+            "numbers-tensor-f64",
+            "numbers-tensor-i64",
+            "numbers-tensor-linalg",
+            "numbers-tensor-rat64",
+            "core"
+          ],
+          "name": "numbers-codec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-complex",
+            "numbers-arith",
+            "core"
+          ],
+          "name": "numbers-complex",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-core"
+          ],
+          "name": "numbers-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-exotic",
+            "numbers-arith",
+            "numbers-f64",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-exotic",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-f64",
+            "numbers-arith",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-f64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-fixed",
+            "numbers-i64",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-fixed",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-float",
+            "numbers-f64",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-float",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-func",
+            "numbers-arith",
+            "numbers-core",
+            "numbers-cas-diff",
+            "numbers-cas-eval",
+            "core"
+          ],
+          "name": "numbers-func",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-i64",
+            "numbers-arith",
+            "numbers-f64",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-i64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-numeric",
+            "numbers-f64",
+            "numbers-func",
+            "core"
+          ],
+          "name": "numbers-numeric",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-prelude",
+            "numbers-ad",
+            "numbers-arith",
+            "numbers-bigint",
+            "numbers-bool",
+            "numbers-cas",
+            "numbers-cas-diff",
+            "numbers-cas-eval",
+            "numbers-codec",
+            "numbers-complex",
+            "numbers-core",
+            "numbers-exotic",
+            "numbers-f64",
+            "numbers-fixed",
+            "numbers-float",
+            "numbers-func",
+            "numbers-i64",
+            "numbers-numeric",
+            "numbers-quad",
+            "numbers-rational",
+            "numbers-rk",
+            "numbers-tensor",
+            "numbers-tensor-bcast",
+            "numbers-tensor-bit",
+            "numbers-tensor-cmplxf",
+            "numbers-tensor-f64",
+            "numbers-tensor-i64",
+            "numbers-tensor-linalg",
+            "numbers-tensor-rat64"
+          ],
+          "name": "numbers-prelude",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-quad",
+            "numbers-numeric",
+            "numbers-f64",
+            "core"
+          ],
+          "name": "numbers-quad",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-rational",
+            "numbers-arith",
+            "numbers-bigint",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-rational",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-rk",
+            "numbers-numeric",
+            "numbers-f64",
+            "numbers-tensor",
+            "core"
+          ],
+          "name": "numbers-rk",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-stats",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-stats",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor",
+            "numbers-core",
+            "core"
+          ],
+          "name": "numbers-tensor",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-bcast",
+            "numbers-arith",
+            "numbers-tensor",
+            "core"
+          ],
+          "name": "numbers-tensor-bcast",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-bit",
+            "numbers-bool",
+            "numbers-tensor"
+          ],
+          "name": "numbers-tensor-bit",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-cmplxf",
+            "numbers-complex",
+            "numbers-f64",
+            "numbers-tensor"
+          ],
+          "name": "numbers-tensor-cmplxf",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-f64",
+            "numbers-f64",
+            "numbers-tensor"
+          ],
+          "name": "numbers-tensor-f64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-i64",
+            "numbers-bigint",
+            "numbers-i64",
+            "numbers-tensor"
+          ],
+          "name": "numbers-tensor-i64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-linalg",
+            "numbers-arith",
+            "numbers-cas",
+            "numbers-tensor",
+            "core"
+          ],
+          "name": "numbers-tensor-linalg",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-tensor-rat64",
+            "numbers-rational",
+            "numbers-tensor"
+          ],
+          "name": "numbers-tensor-rat64",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-openai-server",
+            "core"
+          ],
+          "name": "openai-server",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "openai-server",
+            "server-net-http",
+            "sim-lib-openai-server/http"
+          ],
+          "name": "openai-server-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "pitch-core",
+            "pitch-set",
+            "pitch-scale",
+            "pitch-chord",
+            "pitch-namer",
+            "pitch-dissonance",
+            "pitch-shapes"
+          ],
+          "name": "pitch",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-chord",
+            "pitch-scale",
+            "pitch-set",
+            "core"
+          ],
+          "name": "pitch-chord",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-core",
+            "core"
+          ],
+          "name": "pitch-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-dissonance",
+            "pitch-namer",
+            "pitch-set",
+            "pitch-scale",
+            "core"
+          ],
+          "name": "pitch-dissonance",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-namer",
+            "pitch-namer-forte",
+            "pitch-namer-jazz",
+            "pitch-namer-roman",
+            "pitch-namer-riemann",
+            "pitch-set",
+            "pitch-scale",
+            "pitch-chord",
+            "core"
+          ],
+          "name": "pitch-namer",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-namer-forte",
+            "pitch-set",
+            "core"
+          ],
+          "name": "pitch-namer-forte",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-namer-jazz",
+            "pitch-core",
+            "pitch-set",
+            "pitch-chord",
+            "core"
+          ],
+          "name": "pitch-namer-jazz",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-namer-riemann",
+            "pitch-chord",
+            "core"
+          ],
+          "name": "pitch-namer-riemann",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-namer-roman",
+            "pitch-scale",
+            "pitch-chord",
+            "core"
+          ],
+          "name": "pitch-namer-roman",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-scale",
+            "pitch-set",
+            "core"
+          ],
+          "name": "pitch-scale",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-set",
+            "pitch-core",
+            "core"
+          ],
+          "name": "pitch-set",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-shapes",
+            "pitch-core",
+            "pitch-set",
+            "pitch-scale",
+            "pitch-chord",
+            "shape",
+            "core"
+          ],
+          "name": "pitch-shapes",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-wasm-frame",
+            "pitch",
+            "wasm"
+          ],
+          "name": "pitch-wasm-frame",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-plugin-clap",
+            "plugin-core",
+            "audio-dsp"
+          ],
+          "name": "plugin-clap",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-plugin-core",
+            "audio-graph-core"
+          ],
+          "name": "plugin-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-plugin-lv2",
+            "plugin-core",
+            "audio-dsp"
+          ],
+          "name": "plugin-lv2",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-plugin-vst3",
+            "plugin-core",
+            "audio-dsp"
+          ],
+          "name": "plugin-vst3",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-macros",
+            "core",
+            "shape",
+            "codec-binary"
+          ],
+          "name": "proc-macros",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-rank",
+            "core"
+          ],
+          "name": "rank",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "rank",
+            "sim-lib-rank/rank-codec-fallback"
+          ],
+          "name": "rank-codec-fallback",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "rank",
+            "sim-lib-rank/rank-expr"
+          ],
+          "name": "rank-expr",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "rank",
+            "sim-lib-rank/rank-learn"
+          ],
+          "name": "rank-learn",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "rank",
+            "sim-lib-rank/rank-music"
+          ],
+          "name": "rank-music",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "rank",
+            "sim-lib-rank/rank-scatter"
+          ],
+          "name": "rank-scatter",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-scene",
+            "core",
+            "shape",
+            "codec-lisp"
+          ],
+          "name": "scene",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-run-core",
+            "dep:sim-lib-repl",
+            "mcp",
+            "sim-lib-mcp/serve",
+            "web",
+            "dep:sim-web-shell",
+            "numbers-prelude",
+            "cookbook-all"
+          ],
+          "name": "serve-cli",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-server",
+            "core",
+            "codec-binary",
+            "codec-lisp",
+            "codec-chat"
+          ],
+          "name": "server",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "server",
+            "sim-lib-server/server-net-http"
+          ],
+          "name": "server-net-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-shape",
+            "core"
+          ],
+          "name": "shape",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-skill",
+            "core",
+            "shape",
+            "codec-json"
+          ],
+          "name": "skill",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "agent",
+            "sim-lib-skill/agent"
+          ],
+          "name": "skill-agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "sim-lib-skill/cache"
+          ],
+          "name": "skill-cache",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "sim-lib-skill/cassette"
+          ],
+          "name": "skill-cassette",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "sim-lib-skill/http"
+          ],
+          "name": "skill-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "codec-mcp",
+            "sim-lib-skill/mcp"
+          ],
+          "name": "skill-mcp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "openai-server",
+            "sim-lib-skill/openai"
+          ],
+          "name": "skill-openai",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "sim-lib-skill/process"
+          ],
+          "name": "skill-process",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill",
+            "agent",
+            "sim-lib-skill/runner"
+          ],
+          "name": "skill-runner",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "skill-mcp",
+            "mcp-skill",
+            "server",
+            "sim-lib-skill/serve"
+          ],
+          "name": "skill-serve",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "sound-core",
+            "sound-spectrum",
+            "sound-timbre",
+            "sound-tuning",
+            "sound-dissonance",
+            "sound-bridge",
+            "sound-render",
+            "sound-shapes",
+            "pitch",
+            "midi"
+          ],
+          "name": "sound",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-audio-lift",
+            "sound-spectrum",
+            "sound-tuning",
+            "pitch",
+            "core"
+          ],
+          "name": "sound-audio-lift",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-bridge",
+            "sound-core",
+            "sound-timbre",
+            "sound-tuning",
+            "midi-core",
+            "core"
+          ],
+          "name": "sound-bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-core",
+            "pitch-core",
+            "midi-core",
+            "core"
+          ],
+          "name": "sound-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-dissonance",
+            "sound-core",
+            "sound-spectrum",
+            "sound-tuning",
+            "core"
+          ],
+          "name": "sound-dissonance",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "sound-spectrum"
+          ],
+          "name": "sound-fft",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-gm",
+            "sound-timbre",
+            "sound-bridge",
+            "core"
+          ],
+          "name": "sound-gm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "sound",
+            "music",
+            "sim-lib-sound-audio-lift?/sound-music"
+          ],
+          "name": "sound-music",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-render",
+            "sound-core",
+            "sound-bridge",
+            "core"
+          ],
+          "name": "sound-render",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-shapes",
+            "sound-audio-lift",
+            "sound-core",
+            "sound-spectrum",
+            "sound-timbre",
+            "sound-tuning",
+            "sound-dissonance",
+            "sound-bridge",
+            "sound-render",
+            "sim-table-fs?/sound",
+            "sim-table-fs?/tuning",
+            "shape",
+            "core"
+          ],
+          "name": "sound-shapes",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-spectrum",
+            "sound-core",
+            "core"
+          ],
+          "name": "sound-spectrum",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-timbre",
+            "sound-core",
+            "sound-spectrum",
+            "core"
+          ],
+          "name": "sound-timbre",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-tuning",
+            "sound-core",
+            "pitch-core",
+            "sim-table-fs?/tuning",
+            "core"
+          ],
+          "name": "sound-tuning",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sound-wasm-frame",
+            "sim-lib-sound-wasm-frame/sound-music",
+            "sound",
+            "sound-music",
+            "wasm"
+          ],
+          "name": "sound-wasm-frame",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "standard-core",
+            "standard-binding",
+            "standard-sequence",
+            "standard-pattern",
+            "standard-dispatch",
+            "standard-namespace",
+            "standard-mutation",
+            "standard-scheme",
+            "standard-islisp",
+            "standard-clojure",
+            "standard-cl",
+            "standard-julia",
+            "standard-lua",
+            "standard-ruby",
+            "standard-typed-lazy"
+          ],
+          "name": "standard",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-binding",
+            "standard-core"
+          ],
+          "name": "standard-binding",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-cl",
+            "standard-core",
+            "standard-binding",
+            "standard-dispatch",
+            "standard-namespace",
+            "standard-mutation",
+            "control"
+          ],
+          "name": "standard-cl",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-clojure",
+            "standard-core",
+            "standard-sequence",
+            "standard-namespace",
+            "control"
+          ],
+          "name": "standard-clojure",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-standard-core",
+            "core"
+          ],
+          "name": "standard-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-dispatch",
+            "standard-core",
+            "shape"
+          ],
+          "name": "standard-dispatch",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-islisp",
+            "standard-core",
+            "standard-dispatch"
+          ],
+          "name": "standard-islisp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-julia",
+            "standard-core",
+            "standard-dispatch",
+            "codec-algol"
+          ],
+          "name": "standard-julia",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-lua",
+            "standard-core",
+            "standard-mutation",
+            "control",
+            "codec-algol"
+          ],
+          "name": "standard-lua",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-mutation",
+            "standard-core"
+          ],
+          "name": "standard-mutation",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-namespace",
+            "standard-core"
+          ],
+          "name": "standard-namespace",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pattern",
+            "standard-core",
+            "shape"
+          ],
+          "name": "standard-pattern",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-ruby",
+            "standard-core",
+            "standard-dispatch",
+            "control",
+            "codec-algol"
+          ],
+          "name": "standard-ruby",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-scheme",
+            "standard-core",
+            "standard-binding",
+            "standard-sequence",
+            "standard-pattern",
+            "control"
+          ],
+          "name": "standard-scheme",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-sequence",
+            "standard-core"
+          ],
+          "name": "standard-sequence",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-typed-lazy",
+            "standard-core",
+            "standard-pattern",
+            "control",
+            "codec-algol"
+          ],
+          "name": "standard-typed-lazy",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-alsa",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-host"
+          ],
+          "name": "stream-alsa",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-asio",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-host"
+          ],
+          "name": "stream-asio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-audio",
+            "stream-core"
+          ],
+          "name": "stream-audio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-bridge",
+            "stream-prelude",
+            "stream-audio",
+            "stream-midi",
+            "sound-render",
+            "sound-audio-lift",
+            "sound-gm"
+          ],
+          "name": "stream-bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-clock",
+            "stream-core"
+          ],
+          "name": "stream-clock",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-combinators",
+            "stream-core"
+          ],
+          "name": "stream-combinators",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-core",
+            "core"
+          ],
+          "name": "stream-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-coreaudio",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-host"
+          ],
+          "name": "stream-coreaudio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-fabric",
+            "stream-core"
+          ],
+          "name": "stream-fabric",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-file",
+            "stream-audio",
+            "stream-midi",
+            "midi-smf"
+          ],
+          "name": "stream-file",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-host",
+            "stream-midi",
+            "sim-lib-stream-host/rtp-midi"
+          ],
+          "name": "stream-host",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-jack",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-clock",
+            "stream-host"
+          ],
+          "name": "stream-jack",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-midi",
+            "stream-core",
+            "midi-core"
+          ],
+          "name": "stream-midi",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-pipewire",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-host"
+          ],
+          "name": "stream-pipewire",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-portaudio",
+            "audio-graph-core",
+            "stream-audio",
+            "stream-host"
+          ],
+          "name": "stream-portaudio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-prelude",
+            "stream-audio",
+            "stream-midi",
+            "stream-combinators"
+          ],
+          "name": "stream-prelude",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-db",
+            "core"
+          ],
+          "name": "table-db",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-fs",
+            "codec-lisp",
+            "codec-json",
+            "codec-binary",
+            "codec-binary-base64",
+            "codec-chat",
+            "codec-algol",
+            "core"
+          ],
+          "name": "table-fs",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-hash",
+            "core"
+          ],
+          "name": "table-hash",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-http",
+            "codec-lisp",
+            "core"
+          ],
+          "name": "table-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-lazy",
+            "core"
+          ],
+          "name": "table-lazy",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-override",
+            "core"
+          ],
+          "name": "table-override",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-table-remote",
+            "server"
+          ],
+          "name": "table-remote",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "topology-agent",
+            "topology-stream",
+            "topology-table",
+            "topology-list",
+            "topology-codec"
+          ],
+          "name": "topology",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "agent"
+          ],
+          "name": "topology-agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "codec-lisp",
+            "codec-json",
+            "codec-binary"
+          ],
+          "name": "topology-codec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-topology"
+          ],
+          "name": "topology-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "list-cell"
+          ],
+          "name": "topology-list",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "stream-core",
+            "stream-host"
+          ],
+          "name": "topology-stream",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "topology-core",
+            "table-hash"
+          ],
+          "name": "topology-table",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-view",
+            "scene",
+            "intent",
+            "codec-json"
+          ],
+          "name": "view",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "agent",
+            "topology-core",
+            "dep:sim-lib-view-agent"
+          ],
+          "name": "view-agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "codec-bridge",
+            "dep:sim-lib-view-bridge"
+          ],
+          "name": "view-bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "codec-lisp",
+            "codec-json",
+            "codec-binary",
+            "dep:sim-lib-view-codec"
+          ],
+          "name": "view-codec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "daw-session",
+            "audio-graph-core",
+            "plugin-core",
+            "dep:sim-lib-view-daw"
+          ],
+          "name": "view-daw",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "dep:sim-lib-view-doc"
+          ],
+          "name": "view-doc",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "view",
+            "numbers-numeric",
+            "dep:sim-lib-view-math"
+          ],
+          "name": "view-math",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-run-loaders",
+            "sim-run-loaders/wasm",
+            "dep:sim-wasm-abi",
+            "core"
+          ],
+          "name": "wasm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "web-bridge"
+          ],
+          "name": "web",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-web-bridge",
+            "view",
+            "web-layout"
+          ],
+          "name": "web-bridge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "web",
+            "view-agent",
+            "view-doc",
+            "view-math",
+            "view-codec",
+            "view-daw"
+          ],
+          "name": "web-full",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-web-layout",
+            "view"
+          ],
+          "name": "web-layout",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "web",
+            "dep:sim-lib-view-wasm-frame",
+            "wasm"
+          ],
+          "name": "web-wasm-frame",
+          "workspace_edges": []
+        }
+      ],
+      "group": "workspace",
+      "package": "sim-nest"
+    },
+    {
+      "features": [],
+      "group": "workspace",
+      "package": "xtask"
+    }
+  ]
 }
