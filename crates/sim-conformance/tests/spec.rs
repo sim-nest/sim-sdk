@@ -26,6 +26,8 @@ use sim::{
 
 #[path = "spec/instrument_streams.rs"]
 mod instrument_streams;
+#[path = "spec/forge_eval.rs"]
+mod forge_eval;
 #[path = "spec/rust_intelligence.rs"]
 mod rust_intelligence;
 #[path = "spec/stream_matrix.rs"]
