@@ -92,6 +92,8 @@ fn install_eval_stack(cx: &mut sim::kernel::Cx) {
 fn configure_repl_bootloader(loader: Bootloader) -> Bootloader {
     loader
         .with_context(install_eval_stack)
+        .with_capability(sim::kernel::macro_expand_capability())
+        .with_capability(sim::kernel::macro_expand_eval_capability())
         // The Lisp codec is registered as a host factory so the boot-codec resolver
         // finds `codec/lisp` (it falls back to a host source when the crates.io
         // resolver has nothing), mirroring `configure_web_bootloader`.
