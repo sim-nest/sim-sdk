@@ -35,6 +35,8 @@ pub use sim_lib_core as lib_core;
 pub use sim_lib_dispatch as lib_dispatch;
 #[cfg(feature = "exec")]
 pub use sim_lib_exec as lib_exec;
+#[cfg(feature = "forge")]
+pub use sim_lib_forge as forge;
 #[cfg(feature = "standard-cl")]
 pub use sim_lib_lang_cl as lib_lang_cl;
 #[cfg(feature = "standard-clojure")]

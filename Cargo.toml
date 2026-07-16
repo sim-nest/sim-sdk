@@ -1,6 +1,6 @@
 [package]
 name = "sim-nest"
-version = "0.1.21"
+version = "0.1.22"
 edition = "2024"
 license = "MPL-2.0"
 description = "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features."
@@ -89,6 +89,7 @@ sim-lib-daw-session = { optional = true, version = "0.1.1" }
 sim-lib-discrete = { optional = true, version = "0.1.3" }
 sim-lib-dispatch = { optional = true, version = "0.1.0" }
 sim-lib-exec = { optional = true, version = "0.1.0" }
+sim-lib-forge = { optional = true, version = "0.1.0" }
 sim-lib-femm-assembly = { optional = true, version = "0.1.1" }
 sim-lib-femm-codec = { optional = true, version = "0.1.1" }
 sim-lib-femm-core = { optional = true, version = "0.1.1" }
@@ -307,6 +308,7 @@ femm-sensitiv = ["dep:sim-lib-femm-sensitiv", "femm-core", "femm-function", "fem
 femm-solve = ["dep:sim-lib-femm-solve", "femm-core", "numbers-complex", "core"]
 femm-space = ["dep:sim-lib-femm-space", "femm-mesh", "core"]
 femm-tape = ["dep:sim-lib-femm-tape", "femm-core", "femm-function", "femm-post", "femm-solve", "core"]
+forge = ["dep:sim-lib-forge", "bridge", "codec-json"]
 intent = ["dep:sim-lib-intent", "core", "shape"]
 list-cell = ["dep:sim-list-cell", "core"]
 list-lazy = ["dep:sim-list-lazy", "core"]

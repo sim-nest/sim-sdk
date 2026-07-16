@@ -10,6 +10,5 @@ repository = "https://github.com/sim-nest/sim-sdk"
 homepage = "https://github.com/sim-nest/sim-sdk"
 
 [dev-dependencies]
-sim = { package = "sim-nest", version = "0.1.0", default-features = false, features = ["core", "shape", "codec-lisp", "codec-json", "codec-binary", "codec-binary-base64", "codec-algol", "numbers-prelude", "numbers-stats", "standard", "server", "agent", "control", "exec", "table-fs", "table-http", "wasm", "dynamic-native", "rank", "stream-core", "stream-combinators", "stream-fabric", "stream-file", "stream-host", "stream-bridge", "music-synth", "audio-graph-live", "daw-session", "topology-core", "web-bridge", "view-daw"], path = "../.." }
-sim-lib-forge = { version = "0.1.0" }
+sim = { package = "sim-nest", version = "0.1.0", default-features = false, features = ["core", "shape", "codec-lisp", "codec-json", "codec-binary", "codec-binary-base64", "codec-algol", "numbers-prelude", "numbers-stats", "standard", "server", "agent", "control", "exec", "table-fs", "table-http", "wasm", "dynamic-native", "rank", "stream-core", "stream-combinators", "stream-fabric", "stream-file", "stream-host", "stream-bridge", "music-synth", "audio-graph-live", "daw-session", "topology-core", "web-bridge", "view-daw", "forge"], path = "../.." }
 sim-kernel = { version = "0.1.0", features = ["test-support"] }
