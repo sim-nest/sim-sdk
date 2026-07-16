@@ -206,21 +206,17 @@ pub(super) fn manifest_to_expr(manifest: &sim_kernel::LibManifest) -> sim_kernel
                     .exports
                     .iter()
                     .map(|export| {
-                        let kind = match export {
-                            sim_kernel::Export::Class { symbol, .. } => ("class", symbol),
-                            sim_kernel::Export::Function { symbol, .. } => ("function", symbol),
-                            sim_kernel::Export::Macro { symbol, .. } => ("macro", symbol),
-                            sim_kernel::Export::Shape { symbol, .. } => ("shape", symbol),
-                            sim_kernel::Export::Codec { symbol, .. } => ("codec", symbol),
-                            sim_kernel::Export::NumberDomain { symbol, .. } => {
-                                ("number-domain", symbol)
-                            }
-                            sim_kernel::Export::Value { symbol } => ("value", symbol),
-                            sim_kernel::Export::Site { symbol, .. } => ("site", symbol),
-                        };
                         sim_kernel::Expr::Map(vec![
-                            symbol_entry("kind", sim_kernel::Expr::String(kind.0.to_owned())),
-                            symbol_entry("symbol", sim_kernel::Expr::Symbol(kind.1.clone())),
+                            symbol_entry(
+                                "kind",
+                                sim_kernel::Expr::String(
+                                    export.kind_symbol().symbol().as_qualified_str(),
+                                ),
+                            ),
+                            symbol_entry(
+                                "symbol",
+                                sim_kernel::Expr::Symbol(export.symbol().clone()),
+                            ),
                         ])
                     })
                     .collect(),
