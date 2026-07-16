@@ -36,7 +36,7 @@ use sim::kernel::{
     AbiVersion, Args, CORE_FUNCTION_CLASS_ID, Callable, ClassRef, Cx, DefaultFactory, EagerPolicy,
     EncodeOptions, Export, Expr, Lib, LibManifest, LibSource, LibTarget, Linker, LoadCx,
     NumberLiteral, Object, ObjectCompat, QuoteMode, ReadPolicy, Symbol, Value, Version,
-    eval_fabric_capability,
+    eval_fabric_capability, macro_expand_eval_capability,
 };
 use sim::lib_intent::{Origin, intent};
 use sim::lib_view::{LensRegistry, UNIVERSAL_EDITOR_ID, register_universal_default};
@@ -45,6 +45,7 @@ fn cx_with_public_runtime() -> Cx {
     let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
     sim::runtime::install_core_runtime(&mut cx);
     cx.grant(eval_fabric_capability());
+    cx.grant(macro_expand_eval_capability());
     install_public_codecs(&mut cx);
     cx
 }

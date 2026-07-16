@@ -9,6 +9,7 @@ use sim::{
     codec::{Input, decode_with_codec},
     kernel::{Cx, DefaultFactory, EagerPolicy, Expr, QuoteMode, ReadPolicy, Symbol},
 };
+use sim_lib_cookbook::CookbookCapabilityProfile;
 
 const EXPECTED_IDS: [&str; 5] = [
     "atelier-radar-standard-crate",
@@ -254,7 +255,8 @@ fn assert_setup_evaluates_to_expected(cx: &mut Cx, path: &Path, doc: &RecipeDoc)
 }
 
 fn build_decode_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    CookbookCapabilityProfile::seat(&seat, &mut cx).unwrap();
     sim::runtime::install_core_runtime(&mut cx);
     sim::numbers_prelude::NumbersPreludeLib::new()
         .install_all(&mut cx)

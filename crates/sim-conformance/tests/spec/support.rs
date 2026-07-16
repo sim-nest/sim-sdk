@@ -12,6 +12,7 @@ use sim::{
         Symbol, Value, Version,
     },
 };
+use sim_lib_cookbook::CookbookCapabilityProfile;
 
 /// The authored architecture and conformance contract (`SIM.md`).
 ///
@@ -36,7 +37,8 @@ pub(crate) static CONFORMANCE_CONTRACT: LazyLock<String> = LazyLock::new(|| {
 });
 
 pub(crate) fn cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    CookbookCapabilityProfile::seat(&seat, &mut cx).unwrap();
     sim::runtime::install_core_runtime(&mut cx);
     sim::numbers_prelude::NumbersPreludeLib::new()
         .install_all(&mut cx)

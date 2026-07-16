@@ -1,6 +1,8 @@
 use std::{collections::BTreeSet, sync::Arc};
 
-use sim_kernel::{Args, Cx, DefaultFactory, EagerPolicy, Error, Expr, Symbol, Value};
+use sim_kernel::{
+    Args, Cx, DefaultFactory, EagerPolicy, Error, Expr, Symbol, Value, macro_expand_eval_capability,
+};
 
 use crate::runtime::{
     SimTest, TestExpected,
@@ -120,6 +122,7 @@ fn root_graph_reaches_core_schema_codec_shape_and_test_subjects() {
 fn conformance_cx() -> Cx {
     let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
     install_core_runtime(&mut cx);
+    cx.grant(macro_expand_eval_capability());
     install_enabled_codecs(&mut cx);
     cx
 }

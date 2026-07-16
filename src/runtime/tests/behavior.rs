@@ -1,12 +1,10 @@
 use std::sync::Arc;
 
-use sim_kernel::{
-    Args, Cx, DefaultFactory, EagerPolicy, Expr, NoopEvalPolicy, NumberLiteral, Symbol,
-};
+use sim_kernel::{Args, DefaultFactory, EagerPolicy, Expr, NoopEvalPolicy, NumberLiteral, Symbol};
 
 use crate::runtime::{SimTest, TestExpected, install_core_runtime};
 
-use super::support::{UnsupportedExportLib, call_expr, table_value};
+use super::support::{UnsupportedExportLib, call_expr, eval_cx, table_value};
 
 #[test]
 fn installs_core_runtime_objects() {
@@ -198,8 +196,7 @@ fn loaded_lib_browse_surface_can_report_unsupported_exports() {
 
 #[test]
 fn lambda_uses_scoped_locals_without_leaking_bindings() {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
-    install_core_runtime(&mut cx);
+    let mut cx = eval_cx();
     let false_value = cx.factory().bool(false).unwrap();
     cx.env_mut().define(Symbol::new("x"), false_value);
     let lambda = call_expr(
@@ -220,8 +217,7 @@ fn lambda_uses_scoped_locals_without_leaking_bindings() {
 
 #[test]
 fn lambda_class_destructuring_binds_object_fields() {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
-    install_core_runtime(&mut cx);
+    let mut cx = eval_cx();
     let lambda = call_expr(
         Symbol::new("lambda"),
         vec![

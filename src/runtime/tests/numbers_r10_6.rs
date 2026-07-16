@@ -24,6 +24,7 @@ use sim_codec_lisp::LispCodecLib;
 ))]
 use sim_kernel::{
     DefaultFactory, EagerPolicy, EncodeOptions, Expr, NumberLiteral, QuoteMode, Symbol,
+    macro_expand_eval_capability,
 };
 
 #[cfg(all(
@@ -41,6 +42,7 @@ use crate::runtime::install_core_runtime;
 fn runtime() -> sim_kernel::Cx {
     let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
     install_core_runtime(&mut cx);
+    cx.grant(macro_expand_eval_capability());
     let lisp = LispCodecLib::new(cx.registry_mut().fresh_codec_id()).unwrap();
     cx.load_lib(&lisp).unwrap();
     cx

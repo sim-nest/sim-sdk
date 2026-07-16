@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use sim_kernel::{
     Args, CapabilityName, Cx, DefaultFactory, EagerPolicy, Expr, Symbol, Test, Value,
+    macro_expand_eval_capability,
 };
 
 use crate::runtime::{
@@ -301,6 +302,7 @@ fn install_lisp_codec(cx: &mut Cx) {
 fn test_cx() -> Cx {
     let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
     install_core_runtime(&mut cx);
+    cx.grant(macro_expand_eval_capability());
     cx
 }
 

@@ -4,21 +4,18 @@ use std::sync::{
 };
 
 use sim_kernel::{
-    Args, Cx, DefaultFactory, Demand, EagerPolicy, Expr, HybridPolicy, LazyPolicy, NeedPolicy,
-    QuoteMode, StrictByShapePolicy, Symbol,
+    Args, Demand, EagerPolicy, Expr, HybridPolicy, LazyPolicy, NeedPolicy, QuoteMode,
+    StrictByShapePolicy, Symbol,
 };
 
-use crate::runtime::install_core_runtime;
-
 use super::support::{
-    TickCallable, call_expr, force_first_arg_twice_impl, ignore_arg_impl, one_arg_function,
-    return_first_arg_impl, table_value, two_arg_function,
+    TickCallable, call_expr, eval_cx_with_policy, force_first_arg_twice_impl, ignore_arg_impl,
+    one_arg_function, return_first_arg_impl, table_value, two_arg_function,
 };
 
 #[test]
 fn demand_never_does_not_evaluate_exploding_argument() {
-    let mut cx = Cx::new(Arc::new(HybridPolicy), Arc::new(DefaultFactory));
-    install_core_runtime(&mut cx);
+    let mut cx = eval_cx_with_policy(Arc::new(HybridPolicy));
     let function = Symbol::qualified("test", "ignore");
     one_arg_function(&mut cx, function.clone(), Demand::Never, ignore_arg_impl);
     let result = cx
@@ -35,8 +32,7 @@ fn demand_never_does_not_evaluate_exploding_argument() {
 
 #[test]
 fn demand_expr_receives_original_expression() {
-    let mut cx = Cx::new(Arc::new(HybridPolicy), Arc::new(DefaultFactory));
-    install_core_runtime(&mut cx);
+    let mut cx = eval_cx_with_policy(Arc::new(HybridPolicy));
     let function = Symbol::qualified("test", "expr");
     one_arg_function(
         &mut cx,
@@ -56,8 +52,7 @@ fn demand_expr_receives_original_expression() {
 
 #[test]
 fn lazy_policy_delays_unused_args_and_recomputes_forces() {
-    let mut cx = Cx::new(Arc::new(LazyPolicy), Arc::new(DefaultFactory));
-    install_core_runtime(&mut cx);
+    let mut cx = eval_cx_with_policy(Arc::new(LazyPolicy));
     let ignore_symbol = Symbol::qualified("test", "ignore");
     one_arg_function(
         &mut cx,
@@ -104,8 +99,7 @@ fn lazy_policy_delays_unused_args_and_recomputes_forces() {
 
 #[test]
 fn lazy_by_need_memoizes_argument_evaluation_once() {
-    let mut cx = Cx::new(Arc::new(NeedPolicy), Arc::new(DefaultFactory));
-    install_core_runtime(&mut cx);
+    let mut cx = eval_cx_with_policy(Arc::new(NeedPolicy));
     let counter = Arc::new(AtomicUsize::new(0));
     let tick = cx
         .factory()
@@ -134,8 +128,7 @@ fn lazy_by_need_memoizes_argument_evaluation_once() {
 
 #[test]
 fn strict_by_shape_evaluates_only_required_positions() {
-    let mut cx = Cx::new(Arc::new(StrictByShapePolicy), Arc::new(DefaultFactory));
-    install_core_runtime(&mut cx);
+    let mut cx = eval_cx_with_policy(Arc::new(StrictByShapePolicy));
     let counter = Arc::new(AtomicUsize::new(0));
     let tick = cx
         .factory()
@@ -177,8 +170,7 @@ fn eager_lazy_and_hybrid_can_run_the_same_simple_program() {
         Arc::new(StrictByShapePolicy) as sim_kernel::EvalPolicyRef,
         Arc::new(HybridPolicy) as sim_kernel::EvalPolicyRef,
     ] {
-        let mut cx = Cx::new(eval_policy, Arc::new(DefaultFactory));
-        install_core_runtime(&mut cx);
+        let mut cx = eval_cx_with_policy(eval_policy);
         let identity = Symbol::qualified("test", "identity");
         one_arg_function(
             &mut cx,
@@ -198,8 +190,7 @@ fn eager_lazy_and_hybrid_can_run_the_same_simple_program() {
 
 #[test]
 fn with_eval_policy_switches_for_body_and_restores_policy() {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
-    install_core_runtime(&mut cx);
+    let mut cx = eval_cx_with_policy(Arc::new(EagerPolicy));
     let ignore_symbol = Symbol::qualified("test", "ignore");
     one_arg_function(
         &mut cx,
@@ -231,8 +222,7 @@ fn with_eval_policy_switches_for_body_and_restores_policy() {
 
 #[test]
 fn eval_policies_reports_typed_identity_for_active_policy() {
-    let mut cx = Cx::new(Arc::new(NeedPolicy), Arc::new(DefaultFactory));
-    install_core_runtime(&mut cx);
+    let mut cx = eval_cx_with_policy(Arc::new(NeedPolicy));
     let policies = cx
         .call_function(
             &Symbol::qualified("core", "eval-policies"),
