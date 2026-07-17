@@ -2,6 +2,9 @@
 
 #![allow(dead_code)]
 
+#[path = "conformance_support/mod.rs"]
+mod conformance_support;
+
 #[path = "spec/support.rs"]
 mod support;
 
@@ -26,8 +29,9 @@ use sim::{
 
 #[test]
 fn fs_edit_semantics_atomicity_and_find_are_public_primitives() {
-    let mut cx = support::cx();
+    let (mut cx, seat) = support::seated_cx();
     grant(
+        &seat,
         &mut cx,
         [
             table_fs_read_capability(),
@@ -38,7 +42,10 @@ fn fs_edit_semantics_atomicity_and_find_are_public_primitives() {
     );
     let root = temp_dir("fs-edit-find");
     let dir = FsDir::open(root.clone()).unwrap();
-    let value = cx.factory().string("alpha beta\nomega\n".to_owned()).unwrap();
+    let value = cx
+        .factory()
+        .string("alpha beta\nomega\n".to_owned())
+        .unwrap();
 
     dir.set(&mut cx, Symbol::new("note"), value).unwrap();
     dir.edit(&mut cx, Symbol::new("note"), "beta", "gamma", false)
@@ -59,9 +66,7 @@ fn fs_edit_semantics_atomicity_and_find_are_public_primitives() {
         raw_before_failed_edit
     );
 
-    let matches = dir
-        .find_grep(&mut cx, "gamma", Some("*.siml"), 10)
-        .unwrap();
+    let matches = dir.find_grep(&mut cx, "gamma", Some("*.siml"), 10).unwrap();
     assert_eq!(matches.matches.len(), 1);
     assert_eq!(matches.matches[0].path, "note.siml");
     assert_eq!(matches.matches[0].line, 1);
@@ -72,8 +77,9 @@ fn fs_edit_semantics_atomicity_and_find_are_public_primitives() {
 #[cfg(unix)]
 #[test]
 fn find_refuses_paths_that_escape_the_directory_root() {
-    let mut cx = support::cx();
+    let (mut cx, seat) = support::seated_cx();
     grant(
+        &seat,
         &mut cx,
         [table_fs_read_capability(), table_fs_find_capability()],
     );
@@ -92,7 +98,7 @@ fn find_refuses_paths_that_escape_the_directory_root() {
 
 #[test]
 fn exec_denial_and_output_bounds_are_public_primitives() {
-    let mut cx = support::cx();
+    let (mut cx, seat) = support::seated_cx();
     let denied = exec(
         &mut cx,
         &argv(&["sim-conformance-missing-command"]),
@@ -104,7 +110,7 @@ fn exec_denial_and_output_bounds_are_public_primitives() {
         Error::CapabilityDenied { capability } if capability == exec_capability()
     ));
 
-    cx.grant(exec_capability());
+    support::grant_capability(&seat, &mut cx, exec_capability());
     let result = exec(
         &mut cx,
         &argv(&["env", "printf", "1234567890"]),
@@ -124,8 +130,8 @@ fn http_dir_get_is_a_public_table_primitive() {
         assert_eq!(request_line, "GET /items/alpha HTTP/1.1");
         write_response(stream, "200 OK", br#""hello""#);
     });
-    let mut cx = support::cx();
-    cx.grant(table_http_capability());
+    let (mut cx, seat) = support::seated_cx();
+    support::grant_capability(&seat, &mut cx, table_http_capability());
     let dir = http_dir(base_url);
 
     let value = dir.get(&mut cx, Symbol::new("alpha")).unwrap();
@@ -139,8 +145,9 @@ fn http_dir_get_is_a_public_table_primitive() {
 
 #[test]
 fn legacy_fs_and_net_capability_aliases_still_work() {
-    let mut cx = support::cx();
+    let (mut cx, seat) = support::seated_cx();
     grant(
+        &seat,
         &mut cx,
         [
             CapabilityName::new("table.fs.read"),
@@ -164,7 +171,7 @@ fn legacy_fs_and_net_capability_aliases_still_work() {
         assert_eq!(request_line, "GET /items/legacy HTTP/1.1");
         write_response(stream, "200 OK", br#""alias http""#);
     });
-    cx.grant(CapabilityName::new("net.http"));
+    support::grant_capability(&seat, &mut cx, CapabilityName::new("net.http"));
     let http = http_dir(base_url);
     assert_eq!(
         http.get(&mut cx, Symbol::new("legacy"))
@@ -178,10 +185,12 @@ fn legacy_fs_and_net_capability_aliases_still_work() {
     let _ = fs::remove_dir_all(root);
 }
 
-fn grant(cx: &mut sim::kernel::Cx, capabilities: impl IntoIterator<Item = CapabilityName>) {
-    for capability in capabilities {
-        cx.grant(capability);
-    }
+fn grant(
+    seat: &sim::kernel::GrantSeat,
+    cx: &mut sim::kernel::Cx,
+    capabilities: impl IntoIterator<Item = CapabilityName>,
+) {
+    support::grant_capabilities(seat, cx, capabilities);
 }
 
 fn argv(items: &[&str]) -> Vec<String> {

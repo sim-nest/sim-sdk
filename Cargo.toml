@@ -29,15 +29,8 @@ name = "sim"
 resolver = "3"
 members = [
   ".",
-  "xtask",
-]
-# sim-conformance is the deferred (publish=false) full-constellation conformance
-# suite; several of its tests collect recipes/manifests from the meta-workspace or
-# sibling repos, which do not exist in a standalone checkout. Exclude it from this
-# workspace so per-repo CI stays green; the maintainer meta-workspace still builds
-# and runs it (via repos.toml source_paths).
-exclude = [
   "crates/sim-conformance",
+  "xtask",
 ]
 
 [workspace.package]

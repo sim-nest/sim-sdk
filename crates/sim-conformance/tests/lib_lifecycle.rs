@@ -2,6 +2,9 @@
 
 #![allow(dead_code)]
 
+#[path = "conformance_support/mod.rs"]
+mod conformance_support;
+
 #[path = "spec/support.rs"]
 mod support;
 

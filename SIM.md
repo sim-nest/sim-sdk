@@ -39,8 +39,10 @@ The suite protects the checkable architecture claims below. A regression in any
 of them fails the suite, and every new current architecture claim gets a matching
 conformance assertion.
 
-- **codec totality** over the shared `Expr` graph: every general-purpose codec
-  round-trips every `Expr` variant and quote mode semantically.
+- **codec totality** over the shared `Expr` graph: every codec in the
+  conformance general-purpose set (`lisp`, `json`, `binary`, `binary-base64`,
+  `bitwise`, `bitwise-base64`, and `algol`) round-trips every `Expr` variant
+  and quote mode semantically.
 - **class semantics**: every registered class exposes the callable class
   protocol and constructs instances through the facade.
 - **number-domain replaceability**: the number domains named by the runtime
@@ -78,12 +80,12 @@ audio hashes.
 ## Stream cassette publishability
 
 Stream cassettes carry a `to_expr`/`from_expr` serialization that round-trips
-through any general-purpose codec. The suite guards that round-trip in memory and
-validates the structural invariants a cassette must satisfy before it could be
-published as a golden fixture (finite trace, sequenced envelopes, replay- or
-preview-only transport, and no unredacted payload or host-device name). These are
-in-memory invariant checks, not comparisons against a committed `.simcassette`
-corpus on disk.
+through the conformance general-purpose codec set. The suite guards that
+round-trip in memory and validates the structural invariants a cassette must
+satisfy before it could be published as a golden fixture (finite trace,
+sequenced envelopes, replay- or preview-only transport, and no unredacted payload
+or host-device name). These are in-memory invariant checks, not comparisons
+against a committed `.simcassette` corpus on disk.
 
 ## Surfaces covered versus not covered
 
@@ -98,10 +100,10 @@ Covered by executable conformance in this suite, with the listed feature set on:
   and web-bridge transport surfaces;
 - the topology placement surface and the CLI boot surface.
 
-Linted as offline, deterministic recipe corpora (not full runtime replays): the
-`30-agents` and `40-atelier` recipe sets, whose `(quote ...)` setup forms are
-decoded and evaluated through the lisp codec and compared to their expected
-forms.
+Explicit ignored checks lint offline, deterministic sibling recipe corpora (not
+full runtime replays): the `30-agents` and `40-atelier` recipe sets, whose
+`(quote ...)` setup forms are decoded and evaluated through the lisp codec and
+compared to their expected forms.
 
 Not yet covered by executable conformance here (their features are off by
 default in this suite, tracked separately): the agents, MCP, music, audio-FEMM,

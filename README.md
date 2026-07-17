@@ -61,9 +61,9 @@ For a complete, runnable version of this boot-and-eval loop, see
 domains and the Lisp codec, then reads, evaluates, and prints each line
 (`cargo run --example repl --features shape,numbers-prelude`).
 
-(The full architecture conformance suite `sim-conformance` is a maintainer gate run
-across the whole constellation, not a published crate; contributors run it from the
-repo checkout.)
+(The full architecture conformance suite `sim-conformance` is a maintainer gate
+run across the whole constellation, not a published crate; contributors run it
+from the repo checkout with `cargo test -p sim-conformance`.)
 
 Naming note: the umbrella crate is published on crates.io as `sim-nest` (the
 bare name `sim` was already taken), but it keeps the library import identifier
@@ -489,12 +489,18 @@ When adding behavior in the current tree:
 
 `sim-conformance` is a test-only crate that depends on `sim` through the public
 facade only (`default-features = false` plus an explicit feature set). It turns
-the runtime's architecture claims into executable checks, so a regression in
-codec totality, class semantics, number-domain replaceability, capability
-gating, eval policy, loader behavior, reversible library lifecycle, boot
-receipt replay, the wasm ABI scope, stream transport conformance, or placement
-conformance fails the suite. New current architecture claims get matching
-conformance assertions.
+the runtime's architecture claims into executable checks, so a regression in the
+general-purpose codec set (`lisp`, `json`, `binary`, `binary-base64`, `bitwise`,
+`bitwise-base64`, and `algol`), class semantics, number-domain replaceability,
+capability gating, eval policy, loader behavior, reversible library lifecycle,
+boot receipt replay, the wasm ABI scope, stream transport conformance, or
+placement conformance fails the suite. New current architecture claims get
+matching conformance assertions.
+
+The default `cargo test -p sim-conformance` command runs the standalone
+public-facade checks. Tests that require sibling recipe corpora or the generated
+constellation meta-workspace are explicit ignored tests with their dependency
+set named in the test output.
 
 The library lifecycle conformance matrix lives at
 `crates/sim-conformance/tests/spec/lib_lifecycle.rs`. It covers observable

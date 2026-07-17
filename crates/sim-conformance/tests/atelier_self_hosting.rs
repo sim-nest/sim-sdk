@@ -9,7 +9,9 @@ use sim::{
     codec::{Input, decode_with_codec},
     kernel::{Cx, DefaultFactory, EagerPolicy, Expr, QuoteMode, ReadPolicy, Symbol},
 };
-use sim_lib_cookbook::CookbookCapabilityProfile;
+
+#[path = "conformance_support/mod.rs"]
+mod conformance_support;
 
 const EXPECTED_IDS: [&str; 5] = [
     "atelier-radar-standard-crate",
@@ -28,6 +30,7 @@ struct RecipeDoc {
 }
 
 #[test]
+#[ignore = "requires sibling repository recipe corpora and recipe-runtime parity"]
 fn atelier_self_hosting_recipes_are_offline_and_codec_evaluated() {
     let manifests = collect_atelier_manifests();
     assert_eq!(manifests.len(), EXPECTED_IDS.len(), "{manifests:?}");
@@ -256,7 +259,7 @@ fn assert_setup_evaluates_to_expected(cx: &mut Cx, path: &Path, doc: &RecipeDoc)
 
 fn build_decode_cx() -> Cx {
     let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
-    CookbookCapabilityProfile::seat(&seat, &mut cx).unwrap();
+    conformance_support::seat_cookbook_capabilities(&seat, &mut cx);
     sim::runtime::install_core_runtime(&mut cx);
     sim::numbers_prelude::NumbersPreludeLib::new()
         .install_all(&mut cx)

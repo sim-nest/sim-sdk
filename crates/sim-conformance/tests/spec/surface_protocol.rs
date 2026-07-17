@@ -98,6 +98,7 @@ fn surface_projection_is_deterministic_and_valid_for_every_preset() {
 }
 
 #[test]
+#[ignore = "requires the generated constellation meta-workspace surface dependency set"]
 fn surface_projection_matches_golden_for_cli_and_watch() {
     let mut cx = surface_cx();
     let codec = universal_codec();

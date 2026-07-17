@@ -24,10 +24,12 @@ use sim::{
     },
 };
 
-#[path = "spec/instrument_streams.rs"]
-mod instrument_streams;
+#[path = "conformance_support/mod.rs"]
+mod conformance_support;
 #[path = "spec/forge_eval.rs"]
 mod forge_eval;
+#[path = "spec/instrument_streams.rs"]
+mod instrument_streams;
 #[path = "spec/rust_intelligence.rs"]
 mod rust_intelligence;
 #[path = "spec/stream_matrix.rs"]
@@ -158,7 +160,7 @@ fn number_domains_named_by_sim_parse_and_promote_through_lattice() {
 
 #[test]
 fn read_eval_is_capability_and_trust_gated_separately_from_read_construct() {
-    let mut cx = cx();
+    let (mut cx, seat) = seated_cx();
     let denied = decode_with_codec(
         &mut cx,
         &q("codec", "lisp"),
@@ -220,7 +222,7 @@ fn read_eval_is_capability_and_trust_gated_separately_from_read_construct() {
             if capability == read_construct_capability()
     ));
 
-    cx.grant(read_construct_capability());
+    grant_capability(&seat, &mut cx, read_construct_capability());
     decode_with_codec(
         &mut cx,
         &q("codec", "lisp"),
@@ -446,8 +448,12 @@ fn stream_cassettes_replay_and_round_trip_through_codecs_and_publish_invariants(
         .unwrap();
     assert_eq!(opened.queue().drain(4).unwrap().len(), 1);
 
-    let mut fabric_cx = cx();
-    fabric_cx.grant(stream_remote_network_capability());
+    let (mut fabric_cx, fabric_seat) = seated_cx();
+    grant_capability(
+        &fabric_seat,
+        &mut fabric_cx,
+        stream_remote_network_capability(),
+    );
     let server_stream = StreamValue::pull(
         conformance_metadata(
             "stream/conformance-server",

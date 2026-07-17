@@ -1998,14 +1998,120 @@
   ],
   "groups": {
     "workspace": [
+      "sim-conformance",
       "sim-nest",
       "xtask"
     ]
   },
   "non_citizen_exemption_count": 0,
   "non_citizen_exemptions": [],
-  "package_count": 2,
+  "package_count": 3,
   "packages": [
+    {
+      "crate_name": "agents30",
+      "dependencies": [
+        {
+          "kind": "dev",
+          "optional": false,
+          "package": "sim-nest",
+          "rename": "sim",
+          "target": null
+        }
+      ],
+      "description": "Executable conformance tests for SIM architecture claims.",
+      "features": [],
+      "group": "workspace",
+      "manifest": "crates/sim-conformance/Cargo.toml",
+      "name": "sim-conformance",
+      "publish": "false",
+      "root": "crates/sim-conformance",
+      "rustdoc_summary": "Executable conformance tests for SIM architecture claims.",
+      "target_kinds": [
+        "test"
+      ],
+      "targets": [
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "agents30",
+          "src": "crates/sim-conformance/tests/agents30.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "atelier_self_hosting",
+          "src": "crates/sim-conformance/tests/atelier_self_hosting.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "cli_boot",
+          "src": "crates/sim-conformance/tests/cli_boot.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "core_primitives",
+          "src": "crates/sim-conformance/tests/core_primitives.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "lib_lifecycle",
+          "src": "crates/sim-conformance/tests/lib_lifecycle.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "no_direct_kernel_imports",
+          "src": "crates/sim-conformance/tests/no_direct_kernel_imports.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "placement_matrix",
+          "src": "crates/sim-conformance/tests/placement_matrix.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "spec",
+          "src": "crates/sim-conformance/tests/spec.rs"
+        }
+      ]
+    },
     {
       "crate_name": "sim",
       "dependencies": [],
@@ -4883,10 +4989,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-16T04:29:57+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "1045cee2c07b51883dd2400fe39ca2e7021dc403",
+    "git_commit": "7f6c27c772841e5fd753e052a67750cac5fa7e81",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "1045cee2c07b51883dd2400fe39ca2e7021dc403",
+    "source_commit": "7f6c27c772841e5fd753e052a67750cac5fa7e81",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -4899,17 +5005,19 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "66755f6446e9fdc0",
+    "workspace_hash": "be060f50b7f528cf",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 173,
+    "workspace_hash_input_count": 175,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
       "crates/sim-conformance/tests/agents30.rs",
       "crates/sim-conformance/tests/atelier_self_hosting.rs",
       "crates/sim-conformance/tests/cli_boot.rs",
+      "crates/sim-conformance/tests/conformance_support/mod.rs",
       "crates/sim-conformance/tests/core_primitives.rs",
       "crates/sim-conformance/tests/lib_lifecycle.rs",
+      "crates/sim-conformance/tests/no_direct_kernel_imports.rs",
       "crates/sim-conformance/tests/placement_matrix.rs",
       "crates/sim-conformance/tests/spec/cli_boot.rs",
       "crates/sim-conformance/tests/spec/forge_eval.rs",

@@ -19,7 +19,7 @@ use sim::{
 };
 
 use super::{conformance_metadata, midi_item, pcm_item};
-use crate::support::{cx, q};
+use crate::support::{cx, grant_capability, q, seated_cx};
 
 pub(crate) const MATRIX_PATH: &str = "crates/sim-conformance/tests/spec/stream_matrix.rs";
 
@@ -490,8 +490,8 @@ fn run_reconnect_fixture() {
 }
 
 fn run_refused_profile_fixture() {
-    let mut run_cx = cx();
-    run_cx.grant(stream_remote_network_capability());
+    let (mut run_cx, seat) = seated_cx();
+    grant_capability(&seat, &mut run_cx, stream_remote_network_capability());
     let metadata = conformance_metadata(
         "stream/conformance-refused",
         StreamMedia::Pcm,
@@ -575,8 +575,8 @@ fn browser_roundtrip(row: &MatrixRow, item: StreamItem) {
 }
 
 fn fabric_stream(row: &MatrixRow, item: StreamItem) -> StreamValue {
-    let mut run_cx = cx();
-    run_cx.grant(stream_remote_network_capability());
+    let (mut run_cx, seat) = seated_cx();
+    grant_capability(&seat, &mut run_cx, stream_remote_network_capability());
     let stream = StreamValue::pull(matrix_metadata(row, item.packet().media()), vec![item]);
     let frames = stream_to_frames_with_profile(
         &mut run_cx,
