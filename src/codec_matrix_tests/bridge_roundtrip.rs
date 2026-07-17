@@ -70,6 +70,14 @@ fn brief_request() -> BridgePacket {
     .unwrap()
 }
 
+fn parent_token(parent: &BridgePacket) -> String {
+    format!(
+        "{}#move={}",
+        parent.header.cid.as_deref().unwrap(),
+        parent.header.move_kind.as_qualified_str()
+    )
+}
+
 fn reply_to_request(parent: &BridgePacket, from: &str, payload: Expr) -> BridgePacket {
     BridgePacket {
         header: BridgeHeader {
@@ -78,7 +86,7 @@ fn reply_to_request(parent: &BridgePacket, from: &str, payload: Expr) -> BridgeP
             from: from.to_owned(),
             to: vec![parent.header.from.clone()],
             role: Symbol::new("implementer"),
-            parents: vec![parent.header.cid.clone().unwrap()],
+            parents: vec![parent_token(parent)],
             task: Symbol::new("T2"),
             output: Symbol::new("O2"),
             ceiling: Vec::new(),
@@ -109,18 +117,25 @@ fn return_reply(parent: &BridgePacket, from: &str, payload: Expr) -> BridgePacke
             from: from.to_owned(),
             to: vec![parent.header.from.clone()],
             role: Symbol::new("implementer"),
-            parents: vec![parent.header.cid.clone().unwrap()],
-            task: Symbol::new("A1"),
+            parents: vec![parent_token(parent)],
+            task: Symbol::new("A0"),
             output: Symbol::new("A1"),
             ceiling: Vec::new(),
             context: Vec::new(),
             provenance: BridgeProvenance::default(),
         },
-        body: vec![BridgePart {
-            id: Symbol::new("A1"),
-            kind: Symbol::qualified("bridge", "Return"),
-            payload,
-        }],
+        body: vec![
+            BridgePart {
+                id: Symbol::new("A0"),
+                kind: Symbol::qualified("bridge", "Frame"),
+                payload: frame_payload("answer"),
+            },
+            BridgePart {
+                id: Symbol::new("A1"),
+                kind: Symbol::qualified("bridge", "Return"),
+                payload,
+            },
+        ],
         warrant: None,
     }
 }
@@ -178,7 +193,7 @@ fn review_patch_reply(parent: &BridgePacket, from: &str, replacement: Expr) -> B
             from: from.to_owned(),
             to: vec!["sim".to_owned()],
             role: Symbol::new("reviewer"),
-            parents: vec![parent_cid.clone()],
+            parents: vec![parent_token(parent)],
             task: Symbol::new("P1"),
             output: Symbol::new("P1"),
             ceiling: Vec::new(),
@@ -211,7 +226,7 @@ fn vote_reply(parent: &BridgePacket, from: &str) -> BridgePacket {
             from: from.to_owned(),
             to: vec!["sim".to_owned()],
             role: Symbol::new("judge"),
-            parents: vec![parent.header.cid.clone().unwrap()],
+            parents: vec![parent_token(parent)],
             task: Symbol::new("V1"),
             output: Symbol::new("V1"),
             ceiling: Vec::new(),
