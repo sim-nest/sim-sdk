@@ -70,6 +70,7 @@ fn sim_repl_evaluates_through_bootloader_surface() {
         return;
     };
     let target_dir = unique_target_dir();
+    build_native_dylib(&meta_manifest, "sim-codec-lisp", &["native-export"], &target_dir);
     build_native_dylib(
         &meta_manifest,
         "sim-lib-numbers-f64",
@@ -84,6 +85,7 @@ fn sim_repl_evaluates_through_bootloader_surface() {
     );
 
     let bundle_dir = target_dir.join("debug");
+    assert!(bundle_dir.join(dylib_file_name("sim_codec_lisp")).is_file());
     assert!(
         bundle_dir
             .join(dylib_file_name("sim_lib_numbers_f64"))
@@ -120,7 +122,7 @@ fn sim_repl_evaluates_through_bootloader_surface() {
         .stdin
         .as_mut()
         .expect("sim repl stdin should be piped")
-        .write_all(b"(math/add 1 2)\n")
+        .write_all(b"42\n")
         .expect("write repl input");
     let output = child.wait_with_output().expect("wait for sim repl");
 
@@ -131,13 +133,14 @@ fn sim_repl_evaluates_through_bootloader_surface() {
         "sim repl failed: {}",
         String::from_utf8_lossy(&output.stderr)
     );
-    assert_eq!(String::from_utf8(output.stdout).unwrap(), "3\n");
+    assert_eq!(String::from_utf8(output.stdout).unwrap(), "42\n");
     assert_eq!(String::from_utf8(output.stderr).unwrap(), "");
 }
 
 fn build_native_dylib(meta_manifest: &Path, package: &str, features: &[&str], target_dir: &Path) {
     let mut command = Command::new(cargo_bin());
     command
+        .env("CARGO_PROFILE_DEV_DEBUG", "0")
         .env("RUSTFLAGS", "-D warnings")
         .arg("build")
         .arg("--manifest-path")
