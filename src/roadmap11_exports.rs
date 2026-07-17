@@ -4,6 +4,10 @@ pub use sim_citizen as citizen;
 pub use sim_citizen_derive as citizen_derive;
 #[cfg(feature = "agent-runner-core")]
 pub use sim_lib_agent_runner_core as lib_agent_runner_core;
+#[cfg(feature = "agent-runner-http")]
+pub use sim_lib_agent_runner_http as lib_agent_runner_http;
+#[cfg(feature = "agent-runner-process")]
+pub use sim_lib_agent_runner_process as lib_agent_runner_process;
 #[cfg(feature = "audio-dsp")]
 pub use sim_lib_audio_dsp as lib_audio_dsp;
 #[cfg(feature = "audio-graph-core")]
@@ -12,6 +16,8 @@ pub use sim_lib_audio_graph_core as lib_audio_graph_core;
 pub use sim_lib_audio_graph_live as lib_audio_graph_live;
 #[cfg(feature = "daw-session")]
 pub use sim_lib_daw_session as lib_daw_session;
+#[cfg(feature = "discrete")]
+pub use sim_lib_discrete as lib_discrete;
 #[cfg(feature = "intent")]
 pub use sim_lib_intent as lib_intent;
 #[cfg(feature = "midi-ble")]
@@ -122,11 +128,19 @@ pub use sim_lib_stream_portaudio as lib_stream_portaudio;
 pub use sim_lib_topology as lib_topology;
 #[cfg(feature = "view")]
 pub use sim_lib_view as lib_view;
+#[cfg(feature = "view-agent")]
+pub use sim_lib_view_agent as lib_view_agent;
 #[cfg(feature = "view-bridge")]
 pub use sim_lib_view_bridge as lib_view_bridge;
+#[cfg(feature = "view-codec")]
+pub use sim_lib_view_codec as lib_view_codec;
 #[cfg(feature = "view-daw")]
 pub use sim_lib_view_daw as lib_view_daw;
 #[cfg(feature = "view-doc")]
 pub use sim_lib_view_doc as lib_view_doc;
+#[cfg(feature = "view-math")]
+pub use sim_lib_view_math as lib_view_math;
+#[cfg(feature = "web-wasm-frame")]
+pub use sim_lib_view_wasm_frame as lib_view_wasm_frame;
 #[cfg(feature = "web-layout")]
 pub use sim_lib_web_layout as lib_web_layout;

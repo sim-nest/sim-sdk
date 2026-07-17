@@ -2377,6 +2377,7 @@
         {
           "edges": [
             "core",
+            "shape",
             "codec-lisp",
             "numbers-f64"
           ],
@@ -2795,8 +2796,7 @@
         },
         {
           "edges": [
-            "mcp-stdio",
-            "dep:sim-mcp-server"
+            "mcp-stdio"
           ],
           "name": "mcp-binary",
           "workspace_edges": []
@@ -4655,6 +4655,16 @@
           "kind": [
             "test"
           ],
+          "name": "facade_aliases",
+          "src": "tests/facade_aliases.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "native_dynamic",
           "src": "tests/native_dynamic.rs"
         },
@@ -4873,10 +4883,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-16T04:29:57+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "3acdad71a916e8d34cef581ad4fa9aff5f7bfb72",
+    "git_commit": "1045cee2c07b51883dd2400fe39ca2e7021dc403",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "3acdad71a916e8d34cef581ad4fa9aff5f7bfb72",
+    "source_commit": "1045cee2c07b51883dd2400fe39ca2e7021dc403",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -4889,7 +4899,7 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "88f1206fc162f981",
+    "workspace_hash": "66755f6446e9fdc0",
     "workspace_hash_algorithm": "fnv1a64",
     "workspace_hash_input_count": 173,
     "workspace_hash_inputs": [

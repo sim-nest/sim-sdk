@@ -31,9 +31,8 @@
 //! `sim::list_*` families), and ships the core runtime installer plus the
 //! authoring helpers (`functions`, `classes`, `macros`, `shapes`, and
 //! `runtime`, available with the `shape` feature). The default feature set is
-//! `core`, `codec-lisp`, and
-//! `numbers-f64`; the canonical, current feature map is this crate's
-//! `Cargo.toml`.
+//! `core`, `shape`, `codec-lisp`, and `numbers-f64`; the canonical, current
+//! feature map is this crate's `Cargo.toml`.
 //!
 //! ## Kernel boundary
 //!

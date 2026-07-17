@@ -37,7 +37,13 @@ const UI_PATCHES: &[(&str, &str, &str)] = &[
         "crates/sim-citizen-derive",
     ),
     ("sim-run-loaders", "sim-run", "crates/sim-run-loaders"),
+    ("sim-codec", "sim-codecs", "crates/sim-codec"),
     ("sim-cookbook", "sim-foundation", "crates/sim-cookbook"),
+    (
+        "sim-lib-net-core",
+        "sim-foundation",
+        "crates/sim-lib-net-core",
+    ),
     ("sim-value", "sim-foundation", "crates/sim-value"),
     ("sim-lib-core", "sim-runtime", "crates/sim-lib-core"),
     ("sim-macros", "sim-foundation", "crates/sim-macros"),

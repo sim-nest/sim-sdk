@@ -32,7 +32,7 @@ constellation):
 ```toml
 [dependencies]
 # Published as `sim-nest` (the name `sim` was taken); imported as `sim`.
-sim = { package = "sim-nest", version = "0.1" }   # default features: core, codec-lisp, numbers-f64
+sim = { package = "sim-nest", version = "0.1" }   # default features: core, shape, codec-lisp, numbers-f64
 ```
 
 Boot a runtime in a few lines:

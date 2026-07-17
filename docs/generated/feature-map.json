@@ -369,6 +369,7 @@
         {
           "edges": [
             "core",
+            "shape",
             "codec-lisp",
             "numbers-f64"
           ],
@@ -787,8 +788,7 @@
         },
         {
           "edges": [
-            "mcp-stdio",
-            "dep:sim-mcp-server"
+            "mcp-stdio"
           ],
           "name": "mcp-binary",
           "workspace_edges": []

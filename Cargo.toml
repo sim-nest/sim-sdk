@@ -233,7 +233,6 @@ sim-lib-web-layout = { optional = true, version = "0.1.1" }
 sim-list-cell = { optional = true, version = "0.1.2" }
 sim-list-lazy = { optional = true, version = "0.1.2" }
 sim-macros = { optional = true, version = "0.1.1" }
-sim-mcp-server = { optional = true, version = "0.1.1" }
 sim-shape = { optional = true, version = "0.1.1" }
 sim-table-db = { optional = true, version = "0.1.0" }
 sim-table-fs = { optional = true, version = "0.1.2" }
@@ -279,7 +278,7 @@ cookbook = ["dep:sim-cookbook", "dep:sim-lib-cookbook", "core", "codec-lisp", "s
 cookbook-all = ["cookbook", "shape", "citizen", "bridge", "codec-algol", "codec-binary", "codec-binary-base64", "codec-bitwise", "codec-bitwise-base64", "codec-bridge", "codec-chat", "codec-json", "codec-mcp", "agent", "audio-dsp", "audio-graph-live", "daw-session", "discrete-rank", "discrete-runtime", "exec", "femm-core", "femm-field", "femm-function", "femm-ode", "intent", "list-cell", "list-lazy", "logic-core", "mcp", "midi-core", "midi-live", "midi-ble", "midi-rtmidi", "midi-shapes", "music-lift", "music-notation", "music-shapes", "music-synth", "numbers-i64", "numbers-arith", "numbers-bigint", "numbers-bool", "numbers-f64", "numbers-rational", "numbers-complex", "numbers-func", "numbers-cas", "numbers-cas-diff", "numbers-cas-eval", "numbers-exotic", "numbers-fixed", "numbers-float", "numbers-numeric", "numbers-quad", "numbers-rk", "numbers-stats", "numbers-tensor", "numbers-tensor-bcast", "numbers-tensor-bit", "numbers-tensor-cmplxf", "numbers-tensor-f64", "numbers-tensor-i64", "numbers-tensor-linalg", "numbers-tensor-rat64", "openai-server", "pitch-dissonance", "pitch-namer", "pitch-shapes", "plugin-clap", "plugin-vst3", "rank", "scene", "server", "skill", "sound-audio-lift", "sound-bridge", "sound-dissonance", "sound-render", "sound-shapes", "sound-timbre", "sound-tuning", "standard-binding", "control", "standard-sequence", "standard-pattern", "standard-scheme", "standard-cl", "standard-clojure", "stream-alsa", "stream-asio", "stream-bridge", "stream-core", "stream-coreaudio", "stream-jack", "stream-pipewire", "stream-portaudio", "stream-prelude", "table-fs", "table-hash", "table-http", "table-lazy", "topology-core"]
 core = ["dep:sim-kernel", "dep:sim-value", "dep:sim-lib-core"]
 daw-session = ["dep:sim-lib-daw-session", "audio-graph-live", "plugin-core", "stream-audio", "topology-core"]
-default = ["core", "codec-lisp", "numbers-f64"]
+default = ["core", "shape", "codec-lisp", "numbers-f64"]
 discrete = ["discrete-algebra", "discrete-graph", "discrete-comb", "discrete-spectral"]
 discrete-algebra = ["dep:sim-lib-discrete", "sim-lib-discrete/algebra", "core"]
 discrete-comb = ["dep:sim-lib-discrete", "sim-lib-discrete/comb", "core"]
@@ -319,7 +318,7 @@ logic-numbers = ["logic-core", "numbers-arith", "numbers-f64", "numbers-i64", "n
 logic-server = ["logic-core", "server"]
 logic-wasm = ["logic-core", "wasm"]
 mcp = ["dep:sim-lib-mcp", "codec-mcp", "core", "shape"]
-mcp-binary = ["mcp-stdio", "dep:sim-mcp-server"]
+mcp-binary = ["mcp-stdio"]
 mcp-cassette = ["mcp", "sim-lib-mcp/cassette"]
 mcp-client = ["mcp-skill", "sim-lib-mcp/client"]
 mcp-http = ["mcp-stream", "server", "server-net-http", "sim-lib-mcp/http"]

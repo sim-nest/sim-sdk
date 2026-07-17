@@ -2,9 +2,27 @@ mod cfg_sentinels;
 mod support;
 
 use support::{
-    assert_crate_cargo_tomls_do_not_contain, assert_feature_includes, collect_cfg_features,
-    collect_declared_features, collect_feature_dependencies, repo_root,
+    assert_all_feature_metadata_has_no_invalid_dependency_warnings,
+    assert_crate_cargo_tomls_do_not_contain, assert_dep_edges_reference_optional_dependencies,
+    assert_feature_includes, collect_cfg_features, collect_declared_features,
+    collect_feature_dependencies, collect_optional_dependencies, repo_root,
 };
+
+const PUBLIC_FACADE_ALIASES: &[(&str, &str)] = &[
+    ("agent-runner-core", "lib_agent_runner_core"),
+    ("agent-runner-http", "lib_agent_runner_http"),
+    ("agent-runner-process", "lib_agent_runner_process"),
+    ("discrete", "lib_discrete"),
+    ("view", "lib_view"),
+    ("view-agent", "lib_view_agent"),
+    ("view-bridge", "lib_view_bridge"),
+    ("view-codec", "lib_view_codec"),
+    ("view-daw", "lib_view_daw"),
+    ("view-doc", "lib_view_doc"),
+    ("view-math", "lib_view_math"),
+    ("web-layout", "lib_web_layout"),
+    ("web-wasm-frame", "lib_view_wasm_frame"),
+];
 
 #[test]
 fn declared_features_match_cfg_usage() {
@@ -16,6 +34,42 @@ fn declared_features_match_cfg_usage() {
         declared, used,
         "declared features must match cfg(feature = ...) usage in src/ and tests/"
     );
+}
+
+#[test]
+fn default_features_support_readme_quickstart() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(
+        &features,
+        "default",
+        &["core", "shape", "codec-lisp", "numbers-f64"],
+    );
+}
+
+#[test]
+fn public_facade_alias_table_mentions_declared_features() {
+    let declared = collect_declared_features(include_str!("../Cargo.toml"));
+    let missing = PUBLIC_FACADE_ALIASES
+        .iter()
+        .filter(|(feature, _)| !declared.contains(*feature))
+        .collect::<Vec<_>>();
+    assert!(
+        missing.is_empty(),
+        "public facade aliases must reference declared features: {missing:?}"
+    );
+}
+
+#[test]
+fn feature_dep_edges_reference_optional_dependencies() {
+    let cargo_toml = include_str!("../Cargo.toml");
+    let features = collect_feature_dependencies(cargo_toml);
+    let optional_dependencies = collect_optional_dependencies(cargo_toml);
+    assert_dep_edges_reference_optional_dependencies(&features, &optional_dependencies);
+}
+
+#[test]
+fn all_feature_metadata_has_no_ignored_optional_dependencies() {
+    assert_all_feature_metadata_has_no_invalid_dependency_warnings(&repo_root());
 }
 
 #[test]
@@ -142,7 +196,7 @@ fn g6_mcp_feature_implications_stay_wired() {
         ("mcp-client", &["mcp-skill", "sim-lib-mcp/client"]),
         ("mcp-sampling", MCP_SAMPLING_DEPS),
         ("mcp-cassette", &["mcp", "sim-lib-mcp/cassette"]),
-        ("mcp-binary", &["mcp-stdio", "dep:sim-mcp-server"]),
+        ("mcp-binary", &["mcp-stdio"]),
         (
             "skill-serve",
             &["skill-mcp", "mcp-skill", "server", "sim-lib-skill/serve"],
