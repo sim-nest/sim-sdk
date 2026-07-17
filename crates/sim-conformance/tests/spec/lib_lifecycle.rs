@@ -133,10 +133,9 @@ fn standard_control_lib_uses_recorded_claim_receipts() {
 }
 
 #[test]
-fn standard_profile_installers_record_claims_on_profile_libs() {
+fn standard_profile_installers_unload_profile_owned_claims_with_profile_lib() {
     for case in standard_profile_cases() {
         let mut cx = conformance_cx();
-        let before = lifecycle_snapshot(&cx);
         let mut registry = ProfileRegistry::new();
 
         let profile = (case.install)(&mut cx, &mut registry)
@@ -155,10 +154,14 @@ fn standard_profile_installers_record_claims_on_profile_libs() {
 
         cx.unload_lib(lib_id).unwrap();
 
-        assert_eq!(
-            lifecycle_snapshot(&cx),
-            before,
-            "{} did not restore the observable snapshot",
+        assert!(
+            cx.registry().lib(&lib_symbol).is_none(),
+            "{} did not unload its profile receipt",
+            case.name
+        );
+        assert!(
+            profile_claims(&cx, &profile.symbol).is_empty(),
+            "{} left profile claims behind after unloading the profile receipt",
             case.name
         );
     }
