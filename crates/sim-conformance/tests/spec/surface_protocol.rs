@@ -162,7 +162,7 @@ fn golden_universal_nil() -> Expr {
                                     node(
                                         "field",
                                         vec![
-                                            ("kind", sym("text")),
+                                            ("input-kind", sym("text")),
                                             ("value", Expr::String("nil".to_owned())),
                                             ("target", Expr::Nil),
                                             ("path", Expr::List(vec![])),
