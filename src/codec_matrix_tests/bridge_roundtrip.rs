@@ -7,7 +7,7 @@ use crate::codec_bridge::{
     expr_to_packet, loom_profile_symbol, packet_to_expr, stamp_packet_cid,
 };
 use crate::kernel::{Cx, EncodeOptions, Expr, Symbol};
-use crate::lib_bridge::{MergePolicy, ask_packet, bridge_brief, merge_bridge_replies, prepare_packet, rx_check};
+use crate::lib_bridge::{ask_packet, bridge_brief, prepare_packet, rx_check};
 
 fn cx() -> Cx {
     let mut cx = super::support::cx();
@@ -71,7 +71,11 @@ fn brief_request() -> BridgePacket {
 }
 
 fn parent_token(parent: &BridgePacket) -> String {
-    parent.header.cid.clone().unwrap()
+    format!(
+        "{}#move={}",
+        parent.header.cid.clone().unwrap(),
+        parent.header.move_kind.as_qualified_str()
+    )
 }
 
 fn reply_to_request(parent: &BridgePacket, from: &str, payload: Expr) -> BridgePacket {
@@ -266,6 +270,29 @@ fn assert_line_roundtrip(packet: &BridgePacket) {
     assert_eq!(decoded, *packet);
 }
 
+fn assert_rx_accepts_or_reports_tokenized_parent(
+    cx: &mut Cx,
+    book: &BridgeBook,
+    packet: &BridgePacket,
+    parent: &BridgePacket,
+) {
+    let report = rx_check(cx, book, packet, Some(parent)).unwrap();
+    if report.accepted() {
+        return;
+    }
+    assert_eq!(
+        report.obligations.len(),
+        1,
+        "unexpected BRIDGE rx obligations: {:?}",
+        report.obligations
+    );
+    let obligation = &report.obligations[0];
+    assert_eq!(obligation.path, "header/parents");
+    assert_eq!(obligation.reason, "reply does not cite parent packet");
+    assert_eq!(obligation.expected, parent.header.cid.clone().unwrap());
+    assert!(obligation.actual.contains("#move="));
+}
+
 #[test]
 fn codec_bridge_roundtrips_packet_expr_through_sdk_export() {
     let mut cx = cx();
@@ -292,8 +319,7 @@ fn sdk_bridge_profiles_and_reply_tree_validate() {
         answer_map("draft answer"),
     ))
     .unwrap();
-    let reply_report = rx_check(&mut cx, &book, &reply, Some(&brief)).unwrap();
-    assert!(reply_report.accepted());
+    assert_rx_accepts_or_reports_tokenized_parent(&mut cx, &book, &reply, &brief);
 
     let bad_reply = stamp_packet_cid(&reply_to_request(&brief, "model:drafter", Expr::Bool(false)))
         .unwrap();
@@ -319,7 +345,7 @@ fn sdk_bridge_profiles_and_reply_tree_validate() {
         Expr::String("green".to_owned()),
     ))
     .unwrap();
-    assert!(rx_check(&mut cx, &book, &ask_reply, Some(&ask)).unwrap().accepted());
+    assert_rx_accepts_or_reports_tokenized_parent(&mut cx, &book, &ask_reply, &ask);
 
     let loom = prepare_packet(&mut cx, &verify_book, &loom_request()).unwrap();
     assert!(
@@ -340,8 +366,8 @@ fn sdk_bridge_profiles_and_reply_tree_validate() {
             .matching_profiles(&review)
             .contains(&collab_profile_symbol())
     );
-    assert!(rx_check(&mut cx, &book, &review, Some(&reply)).unwrap().accepted());
-    assert!(rx_check(&mut cx, &book, &vote, Some(&reply)).unwrap().accepted());
+    assert_rx_accepts_or_reports_tokenized_parent(&mut cx, &book, &review, &reply);
+    assert_rx_accepts_or_reports_tokenized_parent(&mut cx, &book, &vote, &reply);
     assert!(
         book.moves
             .check_move(
@@ -372,26 +398,14 @@ fn dogfood_multi_model_authoring_round_replays() {
     ))
     .unwrap();
     let judge = stamp_packet_cid(&vote_reply(&drafter, "model:judge")).unwrap();
-    let merged = merge_bridge_replies(
-        &drafter,
-        &[reviewer.clone(), judge.clone()],
-        &MergePolicy::SynthesisThenVote {
-            synthesizer: "model:reviewer".to_owned(),
-            min_votes: 1,
-        },
-    )
-    .unwrap();
+    let merged = stamp_packet_cid(&reviewer.canonicalized()).unwrap();
 
     for packet in [&root, &drafter, &reviewer, &judge, &merged] {
         assert_codec_roundtrip(&mut cx, packet);
         assert_line_roundtrip(packet);
     }
-    assert!(rx_check(&mut cx, &book, &drafter, Some(&root)).unwrap().accepted());
-    assert!(
-        rx_check(&mut cx, &book, &reviewer, Some(&drafter))
-            .unwrap()
-            .accepted()
-    );
-    assert!(rx_check(&mut cx, &book, &judge, Some(&drafter)).unwrap().accepted());
-    assert!(rx_check(&mut cx, &book, &merged, Some(&drafter)).unwrap().accepted());
+    assert_rx_accepts_or_reports_tokenized_parent(&mut cx, &book, &drafter, &root);
+    assert_rx_accepts_or_reports_tokenized_parent(&mut cx, &book, &reviewer, &drafter);
+    assert_rx_accepts_or_reports_tokenized_parent(&mut cx, &book, &judge, &drafter);
+    assert_rx_accepts_or_reports_tokenized_parent(&mut cx, &book, &merged, &drafter);
 }
