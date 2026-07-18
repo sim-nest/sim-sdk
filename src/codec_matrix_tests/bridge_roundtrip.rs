@@ -184,14 +184,23 @@ fn loom_request() -> BridgePacket {
     }
 }
 
-fn review_patch_reply(parent: &BridgePacket, from: &str, replacement: Expr) -> BridgePacket {
+fn reply_sender(parent: &BridgePacket) -> String {
+    parent
+        .header
+        .to
+        .first()
+        .cloned()
+        .unwrap_or_else(|| "sim".to_owned())
+}
+
+fn review_patch_reply(parent: &BridgePacket, replacement: Expr) -> BridgePacket {
     let parent_cid = parent.header.cid.clone().unwrap();
     BridgePacket {
         header: BridgeHeader {
             cid: None,
             move_kind: Symbol::new("patch"),
-            from: from.to_owned(),
-            to: vec!["sim".to_owned()],
+            from: reply_sender(parent),
+            to: vec![parent.header.from.clone()],
             role: Symbol::new("reviewer"),
             parents: vec![parent_token(parent)],
             task: Symbol::new("P1"),
@@ -218,13 +227,13 @@ fn review_patch_reply(parent: &BridgePacket, from: &str, replacement: Expr) -> B
     }
 }
 
-fn vote_reply(parent: &BridgePacket, from: &str) -> BridgePacket {
+fn vote_reply(parent: &BridgePacket) -> BridgePacket {
     BridgePacket {
         header: BridgeHeader {
             cid: None,
             move_kind: Symbol::new("vote"),
-            from: from.to_owned(),
-            to: vec!["sim".to_owned()],
+            from: reply_sender(parent),
+            to: vec![parent.header.from.clone()],
             role: Symbol::new("judge"),
             parents: vec![parent_token(parent)],
             task: Symbol::new("V1"),
@@ -354,13 +363,9 @@ fn sdk_bridge_profiles_and_reply_tree_validate() {
             .contains(&loom_profile_symbol())
     );
 
-    let review = stamp_packet_cid(&review_patch_reply(
-        &reply,
-        "model:reviewer",
-        answer_map("reviewed answer"),
-    ))
-    .unwrap();
-    let vote = stamp_packet_cid(&vote_reply(&reply, "model:judge")).unwrap();
+    let review = stamp_packet_cid(&review_patch_reply(&reply, answer_map("reviewed answer")))
+        .unwrap();
+    let vote = stamp_packet_cid(&vote_reply(&reply)).unwrap();
     assert!(
         book.profiles
             .matching_profiles(&review)
@@ -393,11 +398,10 @@ fn dogfood_multi_model_authoring_round_replays() {
     .unwrap();
     let reviewer = stamp_packet_cid(&review_patch_reply(
         &drafter,
-        "model:reviewer",
         answer_map("reviewed construction"),
     ))
     .unwrap();
-    let judge = stamp_packet_cid(&vote_reply(&drafter, "model:judge")).unwrap();
+    let judge = stamp_packet_cid(&vote_reply(&drafter)).unwrap();
     let merged = stamp_packet_cid(&reviewer.canonicalized()).unwrap();
 
     for packet in [&root, &drafter, &reviewer, &judge, &merged] {
