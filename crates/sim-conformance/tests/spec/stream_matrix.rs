@@ -554,10 +554,17 @@ fn host_roundtrip(item: StreamItem) {
     let opened = FakeBackend::new()
         .open(host_request(item.packet().media()))
         .unwrap();
-    assert_eq!(
-        opened.queue().callback_item(item.clone()).unwrap(),
-        PushResult::Accepted
-    );
+    if opened.config().direction() == HostDirection::Output {
+        assert_eq!(
+            opened.stream().push_packet(item.clone()).unwrap(),
+            PushResult::Accepted
+        );
+    } else {
+        assert_eq!(
+            opened.queue().callback_item(item.clone()).unwrap(),
+            PushResult::Accepted
+        );
+    }
     assert_eq!(opened.queue().drain(2).unwrap(), vec![item]);
 }
 
