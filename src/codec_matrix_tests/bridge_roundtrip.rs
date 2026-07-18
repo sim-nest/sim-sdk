@@ -71,11 +71,7 @@ fn brief_request() -> BridgePacket {
 }
 
 fn parent_token(parent: &BridgePacket) -> String {
-    format!(
-        "{}#move={}",
-        parent.header.cid.as_deref().unwrap(),
-        parent.header.move_kind.as_qualified_str()
-    )
+    parent.header.cid.clone().unwrap()
 }
 
 fn reply_to_request(parent: &BridgePacket, from: &str, payload: Expr) -> BridgePacket {
