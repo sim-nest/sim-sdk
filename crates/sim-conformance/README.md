@@ -12,4 +12,4 @@ Executable conformance tests for SIM architecture claims.
 
 ## Crate Documentation
 
-Executable conformance checks for the architecture claims in SIM.md.
+SIM workspace package for sim conformance.

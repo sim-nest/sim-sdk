@@ -7,4 +7,5 @@ Generated from Cargo metadata by `xtask crate-catalog v1`.
 | Package | Publish | Targets | Description |
 | --- | --- | --- | --- |
 | `sim-nest` | `true` | `bin, example, lib, test` | The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features. |
+| `sim-conformance` | `false` | `test` | Executable conformance tests for SIM architecture claims. |
 | `xtask` | `false` | `bin` | SIM workspace package for xtask. |
