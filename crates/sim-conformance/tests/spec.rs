@@ -20,7 +20,7 @@ use sim::{
     kernel::{
         Args, CapabilitySet, Cx, DefaultFactory, ExportKind, ExportState, Expr, LibSource,
         LibTarget, NeedPolicy, NumberLiteral, ReadPolicy, Symbol, TrustLevel,
-        read_construct_capability, read_eval_capability,
+        macro_expand_eval_capability, read_construct_capability, read_eval_capability,
     },
 };
 
@@ -188,6 +188,7 @@ fn read_eval_is_capability_and_trust_gated_separately_from_read_construct() {
             if capability == read_eval_capability() && trust == TrustLevel::Untrusted
     ));
 
+    grant_capability(&seat, &mut cx, macro_expand_eval_capability());
     let allowed = decode_with_codec(
         &mut cx,
         &q("codec", "lisp"),
@@ -273,17 +274,23 @@ fn loader_backends_named_by_runtime_are_available() {
     assert_eq!(manifest.target, LibTarget::HostRegistered);
 
     assert_loader_selected(
-        registry.load_lib(&mut cx, LibSource::Path(PathBuf::from("missing.l8b"))),
+        registry.load_lib(
+            &mut cx,
+            sim::loaders::path_source(PathBuf::from("missing.l8b")),
+        ),
         "binary-precompiled-lib",
     );
     assert_loader_selected(
-        registry.load_lib(&mut cx, LibSource::Path(PathBuf::from("missing.lisp"))),
+        registry.load_lib(
+            &mut cx,
+            sim::loaders::path_source(PathBuf::from("missing.lisp")),
+        ),
         "lisp-source",
     );
     assert_loader_selected(
         registry.load_lib(
             &mut cx,
-            LibSource::Path(PathBuf::from(format!(
+            sim::loaders::path_source(PathBuf::from(format!(
                 "missing.{}",
                 std::env::consts::DLL_EXTENSION
             ))),
@@ -295,7 +302,10 @@ fn loader_backends_named_by_runtime_are_available() {
         sim::wasm_abi::InMemoryWasmRuntime::new(),
     ));
     assert_loader_selected(
-        wasm_registry.load_lib(&mut cx, LibSource::Path(PathBuf::from("missing.wasm"))),
+        wasm_registry.load_lib(
+            &mut cx,
+            sim::loaders::path_source(PathBuf::from("missing.wasm")),
+        ),
         "wasm-abi-module",
     );
 }

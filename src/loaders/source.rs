@@ -33,17 +33,16 @@ impl LispSourceLoader {
 #[cfg(feature = "codec-lisp")]
 impl LibLoader for LispSourceLoader {
     fn can_load(&self, source: &LibSource) -> bool {
-        matches!(source, LibSource::Path(path) if path.extension().is_some_and(|ext| ext == "lisp"))
+        sim_run_loaders::path_from_source(source).is_ok_and(|path| {
+            path.is_some_and(|path| path.extension().is_some_and(|ext| ext == "lisp"))
+        })
     }
 
     fn load(&self, cx: &mut Cx, source: LibSource) -> Result<Box<dyn Lib>> {
-        let path = match source {
-            LibSource::Path(path) => path,
-            _ => {
-                return Err(sim_kernel::Error::HostError(
-                    "lisp source loader received unsupported source".to_owned(),
-                ));
-            }
+        let Some(path) = sim_run_loaders::path_from_source(&source)? else {
+            return Err(sim_kernel::Error::HostError(
+                "lisp source loader received unsupported source".to_owned(),
+            ));
         };
         let text = std::fs::read_to_string(&path).map_err(|err| {
             sim_kernel::Error::HostError(format!(
@@ -65,9 +64,8 @@ impl LibLoader for LispSourceLoader {
         cx: &mut Cx,
         source: &LibSource,
     ) -> Result<Option<sim_kernel::LibManifest>> {
-        let path = match source {
-            LibSource::Path(path) => path.clone(),
-            _ => return Ok(None),
+        let Some(path) = sim_run_loaders::path_from_source(source)? else {
+            return Ok(None);
         };
         let text = std::fs::read_to_string(&path).map_err(|err| {
             sim_kernel::Error::HostError(format!(

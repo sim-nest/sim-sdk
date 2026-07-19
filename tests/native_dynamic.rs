@@ -260,7 +260,7 @@ fn native_loader_can_build_and_load_external_plugin_dylib() {
     let registry = standard_loader_registry();
 
     registry
-        .load_and_register(&mut cx, sim::kernel::LibSource::Path(plugin_path.clone()))
+        .load_and_register(&mut cx, sim::loaders::path_source(plugin_path.clone()))
         .unwrap();
 
     let hello = cx
@@ -333,7 +333,7 @@ fn native_loader_can_load_f64_number_domain_dylib() {
     let registry = standard_loader_registry();
 
     registry
-        .load_and_register(&mut cx, sim::kernel::LibSource::Path(plugin_path.clone()))
+        .load_and_register(&mut cx, sim::loaders::path_source(plugin_path.clone()))
         .unwrap();
 
     let domain = Symbol::qualified("numbers", "f64");
@@ -383,7 +383,7 @@ fn native_loader_can_load_standard_core_class_and_macro_dylib() {
     let registry = standard_loader_registry();
 
     registry
-        .load_and_register(&mut cx, sim::kernel::LibSource::Path(plugin_path.clone()))
+        .load_and_register(&mut cx, sim::loaders::path_source(plugin_path.clone()))
         .unwrap();
 
     let class = Symbol::qualified("standard", "proof-box");
@@ -432,7 +432,7 @@ fn native_loader_rejects_extra_args_with_generated_arity_check() {
     let registry = standard_loader_registry();
 
     registry
-        .load_and_register(&mut cx, sim::kernel::LibSource::Path(plugin_path.clone()))
+        .load_and_register(&mut cx, sim::loaders::path_source(plugin_path.clone()))
         .unwrap();
 
     let error = cx

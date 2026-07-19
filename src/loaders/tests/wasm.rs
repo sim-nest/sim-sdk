@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use std::{fs, path::PathBuf};
 
-use sim_kernel::{AbiVersion, Args, LibLoader, LibSource, LibTarget, Symbol};
+use sim_kernel::{AbiVersion, Args, LibLoader, LibTarget, Symbol};
 use sim_wasm_abi::{
     AbiValue, Frame, InMemoryWasmRuntime, WasmExport, WasmGuestModule, WasmManifest,
     encode_exports_frame, encode_manifest_frame, encode_value_frame,
@@ -37,7 +37,7 @@ fn standard_registry_with_wasm_accepts_wasm_source_shape() {
     let err = registry
         .load_lib(
             &mut cx,
-            sim_kernel::LibSource::Path(PathBuf::from("x.wasm")),
+            sim_run_loaders::path_source(PathBuf::from("x.wasm")),
         )
         .err()
         .unwrap();
@@ -48,12 +48,10 @@ fn standard_registry_with_wasm_accepts_wasm_source_shape() {
 fn wasm_loader_accepts_wasm_paths_and_bytes() {
     let runtime = Arc::new(crate::wasm_abi::InMemoryWasmRuntime::new());
     let loader = crate::loaders::WasmLoader::new(runtime);
-    assert!(loader.can_load(&sim_kernel::LibSource::Path(PathBuf::from("lib.wasm"))));
-    assert!(loader.can_load(&sim_kernel::LibSource::Bytes(b"\0asm....".to_vec())));
-    assert!(!loader.can_load(&sim_kernel::LibSource::Bytes(b"L8PK".to_vec())));
-    assert!(!loader.can_load(&sim_kernel::LibSource::Url(
-        "https://example.com/lib.wasm".to_owned()
-    )));
+    assert!(loader.can_load(&sim_run_loaders::path_source(PathBuf::from("lib.wasm"))));
+    assert!(loader.can_load(&sim_run_loaders::bytes_source(b"\0asm....".to_vec())));
+    assert!(!loader.can_load(&sim_run_loaders::bytes_source(b"L8PK".to_vec())));
+    assert!(!loader.can_load(&sim_run_loaders::url_source("https://example.com/lib.wasm")));
 }
 
 #[test]
@@ -86,7 +84,7 @@ fn wasm_loader_loads_registered_module_bytes() {
     let mut cx = cx();
     cx.grant(crate::loaders::wasm_load_capability());
     registry
-        .load_and_register(&mut cx, LibSource::Bytes(bytes))
+        .load_and_register(&mut cx, sim_run_loaders::bytes_source(bytes))
         .unwrap();
 
     assert!(
@@ -116,7 +114,7 @@ fn standard_registry_with_wasm_loads_real_fixture_path() {
     cx.grant(crate::loaders::wasm_load_capability());
 
     registry
-        .load_and_register(&mut cx, LibSource::Path(path.clone()))
+        .load_and_register(&mut cx, sim_run_loaders::path_source(path.clone()))
         .unwrap();
 
     assert!(

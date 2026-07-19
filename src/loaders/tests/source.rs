@@ -4,9 +4,9 @@ use std::sync::Arc;
 #[cfg(feature = "shape")]
 use std::sync::atomic::{AtomicUsize, Ordering};
 
+use sim_kernel::LibLoader;
 #[cfg(feature = "shape")]
 use sim_kernel::{Args, LibTarget, Symbol};
-use sim_kernel::{LibLoader, LibSource};
 
 #[cfg(all(feature = "codec-binary", feature = "shape"))]
 use super::support::pack_output_file;
@@ -19,8 +19,8 @@ use super::support::{
 #[test]
 fn lisp_source_loader_accepts_lisp_paths() {
     let loader = crate::loaders::LispSourceLoader::default();
-    assert!(loader.can_load(&LibSource::Path(PathBuf::from("lib.lisp"))));
-    assert!(!loader.can_load(&LibSource::Bytes(Vec::new())));
+    assert!(loader.can_load(&sim_run_loaders::path_source(PathBuf::from("lib.lisp"))));
+    assert!(!loader.can_load(&sim_run_loaders::bytes_source(Vec::new())));
 }
 
 #[cfg(feature = "shape")]
@@ -42,7 +42,7 @@ fn lisp_source_loader_reexports_existing_runtime_objects() {
 
     let registry = crate::loaders::standard_loader_registry();
     registry
-        .load_and_register(&mut cx, LibSource::Path(path.clone()))
+        .load_and_register(&mut cx, sim_run_loaders::path_source(path.clone()))
         .unwrap();
 
     let value = cx
@@ -88,7 +88,7 @@ fn registry_can_inspect_lisp_source_manifest_before_load() {
     let registry = crate::loaders::standard_loader_registry();
 
     let manifest = registry
-        .inspect_manifest(&mut cx, LibSource::Path(path.clone()))
+        .inspect_manifest(&mut cx, sim_run_loaders::path_source(path.clone()))
         .unwrap();
 
     assert_eq!(manifest.id, Symbol::qualified("loader", "source-demo"));
@@ -108,7 +108,7 @@ fn lisp_source_loader_reexports_existing_macros() {
 
     let registry = crate::loaders::standard_loader_registry();
     registry
-        .load_and_register(&mut cx, LibSource::Path(path.clone()))
+        .load_and_register(&mut cx, sim_run_loaders::path_source(path.clone()))
         .unwrap();
 
     assert!(
@@ -139,7 +139,7 @@ fn lisp_source_loader_authors_defmacro_from_source() {
 
     let registry = crate::loaders::standard_loader_registry();
     registry
-        .load_and_register(&mut cx, LibSource::Path(path.clone()))
+        .load_and_register(&mut cx, sim_run_loaders::path_source(path.clone()))
         .unwrap();
 
     assert!(
@@ -186,7 +186,7 @@ fn lisp_source_loader_reports_invalid_manifest_shape() {
     let path = write_source_file("invalid", "\"not a lib form\"");
     let registry = crate::loaders::standard_loader_registry();
     let err = registry
-        .load_lib(&mut cx, LibSource::Path(path.clone()))
+        .load_lib(&mut cx, sim_run_loaders::path_source(path.clone()))
         .err()
         .unwrap();
     assert!(matches!(err, sim_kernel::Error::Lib(_)));
@@ -200,7 +200,7 @@ fn lisp_source_loader_rejects_arbitrary_top_level_eval() {
     let path = write_source_file("non-manifest", "(print \"hi\")");
     let registry = crate::loaders::standard_loader_registry();
     let err = registry
-        .load_lib(&mut cx, LibSource::Path(path.clone()))
+        .load_lib(&mut cx, sim_run_loaders::path_source(path.clone()))
         .err()
         .unwrap();
     assert!(matches!(

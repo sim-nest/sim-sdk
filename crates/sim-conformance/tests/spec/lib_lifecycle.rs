@@ -1,9 +1,8 @@
 use sim::{
     kernel::{
-        AbiVersion, CatalogSource, ClaimPattern, Cx, DefaultFactory, Dependency, EagerPolicy,
-        Export, ExportKind, ExportRecord, Lib, LibId, LibLoader, LibManifest, LibSource,
-        LibSourceSpec, LibTarget, Linker, LoadCx, LoaderRegistry, Ref, RegistryBootState, Symbol,
-        Version,
+        AbiVersion, ClaimPattern, Cx, DefaultFactory, Dependency, EagerPolicy, Export, ExportKind,
+        ExportRecord, Lib, LibId, LibLoader, LibManifest, LibSource, LibSourceSpec, LibTarget,
+        Linker, LoadCx, LoaderRegistry, Ref, RegistryBootState, Symbol, Version,
     },
     lib_standard_core::{LanguageProfile, ProfileRegistry, language_profile_lib_symbol},
 };
@@ -173,8 +172,14 @@ fn boot_receipts_encode_decode_and_replay_registry_surface() {
     let user_source = Symbol::qualified("lifecycle", "boot-user-source");
     let loaders = LoaderRegistry::new()
         .with_loader(ReceiptFixtureLoader)
-        .with_source(dep_source.clone(), CatalogSource::Bytes(b"dep".to_vec()))
-        .with_source(user_source.clone(), CatalogSource::Bytes(b"user".to_vec()));
+        .with_source(
+            dep_source.clone(),
+            sim::loaders::catalog_bytes_source(b"dep".to_vec()),
+        )
+        .with_source(
+            user_source.clone(),
+            sim::loaders::catalog_bytes_source(b"user".to_vec()),
+        );
     let mut recorded = conformance_cx();
 
     let dep_receipt = loaders
@@ -250,13 +255,15 @@ impl Lib for FixtureValueLib {
 
 impl LibLoader for ReceiptFixtureLoader {
     fn can_load(&self, source: &LibSource) -> bool {
-        matches!(source, LibSource::Bytes(bytes) if matches!(bytes.as_slice(), b"dep" | b"user"))
+        sim::loaders::bytes_from_source(source).is_ok_and(|bytes| {
+            bytes.is_some_and(|bytes| matches!(bytes.as_slice(), b"dep" | b"user"))
+        })
     }
 
     fn load(&self, _cx: &mut Cx, source: LibSource) -> sim::kernel::Result<Box<dyn Lib>> {
-        match source {
-            LibSource::Bytes(bytes) if bytes == b"dep" => Ok(Box::new(fixture_lib("boot-dep"))),
-            LibSource::Bytes(bytes) if bytes == b"user" => {
+        match sim::loaders::bytes_from_source(&source)?.as_deref() {
+            Some(b"dep") => Ok(Box::new(fixture_lib("boot-dep"))),
+            Some(b"user") => {
                 let dep = fixture_lib("boot-dep");
                 Ok(Box::new(fixture_lib("boot-user").requiring(dep.id)))
             }

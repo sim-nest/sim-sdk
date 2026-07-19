@@ -6,10 +6,9 @@ use std::{
 };
 
 use sim::kernel::{
-    AbiVersion, Args, Callable, CatalogSource, Cx, DefaultFactory, EagerPolicy, Error, Export,
-    ExportRecord, ExportState, Lib, LibLoader, LibManifest, LibSource, LibSourceSpec, LibTarget,
-    Linker, LoadCx, LoaderRegistry, Object, ObjectCompat, RegistryBootState, Result, Symbol, Value,
-    Version,
+    AbiVersion, Args, Callable, Cx, DefaultFactory, EagerPolicy, Error, Export, ExportRecord,
+    ExportState, Lib, LibLoader, LibManifest, LibSource, LibSourceSpec, LibTarget, Linker, LoadCx,
+    LoaderRegistry, Object, ObjectCompat, RegistryBootState, Result, Symbol, Value, Version,
 };
 
 #[test]
@@ -20,11 +19,11 @@ fn cli_boot_receipts_replay_to_same_loaded_surface() {
         .with_loader(CliBootFixtureLoader)
         .with_source(
             codec_source.clone(),
-            CatalogSource::Bytes(b"codec-lisp".to_vec()),
+            sim::loaders::catalog_bytes_source(b"codec-lisp".to_vec()),
         )
         .with_source(
             scenario_source.clone(),
-            CatalogSource::Bytes(b"scenario-app".to_vec()),
+            sim::loaders::catalog_bytes_source(b"scenario-app".to_vec()),
         );
     let mut recorded = cx();
 
@@ -219,22 +218,19 @@ struct CliBootFixtureLoader;
 
 impl LibLoader for CliBootFixtureLoader {
     fn can_load(&self, source: &LibSource) -> bool {
-        matches!(
-            source,
-            LibSource::Bytes(bytes) if matches!(bytes.as_slice(), b"codec-lisp" | b"scenario-app")
-        )
+        sim::loaders::bytes_from_source(source).is_ok_and(|bytes| {
+            bytes.is_some_and(|bytes| matches!(bytes.as_slice(), b"codec-lisp" | b"scenario-app"))
+        })
     }
 
     fn load(&self, _cx: &mut Cx, source: LibSource) -> Result<Box<dyn Lib>> {
-        match source {
-            LibSource::Bytes(bytes) if bytes == b"codec-lisp" => Ok(Box::new(CliBootFixtureLib {
+        match sim::loaders::bytes_from_source(&source)?.as_deref() {
+            Some(b"codec-lisp") => Ok(Box::new(CliBootFixtureLib {
                 kind: FixtureKind::Codec,
             })),
-            LibSource::Bytes(bytes) if bytes == b"scenario-app" => {
-                Ok(Box::new(CliBootFixtureLib {
-                    kind: FixtureKind::App,
-                }))
-            }
+            Some(b"scenario-app") => Ok(Box::new(CliBootFixtureLib {
+                kind: FixtureKind::App,
+            })),
             _ => Err(Error::HostError("unsupported CLI boot fixture".to_owned())),
         }
     }

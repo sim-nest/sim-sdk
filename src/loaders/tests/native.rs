@@ -7,11 +7,13 @@ use super::support::cx;
 #[test]
 fn native_dylib_loader_accepts_platform_library_extensions() {
     let loader = crate::loaders::NativeDylibLoader;
-    assert!(loader.can_load(&sim_kernel::LibSource::Path(PathBuf::from("libdemo.so"))));
-    assert!(loader.can_load(&sim_kernel::LibSource::Path(PathBuf::from("libdemo.dylib"))));
-    assert!(loader.can_load(&sim_kernel::LibSource::Path(PathBuf::from("demo.dll"))));
-    assert!(!loader.can_load(&sim_kernel::LibSource::Path(PathBuf::from("demo.wasm"))));
-    assert!(!loader.can_load(&sim_kernel::LibSource::Bytes(Vec::new())));
+    assert!(loader.can_load(&sim_run_loaders::path_source(PathBuf::from("libdemo.so"))));
+    assert!(loader.can_load(&sim_run_loaders::path_source(PathBuf::from(
+        "libdemo.dylib"
+    ))));
+    assert!(loader.can_load(&sim_run_loaders::path_source(PathBuf::from("demo.dll"))));
+    assert!(!loader.can_load(&sim_run_loaders::path_source(PathBuf::from("demo.wasm"))));
+    assert!(!loader.can_load(&sim_run_loaders::bytes_source(Vec::new())));
 }
 
 #[test]
@@ -20,7 +22,7 @@ fn native_dylib_loader_requires_capability_before_loading() {
     let loader = crate::loaders::NativeDylibLoader;
     let err = match loader.load(
         &mut cx,
-        sim_kernel::LibSource::Path(PathBuf::from("missing.so")),
+        sim_run_loaders::path_source(PathBuf::from("missing.so")),
     ) {
         Ok(_) => panic!("expected native dylib load to require a capability"),
         Err(err) => err,
@@ -78,7 +80,7 @@ fn standard_registry_includes_native_loader_when_enabled() {
     cx.grant(sim_kernel::native_dynamic_load_capability());
     let err = match crate::loaders::standard_loader_registry().load_lib(
         &mut cx,
-        sim_kernel::LibSource::Path(PathBuf::from("missing.so")),
+        sim_run_loaders::path_source(PathBuf::from("missing.so")),
     ) {
         Ok(_) => panic!("expected missing native dylib path to fail"),
         Err(err) => err,

@@ -1,6 +1,6 @@
 [package]
 name = "sim-nest"
-version = "0.1.23"
+version = "0.1.24"
 edition = "2024"
 license = "MPL-2.0"
 description = "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features."
@@ -48,8 +48,8 @@ serde = { version = "1", features = ["derive"], optional = true }
 serde_json = { version = "1", optional = true }
 sim-citizen = { optional = true, version = "0.1.1" }
 sim-citizen-derive = { optional = true, version = "0.1.0" }
-sim-run-loaders = { optional = true, version = "0.1.2", default-features = false }
-sim-run-core = { optional = true, version = "0.1.5" }
+sim-run-loaders = { optional = true, version = "0.1.3", default-features = false }
+sim-run-core = { optional = true, version = "0.1.6" }
 sim-lib-repl = { optional = true, version = "0.1.1" }
 sim-web-shell = { optional = true, version = "0.1.9", default-features = false }
 sim-codec = { optional = true, version = "0.1.4" }
@@ -64,11 +64,11 @@ sim-codec-json = { optional = true, version = "0.1.2" }
 sim-codec-lisp = { optional = true, version = "0.1.1" }
 sim-codec-mcp = { optional = true, version = "0.1.2" }
 sim-cookbook = { optional = true, version = "0.1.3" }
-sim-kernel = { optional = true, version = "0.1.3" }
-sim-lib-agent = { optional = true, version = "0.1.8" }
-sim-lib-agent-runner-core = { optional = true, version = "0.1.1" }
-sim-lib-agent-runner-http = { optional = true, version = "0.1.3" }
-sim-lib-agent-runner-process = { optional = true, version = "0.1.3" }
+sim-kernel = { optional = true, version = "0.1.4" }
+sim-lib-agent = { optional = true, version = "0.1.11" }
+sim-lib-agent-runner-core = { optional = true, version = "0.1.2" }
+sim-lib-agent-runner-http = { optional = true, version = "0.1.4" }
+sim-lib-agent-runner-process = { optional = true, version = "0.1.4" }
 sim-lib-audio-dsp = { optional = true, version = "0.1.2" }
 sim-lib-audio-graph-core = { optional = true, version = "0.1.1" }
 sim-lib-audio-graph-live = { optional = true, version = "0.1.1" }
@@ -76,7 +76,7 @@ sim-lib-music-synth = { optional = true, version = "0.1.4" }
 sim-lib-binding = { optional = true, version = "0.1.1" }
 sim-lib-bridge = { optional = true, version = "0.1.0" }
 sim-lib-control = { optional = true, version = "0.1.1" }
-sim-lib-cookbook = { optional = true, version = "0.1.13" }
+sim-lib-cookbook = { optional = true, version = "0.1.14" }
 sim-lib-core = { optional = true, version = "0.1.2" }
 sim-lib-daw-session = { optional = true, version = "0.1.1" }
 sim-lib-discrete = { optional = true, version = "0.1.3" }
@@ -110,7 +110,7 @@ sim-lib-lang-lua = { optional = true, version = "0.1.1" }
 sim-lib-lang-ruby = { optional = true, version = "0.1.1" }
 sim-lib-lang-scheme = { optional = true, version = "0.1.2" }
 sim-lib-lang-typed-lazy = { optional = true, version = "0.1.1" }
-sim-lib-logic = { optional = true, version = "0.1.1" }
+sim-lib-logic = { optional = true, version = "0.1.2" }
 sim-lib-mcp = { optional = true, version = "0.1.5" }
 sim-lib-midi-ble = { optional = true, version = "0.1.1" }
 sim-lib-midi-core = { optional = true, version = "0.1.3" }
@@ -119,7 +119,7 @@ sim-lib-midi-rtmidi = { optional = true, version = "0.1.3" }
 sim-lib-midi-shapes = { optional = true, version = "0.1.2" }
 sim-lib-midi-smf = { optional = true, version = "0.1.1" }
 sim-lib-midi-sysex = { optional = true, version = "0.1.1" }
-sim-lib-midi-wasm-frame = { optional = true, version = "0.1.2" }
+sim-lib-midi-wasm-frame = { optional = true, version = "0.1.3" }
 sim-lib-music-analysis = { optional = true, version = "0.1.1" }
 sim-lib-music-combinators = { optional = true, version = "0.1.1" }
 sim-lib-music-core = { optional = true, version = "0.1.2" }
@@ -161,7 +161,7 @@ sim-lib-numbers-tensor-f64 = { optional = true, version = "0.1.1" }
 sim-lib-numbers-tensor-i64 = { optional = true, version = "0.1.1" }
 sim-lib-numbers-tensor-linalg = { optional = true, version = "0.1.2" }
 sim-lib-numbers-tensor-rat64 = { optional = true, version = "0.1.1" }
-sim-lib-openai-server = { optional = true, version = "0.1.4" }
+sim-lib-openai-server = { optional = true, version = "0.1.5" }
 sim-lib-pattern = { optional = true, version = "0.1.1" }
 sim-lib-pitch-chord = { optional = true, version = "0.1.1" }
 sim-lib-pitch-core = { optional = true, version = "0.1.1" }
@@ -205,8 +205,8 @@ sim-lib-stream-combinators = { optional = true, version = "0.1.2" }
 sim-lib-stream-core = { optional = true, version = "0.1.1" }
 sim-lib-stream-coreaudio = { optional = true, version = "0.1.1" }
 sim-lib-stream-fabric = { optional = true, version = "0.1.4" }
-sim-lib-stream-file = { optional = true, version = "0.1.1" }
-sim-lib-stream-host = { optional = true, version = "0.1.1" }
+sim-lib-stream-file = { optional = true, version = "0.1.2" }
+sim-lib-stream-host = { optional = true, version = "0.1.2" }
 sim-lib-stream-jack = { optional = true, version = "0.1.0" }
 sim-lib-stream-midi = { optional = true, version = "0.1.2" }
 sim-lib-stream-pipewire = { optional = true, version = "0.1.1" }
@@ -227,15 +227,15 @@ sim-list-cell = { optional = true, version = "0.1.2" }
 sim-list-lazy = { optional = true, version = "0.1.2" }
 sim-macros = { optional = true, version = "0.1.1" }
 sim-shape = { optional = true, version = "0.1.1" }
-sim-table-db = { optional = true, version = "0.1.0" }
+sim-table-db = { optional = true, version = "0.1.1" }
 sim-table-fs = { optional = true, version = "0.1.2" }
 sim-table-hash = { optional = true, version = "0.1.2" }
 sim-table-http = { optional = true, version = "0.1.0" }
 sim-table-lazy = { optional = true, version = "0.1.2" }
 sim-table-override = { optional = true, version = "0.1.0" }
-sim-table-remote = { optional = true, version = "0.1.0" }
+sim-table-remote = { optional = true, version = "0.1.1" }
 sim-value = { optional = true, version = "0.1.2" }
-sim-wasm-abi = { optional = true, version = "0.1.0" }
+sim-wasm-abi = { optional = true, version = "0.1.1" }
 
 [dev-dependencies]
 sim-kernel = { version = "0.1.0", features = ["test-support"] }
@@ -257,14 +257,14 @@ citizen = ["dep:sim-citizen", "dep:sim-citizen-derive", "core", "sim-lib-discret
 citizen-strict = ["citizen"]
 bridge = ["dep:sim-lib-bridge", "agent-runner-core", "codec-bridge", "stream-fabric", "shape", "core"]
 codec-algol = ["dep:sim-codec", "dep:sim-codec-algol", "shape", "core"]
-codec-binary = ["dep:sim-codec", "dep:sim-codec-binary", "core"]
+codec-binary = ["dep:sim-codec", "dep:sim-codec-binary", "dep:sim-run-loaders", "core"]
 codec-binary-base64 = ["dep:sim-codec", "dep:sim-codec-binary-base64", "codec-binary", "core"]
 codec-bitwise = ["dep:sim-codec", "dep:sim-codec-bitwise", "core"]
 codec-bitwise-base64 = ["dep:sim-codec", "dep:sim-codec-bitwise-base64", "codec-bitwise", "core"]
 codec-bridge = ["dep:sim-codec", "dep:sim-codec-bridge", "core"]
 codec-chat = ["dep:sim-codec", "dep:sim-codec-chat", "core"]
 codec-json = ["dep:sim-codec", "dep:sim-codec-json", "dep:serde", "dep:serde_json", "core"]
-codec-lisp = ["dep:sim-codec", "dep:sim-codec-lisp", "dep:proc-macro2", "core"]
+codec-lisp = ["dep:sim-codec", "dep:sim-codec-lisp", "dep:proc-macro2", "dep:sim-run-loaders", "core"]
 codec-mcp = ["dep:sim-codec-mcp", "codec-json"]
 control = ["dep:sim-lib-control", "core"]
 cookbook = ["dep:sim-cookbook", "dep:sim-lib-cookbook", "core", "codec-lisp", "sim-lib-agent?/cookbook"]

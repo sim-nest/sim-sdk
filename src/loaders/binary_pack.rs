@@ -19,12 +19,13 @@ impl Default for BinaryPackLoader {
 
 impl LibLoader for BinaryPackLoader {
     fn can_load(&self, source: &LibSource) -> bool {
-        match source {
-            LibSource::Path(path) => path.extension().is_some_and(|ext| ext == "l8b"),
-            LibSource::Bytes(bytes) => has_binary_pack_magic(bytes),
-            LibSource::Url(_) => false,
-            LibSource::Symbol(_) | LibSource::Host(_) => false,
+        if let Ok(Some(path)) = sim_run_loaders::path_from_source(source) {
+            return path.extension().is_some_and(|ext| ext == "l8b");
         }
+        if let Ok(Some(bytes)) = sim_run_loaders::bytes_from_source(source) {
+            return has_binary_pack_magic(&bytes);
+        }
+        false
     }
 
     fn load(&self, _cx: &mut Cx, source: LibSource) -> Result<Box<dyn Lib>> {
@@ -38,20 +39,21 @@ impl LibLoader for BinaryPackLoader {
         _cx: &mut Cx,
         source: &LibSource,
     ) -> Result<Option<sim_kernel::LibManifest>> {
-        let bytes = match source {
-            LibSource::Path(path) => std::fs::read(path).map_err(|err| {
+        let bytes = if let Some(path) = sim_run_loaders::path_from_source(source)? {
+            std::fs::read(&path).map_err(|err| {
                 sim_kernel::Error::HostError(format!(
                     "failed to read binary lib pack {}: {err}",
                     path.display()
                 ))
-            })?,
-            LibSource::Bytes(bytes) => bytes.clone(),
-            LibSource::Url(url) => {
-                return Err(sim_kernel::Error::HostError(format!(
-                    "url inspection is not implemented for binary lib pack {url}"
-                )));
-            }
-            _ => return Ok(None),
+            })?
+        } else if let Some(bytes) = sim_run_loaders::bytes_from_source(source)? {
+            bytes
+        } else if let Some(url) = sim_run_loaders::url_from_source(source)? {
+            return Err(sim_kernel::Error::HostError(format!(
+                "url inspection is not implemented for binary lib pack {url}"
+            )));
+        } else {
+            return Ok(None);
         };
         Ok(Some(decode_binary_lib_pack(&bytes)?.manifest))
     }
@@ -137,21 +139,25 @@ pub fn decode_binary_lib_pack(bytes: &[u8]) -> Result<BinaryLibPack> {
 }
 
 fn read_pack_source(source: LibSource) -> Result<Vec<u8>> {
-    match source {
-        LibSource::Path(path) => std::fs::read(&path).map_err(|err| {
+    if let Some(path) = sim_run_loaders::path_from_source(&source)? {
+        return std::fs::read(&path).map_err(|err| {
             sim_kernel::Error::HostError(format!(
                 "failed to read binary lib pack {}: {err}",
                 path.display()
             ))
-        }),
-        LibSource::Bytes(bytes) => Ok(bytes),
-        LibSource::Url(url) => Err(sim_kernel::Error::HostError(format!(
-            "url loading is not implemented for binary lib pack {url}"
-        ))),
-        _ => Err(sim_kernel::Error::HostError(
-            "binary pack loader received unsupported source".to_owned(),
-        )),
+        });
     }
+    if let Some(bytes) = sim_run_loaders::bytes_from_source(&source)? {
+        return Ok(bytes);
+    }
+    if let Some(url) = sim_run_loaders::url_from_source(&source)? {
+        return Err(sim_kernel::Error::HostError(format!(
+            "url loading is not implemented for binary lib pack {url}"
+        )));
+    }
+    Err(sim_kernel::Error::HostError(
+        "binary pack loader received unsupported source".to_owned(),
+    ))
 }
 
 pub(super) fn manifest_to_expr(manifest: &sim_kernel::LibManifest) -> sim_kernel::Expr {

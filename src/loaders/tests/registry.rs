@@ -51,7 +51,10 @@ fn registry_reports_when_no_loader_accepts_source() {
     let mut cx = cx();
     let registry = crate::loaders::standard_loader_registry();
     let err = registry
-        .load_lib(&mut cx, LibSource::Path(PathBuf::from("x.wasm")))
+        .load_lib(
+            &mut cx,
+            sim_run_loaders::path_source(PathBuf::from("x.wasm")),
+        )
         .err()
         .unwrap();
     assert!(matches!(err, sim_kernel::Error::HostError(_)));
@@ -95,7 +98,7 @@ fn registry_can_resolve_symbol_sources_from_catalog() {
 
     let registry = crate::loaders::standard_loader_registry_with_sources([(
         Symbol::qualified("loader", "catalog-demo"),
-        sim_kernel::CatalogSource::Bytes(bytes),
+        sim_run_loaders::catalog_bytes_source(bytes),
     )]);
 
     registry

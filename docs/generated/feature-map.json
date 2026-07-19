@@ -143,6 +143,7 @@
           "edges": [
             "dep:sim-codec",
             "dep:sim-codec-binary",
+            "dep:sim-run-loaders",
             "core"
           ],
           "name": "codec-binary",
@@ -211,6 +212,7 @@
             "dep:sim-codec",
             "dep:sim-codec-lisp",
             "dep:proc-macro2",
+            "dep:sim-run-loaders",
             "core"
           ],
           "name": "codec-lisp",

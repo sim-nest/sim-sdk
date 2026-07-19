@@ -41,6 +41,7 @@ fn cookbook_all_seeded_recipes_use_product_directory_under_all_features() {
     sim::lib_stream_core::install_stream_core_shapes_lib(&mut cx).unwrap();
     cx.grant(sim::kernel::read_eval_capability());
     cx.grant(sim::kernel::read_construct_capability());
+    cx.grant(sim::kernel::macro_expand_eval_capability());
 
     let (directory, diagnostics) = sim::runtime::cookbook_directory::default_loadable_libs();
     assert!(
