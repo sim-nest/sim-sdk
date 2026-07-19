@@ -3,12 +3,11 @@ use sim::kernel::{Args, Cx, Expr, Symbol, Value};
 use crate::support::{cx, q};
 
 /// Browses real runtime subjects through the public `core/browse` facade and
-/// asserts the returned Card v2 records expose the reflection surfaces SIM
+/// asserts the returned Card records expose the reflection surfaces SIM
 /// advertises (subject, kind, help, tests, see-also, coverage, provenance).
 ///
-/// This replaces a prior tautology that built a struct from consts and asserted
-/// its fields equalled those same consts. It now exercises the browse/reflection
-/// runtime and inspects two distinct cards.
+/// This exercises the browse/reflection runtime and inspects two distinct cards
+/// so the check depends on runtime behavior.
 #[test]
 fn core_browse_reflects_distinct_subjects_into_schema_cards() {
     let mut cx = cx();
@@ -16,7 +15,7 @@ fn core_browse_reflects_distinct_subjects_into_schema_cards() {
     let add_card = browse(&mut cx, q("math", "add"));
     let browse_card = browse(&mut cx, q("core", "browse"));
 
-    // Both are Card v2 maps exposing the reflection surfaces the runtime claims.
+    // Both are Card maps exposing the reflection surfaces the runtime claims.
     for (label, card) in [("math/add", &add_card), ("core/browse", &browse_card)] {
         assert!(
             matches!(card, Expr::Map(_)),

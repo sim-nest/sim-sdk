@@ -11,11 +11,10 @@
     feature = "server",
     feature = "view"
 ))]
-//! Cross-repo contract integration tests for the future split.
+//! Cross-repo contract integration tests for the public facade.
 //!
 //! These tests use only the public `sim` facade and the public types it
-//! re-exports. They protect the contracts that will cross repository
-//! boundaries after the split:
+//! re-exports. They protect contracts that cross repository boundaries:
 //!
 //! - codec surfaces can feed Shape checking, evaluation, `as_expr`, and
 //!   cross-codec re-encoding;

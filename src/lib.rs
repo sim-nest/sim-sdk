@@ -157,7 +157,7 @@ mod standard_exports;
 pub use sim_macros::*;
 // The macros' native_export output emits `::sim::codec_binary::{decode_frame,
 // encode_frame}`, so the feature that enables the macros must also expose that
-// module. `proc-macros` pulls `codec-binary`; this contract asserts it, so a future
+// module. `proc-macros` pulls `codec-binary`; this contract asserts it, so an
 // edit that drops it fails to compile instead of shipping macros that cannot expand.
 #[cfg(all(feature = "proc-macros", not(feature = "codec-binary")))]
 compile_error!("feature `proc-macros` requires `codec-binary` (macros emit `::sim::codec_binary`)");

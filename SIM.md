@@ -3,11 +3,11 @@
 This is the authored architecture contract for the SIM runtime and the document
 the `sim-conformance` suite checks itself against. It is not generated; it states
 the data flow, the kernel-contract claims the executable suite verifies, and the
-surfaces that are covered versus the surfaces that are not yet covered.
+surfaces covered by this suite versus surfaces outside this suite.
 
 The companion narrative lives in `README.md`. This file is the machine-checked
 half: the conformance harness loads SIM.md through the public facade only and
-fails closed when a claim named here is no longer described, so the document and
+fails closed when a named claim is absent from this file, so the document and
 the executable checks cannot silently drift apart.
 
 ## What SIM is
@@ -94,7 +94,7 @@ Covered by executable conformance in this suite, with the listed feature set on:
 - the kernel codec, class, number, capability, eval-policy, loader, lifecycle,
   and wasm-ABI contracts;
 - the CORE host primitives for table-backed filesystem read/write/edit/search,
-  bounded process execution, direct HTTP table reads, and legacy fs/net
+  bounded process execution, direct HTTP table reads, and compatibility fs/net
   capability aliases;
 - the stream-core, stream-combinators, stream-fabric, stream-file, stream-host,
   and web-bridge transport surfaces;
@@ -105,7 +105,7 @@ full runtime replays): the `30-agents` and `40-atelier` recipe sets, whose
 `(quote ...)` setup forms are decoded and evaluated through the lisp codec and
 compared to their expected forms.
 
-Not yet covered by executable conformance here (their features are off by
-default in this suite, tracked separately): the agents, MCP, music, audio-FEMM,
-logic, and discrete surfaces. Their absence is intentional and named so the suite
-does not over-claim coverage it does not have.
+Outside this executable conformance suite (their features are off by default in
+this suite): the agents, MCP, music, audio-FEMM, logic, and discrete surfaces.
+Their absence is intentional and named so the suite does not over-claim coverage
+it does not have.

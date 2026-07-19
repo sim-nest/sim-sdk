@@ -208,7 +208,7 @@ pub fn compile_lisp_source_pack(
     let compiled = compile::compile_lisp_source_parts(path, expr)?;
     if !compiled.macros.is_empty() {
         return Err(sim_kernel::Error::Lib(
-            "binary lib packs cannot yet encode Lisp-authored defmacro bodies".to_owned(),
+            "binary lib packs do not encode Lisp-authored defmacro bodies".to_owned(),
         ));
     }
     Ok(super::binary_pack::BinaryLibPack {

@@ -218,11 +218,13 @@ the authoritative, current list; the families below are a map, not a copy.
 ### Default features
 
 ```text
-default = ["core", "codec-lisp", "numbers-f64"]
+default = ["core", "shape", "codec-lisp", "numbers-f64"]
 ```
 
 - **`core`** brings in `sim-kernel` (the protocol kernel) and `sim-lib-core`
   (the core runtime library).
+- **`shape`** brings in the `sim-shape` engine used by the runtime installer,
+  public shape helpers, macro checking, and codec grammar surfaces.
 - **`codec-lisp`** brings in the Lisp reader/printer codec surface.
 - **`numbers-f64`** brings in the default `f64` number domain.
 
@@ -257,7 +259,7 @@ The large optional surface is organized into families. Each feature is gated in
   and MIDI stream backends.
 - **`pitch-*` / `midi-*` / `music-*` / `sound-*`** -- the music, pitch, MIDI,
   and sound stack, with `music-stack` as the convenience aggregate.
-- **`audio-graph-*` / `audio-dsp` / `audio-synth` / `plugin-*` / `daw-session`**
+- **`audio-graph-*` / `audio-dsp` / `music-synth` / `plugin-*` / `daw-session`**
   -- the audio graph, DSP, synthesis, plugin hosting (CLAP, LV2, VST3), and DAW
   session libs.
 - **`femm-*`** -- the finite-element / numeric-physics (FEMM) stack.

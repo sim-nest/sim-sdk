@@ -21,8 +21,8 @@ const _: &str = "midi-topology-feature-sentinels";
 const _: &str = "music";
 #[cfg(feature = "music-analysis")]
 const _: &str = "music-analysis";
-// Pre-existing: the `cookbook` feature shipped without a cfg sentinel (CK0-CK5),
-// which left this contract test red on main; add it here.
+// The `cookbook` feature needs a cfg sentinel so the contract test can prove the
+// feature is visible to conditional compilation.
 #[cfg(feature = "cookbook")]
 const _: &str = "cookbook";
 #[cfg(feature = "discrete")]

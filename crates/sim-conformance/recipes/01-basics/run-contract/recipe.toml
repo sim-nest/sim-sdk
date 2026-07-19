@@ -1,0 +1,9 @@
+id = "run-contract"
+title = "Run the conformance contract"
+codec = "shell"
+setup = "input.sh"
+purpose = "README.md"
+order = 10
+tags = ["conformance", "facade", "architecture", "offline", "deterministic"]
+requires = ["sim-conformance", "sim-nest"]
+network = false
