@@ -1,4 +1,16 @@
 {
   "schema": "sim.card-index.v1",
-  "cards": []
+  "cards": [
+    "crates/sim-conformance/recipes/01-basics/chapter.toml",
+    "crates/sim-conformance/recipes/01-basics/run-contract/README.md",
+    "crates/sim-conformance/recipes/01-basics/run-contract/input.sh",
+    "crates/sim-conformance/recipes/01-basics/run-contract/recipe.toml",
+    "crates/sim-conformance/recipes/book.toml",
+    "recipes/01-basics/boot-runtime/README.md",
+    "recipes/01-basics/boot-runtime/expected.txt",
+    "recipes/01-basics/boot-runtime/input.lisp",
+    "recipes/01-basics/boot-runtime/recipe.toml",
+    "recipes/01-basics/chapter.toml",
+    "recipes/book.toml"
+  ]
 }

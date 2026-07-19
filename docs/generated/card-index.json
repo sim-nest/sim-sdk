@@ -1,5 +1,5 @@
 {
-  "card_count": 192,
+  "card_count": 194,
   "cards": [
     {
       "id": "agent/effects",
@@ -948,6 +948,18 @@
       "kind": "surface-card",
       "owner": "sim",
       "summary": "codec position behavior facet"
+    },
+    {
+      "id": "cookbook/sim-conformance",
+      "kind": "cookbook-recipe",
+      "owner": "sim-conformance",
+      "summary": "Recipes that show how the executable architecture contract is run."
+    },
+    {
+      "id": "cookbook/sim-sdk",
+      "kind": "cookbook-recipe",
+      "owner": "sim-nest",
+      "summary": "Small recipes for booting and checking the umbrella SIM facade."
     },
     {
       "id": "core/Card",
