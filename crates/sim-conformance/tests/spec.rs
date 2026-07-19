@@ -13,7 +13,7 @@
 //! committed `.simcassette` corpus on disk; `validate_golden_fixture` checks a
 //! cassette's invariants against a target publish path without reading a file.
 
-use std::{path::PathBuf, sync::Arc};
+use std::sync::Arc;
 
 use sim::{
     codec::{Input, decode_with_codec},
@@ -274,26 +274,17 @@ fn loader_backends_named_by_runtime_are_available() {
     assert_eq!(manifest.target, LibTarget::HostRegistered);
 
     assert_loader_selected(
-        registry.load_lib(
-            &mut cx,
-            sim::loaders::path_source(PathBuf::from("missing.l8b")),
-        ),
+        registry.load_lib(&mut cx, sim::loaders::path_source("missing.l8b")),
         "binary-precompiled-lib",
     );
     assert_loader_selected(
-        registry.load_lib(
-            &mut cx,
-            sim::loaders::path_source(PathBuf::from("missing.lisp")),
-        ),
+        registry.load_lib(&mut cx, sim::loaders::path_source("missing.lisp")),
         "lisp-source",
     );
     assert_loader_selected(
         registry.load_lib(
             &mut cx,
-            sim::loaders::path_source(PathBuf::from(format!(
-                "missing.{}",
-                std::env::consts::DLL_EXTENSION
-            ))),
+            sim::loaders::path_source(format!("missing.{}", std::env::consts::DLL_EXTENSION)),
         ),
         "native-dylib",
     );
@@ -302,10 +293,7 @@ fn loader_backends_named_by_runtime_are_available() {
         sim::wasm_abi::InMemoryWasmRuntime::new(),
     ));
     assert_loader_selected(
-        wasm_registry.load_lib(
-            &mut cx,
-            sim::loaders::path_source(PathBuf::from("missing.wasm")),
-        ),
+        wasm_registry.load_lib(&mut cx, sim::loaders::path_source("missing.wasm")),
         "wasm-abi-module",
     );
 }
