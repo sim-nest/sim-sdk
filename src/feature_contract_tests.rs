@@ -72,6 +72,46 @@ fn all_feature_metadata_has_no_ignored_optional_dependencies() {
     assert_all_feature_metadata_has_no_invalid_dependency_warnings(&repo_root());
 }
 
+const REQUIRED_PUBLIC_GATES: &[&str] = &[
+    "cargo fmt --all --check",
+    "cargo test -p sim-conformance",
+    "cargo test --workspace",
+    "cargo clippy --workspace --all-targets -- -D warnings",
+    "cargo doc --workspace --no-deps",
+    "cargo clippy --workspace --all-features --all-targets -- -D warnings",
+    "cargo test --workspace --all-features",
+    "cargo run -p xtask -- simdoc --check",
+];
+
+#[test]
+fn ci_and_public_checklists_name_required_gates() {
+    let checked_files = [
+        (
+            ".github/workflows/ci.yml",
+            include_str!("../.github/workflows/ci.yml"),
+        ),
+        ("README.md", include_str!("../README.md")),
+        ("CONTRIBUTING.md", include_str!("../CONTRIBUTING.md")),
+        (
+            ".github/pull_request_template.md",
+            include_str!("../.github/pull_request_template.md"),
+        ),
+    ];
+    let missing = checked_files
+        .into_iter()
+        .flat_map(|(file, text)| {
+            REQUIRED_PUBLIC_GATES
+                .iter()
+                .filter(move |command| !text.contains(**command))
+                .map(move |command| format!("{file}: {command}"))
+        })
+        .collect::<Vec<_>>();
+    assert!(
+        missing.is_empty(),
+        "CI and public checklists must stay aligned with repos.toml gates: {missing:?}"
+    );
+}
+
 #[test]
 fn r10_numeric_feature_implications_stay_wired() {
     let features = collect_feature_dependencies(include_str!("../Cargo.toml"));

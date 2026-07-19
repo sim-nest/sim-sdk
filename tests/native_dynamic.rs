@@ -54,6 +54,38 @@ const NATIVE_PLUGIN_PATCHES: &[(&str, &str, &str)] = &[
     ),
 ];
 
+const NATIVE_NUMBERS_F64_PATCHES: &[(&str, &str, &str)] = &[
+    ("sim-kernel", "sim-kernel", "."),
+    ("sim-citizen", "sim-citizen", "crates/sim-citizen"),
+    (
+        "sim-citizen-derive",
+        "sim-citizen",
+        "crates/sim-citizen-derive",
+    ),
+    ("sim-cookbook", "sim-foundation", "crates/sim-cookbook"),
+    ("sim-value", "sim-foundation", "crates/sim-value"),
+    ("sim-macros", "sim-foundation", "crates/sim-macros"),
+    ("sim-shape", "sim-shape", "."),
+    ("sim-codec", "sim-codecs", "crates/sim-codec"),
+    ("sim-codec-binary", "sim-codecs", "crates/sim-codec-binary"),
+];
+
+const NATIVE_STANDARD_CORE_PATCHES: &[(&str, &str, &str)] = &[
+    ("sim-kernel", "sim-kernel", "."),
+    ("sim-citizen", "sim-citizen", "crates/sim-citizen"),
+    (
+        "sim-citizen-derive",
+        "sim-citizen",
+        "crates/sim-citizen-derive",
+    ),
+    ("sim-cookbook", "sim-foundation", "crates/sim-cookbook"),
+    ("sim-value", "sim-foundation", "crates/sim-value"),
+    ("sim-shape", "sim-shape", "."),
+    ("sim-codec", "sim-codecs", "crates/sim-codec"),
+    ("sim-codec-binary", "sim-codecs", "crates/sim-codec-binary"),
+    ("sim-lib-core", "sim-runtime", "crates/sim-lib-core"),
+];
+
 fn cx() -> sim::kernel::Cx {
     let mut cx = sim::kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
     install_core_runtime(&mut cx);
@@ -137,8 +169,8 @@ fn toml_string(path: &Path) -> String {
     format!("\"{}\"", raw.replace('\\', "\\\\").replace('"', "\\\""))
 }
 
-fn add_native_plugin_patch_args(command: &mut Command) {
-    for (crate_name, repo_name, source_path) in NATIVE_PLUGIN_PATCHES {
+fn add_native_plugin_patch_args(command: &mut Command, patches: &[(&str, &str, &str)]) {
+    for (crate_name, repo_name, source_path) in patches {
         let path = local_patch_path(crate_name, repo_name, source_path);
         command.arg("--config").arg(format!(
             "patch.crates-io.{crate_name}.path={}",
@@ -153,6 +185,7 @@ fn build_native_plugin() -> PathBuf {
         "sim-native-plugin",
         "native_plugin_fixture",
         &[],
+        NATIVE_PLUGIN_PATCHES,
     )
 }
 
@@ -162,6 +195,7 @@ fn build_native_numbers_f64() -> PathBuf {
         "sim-native-numbers-f64",
         "sim_lib_numbers_f64",
         &["native-export"],
+        NATIVE_NUMBERS_F64_PATCHES,
     )
 }
 
@@ -171,6 +205,7 @@ fn build_native_standard_core() -> PathBuf {
         "sim-native-standard-core",
         "sim_lib_standard_core",
         &["native-export"],
+        NATIVE_STANDARD_CORE_PATCHES,
     )
 }
 
@@ -179,6 +214,7 @@ fn build_native_dylib(
     target_prefix: &str,
     dylib_base: &str,
     features: &[&str],
+    patches: &[(&str, &str, &str)],
 ) -> PathBuf {
     let target_dir = unique_target_dir();
     let mut command = Command::new(cargo_bin());
@@ -192,7 +228,7 @@ fn build_native_dylib(
     if !features.is_empty() {
         command.arg("--features").arg(features.join(","));
     }
-    add_native_plugin_patch_args(&mut command);
+    add_native_plugin_patch_args(&mut command, patches);
     let status = command
         .status()
         .unwrap_or_else(|err| panic!("cargo build for {target_prefix} should start: {err}"));

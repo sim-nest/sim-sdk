@@ -559,9 +559,20 @@ sim = { package = "sim-nest", version = "0.1", default-features = false, feature
 Contributors, from a repo checkout, run the repository validation gate:
 
 ```bash
-cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps
-cargo run -p xtask -- simdoc --check    # `xtask` is a repo-local dev tool, not a published crate
+cargo fmt --all --check
+cargo test -p sim-conformance
+cargo test --workspace
+cargo clippy --workspace --all-targets -- -D warnings
+cargo doc --workspace --no-deps
+cargo clippy --workspace --all-features --all-targets -- -D warnings
+cargo test --workspace --all-features
+cargo run -p xtask -- simdoc --check
 ```
+
+CI runs `cargo test -p sim-conformance` for the standalone public-facade
+conformance suite. Conformance tests that name sibling recipe corpora or the
+generated constellation meta-workspace in their ignored-test output are
+maintainer checks outside GitHub CI.
 
 `cargo run -p xtask -- simdoc` builds the public documentation lanes (API docs,
 agent cards, human docs, and diagrams) and the split contract files under
