@@ -1,4 +1,5 @@
 mod cfg_sentinels;
+mod facade_thinness;
 mod support;
 
 use support::{

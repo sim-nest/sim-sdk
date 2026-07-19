@@ -4,14 +4,14 @@ use std::sync::Arc;
 
 use sim_kernel::{Cx, Lib, LibLoader, LibSource, Result};
 
+#[cfg(feature = "codec-binary")]
+use super::BinaryPackLoader;
+#[cfg(feature = "codec-lisp")]
+use super::LispSourceLoader;
 #[cfg(all(feature = "dynamic-native", not(target_arch = "wasm32")))]
 use super::NativeDylibLoader;
 #[cfg(feature = "wasm")]
 use super::WasmLoader;
-#[cfg(feature = "codec-binary")]
-use super::binary_pack::BinaryPackLoader;
-#[cfg(feature = "codec-lisp")]
-use super::source::LispSourceLoader;
 
 /// Builds a loader registry with the standard loaders for the enabled features.
 pub fn standard_loader_registry() -> LoaderRegistry {

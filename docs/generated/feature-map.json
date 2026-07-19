@@ -144,6 +144,7 @@
             "dep:sim-codec",
             "dep:sim-codec-binary",
             "dep:sim-run-loaders",
+            "sim-run-loaders/codec-binary",
             "core"
           ],
           "name": "codec-binary",
@@ -213,6 +214,7 @@
             "dep:sim-codec-lisp",
             "dep:proc-macro2",
             "dep:sim-run-loaders",
+            "sim-run-loaders/codec-lisp",
             "core"
           ],
           "name": "codec-lisp",
@@ -357,7 +359,8 @@
           "edges": [
             "dep:sim-kernel",
             "dep:sim-value",
-            "dep:sim-lib-core"
+            "dep:sim-lib-core",
+            "dep:sim-run-loaders"
           ],
           "name": "core",
           "workspace_edges": []
@@ -1727,7 +1730,8 @@
         {
           "edges": [
             "dep:sim-shape",
-            "core"
+            "core",
+            "sim-run-loaders?/shape"
           ],
           "name": "shape",
           "workspace_edges": []

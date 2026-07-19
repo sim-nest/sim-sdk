@@ -88,11 +88,11 @@ fn registry_can_resolve_symbol_sources_from_catalog() {
                 function_id: None,
             }],
         },
-        exports: vec![crate::loaders::ReexportSpec {
-            kind: crate::loaders::reexport::ReexportKind::Function,
-            export: Symbol::qualified("loader", "tick-catalog"),
-            target: Symbol::new("tick"),
-        }],
+        exports: vec![crate::loaders::ReexportSpec::new(
+            crate::loaders::ReexportKind::Function,
+            Symbol::qualified("loader", "tick-catalog"),
+            Symbol::new("tick"),
+        )],
     };
     let bytes = crate::loaders::encode_binary_lib_pack(&pack).unwrap();
 

@@ -252,6 +252,8 @@ fn expand_macro_form(
 
 enum ResolvedMacro<'a> {
     Sdk(&'a MacroObject),
+    #[cfg(all(feature = "codec-lisp", feature = "shape"))]
+    LoaderSource(&'a sim_run_loaders::SourceTemplateMacro),
     #[cfg(all(feature = "dynamic-native", not(target_arch = "wasm32")))]
     Native(&'a sim_run_loaders::NativeAbiMacro),
 }
@@ -260,6 +262,13 @@ impl<'a> ResolvedMacro<'a> {
     fn from_value(value: &'a Value) -> Option<Self> {
         if let Some(mac) = value.object().downcast_ref::<MacroObject>() {
             return Some(Self::Sdk(mac));
+        }
+        #[cfg(all(feature = "codec-lisp", feature = "shape"))]
+        if let Some(mac) = value
+            .object()
+            .downcast_ref::<sim_run_loaders::SourceTemplateMacro>()
+        {
+            return Some(Self::LoaderSource(mac));
         }
         #[cfg(all(feature = "dynamic-native", not(target_arch = "wasm32")))]
         if let Some(mac) = value
@@ -274,6 +283,8 @@ impl<'a> ResolvedMacro<'a> {
     fn symbol(&self) -> Symbol {
         match self {
             Self::Sdk(mac) => mac.macro_ref().symbol(),
+            #[cfg(all(feature = "codec-lisp", feature = "shape"))]
+            Self::LoaderSource(mac) => mac.symbol(),
             #[cfg(all(feature = "dynamic-native", not(target_arch = "wasm32")))]
             Self::Native(mac) => mac.symbol(),
         }
@@ -282,6 +293,8 @@ impl<'a> ResolvedMacro<'a> {
     fn syntax_shape(&self) -> Arc<dyn Shape> {
         match self {
             Self::Sdk(mac) => mac.syntax_shape(),
+            #[cfg(all(feature = "codec-lisp", feature = "shape"))]
+            Self::LoaderSource(mac) => mac.syntax_shape(),
             #[cfg(all(feature = "dynamic-native", not(target_arch = "wasm32")))]
             Self::Native(mac) => mac.syntax_shape(),
         }
@@ -290,6 +303,8 @@ impl<'a> ResolvedMacro<'a> {
     fn parser_trusted(&self) -> bool {
         match self {
             Self::Sdk(mac) => mac.parser_trusted(),
+            #[cfg(all(feature = "codec-lisp", feature = "shape"))]
+            Self::LoaderSource(mac) => mac.parser_trusted(),
             #[cfg(all(feature = "dynamic-native", not(target_arch = "wasm32")))]
             Self::Native(mac) => mac.parser_trusted(),
         }
@@ -303,6 +318,11 @@ impl<'a> ResolvedMacro<'a> {
     ) -> Result<Expr> {
         match self {
             Self::Sdk(mac) => mac.macro_ref().expand(cx, input, captures),
+            #[cfg(all(feature = "codec-lisp", feature = "shape"))]
+            Self::LoaderSource(mac) => {
+                let _ = cx;
+                mac.expand(input, captures)
+            }
             #[cfg(all(feature = "dynamic-native", not(target_arch = "wasm32")))]
             Self::Native(mac) => {
                 let _ = captures;
