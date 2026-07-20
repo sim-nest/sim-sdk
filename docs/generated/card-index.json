@@ -1,5 +1,5 @@
 {
-  "card_count": 195,
+  "card_count": 197,
   "cards": [
     {
       "id": "agent/effects",
@@ -626,6 +626,12 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/shape/Defs",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/shape/DiscardOnDiagnosticPrefixHook",
       "kind": "citizen-class",
       "owner": "sim-shape",
@@ -663,6 +669,12 @@
     },
     {
       "id": "citizen/shape/Or",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Ref",
       "kind": "citizen-class",
       "owner": "sim-shape",
       "summary": "citizen class constructor surface"

@@ -26,6 +26,8 @@ use sim::{
 
 #[path = "conformance_support/mod.rs"]
 mod conformance_support;
+#[path = "spec/forge_author.rs"]
+mod forge_author;
 #[path = "spec/forge_eval.rs"]
 mod forge_eval;
 #[path = "spec/instrument_streams.rs"]

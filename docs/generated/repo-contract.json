@@ -1,5 +1,5 @@
 {
-  "card_count": 195,
+  "card_count": 197,
   "cards": [
     {
       "id": "agent/effects",
@@ -626,6 +626,12 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/shape/Defs",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/shape/DiscardOnDiagnosticPrefixHook",
       "kind": "citizen-class",
       "owner": "sim-shape",
@@ -663,6 +669,12 @@
     },
     {
       "id": "citizen/shape/Or",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Ref",
       "kind": "citizen-class",
       "owner": "sim-shape",
       "summary": "citizen class constructor surface"
@@ -1172,7 +1184,7 @@
       "summary": "core"
     }
   ],
-  "citizen_count": 140,
+  "citizen_count": 142,
   "citizens": [
     {
       "arity": 1,
@@ -1733,6 +1745,12 @@
       "version": 1
     },
     {
+      "arity": 2,
+      "crate": "sim-shape",
+      "symbol": "shape/Defs",
+      "version": 1
+    },
+    {
       "arity": 1,
       "crate": "sim-shape",
       "symbol": "shape/DiscardOnDiagnosticPrefixHook",
@@ -1772,6 +1790,12 @@
       "arity": 2,
       "crate": "sim-shape",
       "symbol": "shape/Or",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-shape",
+      "symbol": "shape/Ref",
       "version": 1
     },
     {
@@ -5048,10 +5072,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "621f66165cfd0d684da6e24fedc484f67cfcc613",
+    "git_commit": "d6804b6363cf8c05a1d68bb05dae15e5dc416808",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "621f66165cfd0d684da6e24fedc484f67cfcc613",
+    "source_commit": "d6804b6363cf8c05a1d68bb05dae15e5dc416808",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -5064,9 +5088,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "d223e8bfefea2ef8",
+    "workspace_hash": "3d01a45cd316719f",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 188,
+    "workspace_hash_input_count": 189,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -5082,6 +5106,7 @@
       "crates/sim-conformance/tests/placement_matrix.rs",
       "crates/sim-conformance/tests/shape_grammar.rs",
       "crates/sim-conformance/tests/spec/cli_boot.rs",
+      "crates/sim-conformance/tests/spec/forge_author.rs",
       "crates/sim-conformance/tests/spec/forge_eval.rs",
       "crates/sim-conformance/tests/spec/instrument_streams.rs",
       "crates/sim-conformance/tests/spec/lib_lifecycle.rs",

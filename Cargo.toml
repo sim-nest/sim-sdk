@@ -43,6 +43,12 @@ homepage = "https://github.com/sim-nest/sim-sdk"
 unsafe_code = "forbid"
 
 [patch.crates-io]
+sim-lib-agent-runner-core = { git = "https://github.com/sim-nest/sim-agent-net", rev = "5ed5bfbdbc647301f1563a64454d8f581a002db8" }
+sim-lib-bridge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "5ed5bfbdbc647301f1563a64454d8f581a002db8" }
+sim-lib-cookbook = { git = "https://github.com/sim-nest/sim-agent-net", rev = "5ed5bfbdbc647301f1563a64454d8f581a002db8" }
+sim-lib-forge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "5ed5bfbdbc647301f1563a64454d8f581a002db8" }
+sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "5ed5bfbdbc647301f1563a64454d8f581a002db8" }
+sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "5ed5bfbdbc647301f1563a64454d8f581a002db8" }
 sim-lib-intent = { git = "https://github.com/sim-nest/sim-web", rev = "6a77c077262e12fdecb8913f688040e7c4da8575" }
 sim-lib-scene = { git = "https://github.com/sim-nest/sim-web", rev = "6a77c077262e12fdecb8913f688040e7c4da8575" }
 sim-lib-stream-core = { git = "https://github.com/sim-nest/sim-stream", rev = "4dda4235d6ef91b28035882cd0dcd8d7d721cfb2" }
