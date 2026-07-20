@@ -6,5 +6,5 @@ purpose = "README.md"
 expected = "expected.txt"
 order = 10
 tags = ["sdk", "facade", "boot", "offline", "deterministic"]
-requires = ["core", "shape", "codec/lisp", "numbers/f64"]
+requires = ["core", "codec/lisp", "numbers/f64"]
 network = false
