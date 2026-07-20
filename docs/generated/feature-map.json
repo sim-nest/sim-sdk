@@ -389,6 +389,14 @@
         },
         {
           "edges": [
+            "device-reference",
+            "cookbook"
+          ],
+          "name": "device",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-stream-device",
             "dep:sim-lib-view-device",
             "dep:sim-lib-web-bridge",

@@ -290,6 +290,7 @@ cookbook-all = ["cookbook", "shape", "citizen", "bridge", "codec-algol", "codec-
 core = ["dep:sim-kernel", "dep:sim-value", "dep:sim-lib-core", "dep:sim-run-loaders"]
 daw-session = ["dep:sim-lib-daw-session", "audio-graph-live", "plugin-core", "stream-audio", "topology-core"]
 default = ["core", "shape", "codec-lisp", "numbers-f64"]
+device = ["device-reference", "cookbook"]
 device-reference = ["dep:sim-lib-stream-device", "dep:sim-lib-view-device", "dep:sim-lib-web-bridge", "core"]
 discrete = ["discrete-algebra", "discrete-graph", "discrete-comb", "discrete-spectral"]
 discrete-algebra = ["dep:sim-lib-discrete", "sim-lib-discrete/algebra", "core"]

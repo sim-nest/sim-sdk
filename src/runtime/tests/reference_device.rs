@@ -2,9 +2,9 @@ use sim_kernel::testing::bare_cx;
 use sim_lib_view_device::{DeviceCapability, DeviceTier};
 
 use crate::runtime::reference_device::{
-    bool_field, install_reference_device, prove_consent_without_kernel_grant, prove_route_swap,
-    prove_two_rate, reference_glance_profile, reference_pose_receipt, reference_rich_profile,
-    require_reference_pose,
+    bool_field, install_device_base, install_reference_device, prove_consent_without_kernel_grant,
+    prove_route_swap, prove_two_rate, reference_glance_profile, reference_pose_receipt,
+    reference_rich_profile, require_reference_pose,
 };
 
 #[test]
@@ -47,6 +47,45 @@ fn reference_device_installs_profiles_and_stream_base() {
         cx.registry()
             .value_by_symbol(&crate::runtime::reference_device::reference_rich_profile_symbol())
             .is_some()
+    );
+}
+
+#[cfg(feature = "device")]
+#[test]
+fn device_base_feature_installs() {
+    use sim_cookbook::recipes_from_embedded;
+
+    let mut cx = bare_cx();
+
+    crate::runtime::install_device_base(&mut cx).expect("device base installs");
+    install_device_base(&mut cx).expect("device base install is idempotent");
+
+    assert!(
+        cx.registry()
+            .lib(&crate::lib_stream_device::device_stream_base_manifest_symbol())
+            .is_some()
+    );
+    assert_eq!(
+        crate::lib_view_device::derive_tier(&crate::lib_view_device::tier_preset(
+            crate::lib_view_device::DeviceTier::Rich
+        )),
+        crate::lib_view_device::DeviceTier::Rich
+    );
+    assert!(
+        cx.registry()
+            .lib(&crate::runtime::reference_device::reference_device_manifest_symbol())
+            .is_some()
+    );
+    assert!(
+        cx.registry()
+            .value_by_symbol(&crate::runtime::reference_device::reference_glance_profile_symbol())
+            .is_some()
+    );
+    let cards =
+        recipes_from_embedded(crate::runtime::reference_device::RECIPES).expect("recipes parse");
+    assert!(
+        cards.iter().any(|card| card.id.ends_with("/two-rate")),
+        "reference recipes should be linked into the device facade"
     );
 }
 

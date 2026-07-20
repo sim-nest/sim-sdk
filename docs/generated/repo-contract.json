@@ -2532,6 +2532,14 @@
         },
         {
           "edges": [
+            "device-reference",
+            "cookbook"
+          ],
+          "name": "device",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-stream-device",
             "dep:sim-lib-view-device",
             "dep:sim-lib-web-bridge",
@@ -5040,10 +5048,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "259a35a309fe8a9e844298c7488260c921f80043",
+    "git_commit": "621f66165cfd0d684da6e24fedc484f67cfcc613",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "259a35a309fe8a9e844298c7488260c921f80043",
+    "source_commit": "621f66165cfd0d684da6e24fedc484f67cfcc613",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -5056,7 +5064,7 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "ef925dcdaf5deaae",
+    "workspace_hash": "d223e8bfefea2ef8",
     "workspace_hash_algorithm": "fnv1a64",
     "workspace_hash_input_count": 188,
     "workspace_hash_inputs": [

@@ -25,6 +25,8 @@ const _: &str = "music-analysis";
 // feature is visible to conditional compilation.
 #[cfg(feature = "cookbook")]
 const _: &str = "cookbook";
+#[cfg(feature = "device")]
+const _: &str = "device";
 #[cfg(feature = "discrete")]
 const _: &str = "discrete";
 #[cfg(feature = "discrete-algebra")]

@@ -22,6 +22,8 @@ pub use capabilities::{
     config_list_impl_capability, config_table_impl_capability,
 };
 pub use install::{CoreRuntimeLib, install_core_runtime};
+#[cfg(feature = "device")]
+pub use reference_device::install_device_base;
 pub use testing::{SimTest, TestExpected};
 
 #[cfg(test)]

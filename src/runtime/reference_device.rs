@@ -84,11 +84,16 @@ impl Lib for ReferenceDeviceLib {
     }
 }
 
-/// Installs the modeled stream base and the SDK reference-device exports.
-pub fn install_reference_device(cx: &mut Cx) -> Result<()> {
+/// Installs the device base and the SDK reference-device exports.
+pub fn install_device_base(cx: &mut Cx) -> Result<()> {
     sim_lib_stream_device::install_device_stream_base(cx)?;
     sim_lib_core::install_once(cx, &ReferenceDeviceLib)?;
     Ok(())
+}
+
+/// Installs the modeled reference device into a context.
+pub fn install_reference_device(cx: &mut Cx) -> Result<()> {
+    install_device_base(cx)
 }
 
 /// Returns the manifest id for the reference-device facade.

@@ -48,6 +48,12 @@ fn default_features_support_readme_quickstart() {
 }
 
 #[test]
+fn device_feature_installs_reference_base_and_recipes() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "device", &["device-reference", "cookbook"]);
+}
+
+#[test]
 fn public_facade_alias_table_mentions_declared_features() {
     let declared = collect_declared_features(include_str!("../Cargo.toml"));
     let missing = PUBLIC_FACADE_ALIASES
