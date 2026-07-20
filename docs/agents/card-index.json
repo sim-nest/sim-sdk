@@ -11,6 +11,16 @@
     "recipes/01-basics/boot-runtime/input.lisp",
     "recipes/01-basics/boot-runtime/recipe.toml",
     "recipes/01-basics/chapter.toml",
-    "recipes/book.toml"
+    "recipes/book.toml",
+    "recipes/device/chapter.toml",
+    "recipes/device/consent/README.md",
+    "recipes/device/consent/input.lisp",
+    "recipes/device/consent/recipe.toml",
+    "recipes/device/route-swap/README.md",
+    "recipes/device/route-swap/input.lisp",
+    "recipes/device/route-swap/recipe.toml",
+    "recipes/device/two-rate/README.md",
+    "recipes/device/two-rate/input.lisp",
+    "recipes/device/two-rate/recipe.toml"
   ]
 }

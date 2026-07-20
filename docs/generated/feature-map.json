@@ -266,6 +266,7 @@
             "audio-dsp",
             "audio-graph-live",
             "daw-session",
+            "device-reference",
             "discrete-rank",
             "discrete-runtime",
             "exec",
@@ -384,6 +385,16 @@
             "numbers-f64"
           ],
           "name": "default",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-device",
+            "dep:sim-lib-view-device",
+            "dep:sim-lib-web-bridge",
+            "core"
+          ],
+          "name": "device-reference",
           "workspace_edges": []
         },
         {

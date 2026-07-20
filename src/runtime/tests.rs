@@ -33,6 +33,8 @@ mod numbers_r10_8;
 mod numbers_r8_09;
 mod numbers_surfaces;
 mod realize;
+#[cfg(feature = "device-reference")]
+mod reference_device;
 #[cfg(all(
     feature = "pitch",
     feature = "midi",

@@ -1,0 +1,8 @@
+id = "consent"
+title = "Check modeled device consent"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 20
+tags = ["sdk", "device", "consent", "offline", "deterministic"]
+requires = ["device/reference"]

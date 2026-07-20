@@ -87,6 +87,8 @@ pub use sim_lib_stream_clock as lib_stream_clock;
 pub use sim_lib_stream_combinators as lib_stream_combinators;
 #[cfg(feature = "stream-core")]
 pub use sim_lib_stream_core as lib_stream_core;
+#[cfg(feature = "device-reference")]
+pub use sim_lib_stream_device as lib_stream_device;
 #[cfg(feature = "stream-fabric")]
 pub use sim_lib_stream_fabric as lib_stream_fabric;
 #[cfg(feature = "stream-file")]
@@ -100,7 +102,9 @@ pub use sim_lib_stream_prelude as lib_stream_prelude;
 #[cfg(feature = "topology-core")]
 #[allow(unused_imports)]
 pub use sim_lib_topology as lib_topology;
-#[cfg(feature = "web-bridge")]
+#[cfg(feature = "device-reference")]
+pub use sim_lib_view_device as lib_view_device;
+#[cfg(any(feature = "web-bridge", feature = "device-reference"))]
 pub use sim_lib_web_bridge as lib_web_bridge;
 #[cfg(feature = "list-cell")]
 pub use sim_list_cell as list_cell;

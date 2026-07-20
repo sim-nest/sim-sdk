@@ -13,14 +13,14 @@ use sim_lib_cookbook::{
     ResolvedLoadable,
 };
 
-const PRODUCT_CODEC_BASE: u32 = 10_000;
-
 #[macro_use]
 mod audio_stream;
 #[macro_use]
 mod codecs;
 #[macro_use]
 mod data;
+#[macro_use]
+mod device;
 #[macro_use]
 mod femm;
 #[macro_use]
@@ -39,6 +39,7 @@ macro_rules! loadable_libs {
         cookbook_directory_music!($m);
         cookbook_directory_audio_stream!($m);
         cookbook_directory_data!($m);
+        cookbook_directory_device!($m);
     };
 }
 
@@ -116,7 +117,9 @@ impl LoadableLibResolver for SimNestCookbookResolver {
     }
 }
 
+#[allow(dead_code)]
 fn codec_id(offset: u32) -> CodecId {
+    const PRODUCT_CODEC_BASE: u32 = 10_000;
     CodecId(PRODUCT_CODEC_BASE + offset)
 }
 

@@ -10,6 +10,8 @@ mod install;
 mod lambda;
 mod lists;
 mod realize;
+#[cfg(feature = "device-reference")]
+pub mod reference_device;
 mod shape_ops;
 mod tables;
 pub(crate) mod test_runs;

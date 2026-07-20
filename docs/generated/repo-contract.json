@@ -1,5 +1,5 @@
 {
-  "card_count": 194,
+  "card_count": 195,
   "cards": [
     {
       "id": "agent/effects",
@@ -818,6 +818,12 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/stream/DeviceSample",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-device",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/stream/Metadata",
       "kind": "citizen-class",
       "owner": "sim-lib-stream-core",
@@ -1166,7 +1172,7 @@
       "summary": "core"
     }
   ],
-  "citizen_count": 139,
+  "citizen_count": 140,
   "citizens": [
     {
       "arity": 1,
@@ -1919,6 +1925,12 @@
       "version": 1
     },
     {
+      "arity": 1,
+      "crate": "sim-lib-stream-device",
+      "symbol": "stream/DeviceSample",
+      "version": 0
+    },
+    {
       "arity": 5,
       "crate": "sim-lib-stream-core",
       "symbol": "stream/Metadata",
@@ -2397,6 +2409,7 @@
             "audio-dsp",
             "audio-graph-live",
             "daw-session",
+            "device-reference",
             "discrete-rank",
             "discrete-runtime",
             "exec",
@@ -2515,6 +2528,16 @@
             "numbers-f64"
           ],
           "name": "default",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-stream-device",
+            "dep:sim-lib-view-device",
+            "dep:sim-lib-web-bridge",
+            "core"
+          ],
+          "name": "device-reference",
           "workspace_edges": []
         },
         {
@@ -5017,10 +5040,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "075a138910ff9322542d8593782aa062f74ca284",
+    "git_commit": "259a35a309fe8a9e844298c7488260c921f80043",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "075a138910ff9322542d8593782aa062f74ca284",
+    "source_commit": "259a35a309fe8a9e844298c7488260c921f80043",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -5033,9 +5056,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "6b27a6826df5fa8e",
+    "workspace_hash": "ef925dcdaf5deaae",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 176,
+    "workspace_hash_input_count": 188,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -5063,6 +5086,9 @@
       "docs/generated/citizens.md",
       "recipes/01-basics/boot-runtime/recipe.toml",
       "recipes/book.toml",
+      "recipes/device/consent/recipe.toml",
+      "recipes/device/route-swap/recipe.toml",
+      "recipes/device/two-rate/recipe.toml",
       "src/bin/sim.rs",
       "src/classes/lib_support.rs",
       "src/classes/model.rs",
@@ -5129,6 +5155,7 @@
       "src/runtime/cookbook_directory/audio_stream.rs",
       "src/runtime/cookbook_directory/codecs.rs",
       "src/runtime/cookbook_directory/data.rs",
+      "src/runtime/cookbook_directory/device.rs",
       "src/runtime/cookbook_directory/femm.rs",
       "src/runtime/cookbook_directory/music.rs",
       "src/runtime/cookbook_directory/numbers.rs",
@@ -5148,6 +5175,13 @@
       "src/runtime/lambda.rs",
       "src/runtime/lists.rs",
       "src/runtime/realize.rs",
+      "src/runtime/reference_device/consent.rs",
+      "src/runtime/reference_device/cookbook.rs",
+      "src/runtime/reference_device/profiles.rs",
+      "src/runtime/reference_device/proof_functions.rs",
+      "src/runtime/reference_device/route.rs",
+      "src/runtime/reference_device/two_rate.rs",
+      "src/runtime/reference_device.rs",
       "src/runtime/shape_ops.rs",
       "src/runtime/shape_ops_impl/algebra.rs",
       "src/runtime/shape_ops_impl/compare.rs",
@@ -5193,6 +5227,7 @@
       "src/runtime/tests/numbers_r8_09.rs",
       "src/runtime/tests/numbers_surfaces.rs",
       "src/runtime/tests/realize.rs",
+      "src/runtime/tests/reference_device.rs",
       "src/runtime/tests/roadmap11_r11_18.rs",
       "src/runtime/tests/shape_r12.rs",
       "src/runtime/tests/shape_r4.rs",
@@ -5243,7 +5278,7 @@
       "card_id": "cookbook/sim-sdk",
       "group": "workspace",
       "package": "sim-nest",
-      "recipe_count": 1,
+      "recipe_count": 4,
       "recipes": [
         {
           "card_id": "sim-sdk/01-basics/boot-runtime",
@@ -5252,6 +5287,30 @@
           "package": "sim-nest",
           "recipe_toml": "recipes/01-basics/boot-runtime/recipe.toml",
           "title": "Boot the facade runtime"
+        },
+        {
+          "card_id": "sim-sdk/device/consent",
+          "codec": "lisp",
+          "id": "consent",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/device/consent/recipe.toml",
+          "title": "Check modeled device consent"
+        },
+        {
+          "card_id": "sim-sdk/device/route-swap",
+          "codec": "lisp",
+          "id": "route-swap",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/device/route-swap/recipe.toml",
+          "title": "Swap a modeled device route"
+        },
+        {
+          "card_id": "sim-sdk/device/two-rate",
+          "codec": "lisp",
+          "id": "two-rate",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/device/two-rate/recipe.toml",
+          "title": "Adapt a reference device at two rates"
         }
       ],
       "summary": "Small recipes for booting and checking the umbrella SIM facade.",

@@ -9,3 +9,13 @@
 {"kind":"recipe","path":"recipes/01-basics/boot-runtime/recipe.toml"}
 {"kind":"recipe","path":"recipes/01-basics/chapter.toml"}
 {"kind":"recipe","path":"recipes/book.toml"}
+{"kind":"recipe","path":"recipes/device/chapter.toml"}
+{"kind":"recipe","path":"recipes/device/consent/README.md"}
+{"kind":"recipe","path":"recipes/device/consent/input.lisp"}
+{"kind":"recipe","path":"recipes/device/consent/recipe.toml"}
+{"kind":"recipe","path":"recipes/device/route-swap/README.md"}
+{"kind":"recipe","path":"recipes/device/route-swap/input.lisp"}
+{"kind":"recipe","path":"recipes/device/route-swap/recipe.toml"}
+{"kind":"recipe","path":"recipes/device/two-rate/README.md"}
+{"kind":"recipe","path":"recipes/device/two-rate/input.lisp"}
+{"kind":"recipe","path":"recipes/device/two-rate/recipe.toml"}

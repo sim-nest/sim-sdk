@@ -1,0 +1,8 @@
+id = "two-rate"
+title = "Adapt a reference device at two rates"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 10
+tags = ["sdk", "device", "reference", "offline", "deterministic"]
+requires = ["device/reference"]
