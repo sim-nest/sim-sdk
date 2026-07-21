@@ -351,7 +351,8 @@
             "table-hash",
             "table-http",
             "table-lazy",
-            "topology-core"
+            "topology-core",
+            "watch-modeled"
           ],
           "name": "cookbook-all",
           "workspace_edges": []
@@ -2519,6 +2520,31 @@
             "core"
           ],
           "name": "wasm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "watch-modeled"
+          ],
+          "name": "watch",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "watch-modeled",
+            "dep:sim-lib-stream-wristbridge"
+          ],
+          "name": "watch-hardware",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "device-reference",
+            "dep:sim-lib-stream-wrist",
+            "dep:sim-lib-view-wrist",
+            "cookbook"
+          ],
+          "name": "watch-modeled",
           "workspace_edges": []
         },
         {

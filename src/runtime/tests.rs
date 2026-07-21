@@ -66,3 +66,5 @@ mod tables_core;
     feature = "table-remote"
 ))]
 mod tables_lisp;
+#[cfg(feature = "watch-modeled")]
+mod watch;

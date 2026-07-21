@@ -1,0 +1,8 @@
+id = "glance-pager"
+title = "Page a modeled watch glance"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 10
+tags = ["sdk", "watch", "glance", "offline", "deterministic"]
+requires = ["watch/sdk"]

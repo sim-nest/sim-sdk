@@ -1,5 +1,5 @@
 {
-  "card_count": 197,
+  "card_count": 198,
   "cards": [
     {
       "id": "agent/effects",
@@ -851,6 +851,12 @@
       "id": "citizen/stream/PcmFormat",
       "kind": "citizen-class",
       "owner": "sim-lib-stream-audio",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/WornEvent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-wrist",
       "summary": "citizen class constructor surface"
     },
     {

@@ -1,6 +1,7 @@
 mod cfg_sentinels;
 mod facade_thinness;
 mod support;
+mod watch;
 
 use support::{
     assert_all_feature_metadata_has_no_invalid_dependency_warnings,

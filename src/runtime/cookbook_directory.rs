@@ -29,6 +29,8 @@ mod music;
 mod numbers;
 #[macro_use]
 mod runtime_libs;
+#[macro_use]
+mod watch;
 
 macro_rules! loadable_libs {
     ($m:ident) => {
@@ -40,6 +42,7 @@ macro_rules! loadable_libs {
         cookbook_directory_audio_stream!($m);
         cookbook_directory_data!($m);
         cookbook_directory_device!($m);
+        cookbook_directory_watch!($m);
     };
 }
 

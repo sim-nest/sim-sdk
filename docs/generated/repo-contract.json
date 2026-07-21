@@ -1,5 +1,5 @@
 {
-  "card_count": 197,
+  "card_count": 198,
   "cards": [
     {
       "id": "agent/effects",
@@ -854,6 +854,12 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/stream/WornEvent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-wrist",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/table/DbDir",
       "kind": "citizen-class",
       "owner": "sim-table-db",
@@ -1184,7 +1190,7 @@
       "summary": "core"
     }
   ],
-  "citizen_count": 142,
+  "citizen_count": 143,
   "citizens": [
     {
       "arity": 1,
@@ -1974,6 +1980,12 @@
     },
     {
       "arity": 1,
+      "crate": "sim-lib-stream-wrist",
+      "symbol": "stream/WornEvent",
+      "version": 0
+    },
+    {
+      "arity": 1,
       "crate": "sim-table-db",
       "symbol": "table/DbDir",
       "version": 0
@@ -2518,7 +2530,8 @@
             "table-hash",
             "table-http",
             "table-lazy",
-            "topology-core"
+            "topology-core",
+            "watch-modeled"
           ],
           "name": "cookbook-all",
           "workspace_edges": []
@@ -4690,6 +4703,31 @@
         },
         {
           "edges": [
+            "watch-modeled"
+          ],
+          "name": "watch",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "watch-modeled",
+            "dep:sim-lib-stream-wristbridge"
+          ],
+          "name": "watch-hardware",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "device-reference",
+            "dep:sim-lib-stream-wrist",
+            "dep:sim-lib-view-wrist",
+            "cookbook"
+          ],
+          "name": "watch-modeled",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "web-bridge"
           ],
           "name": "web",
@@ -5072,10 +5110,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "dabb419bbbc053b9c2bb637f1cf88af8db89ee57",
+    "git_commit": "6d7acc1737de098f1c9da4e896179a7828845a45",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "dabb419bbbc053b9c2bb637f1cf88af8db89ee57",
+    "source_commit": "6d7acc1737de098f1c9da4e896179a7828845a45",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -5088,9 +5126,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "53dde37adf3eb3a2",
+    "workspace_hash": "8cd1e1b08e2d6391",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 189,
+    "workspace_hash_input_count": 201,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -5122,6 +5160,11 @@
       "recipes/device/consent/recipe.toml",
       "recipes/device/route-swap/recipe.toml",
       "recipes/device/two-rate/recipe.toml",
+      "recipes/watch/book.toml",
+      "recipes/watch/dual-quorum/recipe.toml",
+      "recipes/watch/glance-pager/recipe.toml",
+      "recipes/watch/hold-last/recipe.toml",
+      "recipes/watch/privacy-reaper/recipe.toml",
       "src/bin/sim.rs",
       "src/classes/lib_support.rs",
       "src/classes/model.rs",
@@ -5140,6 +5183,7 @@
       "src/feature_contract_tests/cfg_sentinels.rs",
       "src/feature_contract_tests/facade_thinness.rs",
       "src/feature_contract_tests/support.rs",
+      "src/feature_contract_tests/watch.rs",
       "src/feature_contract_tests.rs",
       "src/femm_exports.rs",
       "src/functions.rs",
@@ -5193,6 +5237,7 @@
       "src/runtime/cookbook_directory/music.rs",
       "src/runtime/cookbook_directory/numbers.rs",
       "src/runtime/cookbook_directory/runtime_libs.rs",
+      "src/runtime/cookbook_directory/watch.rs",
       "src/runtime/cookbook_directory.rs",
       "src/runtime/cookbook_discovery.rs",
       "src/runtime/eval_policy.rs",
@@ -5271,7 +5316,12 @@
       "src/runtime/tests/tables.rs",
       "src/runtime/tests/tables_core.rs",
       "src/runtime/tests/tables_lisp.rs",
+      "src/runtime/tests/watch.rs",
       "src/runtime/tests.rs",
+      "src/runtime/watch/cookbook.rs",
+      "src/runtime/watch/proof_functions.rs",
+      "src/runtime/watch/proofs.rs",
+      "src/runtime/watch.rs",
       "src/runtime.rs",
       "src/shapes.rs",
       "src/skill_tests.rs",
@@ -5311,7 +5361,7 @@
       "card_id": "cookbook/sim-sdk",
       "group": "workspace",
       "package": "sim-nest",
-      "recipe_count": 4,
+      "recipe_count": 8,
       "recipes": [
         {
           "card_id": "sim-sdk/01-basics/boot-runtime",
@@ -5344,6 +5394,38 @@
           "package": "sim-nest",
           "recipe_toml": "recipes/device/two-rate/recipe.toml",
           "title": "Adapt a reference device at two rates"
+        },
+        {
+          "card_id": "sim-sdk/watch/dual-quorum",
+          "codec": "lisp",
+          "id": "dual-quorum",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/watch/dual-quorum/recipe.toml",
+          "title": "Score a dual-watch quorum"
+        },
+        {
+          "card_id": "sim-sdk/watch/glance-pager",
+          "codec": "lisp",
+          "id": "glance-pager",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/watch/glance-pager/recipe.toml",
+          "title": "Page a modeled watch glance"
+        },
+        {
+          "card_id": "sim-sdk/watch/hold-last",
+          "codec": "lisp",
+          "id": "hold-last",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/watch/hold-last/recipe.toml",
+          "title": "Hold the last watch card"
+        },
+        {
+          "card_id": "sim-sdk/watch/privacy-reaper",
+          "codec": "lisp",
+          "id": "privacy-reaper",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/watch/privacy-reaper/recipe.toml",
+          "title": "Reap private watch samples"
         }
       ],
       "summary": "Small recipes for booting and checking the umbrella SIM facade.",

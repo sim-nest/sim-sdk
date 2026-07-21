@@ -41,6 +41,8 @@ const RUNTIME_BEHAVIOR_ALLOWLIST: &[&str] = &[
     "src/runtime/realize.rs",
     "src/runtime/reference_device.rs",
     "src/runtime/reference_device/",
+    "src/runtime/watch.rs",
+    "src/runtime/watch/",
     "src/runtime/shape_ops.rs",
     "src/runtime/shape_ops_impl.rs",
     "src/runtime/shape_ops_impl/",

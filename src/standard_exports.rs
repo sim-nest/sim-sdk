@@ -99,11 +99,17 @@ pub use sim_lib_stream_host as lib_stream_host;
 pub use sim_lib_stream_midi as lib_stream_midi;
 #[cfg(feature = "stream-prelude")]
 pub use sim_lib_stream_prelude as lib_stream_prelude;
+#[cfg(feature = "watch-modeled")]
+pub use sim_lib_stream_wrist as lib_stream_wrist;
+#[cfg(feature = "watch-hardware")]
+pub use sim_lib_stream_wristbridge as lib_stream_wristbridge;
 #[cfg(feature = "topology-core")]
 #[allow(unused_imports)]
 pub use sim_lib_topology as lib_topology;
 #[cfg(feature = "device-reference")]
 pub use sim_lib_view_device as lib_view_device;
+#[cfg(feature = "watch-modeled")]
+pub use sim_lib_view_wrist as lib_view_wrist;
 #[cfg(any(feature = "web-bridge", feature = "device-reference"))]
 pub use sim_lib_web_bridge as lib_web_bridge;
 #[cfg(feature = "list-cell")]

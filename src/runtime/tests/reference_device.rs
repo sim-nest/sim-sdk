@@ -2,9 +2,9 @@ use sim_kernel::testing::bare_cx;
 use sim_lib_view_device::{DeviceCapability, DeviceTier};
 
 use crate::runtime::reference_device::{
-    bool_field, install_device_base, install_reference_device, prove_consent_without_kernel_grant,
-    prove_route_swap, prove_two_rate, reference_glance_profile, reference_pose_receipt,
-    reference_rich_profile, require_reference_pose,
+    bool_field, install_reference_device, prove_consent_without_kernel_grant, prove_route_swap,
+    prove_two_rate, reference_glance_profile, reference_pose_receipt, reference_rich_profile,
+    require_reference_pose,
 };
 
 #[test]
@@ -58,7 +58,8 @@ fn device_base_feature_installs() {
     let mut cx = bare_cx();
 
     crate::runtime::install_device_base(&mut cx).expect("device base installs");
-    install_device_base(&mut cx).expect("device base install is idempotent");
+    crate::runtime::reference_device::install_device_base(&mut cx)
+        .expect("device base install is idempotent");
 
     assert!(
         cx.registry()
