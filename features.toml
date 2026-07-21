@@ -1,0 +1,76 @@
+schema = "sim.features"
+
+[enforcement.audience]
+user = "strict"
+code = "advisory"
+framework = "advisory"
+
+[enforcement.surface]
+cli = "strict"
+view = "strict"
+view-edit = "strict"
+docs = "advisory"
+
+[enforcement.route]
+major_entrypoints = "advisory"
+frameworks = "advisory"
+
+[[feature]]
+id = "feature/sim-sdk/generated-docs"
+title = "Repository documentation surface"
+summary = "Publish generated package, card, recipe, and index facts for the SDK facade and conformance crate."
+owner = "crate/xtask"
+audiences = ["code"]
+guidance = "Use this row when checking the generated documentation and index lane for the SDK repo."
+claims_anchors = [
+  "anchor/cli/xtask",
+  "anchor/doc/generated/feature-map",
+  "anchor/doc/generated/sim-index-fragment",
+]
+claims_surfaces = [
+  "cli/xtask",
+  "docs/sim-sdk/generated",
+]
+
+[[feature]]
+id = "feature/sim-sdk/facade-runtime"
+title = "Facade runtime entry point"
+summary = "Boot the public SIM facade and expose its command plus reversible view surface."
+owner = "crate/sim-nest"
+audiences = ["user", "code"]
+guidance = "Use this row when starting from the SDK facade instead of an implementation crate."
+claims_anchors = [
+  "anchor/card/citizen/view/lens-descriptor",
+  "anchor/cli/sim-nest",
+]
+claims_surfaces = [
+  "cli/sim-nest",
+  "view/sim-nest",
+  "view-edit/sim-nest",
+]
+
+[[feature]]
+id = "feature/sim-sdk/device-recipes"
+title = "Device and wearable recipes"
+summary = "Exercise modeled device, watch, and glasses workflows through SDK-level recipe entry points."
+owner = "crate/sim-nest"
+audiences = ["user", "code"]
+guidance = "Use this row when following wearable and device workflows from the public facade."
+
+[[feature]]
+id = "feature/sim-sdk/conformance-contract"
+title = "Conformance contract"
+summary = "Run the SDK conformance contract as a checked operational recipe."
+owner = "crate/sim-conformance"
+audiences = ["code", "framework"]
+guidance = "Use this row when verifying that a facade-facing runtime satisfies the public contract."
+
+[[route]]
+id = "route/start-from-sdk"
+task = "Start from the SDK"
+audiences = ["user", "code"]
+steps = [
+  { feature = "feature/sim-sdk/facade-runtime", why = "The facade row owns the public command and reversible view surface." },
+  { feature = "feature/sim-sdk/device-recipes", why = "The device row gives wearable workflows through facade-level recipes." },
+  { specimen = "recipe/sim-sdk/01-basics/boot-runtime", why = "The boot-runtime recipe checks the smallest facade path." },
+]
