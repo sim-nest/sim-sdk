@@ -1,0 +1,8 @@
+id = "review-in-space"
+title = "Approve a BRIDGE warrant from Halo"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 50
+tags = ["sdk", "glasses", "bridge", "review", "offline", "deterministic"]
+requires = ["glasses/sdk"]

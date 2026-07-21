@@ -5,6 +5,8 @@ pub mod cookbook_directory;
 #[cfg(feature = "cookbook")]
 mod cookbook_discovery;
 mod eval_policy;
+#[cfg(feature = "glasses-modeled")]
+pub mod glasses;
 mod help;
 mod install;
 mod lambda;
@@ -23,6 +25,8 @@ pub use capabilities::{
     browse_internal_capability, browse_read_capability, browse_run_tests_capability,
     config_list_impl_capability, config_table_impl_capability,
 };
+#[cfg(feature = "glasses")]
+pub use glasses::{GlassesInstallMode, install_glasses_stack};
 pub use install::{CoreRuntimeLib, install_core_runtime};
 #[cfg(feature = "device")]
 pub use reference_device::install_device_base;

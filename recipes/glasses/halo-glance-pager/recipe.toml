@@ -1,0 +1,8 @@
+id = "halo-glance-pager"
+title = "Diff a modeled Halo glance"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 20
+tags = ["sdk", "glasses", "halo", "glance", "offline", "deterministic"]
+requires = ["glasses/sdk"]

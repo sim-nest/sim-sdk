@@ -274,6 +274,7 @@
             "femm-field",
             "femm-function",
             "femm-ode",
+            "glasses-modeled",
             "intent",
             "list-cell",
             "list-lazy",
@@ -727,6 +728,40 @@
             "codec-json"
           ],
           "name": "forge",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "glasses-modeled"
+          ],
+          "name": "glasses",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "glasses-modeled"
+          ],
+          "name": "glasses-halo",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "device",
+            "dep:sim-lib-stream-halo",
+            "dep:sim-lib-stream-xr",
+            "dep:sim-lib-view-spatial",
+            "view-bridge",
+            "web-bridge"
+          ],
+          "name": "glasses-modeled",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "glasses-modeled",
+            "dep:sim-lib-stream-viture"
+          ],
+          "name": "glasses-viture",
           "workspace_edges": []
         },
         {

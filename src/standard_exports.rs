@@ -93,21 +93,29 @@ pub use sim_lib_stream_device as lib_stream_device;
 pub use sim_lib_stream_fabric as lib_stream_fabric;
 #[cfg(feature = "stream-file")]
 pub use sim_lib_stream_file as lib_stream_file;
+#[cfg(feature = "glasses-modeled")]
+pub use sim_lib_stream_halo as lib_stream_halo;
 #[cfg(feature = "stream-host")]
 pub use sim_lib_stream_host as lib_stream_host;
 #[cfg(feature = "stream-midi")]
 pub use sim_lib_stream_midi as lib_stream_midi;
 #[cfg(feature = "stream-prelude")]
 pub use sim_lib_stream_prelude as lib_stream_prelude;
+#[cfg(feature = "glasses-viture")]
+pub use sim_lib_stream_viture as lib_stream_viture;
 #[cfg(feature = "watch-modeled")]
 pub use sim_lib_stream_wrist as lib_stream_wrist;
 #[cfg(feature = "watch-hardware")]
 pub use sim_lib_stream_wristbridge as lib_stream_wristbridge;
+#[cfg(feature = "glasses-modeled")]
+pub use sim_lib_stream_xr as lib_stream_xr;
 #[cfg(feature = "topology-core")]
 #[allow(unused_imports)]
 pub use sim_lib_topology as lib_topology;
 #[cfg(feature = "device-reference")]
 pub use sim_lib_view_device as lib_view_device;
+#[cfg(feature = "glasses-modeled")]
+pub use sim_lib_view_spatial as lib_view_spatial;
 #[cfg(feature = "watch-modeled")]
 pub use sim_lib_view_wrist as lib_view_wrist;
 #[cfg(any(feature = "web-bridge", feature = "device-reference"))]

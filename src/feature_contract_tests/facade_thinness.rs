@@ -33,6 +33,8 @@ const RUNTIME_BEHAVIOR_ALLOWLIST: &[&str] = &[
     "src/runtime/cookbook_directory/",
     "src/runtime/cookbook_discovery.rs",
     "src/runtime/eval_policy.rs",
+    "src/runtime/glasses.rs",
+    "src/runtime/glasses/",
     "src/runtime/help.rs",
     "src/runtime/install.rs",
     "src/runtime/install/",

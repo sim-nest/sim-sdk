@@ -108,7 +108,7 @@ pub use femm_exports::*;
 #[rustfmt::skip] #[allow(unused_imports)] pub use numbers_exports::*;
 #[rustfmt::skip] #[allow(unused_imports)] pub use standard_exports::*;
 #[rustfmt::skip]
-#[cfg(any(feature = "server-net-http", feature = "agent-net", feature = "openai-server-http", feature = "standard", feature = "rank-codec-fallback", feature = "rank-expr", feature = "rank-learn", feature = "rank-music", feature = "rank-scatter", feature = "stream-bridge", feature = "stream-host"))]
+#[cfg(any(feature = "server-net-http", feature = "agent-net", feature = "glasses", feature = "openai-server-http", feature = "standard", feature = "rank-codec-fallback", feature = "rank-expr", feature = "rank-learn", feature = "rank-music", feature = "rank-scatter", feature = "stream-bridge", feature = "stream-host"))]
 const _: bool = true;
 #[allow(unused_imports)]
 pub use roadmap11_exports::*;

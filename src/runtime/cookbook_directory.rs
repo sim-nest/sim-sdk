@@ -24,6 +24,8 @@ mod device;
 #[macro_use]
 mod femm;
 #[macro_use]
+mod glasses;
+#[macro_use]
 mod music;
 #[macro_use]
 mod numbers;
@@ -38,6 +40,7 @@ macro_rules! loadable_libs {
         cookbook_directory_numbers!($m);
         cookbook_directory_runtime_libs!($m);
         cookbook_directory_femm!($m);
+        cookbook_directory_glasses!($m);
         cookbook_directory_music!($m);
         cookbook_directory_audio_stream!($m);
         cookbook_directory_data!($m);

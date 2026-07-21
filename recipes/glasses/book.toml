@@ -1,0 +1,5 @@
+book = "glasses"
+title = "Glasses"
+summary = "Hardware-free glasses recipes for timing, glance, voice, co-use, and review."
+order = 40
+chapters = ["glasses"]

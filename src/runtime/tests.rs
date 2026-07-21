@@ -13,6 +13,8 @@ mod cards;
 #[cfg(feature = "cookbook")]
 mod cookbook_discovery;
 mod eval_policy;
+#[cfg(feature = "glasses-modeled")]
+mod glasses;
 mod lists;
 #[cfg(feature = "list-lazy")]
 mod lists_lazy;
