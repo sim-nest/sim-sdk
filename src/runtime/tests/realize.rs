@@ -5,10 +5,13 @@ use sim_kernel::{Error, EvalRequest, Expr, NumberLiteral, Symbol, read_construct
 
 #[cfg(feature = "server")]
 use crate::install_server_lib;
-#[cfg(feature = "logic-core")]
-use sim_kernel::logic_db_write_capability;
 
 use super::support::eval_cx;
+
+#[cfg(feature = "logic-core")]
+fn logic_db_write_capability() -> sim_kernel::CapabilityName {
+    sim_kernel::CapabilityName::new("logic.db.write")
+}
 
 #[test]
 fn realize_evaluates_through_local_fabric() {

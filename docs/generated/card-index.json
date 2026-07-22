@@ -1,4 +1,1200 @@
 {
-  "schema": "sim.card-index.v1",
-  "cards": []
+  "card_count": 199,
+  "cards": [
+    {
+      "id": "agent/effects",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "agent effect requirement surface"
+    },
+    {
+      "id": "agent/memory",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "agent memory surface"
+    },
+    {
+      "id": "agent/model-runner",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "agent model runner surface"
+    },
+    {
+      "id": "agent/tool-surface",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "agent callable tool surface"
+    },
+    {
+      "id": "browse/Coverage",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "test and example coverage summary for one Card"
+    },
+    {
+      "id": "browse/Facet",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "typed extension payload attached to a Card"
+    },
+    {
+      "id": "browse/Help",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "fixed-field help document embedded in a Card"
+    },
+    {
+      "id": "browse/Redaction",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "placeholder for hidden but known browse data"
+    },
+    {
+      "id": "browse/Test",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "fixed-field executable test or worked example"
+    },
+    {
+      "id": "browse/TestReport",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "fixed-field result of an explicit test run"
+    },
+    {
+      "id": "browse/catalog",
+      "kind": "browse-root",
+      "owner": "workspace",
+      "summary": "root browse catalog"
+    },
+    {
+      "id": "citizen/OverrideTable",
+      "kind": "citizen-class",
+      "owner": "sim-table-override",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent-runner/ModelBid",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-runner-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent-runner/ModelCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-runner-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent-runner/ModelRequest",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-runner-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent-runner/ModelResponse",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-runner-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent-runner/ModelUsage",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-runner-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/audio-dsp/Config",
+      "kind": "citizen-class",
+      "owner": "sim-lib-audio-dsp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/audio-graph/NodeConfig",
+      "kind": "citizen-class",
+      "owner": "sim-lib-audio-graph-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/audio-graph/Patch",
+      "kind": "citizen-class",
+      "owner": "sim-lib-audio-graph-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/audio-synth/Preset",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-synth",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/daw-session/DawSession",
+      "kind": "citizen-class",
+      "owner": "sim-lib-daw-session",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/BitVectorSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/BoundedIntVectorSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/Combination",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/CombinationSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/Edge",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/FwhtSignal",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/FwhtSignalSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/Graph",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/Matrix",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/MstCertificate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/Permutation",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/PermutationSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/SimpleGraphSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/SparseMatrix",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/discrete/SubsetSpace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-discrete",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/doc/Article",
+      "kind": "citizen-class",
+      "owner": "sim-lib-view-doc",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Field",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/FuncPayload",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Function",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Geometry",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Material",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Mesh",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Model",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Ode",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Physics",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Post",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Sensitivity",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Solution",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Solve",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Space",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/femm/Tape",
+      "kind": "citizen-class",
+      "owner": "sim-lib-femm-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/forge/CompiledIntent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-forge",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/intent/Intent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-intent",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/list/ConsList",
+      "kind": "citizen-class",
+      "owner": "sim-list-cell",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/list/LazyConsList",
+      "kind": "citizen-class",
+      "owner": "sim-list-lazy",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/list/LazyIterList",
+      "kind": "citizen-class",
+      "owner": "sim-list-lazy",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/AuditEntry",
+      "kind": "citizen-class",
+      "owner": "sim-lib-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/Cassette",
+      "kind": "citizen-class",
+      "owner": "sim-lib-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/CassetteEntry",
+      "kind": "citizen-class",
+      "owner": "sim-lib-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/Error",
+      "kind": "citizen-class",
+      "owner": "sim-codec-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/ErrorEnvelope",
+      "kind": "citizen-class",
+      "owner": "sim-codec-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/Notification",
+      "kind": "citizen-class",
+      "owner": "sim-codec-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/Request",
+      "kind": "citizen-class",
+      "owner": "sim-codec-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/mcp/Response",
+      "kind": "citizen-class",
+      "owner": "sim-codec-mcp",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/midi/ChannelMessage",
+      "kind": "citizen-class",
+      "owner": "sim-lib-midi-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/midi/MetaEvent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-midi-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/midi/MidiEvent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-midi-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/midi/SmfFile",
+      "kind": "citizen-class",
+      "owner": "sim-lib-midi-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/midi/SmfTrack",
+      "kind": "citizen-class",
+      "owner": "sim-lib-midi-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Chord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Melody",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Note",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Par",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Score",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/music/Seq",
+      "kind": "citizen-class",
+      "owner": "sim-lib-music-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/numbers/Cas",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-cas",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/numbers/Complex",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-complex",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/numbers/Func",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-func",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/numbers/Rational",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-rational",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/numbers/Tensor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-tensor",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/GatewayEvent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/GatewayKey",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/GatewayRequest",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/GatewayResponse",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/GatewayRun",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/openai/Plan",
+      "kind": "citizen-class",
+      "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/Chord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/Interval",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/Pitch",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/PitchClassMask",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/Scale",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/plugin-core/PluginDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-plugin-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/rank/Coord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-rank",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/rank/Node",
+      "kind": "citizen-class",
+      "owner": "sim-lib-rank",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/rank/Space",
+      "kind": "citizen-class",
+      "owner": "sim-lib-rank",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/scene/Scene",
+      "kind": "citizen-class",
+      "owner": "sim-lib-scene",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/server/Address",
+      "kind": "citizen-class",
+      "owner": "sim-lib-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/server/Frame",
+      "kind": "citizen-class",
+      "owner": "sim-lib-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/AcceptOnNoDiagnosticsHook",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/And",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Any",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Class",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Defs",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/DiscardOnDiagnosticPrefixHook",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/ExactExpr",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/ExprKind",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Hooked",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/List",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Not",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Or",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Ref",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Repeat",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/ScoreFloorHook",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Table",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/TraceMarkHook",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/shape/Venn",
+      "kind": "citizen-class",
+      "owner": "sim-shape",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/Card",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpCallParams",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpPromptArgument",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpPromptDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpPromptGetParams",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpResourceDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpResourceReadParams",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpToolDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/skill/McpToolResult",
+      "kind": "citizen-class",
+      "owner": "sim-lib-skill",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/Envelope",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/Partial",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/Spectrum",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/Timbre",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/Tone",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/sound/TuningDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-sound-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/standard/FidelityBadge",
+      "kind": "citizen-class",
+      "owner": "sim-lib-standard-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/standard/Profile",
+      "kind": "citizen-class",
+      "owner": "sim-lib-standard-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream-bridge/LiftMidiOptions",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-bridge",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream-bridge/RenderOptions",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-bridge",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/Clock",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-clock",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/DeviceSample",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-device",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/Metadata",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/Packet",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/PcmFormat",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-audio",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/WornEvent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-wrist",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/stream/XrSample",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-xr",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/DbDir",
+      "kind": "citizen-class",
+      "owner": "sim-table-db",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/FsDir",
+      "kind": "citizen-class",
+      "owner": "sim-table-fs",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/HashTable",
+      "kind": "citizen-class",
+      "owner": "sim-table-hash",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/HttpDir",
+      "kind": "citizen-class",
+      "owner": "sim-table-http",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/LazyTable",
+      "kind": "citizen-class",
+      "owner": "sim-table-lazy",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/table/RemoteDir",
+      "kind": "citizen-class",
+      "owner": "sim-table-remote",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/topology/Edge",
+      "kind": "citizen-class",
+      "owner": "sim-lib-topology",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/topology/Node",
+      "kind": "citizen-class",
+      "owner": "sim-lib-topology",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/topology/Package",
+      "kind": "citizen-class",
+      "owner": "sim-lib-topology",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/view/LensDescriptor",
+      "kind": "citizen-class",
+      "owner": "sim-lib-view",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/web/Workspace",
+      "kind": "citizen-class",
+      "owner": "sim-lib-web-layout",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "codec/algol",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".sima"
+    },
+    {
+      "id": "codec/binary",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".simb"
+    },
+    {
+      "id": "codec/binary-base64",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".simb64"
+    },
+    {
+      "id": "codec/chat",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".simchat"
+    },
+    {
+      "id": "codec/extensions",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "codec extension names facet"
+    },
+    {
+      "id": "codec/json",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".simj"
+    },
+    {
+      "id": "codec/lisp",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": ".siml"
+    },
+    {
+      "id": "codec/positions",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "codec position behavior facet"
+    },
+    {
+      "id": "cookbook/sim-conformance",
+      "kind": "cookbook-recipe",
+      "owner": "sim-conformance",
+      "summary": "Recipes that show how the executable architecture contract is run."
+    },
+    {
+      "id": "cookbook/sim-sdk",
+      "kind": "cookbook-recipe",
+      "owner": "sim-nest",
+      "summary": "Small recipes for booting and checking the umbrella SIM facade."
+    },
+    {
+      "id": "core/Card",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "Card fixed-field browse envelope"
+    },
+    {
+      "id": "core/args",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "core/browse",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "returns a Card for a subject or the root browse catalog"
+    },
+    {
+      "id": "core/browse-neighbors",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "returns visible graph refs directly reachable from one Card"
+    },
+    {
+      "id": "core/browse-path",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "returns the shortest visible browse graph path between refs"
+    },
+    {
+      "id": "core/coverage",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "core/examples",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects example browse/Test values for one subject"
+    },
+    {
+      "id": "core/facets",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "core/help",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "returns and publishes authored Help for one subject"
+    },
+    {
+      "id": "core/help-object",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "core/result",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "core/tests",
+      "kind": "browse-reflection",
+      "owner": "sim",
+      "summary": "projects one stable Card field for a subject"
+    },
+    {
+      "id": "model-runner/ai/infer.v1",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "ai/bid.v1"
+    },
+    {
+      "id": "numbers/dispatch",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "number dispatch operations facet"
+    },
+    {
+      "id": "numbers/domain",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "number domain shape facet"
+    },
+    {
+      "id": "rank/coordinate",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "rank"
+    },
+    {
+      "id": "rank/space",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "rank"
+    },
+    {
+      "id": "registry/catalog",
+      "kind": "browse-registry",
+      "owner": "workspace",
+      "summary": "registry catalog browse card"
+    },
+    {
+      "id": "server/connection",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "server connection surface"
+    },
+    {
+      "id": "server/metrics",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "server metrics facet"
+    },
+    {
+      "id": "server/server",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "live evaluation server surface"
+    },
+    {
+      "id": "server/session",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "server session surface"
+    },
+    {
+      "id": "server/transport",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "server transport facet"
+    },
+    {
+      "id": "server/trigger",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "server trigger surface"
+    },
+    {
+      "id": "standard/fidelity",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "standard fidelity facet"
+    },
+    {
+      "id": "standard/organ",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "standard"
+    },
+    {
+      "id": "standard/profile",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "standard"
+    },
+    {
+      "id": "standard/standard/install.v1",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "standard/diff.v1"
+    },
+    {
+      "id": "stream/data",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "stream"
+    },
+    {
+      "id": "stream/data/model-event",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "stream"
+    },
+    {
+      "id": "stream/data/rank-frontier",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "stream"
+    },
+    {
+      "id": "stream/events",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "stream event surface facet"
+    },
+    {
+      "id": "stream/queue-policy",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "stream"
+    },
+    {
+      "id": "stream/stream",
+      "kind": "surface-card",
+      "owner": "sim",
+      "summary": "core"
+    }
+  ],
+  "generator": "xtask repo-contract v1"
 }

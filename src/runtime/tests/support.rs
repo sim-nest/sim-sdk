@@ -5,8 +5,9 @@ use std::sync::{
 
 use sim_kernel::{
     AbiVersion, Args, CORE_FUNCTION_CLASS_ID, Callable, ClassRef, Cx, DefaultFactory, Demand,
-    EagerPolicy, Error, ExportKind, Expr, Lib, LibManifest, LibTarget, Linker, Object,
-    PreparedArgs, Result, Symbol, Value, Version, eval_fabric_capability,
+    EagerPolicy, Error, EvalPolicyRef, ExportKind, Expr, Lib, LibManifest, LibTarget, Linker,
+    Object, PreparedArgs, Result, Symbol, Value, Version, eval_fabric_capability,
+    macro_expand_eval_capability,
 };
 use sim_shape::{AnyShape, Bindings, FunctionCase, FunctionObject, ListShape};
 
@@ -25,9 +26,15 @@ pub(super) fn table_value<'a>(expr: &'a Expr, key: &Symbol) -> Option<&'a Expr> 
 }
 
 pub(super) fn eval_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
-    install_core_runtime(&mut cx);
+    let mut cx = eval_cx_with_policy(Arc::new(EagerPolicy));
     cx.grant(eval_fabric_capability());
+    cx
+}
+
+pub(super) fn eval_cx_with_policy(policy: EvalPolicyRef) -> Cx {
+    let mut cx = Cx::new(policy, Arc::new(DefaultFactory));
+    install_core_runtime(&mut cx);
+    cx.grant(macro_expand_eval_capability());
     cx
 }
 

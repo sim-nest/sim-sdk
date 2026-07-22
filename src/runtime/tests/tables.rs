@@ -20,7 +20,7 @@ use sim_kernel::{
     TrustLevel, read_construct_capability,
 };
 #[cfg(all(feature = "table-lazy", not(feature = "table-override")))]
-use sim_kernel::{Expr, Symbol, Table};
+use sim_kernel::{Expr, ObjectCompat, Symbol, Table};
 
 #[test]
 #[cfg(feature = "table-hash")]

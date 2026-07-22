@@ -1,17 +1,21 @@
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use sim_kernel::{Args, Export, ExportState, LibLoader, LibSource, LibTarget, Symbol, Version};
+use sim_kernel::{Args, Export, ExportState, LibLoader, LibTarget, Symbol, Version};
 
 use super::support::{TickCallable, cx, cx_with_lisp_codec, write_binary_pack_file};
 
 #[test]
 fn binary_pack_loader_accepts_pack_paths_and_bytes() {
     let loader = crate::loaders::BinaryPackLoader;
-    assert!(loader.can_load(&LibSource::Path(std::path::PathBuf::from("lib.l8b"))));
-    assert!(loader.can_load(&LibSource::Bytes(b"L8PKrest".to_vec())));
-    assert!(!loader.can_load(&LibSource::Url("https://example.com/lib.l8b".to_owned())));
-    assert!(!loader.can_load(&LibSource::Bytes(Vec::new())));
+    assert!(
+        loader.can_load(&sim_run_loaders::path_source(std::path::PathBuf::from(
+            "lib.l8b"
+        )))
+    );
+    assert!(loader.can_load(&sim_run_loaders::bytes_source(b"L8PKrest".to_vec())));
+    assert!(!loader.can_load(&sim_run_loaders::url_source("https://example.com/lib.l8b")));
+    assert!(!loader.can_load(&sim_run_loaders::bytes_source(Vec::new())));
 }
 
 #[cfg(all(feature = "codec-lisp", feature = "shape"))]
@@ -57,26 +61,26 @@ fn binary_pack_loader_reexports_existing_runtime_objects() {
             ],
         },
         exports: vec![
-            crate::loaders::ReexportSpec {
-                kind: crate::loaders::reexport::ReexportKind::Function,
-                export: Symbol::qualified("loader", "tick-pack"),
-                target: Symbol::new("tick"),
-            },
-            crate::loaders::ReexportSpec {
-                kind: crate::loaders::reexport::ReexportKind::Shape,
-                export: Symbol::qualified("loader", "ExprPack"),
-                target: Symbol::qualified("core", "Expr"),
-            },
-            crate::loaders::ReexportSpec {
-                kind: crate::loaders::reexport::ReexportKind::Codec,
-                export: Symbol::qualified("loader", "lisp-pack"),
-                target: Symbol::qualified("codec", "lisp"),
-            },
-            crate::loaders::ReexportSpec {
-                kind: crate::loaders::reexport::ReexportKind::NumberDomain,
-                export: Symbol::qualified("loader", "f64-pack"),
-                target: Symbol::qualified("numbers", "f64"),
-            },
+            crate::loaders::ReexportSpec::new(
+                crate::loaders::ReexportKind::Function,
+                Symbol::qualified("loader", "tick-pack"),
+                Symbol::new("tick"),
+            ),
+            crate::loaders::ReexportSpec::new(
+                crate::loaders::ReexportKind::Shape,
+                Symbol::qualified("loader", "ExprPack"),
+                Symbol::qualified("core", "Expr"),
+            ),
+            crate::loaders::ReexportSpec::new(
+                crate::loaders::ReexportKind::Codec,
+                Symbol::qualified("loader", "lisp-pack"),
+                Symbol::qualified("codec", "lisp"),
+            ),
+            crate::loaders::ReexportSpec::new(
+                crate::loaders::ReexportKind::NumberDomain,
+                Symbol::qualified("loader", "f64-pack"),
+                Symbol::qualified("numbers", "f64"),
+            ),
         ],
     };
     let bytes = crate::loaders::encode_binary_lib_pack(&pack).unwrap();
@@ -84,7 +88,7 @@ fn binary_pack_loader_reexports_existing_runtime_objects() {
 
     let registry = crate::loaders::standard_loader_registry();
     registry
-        .load_and_register(&mut cx, LibSource::Path(path.clone()))
+        .load_and_register(&mut cx, sim_run_loaders::path_source(path.clone()))
         .unwrap();
 
     let value = cx
@@ -145,7 +149,7 @@ fn registry_can_inspect_binary_pack_manifest_before_load() {
     let registry = crate::loaders::standard_loader_registry();
 
     let manifest = registry
-        .inspect_manifest(&mut cx, LibSource::Bytes(bytes))
+        .inspect_manifest(&mut cx, sim_run_loaders::bytes_source(bytes))
         .unwrap();
 
     assert_eq!(manifest.id, Symbol::qualified("loader", "inspect-pack"));
@@ -172,17 +176,17 @@ fn binary_pack_number_domain_reexport_is_visible_in_loaded_exports() {
                 number_domain_id: None,
             }],
         },
-        exports: vec![crate::loaders::ReexportSpec {
-            kind: crate::loaders::reexport::ReexportKind::NumberDomain,
-            export: Symbol::qualified("loader", "f64-browse"),
-            target: Symbol::qualified("numbers", "f64"),
-        }],
+        exports: vec![crate::loaders::ReexportSpec::new(
+            crate::loaders::ReexportKind::NumberDomain,
+            Symbol::qualified("loader", "f64-browse"),
+            Symbol::qualified("numbers", "f64"),
+        )],
     };
 
     crate::loaders::standard_loader_registry()
         .load_and_register(
             &mut cx,
-            LibSource::Bytes(crate::loaders::encode_binary_lib_pack(&pack).unwrap()),
+            sim_run_loaders::bytes_source(crate::loaders::encode_binary_lib_pack(&pack).unwrap()),
         )
         .unwrap();
 
@@ -199,7 +203,7 @@ fn binary_pack_number_domain_reexport_is_visible_in_loaded_exports() {
 #[test]
 fn binary_pack_loader_rejects_bad_magic() {
     let loader = crate::loaders::BinaryPackLoader;
-    let err = match loader.load(&mut cx(), LibSource::Bytes(b"nope".to_vec())) {
+    let err = match loader.load(&mut cx(), sim_run_loaders::bytes_source(b"nope".to_vec())) {
         Ok(_) => panic!("expected binary pack load failure"),
         Err(err) => err,
     };

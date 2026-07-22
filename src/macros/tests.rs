@@ -34,6 +34,7 @@ fn ungranted_eager_cx() -> sim_kernel::Cx {
 fn noop_cx() -> sim_kernel::Cx {
     let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
     install_core_runtime(&mut cx);
+    cx.grant(macro_expand_capability());
     cx
 }
 
@@ -209,7 +210,9 @@ fn macro_expansion_is_controlled_by_phase_policy() {
         )
         .unwrap_err();
 
-    assert!(matches!(error, sim_kernel::Error::Eval(message) if message.contains("not allowed")));
+    assert!(matches!(error, sim_kernel::Error::Eval(message) if
+            message.contains("noop") &&
+            (message.contains("denied by eval policy") || message.contains("not allowed"))));
 }
 
 #[test]

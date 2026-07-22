@@ -1,10 +1,31 @@
 mod cfg_sentinels;
+mod facade_thinness;
+mod glasses;
 mod support;
+mod watch;
 
 use support::{
-    assert_crate_cargo_tomls_do_not_contain, assert_feature_includes, collect_cfg_features,
-    collect_declared_features, collect_feature_dependencies, repo_root,
+    assert_all_feature_metadata_has_no_invalid_dependency_warnings,
+    assert_crate_cargo_tomls_do_not_contain, assert_dep_edges_reference_optional_dependencies,
+    assert_feature_includes, collect_cfg_features, collect_declared_features,
+    collect_feature_dependencies, collect_optional_dependencies, repo_root,
 };
+
+const PUBLIC_FACADE_ALIASES: &[(&str, &str)] = &[
+    ("agent-runner-core", "lib_agent_runner_core"),
+    ("agent-runner-http", "lib_agent_runner_http"),
+    ("agent-runner-process", "lib_agent_runner_process"),
+    ("discrete", "lib_discrete"),
+    ("view", "lib_view"),
+    ("view-agent", "lib_view_agent"),
+    ("view-bridge", "lib_view_bridge"),
+    ("view-codec", "lib_view_codec"),
+    ("view-daw", "lib_view_daw"),
+    ("view-doc", "lib_view_doc"),
+    ("view-math", "lib_view_math"),
+    ("web-layout", "lib_web_layout"),
+    ("web-wasm-frame", "lib_view_wasm_frame"),
+];
 
 #[test]
 fn declared_features_match_cfg_usage() {
@@ -15,6 +36,88 @@ fn declared_features_match_cfg_usage() {
     assert_eq!(
         declared, used,
         "declared features must match cfg(feature = ...) usage in src/ and tests/"
+    );
+}
+
+#[test]
+fn default_features_support_readme_quickstart() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(
+        &features,
+        "default",
+        &["core", "shape", "codec-lisp", "numbers-f64"],
+    );
+}
+
+#[test]
+fn device_feature_installs_reference_base_and_recipes() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "device", &["device-reference", "cookbook"]);
+}
+
+#[test]
+fn public_facade_alias_table_mentions_declared_features() {
+    let declared = collect_declared_features(include_str!("../Cargo.toml"));
+    let missing = PUBLIC_FACADE_ALIASES
+        .iter()
+        .filter(|(feature, _)| !declared.contains(*feature))
+        .collect::<Vec<_>>();
+    assert!(
+        missing.is_empty(),
+        "public facade aliases must reference declared features: {missing:?}"
+    );
+}
+
+#[test]
+fn feature_dep_edges_reference_optional_dependencies() {
+    let cargo_toml = include_str!("../Cargo.toml");
+    let features = collect_feature_dependencies(cargo_toml);
+    let optional_dependencies = collect_optional_dependencies(cargo_toml);
+    assert_dep_edges_reference_optional_dependencies(&features, &optional_dependencies);
+}
+
+#[test]
+fn all_feature_metadata_has_no_ignored_optional_dependencies() {
+    assert_all_feature_metadata_has_no_invalid_dependency_warnings(&repo_root());
+}
+
+const REQUIRED_PUBLIC_GATES: &[&str] = &[
+    "cargo fmt --all --check",
+    "cargo test -p sim-conformance",
+    "cargo test --workspace",
+    "cargo clippy --workspace --all-targets -- -D warnings",
+    "cargo doc --workspace --no-deps",
+    "cargo clippy --workspace --all-features --all-targets -- -D warnings",
+    "cargo test --workspace --all-features",
+    "cargo run -p xtask -- simdoc --check",
+];
+
+#[test]
+fn ci_and_public_checklists_name_required_gates() {
+    let checked_files = [
+        (
+            ".github/workflows/ci.yml",
+            include_str!("../.github/workflows/ci.yml"),
+        ),
+        ("README.md", include_str!("../README.md")),
+        ("CONTRIBUTING.md", include_str!("../CONTRIBUTING.md")),
+        (
+            ".github/pull_request_template.md",
+            include_str!("../.github/pull_request_template.md"),
+        ),
+    ];
+    let missing = checked_files
+        .into_iter()
+        .flat_map(|(file, text)| {
+            REQUIRED_PUBLIC_GATES
+                .iter()
+                .filter(move |command| !text.contains(**command))
+                .map(move |command| format!("{file}: {command}"))
+        })
+        .collect::<Vec<_>>();
+    assert!(
+        missing.is_empty(),
+        "CI and public checklists must stay aligned with repos.toml gates: {missing:?}"
     );
 }
 
@@ -142,7 +245,7 @@ fn g6_mcp_feature_implications_stay_wired() {
         ("mcp-client", &["mcp-skill", "sim-lib-mcp/client"]),
         ("mcp-sampling", MCP_SAMPLING_DEPS),
         ("mcp-cassette", &["mcp", "sim-lib-mcp/cassette"]),
-        ("mcp-binary", &["mcp-stdio", "dep:sim-mcp-server"]),
+        ("mcp-binary", &["mcp-stdio"]),
         (
             "skill-serve",
             &["skill-mcp", "mcp-skill", "server", "sim-lib-skill/serve"],

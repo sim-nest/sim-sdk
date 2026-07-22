@@ -1,10 +1,14 @@
 use sim_kernel::{
     CapabilityName, Cx, Datum, DatumStore, Effect, Error, Ref, Result, Symbol, TestReport, Value,
-    browse_run_tests_capability, card::ref_value, effect_abort_op_key, effect_ledger::EffectLedger,
-    effect_resume_op_key, effect_test_run_kind,
+    card::ref_value, effect_abort_op_key, effect_ledger::EffectLedger, effect_resume_op_key,
 };
 
 use super::browse::schema::TestReportBuilder;
+use super::browse_run_tests_capability;
+
+pub(crate) fn test_run_effect_kind() -> Symbol {
+    Symbol::qualified("effect", "test-run")
+}
 
 pub(crate) fn run_effect_backed<F>(
     cx: &mut Cx,
@@ -22,7 +26,7 @@ where
     let mut requires = vec![browse_run_tests_capability()];
     requires.extend(capabilities.iter().cloned());
     let mut effect = Effect::new(
-        effect_test_run_kind(),
+        test_run_effect_kind(),
         Ref::Symbol(name.clone()),
         input,
         Ref::Symbol(Symbol::qualified("browse", "TestReport")),

@@ -1,0 +1,8 @@
+id = "hold-last"
+title = "Hold the last watch card"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 20
+tags = ["sdk", "watch", "timing", "offline", "deterministic"]
+requires = ["watch/sdk"]

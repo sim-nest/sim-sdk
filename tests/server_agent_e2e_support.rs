@@ -458,7 +458,7 @@ pub fn normalize_server_reflect(text: String) -> String {
         if prev == "server" && token.parse::<u64>().is_ok() {
             continue;
         }
-        if prev == "id" || prev == "uptime-ms" {
+        if prev == "id" || prev == "uptime" || prev == "uptime-ms" {
             prev = token;
             continue;
         }

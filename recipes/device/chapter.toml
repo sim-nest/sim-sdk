@@ -1,0 +1,3 @@
+title = "Device"
+summary = "Modeled device recipes for timing, consent, and route handling."
+order = 20

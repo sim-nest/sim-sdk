@@ -21,10 +21,18 @@ const _: &str = "midi-topology-feature-sentinels";
 const _: &str = "music";
 #[cfg(feature = "music-analysis")]
 const _: &str = "music-analysis";
-// Pre-existing: the `cookbook` feature shipped without a cfg sentinel (CK0-CK5),
-// which left this contract test red on main; add it here.
+// The `cookbook` feature needs a cfg sentinel so the contract test can prove the
+// feature is visible to conditional compilation.
 #[cfg(feature = "cookbook")]
 const _: &str = "cookbook";
+#[cfg(feature = "device")]
+const _: &str = "device";
+#[cfg(feature = "watch")]
+const _: &str = "watch";
+#[cfg(feature = "watch-modeled")]
+const _: &str = "watch-modeled";
+#[cfg(feature = "watch-hardware")]
+const _: &str = "watch-hardware";
 #[cfg(feature = "discrete")]
 const _: &str = "discrete";
 #[cfg(feature = "discrete-algebra")]
@@ -123,6 +131,10 @@ const _: &str = "agent-runner-http-tls";
 const _: &str = "agent-runner-ollama";
 #[cfg(feature = "agent-runner-process")]
 const _: &str = "agent-runner-process";
+#[cfg(feature = "bridge")]
+const _: &str = "bridge";
+#[cfg(feature = "codec-bridge")]
+const _: &str = "codec-bridge";
 #[cfg(feature = "codec-chat")]
 const _: &str = "codec-chat";
 #[cfg(feature = "codec-mcp")]
@@ -143,6 +155,8 @@ const _: &str = "web";
 const _: &str = "web-wasm-frame";
 #[cfg(feature = "view-agent")]
 const _: &str = "view-agent";
+#[cfg(feature = "view-bridge")]
+const _: &str = "view-bridge";
 #[cfg(feature = "view-doc")]
 const _: &str = "view-doc";
 #[cfg(feature = "view-math")]

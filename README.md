@@ -32,7 +32,7 @@ constellation):
 ```toml
 [dependencies]
 # Published as `sim-nest` (the name `sim` was taken); imported as `sim`.
-sim = { package = "sim-nest", version = "0.1" }   # default features: core, codec-lisp, numbers-f64
+sim = { package = "sim-nest", version = "0.1" }   # default features: core, shape, codec-lisp, numbers-f64
 ```
 
 Boot a runtime in a few lines:
@@ -61,9 +61,9 @@ For a complete, runnable version of this boot-and-eval loop, see
 domains and the Lisp codec, then reads, evaluates, and prints each line
 (`cargo run --example repl --features shape,numbers-prelude`).
 
-(The full architecture conformance suite `sim-conformance` is a maintainer gate run
-across the whole constellation, not a published crate; contributors run it from the
-repo checkout.)
+(The full architecture conformance suite `sim-conformance` is a maintainer gate
+run across the whole constellation, not a published crate; contributors run it
+from the repo checkout with `cargo test -p sim-conformance`.)
 
 Naming note: the umbrella crate is published on crates.io as `sim-nest` (the
 bare name `sim` was already taken), but it keeps the library import identifier
@@ -218,11 +218,13 @@ the authoritative, current list; the families below are a map, not a copy.
 ### Default features
 
 ```text
-default = ["core", "codec-lisp", "numbers-f64"]
+default = ["core", "shape", "codec-lisp", "numbers-f64"]
 ```
 
 - **`core`** brings in `sim-kernel` (the protocol kernel) and `sim-lib-core`
   (the core runtime library).
+- **`shape`** brings in the `sim-shape` engine used by the runtime installer,
+  public shape helpers, macro checking, and codec grammar surfaces.
 - **`codec-lisp`** brings in the Lisp reader/printer codec surface.
 - **`numbers-f64`** brings in the default `f64` number domain.
 
@@ -243,9 +245,10 @@ The large optional surface is organized into families. Each feature is gated in
   `numbers-rational`, `numbers-complex`, `numbers-bigint`, `numbers-tensor-*`,
   the `numbers-cas-*` symbolic stack, and the `numbers-prelude` aggregate, among
   many more.
-- **`list-*` / `table-*`** -- pluggable list and table backends: `list-cell`,
-  `list-lazy`, `table-hash`, `table-override`, `table-lazy`, `table-fs`,
-  `table-db`, `table-remote`.
+- **`list-*` / `table-*` / `exec`** -- pluggable list and table backends plus
+  bounded host-process execution: `list-cell`, `list-lazy`, `table-hash`,
+  `table-override`, `table-lazy`, `table-fs`, `table-http`, `table-db`,
+  `table-remote`, and `exec`.
 - **`control`** -- control-flow and policy library.
 - **`standard-*`** -- the standard distribution and language surface libs
   (`standard-core`, binding, sequence, pattern, dispatch, namespace, mutation,
@@ -256,7 +259,7 @@ The large optional surface is organized into families. Each feature is gated in
   and MIDI stream backends.
 - **`pitch-*` / `midi-*` / `music-*` / `sound-*`** -- the music, pitch, MIDI,
   and sound stack, with `music-stack` as the convenience aggregate.
-- **`audio-graph-*` / `audio-dsp` / `audio-synth` / `plugin-*` / `daw-session`**
+- **`audio-graph-*` / `audio-dsp` / `music-synth` / `plugin-*` / `daw-session`**
   -- the audio graph, DSP, synthesis, plugin hosting (CLAP, LV2, VST3), and DAW
   session libs.
 - **`femm-*`** -- the finite-element / numeric-physics (FEMM) stack.
@@ -488,12 +491,18 @@ When adding behavior in the current tree:
 
 `sim-conformance` is a test-only crate that depends on `sim` through the public
 facade only (`default-features = false` plus an explicit feature set). It turns
-the runtime's architecture claims into executable checks, so a regression in
-codec totality, class semantics, number-domain replaceability, capability
-gating, eval policy, loader behavior, reversible library lifecycle, boot
-receipt replay, the wasm ABI scope, stream transport conformance, or placement
-conformance fails the suite. New current architecture claims get matching
-conformance assertions.
+the runtime's architecture claims into executable checks, so a regression in the
+general-purpose codec set (`lisp`, `json`, `binary`, `binary-base64`, `bitwise`,
+`bitwise-base64`, and `algol`), class semantics, number-domain replaceability,
+capability gating, eval policy, loader behavior, reversible library lifecycle,
+boot receipt replay, the wasm ABI scope, stream transport conformance, or
+placement conformance fails the suite. New current architecture claims get
+matching conformance assertions.
+
+The default `cargo test -p sim-conformance` command runs the standalone
+public-facade checks. Tests that require sibling recipe corpora or the generated
+constellation meta-workspace are explicit ignored tests with their dependency
+set named in the test output.
 
 The library lifecycle conformance matrix lives at
 `crates/sim-conformance/tests/spec/lib_lifecycle.rs`. It covers observable
@@ -552,9 +561,20 @@ sim = { package = "sim-nest", version = "0.1", default-features = false, feature
 Contributors, from a repo checkout, run the repository validation gate:
 
 ```bash
-cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps
-cargo run -p xtask -- simdoc --check    # `xtask` is a repo-local dev tool, not a published crate
+cargo fmt --all --check
+cargo test -p sim-conformance
+cargo test --workspace
+cargo clippy --workspace --all-targets -- -D warnings
+cargo doc --workspace --no-deps
+cargo clippy --workspace --all-features --all-targets -- -D warnings
+cargo test --workspace --all-features
+cargo run -p xtask -- simdoc --check
 ```
+
+CI runs `cargo test -p sim-conformance` for the standalone public-facade
+conformance suite. Conformance tests that name sibling recipe corpora or the
+generated constellation meta-workspace in their ignored-test output are
+maintainer checks outside GitHub CI.
 
 `cargo run -p xtask -- simdoc` builds the public documentation lanes (API docs,
 agent cards, human docs, and diagrams) and the split contract files under

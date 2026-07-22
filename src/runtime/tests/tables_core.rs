@@ -1,9 +1,7 @@
-use sim_kernel::{
-    Args, Cx, Error, Expr, Symbol, Table, Value, catalog::CatalogTable,
-    config_table_impl_capability,
-};
+use sim_kernel::{Args, Cx, Error, Expr, Symbol, Table, Value, catalog::CatalogTable};
 
 use super::support::eval_cx;
+use crate::runtime::config_table_impl_capability;
 
 fn number_text(expr: Expr) -> String {
     match expr {

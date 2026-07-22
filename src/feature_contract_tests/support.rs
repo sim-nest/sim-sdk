@@ -2,6 +2,7 @@ use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
     path::{Path, PathBuf},
+    process::Command,
 };
 
 pub fn repo_root() -> PathBuf {
@@ -62,6 +63,28 @@ pub fn collect_feature_dependencies(cargo_toml: &str) -> BTreeMap<String, BTreeS
         }
     }
     features
+}
+
+pub fn collect_optional_dependencies(cargo_toml: &str) -> BTreeSet<String> {
+    let mut dependencies = BTreeSet::new();
+    let mut in_dependencies = false;
+    for line in cargo_toml.lines() {
+        let trimmed = line.trim();
+        if trimmed.starts_with('[') {
+            in_dependencies = trimmed == "[dependencies]";
+            continue;
+        }
+        if !in_dependencies || trimmed.is_empty() || trimmed.starts_with('#') {
+            continue;
+        }
+        if !trimmed.contains("optional = true") {
+            continue;
+        }
+        if let Some((name, _)) = trimmed.split_once('=') {
+            dependencies.insert(name.trim().to_owned());
+        }
+    }
+    dependencies
 }
 
 fn extract_quoted_items(text: &str, out: &mut BTreeSet<String>) {
@@ -134,6 +157,49 @@ pub fn assert_feature_includes(
     assert!(
         missing.is_empty(),
         "feature {feature} is missing implications: {missing:?}"
+    );
+}
+
+pub fn assert_dep_edges_reference_optional_dependencies(
+    features: &BTreeMap<String, BTreeSet<String>>,
+    optional_dependencies: &BTreeSet<String>,
+) {
+    let mut missing = Vec::new();
+    for (feature, deps) in features {
+        for dep in deps {
+            let Some(name) = dep.strip_prefix("dep:") else {
+                continue;
+            };
+            if !optional_dependencies.contains(name) {
+                missing.push(format!("{feature} -> {dep}"));
+            }
+        }
+    }
+    assert!(
+        missing.is_empty(),
+        "feature dep edges must reference optional dependencies: {missing:?}"
+    );
+}
+
+pub fn assert_all_feature_metadata_has_no_invalid_dependency_warnings(root: &Path) {
+    let output = Command::new(env!("CARGO"))
+        .arg("metadata")
+        .arg("--format-version")
+        .arg("1")
+        .arg("--no-deps")
+        .arg("--all-features")
+        .current_dir(root)
+        .output()
+        .unwrap_or_else(|err| panic!("failed to run cargo metadata: {err}"));
+    assert!(
+        output.status.success(),
+        "cargo metadata --all-features failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        !stderr.contains("ignoring invalid dependency"),
+        "cargo metadata must not ignore optional dependencies: {stderr}"
     );
 }
 

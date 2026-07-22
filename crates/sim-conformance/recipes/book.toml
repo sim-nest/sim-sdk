@@ -1,0 +1,5 @@
+book = "sim-conformance"
+title = "sim-conformance recipes"
+summary = "Recipes that show how the executable architecture contract is run."
+order = 10
+chapters = ["01-basics"]

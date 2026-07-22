@@ -1,0 +1,5 @@
+book = "watch"
+title = "Watch"
+summary = "Modeled watch recipes for glance, pacing, privacy, and quorum checks."
+order = 30
+chapters = ["watch"]

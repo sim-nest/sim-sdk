@@ -13,17 +13,23 @@
 //! committed `.simcassette` corpus on disk; `validate_golden_fixture` checks a
 //! cassette's invariants against a target publish path without reading a file.
 
-use std::{path::PathBuf, sync::Arc};
+use std::sync::Arc;
 
 use sim::{
     codec::{Input, decode_with_codec},
     kernel::{
         Args, CapabilitySet, Cx, DefaultFactory, ExportKind, ExportState, Expr, LibSource,
         LibTarget, NeedPolicy, NumberLiteral, ReadPolicy, Symbol, TrustLevel,
-        read_construct_capability, read_eval_capability,
+        macro_expand_eval_capability, read_construct_capability, read_eval_capability,
     },
 };
 
+#[path = "conformance_support/mod.rs"]
+mod conformance_support;
+#[path = "spec/forge_author.rs"]
+mod forge_author;
+#[path = "spec/forge_eval.rs"]
+mod forge_eval;
 #[path = "spec/instrument_streams.rs"]
 mod instrument_streams;
 #[path = "spec/rust_intelligence.rs"]
@@ -156,7 +162,7 @@ fn number_domains_named_by_sim_parse_and_promote_through_lattice() {
 
 #[test]
 fn read_eval_is_capability_and_trust_gated_separately_from_read_construct() {
-    let mut cx = cx();
+    let (mut cx, seat) = seated_cx();
     let denied = decode_with_codec(
         &mut cx,
         &q("codec", "lisp"),
@@ -184,6 +190,7 @@ fn read_eval_is_capability_and_trust_gated_separately_from_read_construct() {
             if capability == read_eval_capability() && trust == TrustLevel::Untrusted
     ));
 
+    grant_capability(&seat, &mut cx, macro_expand_eval_capability());
     let allowed = decode_with_codec(
         &mut cx,
         &q("codec", "lisp"),
@@ -218,7 +225,7 @@ fn read_eval_is_capability_and_trust_gated_separately_from_read_construct() {
             if capability == read_construct_capability()
     ));
 
-    cx.grant(read_construct_capability());
+    grant_capability(&seat, &mut cx, read_construct_capability());
     decode_with_codec(
         &mut cx,
         &q("codec", "lisp"),
@@ -269,20 +276,17 @@ fn loader_backends_named_by_runtime_are_available() {
     assert_eq!(manifest.target, LibTarget::HostRegistered);
 
     assert_loader_selected(
-        registry.load_lib(&mut cx, LibSource::Path(PathBuf::from("missing.l8b"))),
+        registry.load_lib(&mut cx, sim::loaders::path_source("missing.l8b")),
         "binary-precompiled-lib",
     );
     assert_loader_selected(
-        registry.load_lib(&mut cx, LibSource::Path(PathBuf::from("missing.lisp"))),
+        registry.load_lib(&mut cx, sim::loaders::path_source("missing.lisp")),
         "lisp-source",
     );
     assert_loader_selected(
         registry.load_lib(
             &mut cx,
-            LibSource::Path(PathBuf::from(format!(
-                "missing.{}",
-                std::env::consts::DLL_EXTENSION
-            ))),
+            sim::loaders::path_source(format!("missing.{}", std::env::consts::DLL_EXTENSION)),
         ),
         "native-dylib",
     );
@@ -291,7 +295,7 @@ fn loader_backends_named_by_runtime_are_available() {
         sim::wasm_abi::InMemoryWasmRuntime::new(),
     ));
     assert_loader_selected(
-        wasm_registry.load_lib(&mut cx, LibSource::Path(PathBuf::from("missing.wasm"))),
+        wasm_registry.load_lib(&mut cx, sim::loaders::path_source("missing.wasm")),
         "wasm-abi-module",
     );
 }
@@ -444,8 +448,12 @@ fn stream_cassettes_replay_and_round_trip_through_codecs_and_publish_invariants(
         .unwrap();
     assert_eq!(opened.queue().drain(4).unwrap().len(), 1);
 
-    let mut fabric_cx = cx();
-    fabric_cx.grant(stream_remote_network_capability());
+    let (mut fabric_cx, fabric_seat) = seated_cx();
+    grant_capability(
+        &fabric_seat,
+        &mut fabric_cx,
+        stream_remote_network_capability(),
+    );
     let server_stream = StreamValue::pull(
         conformance_metadata(
             "stream/conformance-server",

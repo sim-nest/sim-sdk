@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
-use sim_kernel::{Args, DefaultFactory, EagerPolicy, Expr, NumberLiteral, Symbol};
+use sim_kernel::{
+    Args, DefaultFactory, EagerPolicy, Expr, NumberLiteral, Symbol, macro_expand_eval_capability,
+};
 
 use crate::runtime::install_core_runtime;
 
@@ -159,6 +161,7 @@ fn shape_read_construct_decodes_to_callable_shape_value() {
 
     let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
     install_core_runtime(&mut cx);
+    cx.grant(macro_expand_eval_capability());
     cx.grant(read_construct_capability());
     let codec_id = cx.registry_mut().fresh_codec_id();
     cx.load_lib(&LispCodecLib::new(codec_id).unwrap()).unwrap();

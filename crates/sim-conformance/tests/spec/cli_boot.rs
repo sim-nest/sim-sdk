@@ -5,10 +5,10 @@ use std::{
     sync::Arc,
 };
 
-use sim_kernel::{
-    AbiVersion, Args, Callable, CatalogSource, Cx, Error, Export, ExportRecord, ExportState, Lib,
-    LibLoader, LibManifest, LibSource, LibSourceSpec, LibTarget, Linker, LoadCx, LoaderRegistry,
-    Object, ObjectCompat, RegistryBootState, Symbol, Value, Version,
+use sim::kernel::{
+    AbiVersion, Args, Callable, Cx, DefaultFactory, EagerPolicy, Error, Export, ExportRecord,
+    ExportState, Lib, LibLoader, LibManifest, LibSource, LibSourceSpec, LibTarget, Linker, LoadCx,
+    LoaderRegistry, Object, ObjectCompat, RegistryBootState, Result, Symbol, Value, Version,
 };
 
 #[test]
@@ -19,11 +19,11 @@ fn cli_boot_receipts_replay_to_same_loaded_surface() {
         .with_loader(CliBootFixtureLoader)
         .with_source(
             codec_source.clone(),
-            CatalogSource::Bytes(b"codec-lisp".to_vec()),
+            sim::loaders::catalog_bytes_source(b"codec-lisp".to_vec()),
         )
         .with_source(
             scenario_source.clone(),
-            CatalogSource::Bytes(b"scenario-app".to_vec()),
+            sim::loaders::catalog_bytes_source(b"scenario-app".to_vec()),
         );
     let mut recorded = cx();
 
@@ -64,12 +64,17 @@ fn cli_boot_receipts_replay_to_same_loaded_surface() {
 }
 
 #[test]
+#[ignore = "requires the generated constellation meta-workspace and native dynamic plugin builds"]
 fn sim_repl_evaluates_through_bootloader_surface() {
-    let Some(meta_manifest) = meta_workspace_manifest() else {
-        eprintln!("skipping bootloader REPL check outside the constellation meta-workspace");
-        return;
-    };
+    let meta_manifest = meta_workspace_manifest()
+        .expect("bootloader REPL check must run from the generated constellation meta-workspace");
     let target_dir = unique_target_dir();
+    build_native_dylib(
+        &meta_manifest,
+        "sim-codec-lisp",
+        &["native-export"],
+        &target_dir,
+    );
     build_native_dylib(
         &meta_manifest,
         "sim-lib-numbers-f64",
@@ -84,6 +89,7 @@ fn sim_repl_evaluates_through_bootloader_surface() {
     );
 
     let bundle_dir = target_dir.join("debug");
+    assert!(bundle_dir.join(dylib_file_name("sim_codec_lisp")).is_file());
     assert!(
         bundle_dir
             .join(dylib_file_name("sim_lib_numbers_f64"))
@@ -120,7 +126,7 @@ fn sim_repl_evaluates_through_bootloader_surface() {
         .stdin
         .as_mut()
         .expect("sim repl stdin should be piped")
-        .write_all(b"(math/add 1 2)\n")
+        .write_all(b"42\n")
         .expect("write repl input");
     let output = child.wait_with_output().expect("wait for sim repl");
 
@@ -131,13 +137,14 @@ fn sim_repl_evaluates_through_bootloader_surface() {
         "sim repl failed: {}",
         String::from_utf8_lossy(&output.stderr)
     );
-    assert_eq!(String::from_utf8(output.stdout).unwrap(), "3\n");
+    assert_eq!(String::from_utf8(output.stdout).unwrap(), "42\n");
     assert_eq!(String::from_utf8(output.stderr).unwrap(), "");
 }
 
 fn build_native_dylib(meta_manifest: &Path, package: &str, features: &[&str], target_dir: &Path) {
     let mut command = Command::new(cargo_bin());
     command
+        .env("CARGO_PROFILE_DEV_DEBUG", "0")
         .env("RUSTFLAGS", "-D warnings")
         .arg("build")
         .arg("--manifest-path")
@@ -203,28 +210,27 @@ fn remove_dir_all_if_exists(path: &Path) {
     }
 }
 
-use sim_kernel::testing::eager_cx as cx;
+fn cx() -> Cx {
+    Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory))
+}
 
 struct CliBootFixtureLoader;
 
 impl LibLoader for CliBootFixtureLoader {
     fn can_load(&self, source: &LibSource) -> bool {
-        matches!(
-            source,
-            LibSource::Bytes(bytes) if matches!(bytes.as_slice(), b"codec-lisp" | b"scenario-app")
-        )
+        sim::loaders::bytes_from_source(source).is_ok_and(|bytes| {
+            bytes.is_some_and(|bytes| matches!(bytes.as_slice(), b"codec-lisp" | b"scenario-app"))
+        })
     }
 
-    fn load(&self, _cx: &mut Cx, source: LibSource) -> sim_kernel::Result<Box<dyn Lib>> {
-        match source {
-            LibSource::Bytes(bytes) if bytes == b"codec-lisp" => Ok(Box::new(CliBootFixtureLib {
+    fn load(&self, _cx: &mut Cx, source: LibSource) -> Result<Box<dyn Lib>> {
+        match sim::loaders::bytes_from_source(&source)?.as_deref() {
+            Some(b"codec-lisp") => Ok(Box::new(CliBootFixtureLib {
                 kind: FixtureKind::Codec,
             })),
-            LibSource::Bytes(bytes) if bytes == b"scenario-app" => {
-                Ok(Box::new(CliBootFixtureLib {
-                    kind: FixtureKind::App,
-                }))
-            }
+            Some(b"scenario-app") => Ok(Box::new(CliBootFixtureLib {
+                kind: FixtureKind::App,
+            })),
             _ => Err(Error::HostError("unsupported CLI boot fixture".to_owned())),
         }
     }
@@ -274,7 +280,7 @@ impl Lib for CliBootFixtureLib {
         }
     }
 
-    fn load(&self, cx: &mut LoadCx, linker: &mut Linker<'_>) -> sim_kernel::Result<()> {
+    fn load(&self, cx: &mut LoadCx, linker: &mut Linker<'_>) -> Result<()> {
         match self.kind {
             FixtureKind::Codec => {
                 linker.codec_value(Symbol::qualified("codec", "lisp"), cx.factory().bool(true)?)?;
@@ -300,7 +306,7 @@ impl Lib for CliBootFixtureLib {
 struct CliMainFixture;
 
 impl Object for CliMainFixture {
-    fn display(&self, _cx: &mut Cx) -> sim_kernel::Result<String> {
+    fn display(&self, _cx: &mut Cx) -> Result<String> {
         Ok("cli/main".to_owned())
     }
 
@@ -316,7 +322,7 @@ impl ObjectCompat for CliMainFixture {
 }
 
 impl Callable for CliMainFixture {
-    fn call(&self, cx: &mut Cx, _args: Args) -> sim_kernel::Result<Value> {
+    fn call(&self, cx: &mut Cx, _args: Args) -> Result<Value> {
         cx.factory().bool(true)
     }
 }

@@ -1,0 +1,8 @@
+id = "route-swap"
+title = "Swap a modeled device route"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 30
+tags = ["sdk", "device", "route", "offline", "deterministic"]
+requires = ["device/reference"]

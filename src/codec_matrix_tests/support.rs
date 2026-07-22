@@ -4,6 +4,7 @@ use std::{panic::AssertUnwindSafe, panic::catch_unwind};
 use sim_codec::{CodecRuntime, Input, Output, decode_with_codec, encode_with_codec};
 use sim_kernel::{
     DefaultFactory, EagerPolicy, EncodeOptions, Expr, NumberLiteral, QuoteMode, ReadPolicy, Symbol,
+    macro_expand_eval_capability,
 };
 
 use crate::{
@@ -15,6 +16,7 @@ use crate::{
 pub fn cx() -> sim_kernel::Cx {
     let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
     install_core_runtime(&mut cx);
+    cx.grant(macro_expand_eval_capability());
     #[cfg(feature = "numbers-f64")]
     if cx
         .registry()

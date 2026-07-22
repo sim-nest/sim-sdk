@@ -1,10 +1,12 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use sim_kernel::{
-    CapabilityName, Cx, Datum, DatumStore, Ref, Result, Symbol, Value, browse_run_tests_capability,
-    card::ref_value, effect_test_run_kind, force_list_to_vec,
+    CapabilityName, Cx, Datum, DatumStore, Ref, Result, Symbol, Value, card::ref_value,
+    force_list_to_vec,
 };
 
+use super::super::browse_run_tests_capability;
+use super::super::test_runs::test_run_effect_kind;
 use super::schema::CoverageBuilder;
 
 pub(super) fn coverage_from_tests(cx: &mut Cx, tests: Value) -> Result<Value> {
@@ -66,7 +68,7 @@ impl RunSummary {
             let Some(effect) = cx.effect_ledger().effect(&record.effect) else {
                 continue;
             };
-            if effect.kind != effect_test_run_kind() {
+            if effect.kind != test_run_effect_kind() {
                 continue;
             }
             let Ref::Symbol(name) = &effect.subject else {

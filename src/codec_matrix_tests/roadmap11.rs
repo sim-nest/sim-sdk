@@ -10,6 +10,22 @@ use super::support::{codec_symbols, cx, decode_once, encode_once};
 /// A roundtrip corpus case: an expression plus an assertion over its decode.
 type Roadmap11Case = (Expr, fn(&Expr));
 
+trait IntoMusicFileText {
+    fn into_music_file_text(self) -> String;
+}
+
+impl IntoMusicFileText for String {
+    fn into_music_file_text(self) -> String {
+        self
+    }
+}
+
+impl<E: std::fmt::Debug> IntoMusicFileText for Result<String, E> {
+    fn into_music_file_text(self) -> String {
+        self.expect("music file encodes")
+    }
+}
+
 fn roadmap11_corpus() -> Vec<Roadmap11Case> {
     vec![
         (
@@ -53,27 +69,30 @@ fn roadmap11_corpus() -> Vec<Roadmap11Case> {
         (
             Expr::Extension {
                 tag: Symbol::qualified("music", "Score"),
-                payload: Box::new(Expr::String(sim_lib_music_shapes::encode_music_file(
-                    &Score::new(
-                        120,
-                        (4, 4),
-                        Some("C major".to_owned()),
-                        Music::Melody(
-                            Melody::new(vec![MelodyItem::Note(
-                                Note::new(
-                                    Time::new(1, 4),
-                                    Pitch::from_midi(60),
-                                    100,
-                                    Channel::new(0).expect("channel"),
-                                    Articulation::Normal,
-                                )
-                                .expect("note"),
-                            )])
-                            .expect("melody"),
-                        ),
+                payload: Box::new(Expr::String(
+                    sim_lib_music_shapes::encode_music_file(
+                        &Score::new(
+                            120,
+                            (4, 4),
+                            Some("C major".to_owned()),
+                            Music::Melody(
+                                Melody::new(vec![MelodyItem::Note(
+                                    Note::new(
+                                        Time::new(1, 4),
+                                        Pitch::from_midi(60),
+                                        100,
+                                        Channel::new(0).expect("channel"),
+                                        Articulation::Normal,
+                                    )
+                                    .expect("note"),
+                                )])
+                                .expect("melody"),
+                            ),
+                        )
+                        .expect("score"),
                     )
-                    .expect("score"),
-                ))),
+                    .into_music_file_text(),
+                )),
             },
             |expr| {
                 let Expr::Extension { tag, payload } = expr else {

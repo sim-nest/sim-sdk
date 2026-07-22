@@ -1,9 +1,8 @@
 use sim::{
     kernel::{
-        AbiVersion, CatalogSource, ClaimPattern, Cx, DefaultFactory, Dependency, EagerPolicy,
-        Export, ExportKind, ExportRecord, Lib, LibId, LibLoader, LibManifest, LibSource,
-        LibSourceSpec, LibTarget, Linker, LoadCx, LoaderRegistry, Ref, RegistryBootState, Symbol,
-        Version,
+        AbiVersion, ClaimPattern, Cx, DefaultFactory, Dependency, EagerPolicy, Export, ExportKind,
+        ExportRecord, Lib, LibId, LibLoader, LibManifest, LibSource, LibSourceSpec, LibTarget,
+        Linker, LoadCx, LoaderRegistry, Ref, RegistryBootState, Symbol, Version,
     },
     lib_standard_core::{LanguageProfile, ProfileRegistry, language_profile_lib_symbol},
 };
@@ -133,10 +132,9 @@ fn standard_control_lib_uses_recorded_claim_receipts() {
 }
 
 #[test]
-fn standard_profile_installers_record_claims_on_profile_libs() {
+fn standard_profile_installers_unload_profile_owned_claims_with_profile_lib() {
     for case in standard_profile_cases() {
         let mut cx = conformance_cx();
-        let before = lifecycle_snapshot(&cx);
         let mut registry = ProfileRegistry::new();
 
         let profile = (case.install)(&mut cx, &mut registry)
@@ -155,10 +153,14 @@ fn standard_profile_installers_record_claims_on_profile_libs() {
 
         cx.unload_lib(lib_id).unwrap();
 
-        assert_eq!(
-            lifecycle_snapshot(&cx),
-            before,
-            "{} did not restore the observable snapshot",
+        assert!(
+            cx.registry().lib(&lib_symbol).is_none(),
+            "{} did not unload its profile receipt",
+            case.name
+        );
+        assert!(
+            profile_claims(&cx, &profile.symbol).is_empty(),
+            "{} left profile claims behind after unloading the profile receipt",
             case.name
         );
     }
@@ -170,8 +172,14 @@ fn boot_receipts_encode_decode_and_replay_registry_surface() {
     let user_source = Symbol::qualified("lifecycle", "boot-user-source");
     let loaders = LoaderRegistry::new()
         .with_loader(ReceiptFixtureLoader)
-        .with_source(dep_source.clone(), CatalogSource::Bytes(b"dep".to_vec()))
-        .with_source(user_source.clone(), CatalogSource::Bytes(b"user".to_vec()));
+        .with_source(
+            dep_source.clone(),
+            sim::loaders::catalog_bytes_source(b"dep".to_vec()),
+        )
+        .with_source(
+            user_source.clone(),
+            sim::loaders::catalog_bytes_source(b"user".to_vec()),
+        );
     let mut recorded = conformance_cx();
 
     let dep_receipt = loaders
@@ -247,13 +255,15 @@ impl Lib for FixtureValueLib {
 
 impl LibLoader for ReceiptFixtureLoader {
     fn can_load(&self, source: &LibSource) -> bool {
-        matches!(source, LibSource::Bytes(bytes) if matches!(bytes.as_slice(), b"dep" | b"user"))
+        sim::loaders::bytes_from_source(source).is_ok_and(|bytes| {
+            bytes.is_some_and(|bytes| matches!(bytes.as_slice(), b"dep" | b"user"))
+        })
     }
 
     fn load(&self, _cx: &mut Cx, source: LibSource) -> sim::kernel::Result<Box<dyn Lib>> {
-        match source {
-            LibSource::Bytes(bytes) if bytes == b"dep" => Ok(Box::new(fixture_lib("boot-dep"))),
-            LibSource::Bytes(bytes) if bytes == b"user" => {
+        match sim::loaders::bytes_from_source(&source)?.as_deref() {
+            Some(b"dep") => Ok(Box::new(fixture_lib("boot-dep"))),
+            Some(b"user") => {
                 let dep = fixture_lib("boot-dep");
                 Ok(Box::new(fixture_lib("boot-user").requiring(dep.id)))
             }

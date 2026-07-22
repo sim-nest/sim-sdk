@@ -10,6 +10,9 @@ use sim::{
     kernel::{Cx, DefaultFactory, EagerPolicy, Expr, QuoteMode, ReadPolicy, Symbol},
 };
 
+#[path = "conformance_support/mod.rs"]
+mod conformance_support;
+
 const EXPECTED_RECIPE_IDS: [&str; 30] = [
     "a30-001-autonomous-decision",
     "a30-002-planning",
@@ -57,6 +60,7 @@ struct RecipeDoc {
 }
 
 #[test]
+#[ignore = "requires sibling repository recipe corpora and recipe-runtime parity"]
 fn agents30_numbered_recipes_are_deterministic_offline_and_metadata_complete() {
     let manifests = collect_agent30_manifests();
     assert!(
@@ -416,13 +420,13 @@ fn collect_files(root: &Path, files: &mut Vec<PathBuf>) {
 }
 
 fn assert_deterministic_fixture_run(cx: &mut Cx, path: &Path, doc: &RecipeDoc) {
-    // Evaluate the recipe's `(quote ...)` setup form through the lisp codec, not
-    // by string-stripping the parentheses. Evaluating twice must produce the same
-    // value: this is the deterministic-runtime claim, exercised for real.
+    // Decode the setup form through the lisp codec, accepting either the direct
+    // setup expression or the older quoted wrapper. Decoding twice must produce
+    // the same value: this is the deterministic-runtime claim, exercised for real.
     let setup_path = recipe_sibling(path, &required_string(doc, path, "setup"));
     let setup_text = read_ascii(&setup_path);
-    let first = evaluate_quoted_setup(cx, &setup_text, &setup_path);
-    let second = evaluate_quoted_setup(cx, &setup_text, &setup_path);
+    let first = evaluate_setup(cx, &setup_text, &setup_path);
+    let second = evaluate_setup(cx, &setup_text, &setup_path);
     assert_eq!(
         first,
         second,
@@ -453,13 +457,16 @@ fn assert_deterministic_fixture_run(cx: &mut Cx, path: &Path, doc: &RecipeDoc) {
 }
 
 fn build_decode_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    conformance_support::seat_cookbook_capabilities(&seat, &mut cx);
     sim::runtime::install_core_runtime(&mut cx);
     sim::numbers_prelude::NumbersPreludeLib::new()
         .install_all(&mut cx)
         .unwrap();
     let lisp = sim::codec_lisp::LispCodecLib::new(cx.registry_mut().fresh_codec_id()).unwrap();
     cx.load_lib(&lisp).unwrap();
+    cx.load_lib(&sim::lib_control::ControlLib).unwrap();
+    sim::install_agent_lib(&mut cx).unwrap();
     cx
 }
 
@@ -473,29 +480,74 @@ fn decode_lisp(cx: &mut Cx, text: &str, source: &Path) -> Expr {
     .unwrap_or_else(|err| panic!("{}: lisp decode failed: {err:?}", source.display()))
 }
 
-fn evaluate_quoted_setup(cx: &mut Cx, setup_text: &str, source: &Path) -> Expr {
+fn evaluate_setup(cx: &mut Cx, setup_text: &str, source: &Path) -> Expr {
     let form = decode_lisp(cx, setup_text.trim(), source);
-    unwrap_quote(form).unwrap_or_else(|| {
+    if let Some(expr) = unwrap_quote(&form) {
+        return expr;
+    }
+
+    let value = cx
+        .eval_expr(lower_lisp_eval_surface(form))
+        .unwrap_or_else(|err| panic!("{}: setup evaluation failed: {err:?}", source.display()));
+    value.object().as_expr(cx).unwrap_or_else(|err| {
         panic!(
-            "{}: setup must be a single (quote ...) form",
+            "{}: setup result is not an expression: {err:?}",
             source.display()
         )
     })
 }
 
-fn unwrap_quote(form: Expr) -> Option<Expr> {
+fn unwrap_quote(form: &Expr) -> Option<Expr> {
     match form {
         Expr::Quote {
             mode: QuoteMode::Quote,
             expr,
-        } => Some(*expr),
-        Expr::List(mut items) if items.len() == 2 && is_quote_head(&items[0]) => {
-            Some(items.remove(1))
-        }
-        Expr::Call { operator, mut args } if is_quote_head(&operator) && args.len() == 1 => {
-            Some(args.remove(0))
+        } => Some(expr.as_ref().clone()),
+        Expr::List(items) if items.len() == 2 && is_quote_head(&items[0]) => Some(items[1].clone()),
+        Expr::Call { operator, args } if is_quote_head(operator.as_ref()) && args.len() == 1 => {
+            Some(args[0].clone())
         }
         _ => None,
+    }
+}
+
+fn lower_lisp_eval_surface(expr: Expr) -> Expr {
+    match expr {
+        Expr::List(items) if !items.is_empty() => {
+            let mut items = items
+                .into_iter()
+                .map(lower_lisp_eval_surface)
+                .collect::<Vec<_>>();
+            let operator = Box::new(items.remove(0));
+            Expr::Call {
+                operator,
+                args: items,
+            }
+        }
+        Expr::List(items) => Expr::List(items.into_iter().map(lower_lisp_eval_surface).collect()),
+        Expr::Vector(items) => {
+            Expr::Vector(items.into_iter().map(lower_lisp_eval_surface).collect())
+        }
+        Expr::Map(entries) => Expr::Map(
+            entries
+                .into_iter()
+                .map(|(key, value)| (lower_lisp_eval_surface(key), lower_lisp_eval_surface(value)))
+                .collect(),
+        ),
+        Expr::Set(items) => Expr::Set(items.into_iter().map(lower_lisp_eval_surface).collect()),
+        Expr::Block(items) => Expr::Block(items.into_iter().map(lower_lisp_eval_surface).collect()),
+        Expr::Annotated { expr, annotations } => Expr::Annotated {
+            expr: Box::new(lower_lisp_eval_surface(*expr)),
+            annotations: annotations
+                .into_iter()
+                .map(|(name, value)| (name, lower_lisp_eval_surface(value)))
+                .collect(),
+        },
+        Expr::Extension { tag, payload } => Expr::Extension {
+            tag,
+            payload: Box::new(lower_lisp_eval_surface(*payload)),
+        },
+        other => other,
     }
 }
 

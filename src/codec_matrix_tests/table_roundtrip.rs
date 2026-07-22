@@ -14,26 +14,16 @@ use sim_codec::{encode_value_with_codec, encode_with_codec};
 use sim_kernel::CapabilityName;
 use sim_kernel::{AssocTable, Cx, EncodeOptions, Error, Expr, Result, Symbol, Value};
 
-#[cfg(feature = "table-db")]
-use sim_kernel::capability::{
-    table_db_capability, table_db_mkdir_capability, table_db_read_capability,
-    table_db_rmdir_capability, table_db_write_capability,
-};
-#[cfg(feature = "table-fs")]
-use sim_kernel::capability::{
-    table_fs_capability, table_fs_mkdir_capability, table_fs_read_capability,
-    table_fs_rmdir_capability, table_fs_write_capability,
-};
-#[cfg(feature = "table-remote")]
-use sim_kernel::{eval_remote_capability, table_remote_capability};
-#[cfg(feature = "table-db")]
+#[cfg(any(feature = "table-db", feature = "table-remote"))]
 use sim_table_db::install_db_dir_lib;
 #[cfg(feature = "table-fs")]
 use sim_table_fs::install_fs_dir_lib;
-#[cfg(feature = "table-override")]
-use sim_table_override::OverrideTable;
 #[cfg(feature = "table-remote")]
 use sim_table_remote::{remote_dir_value, wrap_remote_table_site};
+#[cfg(feature = "table-remote")]
+use sim_kernel::eval_remote_capability;
+#[cfg(feature = "table-override")]
+use sim_table_override::OverrideTable;
 
 #[cfg(feature = "table-remote")]
 use sim_lib_server::{EvalSite, LocalEvalSite, ServerAddress};
@@ -42,6 +32,61 @@ use sim_lib_server::{EvalSite, LocalEvalSite, ServerAddress};
 use sim_table_lazy::{LazyTable, ValueLoader};
 
 use super::support::{codec_symbols, cx as test_cx, decode_once};
+
+#[cfg(feature = "table-fs")]
+fn table_fs_capability() -> CapabilityName {
+    CapabilityName::new("table.fs")
+}
+
+#[cfg(feature = "table-fs")]
+fn table_fs_read_capability() -> CapabilityName {
+    CapabilityName::new("table.fs.read")
+}
+
+#[cfg(feature = "table-fs")]
+fn table_fs_write_capability() -> CapabilityName {
+    CapabilityName::new("table.fs.write")
+}
+
+#[cfg(feature = "table-fs")]
+fn table_fs_mkdir_capability() -> CapabilityName {
+    CapabilityName::new("table.fs.mkdir")
+}
+
+#[cfg(feature = "table-fs")]
+fn table_fs_rmdir_capability() -> CapabilityName {
+    CapabilityName::new("table.fs.rmdir")
+}
+
+#[cfg(any(feature = "table-db", feature = "table-remote"))]
+fn table_db_capability() -> CapabilityName {
+    CapabilityName::new("table.db")
+}
+
+#[cfg(any(feature = "table-db", feature = "table-remote"))]
+fn table_db_read_capability() -> CapabilityName {
+    CapabilityName::new("table.db.read")
+}
+
+#[cfg(any(feature = "table-db", feature = "table-remote"))]
+fn table_db_write_capability() -> CapabilityName {
+    CapabilityName::new("table.db.write")
+}
+
+#[cfg(any(feature = "table-db", feature = "table-remote"))]
+fn table_db_mkdir_capability() -> CapabilityName {
+    CapabilityName::new("table.db.mkdir")
+}
+
+#[cfg(any(feature = "table-db", feature = "table-remote"))]
+fn table_db_rmdir_capability() -> CapabilityName {
+    CapabilityName::new("table.db.rmdir")
+}
+
+#[cfg(feature = "table-remote")]
+fn table_remote_capability() -> CapabilityName {
+    CapabilityName::new("table.remote")
+}
 
 fn number_expr(text: &str) -> Expr {
     Expr::Number(sim_kernel::NumberLiteral {

@@ -1,5 +1,6 @@
-use sim_kernel::{Cx, Result, Symbol, Value, browse_internal_capability};
+use sim_kernel::{Cx, Result, Symbol, Value};
 
+use super::super::super::browse_internal_capability;
 use super::{
     capability_list, empty_public_facet, field, private_facet, public_facet, string_list,
     symbol_list, symbol_payload,

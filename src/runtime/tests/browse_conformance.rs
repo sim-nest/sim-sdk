@@ -1,8 +1,7 @@
 use std::{collections::BTreeSet, sync::Arc};
 
 use sim_kernel::{
-    Args, Cx, DefaultFactory, EagerPolicy, Error, Expr, Symbol, Value, browse_internal_capability,
-    browse_run_tests_capability,
+    Args, Cx, DefaultFactory, EagerPolicy, Error, Expr, Symbol, Value, macro_expand_eval_capability,
 };
 
 use crate::runtime::{
@@ -11,7 +10,7 @@ use crate::runtime::{
         BROWSE_TEST_FIELDS, CARD_V2_FIELDS, COVERAGE_FIELDS, FACET_FIELDS, HELP_FIELDS,
         REDACTION_FIELDS, TEST_REPORT_FIELDS,
     },
-    install_core_runtime,
+    browse_internal_capability, browse_run_tests_capability, install_core_runtime,
 };
 
 use super::support::table_value;
@@ -123,6 +122,7 @@ fn root_graph_reaches_core_schema_codec_shape_and_test_subjects() {
 fn conformance_cx() -> Cx {
     let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
     install_core_runtime(&mut cx);
+    cx.grant(macro_expand_eval_capability());
     install_enabled_codecs(&mut cx);
     cx
 }

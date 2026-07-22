@@ -1,0 +1,8 @@
+id = "voice-site"
+title = "Recognize voice through a modeled site"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 30
+tags = ["sdk", "glasses", "voice", "site", "offline", "deterministic", "requires-capability:glasses/mic", "allow-capability:glasses/mic"]
+requires = ["glasses/sdk"]

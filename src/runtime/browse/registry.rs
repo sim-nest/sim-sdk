@@ -1,13 +1,11 @@
 use std::{collections::BTreeSet, sync::Arc};
 
-use sim_kernel::{
-    ClaimPattern, Cx, Demand, Error, FunctionId, Ref, Result, Symbol, Value,
-    browse_run_tests_capability,
-};
+use sim_kernel::{ClaimPattern, Cx, Demand, Error, FunctionId, Ref, Result, Symbol, Value};
 use sim_shape::{AnyShape, Bindings, CaptureShape, ListShape};
 
 use crate::functions::{FunctionCase, FunctionObject};
 
+use super::super::browse_run_tests_capability;
 use super::super::{help::build_help, test_runs::test_report_value};
 use super::schema::card_v2_from_card_v1;
 use super::test_values;

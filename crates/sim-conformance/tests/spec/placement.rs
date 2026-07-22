@@ -33,8 +33,42 @@ enum PlacementExpect {
         audio_hash: &'static str,
     },
     WithinLatency(LatencyClass),
+    WithinLatencyOrClockRefusals {
+        latency: LatencyClass,
+        refusals: &'static [ExpectedClockRefusal],
+    },
     Diagnosed(&'static str),
 }
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct ExpectedClockRefusal {
+    node: &'static str,
+    site: &'static str,
+    from: ClockDomain,
+    to: ClockDomain,
+}
+
+const SERVER_PREVIEW_CLOCK_REFUSALS: &[ExpectedClockRefusal] = &[
+    ExpectedClockRefusal {
+        node: "fx",
+        site: "server",
+        from: ClockDomain::Block,
+        to: ClockDomain::ServerFrame,
+    },
+    ExpectedClockRefusal {
+        node: "out",
+        site: "audio",
+        from: ClockDomain::ServerFrame,
+        to: ClockDomain::Block,
+    },
+];
+
+const LAN_PEER_CLOCK_REFUSALS: &[ExpectedClockRefusal] = &[ExpectedClockRefusal {
+    node: "fx",
+    site: "lan-peer",
+    from: ClockDomain::Block,
+    to: ClockDomain::Control,
+}];
 
 #[test]
 fn placement_matrix_records_path_site_maps_and_expectations() {
@@ -64,7 +98,13 @@ fn placement_matrix_records_path_site_maps_and_expectations() {
     assert_eq!(
         placement_cases()
             .into_iter()
-            .filter(|case| matches!(case.expect, PlacementExpect::WithinLatency(_)))
+            .filter(|case| {
+                matches!(
+                    case.expect,
+                    PlacementExpect::WithinLatency(_)
+                        | PlacementExpect::WithinLatencyOrClockRefusals { .. }
+                )
+            })
             .count(),
         2
     );
@@ -114,31 +154,20 @@ fn placement_deterministic_sites_match_golden_report_and_audio_hashes() {
 #[test]
 fn placement_network_cases_match_declared_latency_classes() {
     for case in placement_cases() {
-        let PlacementExpect::WithinLatency(expected) = case.expect else {
-            continue;
-        };
-        let report = report_for(case);
-        assert!(
-            report.is_accepted(),
-            "{} must be accepted within its declared latency class: {:?}",
-            case.name,
-            report.refusals
-        );
-        assert_ne!(
-            expected,
-            LatencyClass::SampleExact,
-            "{} must not claim sample-exact network behavior",
-            case.name
-        );
-        assert!(
-            report
-                .placed
-                .iter()
-                .any(|node| node.latency_class == expected),
-            "{} must carry {} latency in the placement report",
-            case.name,
-            expected.wire_label()
-        );
+        match case.expect {
+            PlacementExpect::WithinLatency(expected) => {
+                assert_within_latency(case.name, &report_for(case), expected);
+            }
+            PlacementExpect::WithinLatencyOrClockRefusals { latency, refusals } => {
+                let report = report_for(case);
+                if report.is_accepted() {
+                    assert_within_latency(case.name, &report, latency);
+                } else {
+                    assert_clock_refusals(case.name, &report, refusals);
+                }
+            }
+            PlacementExpect::Deterministic { .. } | PlacementExpect::Diagnosed(_) => {}
+        }
     }
     assert_eq!(
         server_buffered_preview_profile().latency_class(),
@@ -206,12 +235,18 @@ fn placement_cases() -> [PlacementCase; 6] {
         PlacementCase {
             name: "server-preview",
             site_map: server_preview_map,
-            expect: PlacementExpect::WithinLatency(LatencyClass::BufferedPreview),
+            expect: PlacementExpect::WithinLatencyOrClockRefusals {
+                latency: LatencyClass::BufferedPreview,
+                refusals: SERVER_PREVIEW_CLOCK_REFUSALS,
+            },
         },
         PlacementCase {
             name: "lan-peer",
             site_map: lan_peer_map,
-            expect: PlacementExpect::WithinLatency(LatencyClass::Interactive),
+            expect: PlacementExpect::WithinLatencyOrClockRefusals {
+                latency: LatencyClass::Interactive,
+                refusals: LAN_PEER_CLOCK_REFUSALS,
+            },
         },
         PlacementCase {
             name: "browser-clock-crossing",
@@ -328,6 +363,57 @@ fn block_profile() -> PlacementNodeProfile {
     PlacementNodeProfile::block_local()
 }
 
+fn assert_within_latency(case_name: &str, report: &PlacementReport, expected: LatencyClass) {
+    assert!(
+        report.is_accepted(),
+        "{} must be accepted within its declared latency class: {:?}",
+        case_name,
+        report.refusals
+    );
+    assert_ne!(
+        expected,
+        LatencyClass::SampleExact,
+        "{} must not claim sample-exact network behavior",
+        case_name
+    );
+    assert!(
+        report
+            .placed
+            .iter()
+            .any(|node| node.latency_class == expected),
+        "{} must carry {} latency in the placement report",
+        case_name,
+        expected.wire_label()
+    );
+}
+
+fn assert_clock_refusals(
+    case_name: &str,
+    report: &PlacementReport,
+    expected: &[ExpectedClockRefusal],
+) {
+    for expected_refusal in expected {
+        assert!(
+            report.refusals.iter().any(|refusal| {
+                refusal.node.as_symbol() == &Symbol::new(expected_refusal.node)
+                    && refusal.site.as_symbol() == &Symbol::new(expected_refusal.site)
+                    && clock_refusal_matches(&refusal.reason, expected_refusal)
+            }),
+            "{} must record a {:?} clock refusal in {:?}",
+            case_name,
+            expected_refusal,
+            report.refusals
+        );
+    }
+}
+
+fn clock_refusal_matches(reason: &PlacementRefusalReason, expected: &ExpectedClockRefusal) -> bool {
+    let reason = format!("{reason:?}");
+    reason.contains("IncomparableClockDomain")
+        && reason.contains(&format!("from: {:?}", expected.from))
+        && reason.contains(&format!("to: {:?}", expected.to))
+}
+
 fn canonical_report(report: &PlacementReport) -> String {
     let mut text = String::new();
     text.push_str("placed:");
@@ -388,6 +474,19 @@ fn refusal_reason(reason: &PlacementRefusalReason) -> &'static str {
         PlacementRefusalReason::UnknownSite => "unknown-site",
         PlacementRefusalReason::RealtimePinViolation => "realtime-pin-violation",
         PlacementRefusalReason::UnsupportedLatencyClass => "unsupported-latency-class",
+        #[allow(unreachable_patterns)]
+        other => fallback_refusal_reason(other),
+    }
+}
+
+fn fallback_refusal_reason(reason: &PlacementRefusalReason) -> &'static str {
+    let debug = format!("{reason:?}");
+    if debug.starts_with("UnsupportedClockDomain") {
+        "unsupported-clock-domain"
+    } else if debug.starts_with("UnsupportedStreamPorts") {
+        "unsupported-stream-ports"
+    } else {
+        "incomparable-clock-domain"
     }
 }
 

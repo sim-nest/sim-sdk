@@ -3,11 +3,11 @@
 This is the authored architecture contract for the SIM runtime and the document
 the `sim-conformance` suite checks itself against. It is not generated; it states
 the data flow, the kernel-contract claims the executable suite verifies, and the
-surfaces that are covered versus the surfaces that are not yet covered.
+surfaces covered by this suite versus surfaces outside this suite.
 
 The companion narrative lives in `README.md`. This file is the machine-checked
 half: the conformance harness loads SIM.md through the public facade only and
-fails closed when a claim named here is no longer described, so the document and
+fails closed when a named claim is absent from this file, so the document and
 the executable checks cannot silently drift apart.
 
 ## What SIM is
@@ -39,8 +39,10 @@ The suite protects the checkable architecture claims below. A regression in any
 of them fails the suite, and every new current architecture claim gets a matching
 conformance assertion.
 
-- **codec totality** over the shared `Expr` graph: every general-purpose codec
-  round-trips every `Expr` variant and quote mode semantically.
+- **codec totality** over the shared `Expr` graph: every codec in the
+  conformance general-purpose set (`lisp`, `json`, `binary`, `binary-base64`,
+  `bitwise`, `bitwise-base64`, and `algol`) round-trips every `Expr` variant
+  and quote mode semantically.
 - **class semantics**: every registered class exposes the callable class
   protocol and constructs instances through the facade.
 - **number-domain replaceability**: the number domains named by the runtime
@@ -78,12 +80,12 @@ audio hashes.
 ## Stream cassette publishability
 
 Stream cassettes carry a `to_expr`/`from_expr` serialization that round-trips
-through any general-purpose codec. The suite guards that round-trip in memory and
-validates the structural invariants a cassette must satisfy before it could be
-published as a golden fixture (finite trace, sequenced envelopes, replay- or
-preview-only transport, and no unredacted payload or host-device name). These are
-in-memory invariant checks, not comparisons against a committed `.simcassette`
-corpus on disk.
+through the conformance general-purpose codec set. The suite guards that
+round-trip in memory and validates the structural invariants a cassette must
+satisfy before it could be published as a golden fixture (finite trace,
+sequenced envelopes, replay- or preview-only transport, and no unredacted payload
+or host-device name). These are in-memory invariant checks, not comparisons
+against a committed `.simcassette` corpus on disk.
 
 ## Surfaces covered versus not covered
 
@@ -91,16 +93,19 @@ Covered by executable conformance in this suite, with the listed feature set on:
 
 - the kernel codec, class, number, capability, eval-policy, loader, lifecycle,
   and wasm-ABI contracts;
+- the CORE host primitives for table-backed filesystem read/write/edit/search,
+  bounded process execution, direct HTTP table reads, and compatibility fs/net
+  capability aliases;
 - the stream-core, stream-combinators, stream-fabric, stream-file, stream-host,
   and web-bridge transport surfaces;
 - the topology placement surface and the CLI boot surface.
 
-Linted as offline, deterministic recipe corpora (not full runtime replays): the
-`30-agents` and `40-atelier` recipe sets, whose `(quote ...)` setup forms are
-decoded and evaluated through the lisp codec and compared to their expected
-forms.
+Explicit ignored checks lint offline, deterministic sibling recipe corpora (not
+full runtime replays): the `30-agents` and `40-atelier` recipe sets, whose
+`(quote ...)` setup forms are decoded and evaluated through the lisp codec and
+compared to their expected forms.
 
-Not yet covered by executable conformance here (their features are off by
-default in this suite, tracked separately): the agents, MCP, music, audio-FEMM,
-logic, and discrete surfaces. Their absence is intentional and named so the suite
-does not over-claim coverage it does not have.
+Outside this executable conformance suite (their features are off by default in
+this suite): the agents, MCP, music, audio-FEMM, logic, and discrete surfaces.
+Their absence is intentional and named so the suite does not over-claim coverage
+it does not have.

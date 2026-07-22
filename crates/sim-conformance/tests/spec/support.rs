@@ -7,11 +7,13 @@ use std::{
 use sim::{
     codec::{Input, Output, decode_with_codec, encode_with_codec},
     kernel::{
-        AbiVersion, Cx, DefaultFactory, EagerPolicy, ExportKind, ExportState, Expr, Lib,
-        LibManifest, LibTarget, Linker, LoadCx, NumberLiteral, PreparedArgs, QuoteMode, ReadPolicy,
-        Symbol, Value, Version,
+        AbiVersion, CapabilityName, Cx, DefaultFactory, EagerPolicy, ExportKind, ExportState, Expr,
+        GrantSeat, Lib, LibManifest, LibTarget, Linker, LoadCx, NumberLiteral, PreparedArgs,
+        QuoteMode, ReadPolicy, Symbol, Value, Version,
     },
 };
+
+use crate::conformance_support::seat_cookbook_capabilities;
 
 /// The authored architecture and conformance contract (`SIM.md`).
 ///
@@ -36,13 +38,48 @@ pub(crate) static CONFORMANCE_CONTRACT: LazyLock<String> = LazyLock::new(|| {
 });
 
 pub(crate) fn cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    seated_cx().0
+}
+
+pub(crate) fn seated_cx() -> (Cx, GrantSeat) {
+    let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    seat_cookbook_capabilities(&seat, &mut cx);
     sim::runtime::install_core_runtime(&mut cx);
     sim::numbers_prelude::NumbersPreludeLib::new()
         .install_all(&mut cx)
         .unwrap();
     install_codecs(&mut cx);
-    cx
+    (cx, seat)
+}
+
+#[allow(dead_code, clippy::unit_arg)]
+pub(crate) fn grant_capability(seat: &GrantSeat, cx: &mut Cx, capability: CapabilityName) {
+    seat.grant(cx, capability).assert_grant_ok();
+}
+
+#[allow(dead_code)]
+pub(crate) fn grant_capabilities(
+    seat: &GrantSeat,
+    cx: &mut Cx,
+    capabilities: impl IntoIterator<Item = CapabilityName>,
+) {
+    for capability in capabilities {
+        grant_capability(seat, cx, capability);
+    }
+}
+
+trait GrantOutcome {
+    fn assert_grant_ok(self);
+}
+
+impl GrantOutcome for () {
+    fn assert_grant_ok(self) {}
+}
+
+impl<T, E: std::fmt::Debug> GrantOutcome for std::result::Result<T, E> {
+    fn assert_grant_ok(self) {
+        self.expect("grant seat should be bound to this context");
+    }
 }
 
 fn install_codecs(cx: &mut Cx) {
@@ -55,6 +92,11 @@ fn install_codecs(cx: &mut Cx) {
     let binary_base64 =
         sim::codec_binary_base64::BinaryBase64CodecLib::new(cx.registry_mut().fresh_codec_id());
     cx.load_lib(&binary_base64).unwrap();
+    let bitwise = sim::codec_bitwise::BitwiseCodecLib::new(cx.registry_mut().fresh_codec_id());
+    cx.load_lib(&bitwise).unwrap();
+    let bitwise_base64 =
+        sim::codec_bitwise_base64::BitwiseBase64CodecLib::new(cx.registry_mut().fresh_codec_id());
+    cx.load_lib(&bitwise_base64).unwrap();
     let algol = sim::codec_algol::AlgolCodecLib::new(cx.registry_mut().fresh_codec_id());
     cx.load_lib(&algol).unwrap();
 }
@@ -63,12 +105,14 @@ pub(crate) fn q(namespace: &str, name: &str) -> Symbol {
     Symbol::qualified(namespace, name)
 }
 
-pub(crate) fn codec_symbols() -> [Symbol; 5] {
+pub(crate) fn codec_symbols() -> [Symbol; 7] {
     [
         q("codec", "lisp"),
         q("codec", "json"),
         q("codec", "binary"),
         q("codec", "binary-base64"),
+        q("codec", "bitwise"),
+        q("codec", "bitwise-base64"),
         q("codec", "algol"),
     ]
 }

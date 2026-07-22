@@ -54,6 +54,38 @@ const NATIVE_PLUGIN_PATCHES: &[(&str, &str, &str)] = &[
     ),
 ];
 
+const NATIVE_NUMBERS_F64_PATCHES: &[(&str, &str, &str)] = &[
+    ("sim-kernel", "sim-kernel", "."),
+    ("sim-citizen", "sim-citizen", "crates/sim-citizen"),
+    (
+        "sim-citizen-derive",
+        "sim-citizen",
+        "crates/sim-citizen-derive",
+    ),
+    ("sim-cookbook", "sim-foundation", "crates/sim-cookbook"),
+    ("sim-value", "sim-foundation", "crates/sim-value"),
+    ("sim-macros", "sim-foundation", "crates/sim-macros"),
+    ("sim-shape", "sim-shape", "."),
+    ("sim-codec", "sim-codecs", "crates/sim-codec"),
+    ("sim-codec-binary", "sim-codecs", "crates/sim-codec-binary"),
+];
+
+const NATIVE_STANDARD_CORE_PATCHES: &[(&str, &str, &str)] = &[
+    ("sim-kernel", "sim-kernel", "."),
+    ("sim-citizen", "sim-citizen", "crates/sim-citizen"),
+    (
+        "sim-citizen-derive",
+        "sim-citizen",
+        "crates/sim-citizen-derive",
+    ),
+    ("sim-cookbook", "sim-foundation", "crates/sim-cookbook"),
+    ("sim-value", "sim-foundation", "crates/sim-value"),
+    ("sim-shape", "sim-shape", "."),
+    ("sim-codec", "sim-codecs", "crates/sim-codec"),
+    ("sim-codec-binary", "sim-codecs", "crates/sim-codec-binary"),
+    ("sim-lib-core", "sim-runtime", "crates/sim-lib-core"),
+];
+
 fn cx() -> sim::kernel::Cx {
     let mut cx = sim::kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
     install_core_runtime(&mut cx);
@@ -137,8 +169,8 @@ fn toml_string(path: &Path) -> String {
     format!("\"{}\"", raw.replace('\\', "\\\\").replace('"', "\\\""))
 }
 
-fn add_native_plugin_patch_args(command: &mut Command) {
-    for (crate_name, repo_name, source_path) in NATIVE_PLUGIN_PATCHES {
+fn add_native_plugin_patch_args(command: &mut Command, patches: &[(&str, &str, &str)]) {
+    for (crate_name, repo_name, source_path) in patches {
         let path = local_patch_path(crate_name, repo_name, source_path);
         command.arg("--config").arg(format!(
             "patch.crates-io.{crate_name}.path={}",
@@ -147,30 +179,33 @@ fn add_native_plugin_patch_args(command: &mut Command) {
     }
 }
 
-fn build_native_plugin() -> PathBuf {
+fn build_native_plugin() -> Option<PathBuf> {
     build_native_dylib(
         plugin_manifest_dir().join("Cargo.toml"),
         "sim-native-plugin",
         "native_plugin_fixture",
         &[],
+        NATIVE_PLUGIN_PATCHES,
     )
 }
 
-fn build_native_numbers_f64() -> PathBuf {
+fn build_native_numbers_f64() -> Option<PathBuf> {
     build_native_dylib(
         numbers_f64_manifest_path(),
         "sim-native-numbers-f64",
         "sim_lib_numbers_f64",
         &["native-export"],
+        NATIVE_NUMBERS_F64_PATCHES,
     )
 }
 
-fn build_native_standard_core() -> PathBuf {
+fn build_native_standard_core() -> Option<PathBuf> {
     build_native_dylib(
         standard_core_manifest_path(),
         "sim-native-standard-core",
         "sim_lib_standard_core",
         &["native-export"],
+        NATIVE_STANDARD_CORE_PATCHES,
     )
 }
 
@@ -179,7 +214,16 @@ fn build_native_dylib(
     target_prefix: &str,
     dylib_base: &str,
     features: &[&str],
-) -> PathBuf {
+    patches: &[(&str, &str, &str)],
+) -> Option<PathBuf> {
+    if let Some(missing) = missing_native_build_input(&manifest_path, patches) {
+        eprintln!(
+            "skipping {target_prefix}: required local manifest is absent at {}",
+            missing.display()
+        );
+        return None;
+    }
+
     let target_dir = unique_target_dir();
     let mut command = Command::new(cargo_bin());
     command
@@ -192,12 +236,30 @@ fn build_native_dylib(
     if !features.is_empty() {
         command.arg("--features").arg(features.join(","));
     }
-    add_native_plugin_patch_args(&mut command);
+    add_native_plugin_patch_args(&mut command, patches);
     let status = command
         .status()
         .unwrap_or_else(|err| panic!("cargo build for {target_prefix} should start: {err}"));
     assert!(status.success(), "{target_prefix} build failed");
-    target_dir.join("debug").join(dylib_file_name(dylib_base))
+    Some(target_dir.join("debug").join(dylib_file_name(dylib_base)))
+}
+
+fn missing_native_build_input(
+    manifest_path: &Path,
+    patches: &[(&str, &str, &str)],
+) -> Option<PathBuf> {
+    if !manifest_path.is_file() {
+        return Some(manifest_path.to_path_buf());
+    }
+
+    for (crate_name, repo_name, source_path) in patches {
+        let manifest = local_patch_path(crate_name, repo_name, source_path).join("Cargo.toml");
+        if !manifest.is_file() {
+            return Some(manifest);
+        }
+    }
+
+    None
 }
 
 fn remove_dir_all_if_exists(path: &Path) {
@@ -208,7 +270,9 @@ fn remove_dir_all_if_exists(path: &Path) {
 
 #[test]
 fn native_loader_can_build_and_load_external_plugin_dylib() {
-    let plugin_path = build_native_plugin();
+    let Some(plugin_path) = build_native_plugin() else {
+        return;
+    };
     assert!(
         plugin_path.is_file(),
         "missing plugin dylib {plugin_path:?}"
@@ -224,7 +288,7 @@ fn native_loader_can_build_and_load_external_plugin_dylib() {
     let registry = standard_loader_registry();
 
     registry
-        .load_and_register(&mut cx, sim::kernel::LibSource::Path(plugin_path.clone()))
+        .load_and_register(&mut cx, sim::loaders::path_source(plugin_path.clone()))
         .unwrap();
 
     let hello = cx
@@ -279,7 +343,9 @@ fn native_loader_can_build_and_load_external_plugin_dylib() {
 #[cfg(feature = "numbers-arith")]
 #[test]
 fn native_loader_can_load_f64_number_domain_dylib() {
-    let plugin_path = build_native_numbers_f64();
+    let Some(plugin_path) = build_native_numbers_f64() else {
+        return;
+    };
     assert!(
         plugin_path.is_file(),
         "missing numbers f64 dylib {plugin_path:?}"
@@ -297,7 +363,7 @@ fn native_loader_can_load_f64_number_domain_dylib() {
     let registry = standard_loader_registry();
 
     registry
-        .load_and_register(&mut cx, sim::kernel::LibSource::Path(plugin_path.clone()))
+        .load_and_register(&mut cx, sim::loaders::path_source(plugin_path.clone()))
         .unwrap();
 
     let domain = Symbol::qualified("numbers", "f64");
@@ -330,7 +396,9 @@ fn native_loader_can_load_f64_number_domain_dylib() {
 
 #[test]
 fn native_loader_can_load_standard_core_class_and_macro_dylib() {
-    let plugin_path = build_native_standard_core();
+    let Some(plugin_path) = build_native_standard_core() else {
+        return;
+    };
     assert!(
         plugin_path.is_file(),
         "missing standard-core dylib {plugin_path:?}"
@@ -347,7 +415,7 @@ fn native_loader_can_load_standard_core_class_and_macro_dylib() {
     let registry = standard_loader_registry();
 
     registry
-        .load_and_register(&mut cx, sim::kernel::LibSource::Path(plugin_path.clone()))
+        .load_and_register(&mut cx, sim::loaders::path_source(plugin_path.clone()))
         .unwrap();
 
     let class = Symbol::qualified("standard", "proof-box");
@@ -385,7 +453,9 @@ fn native_loader_can_load_standard_core_class_and_macro_dylib() {
 
 #[test]
 fn native_loader_rejects_extra_args_with_generated_arity_check() {
-    let plugin_path = build_native_plugin();
+    let Some(plugin_path) = build_native_plugin() else {
+        return;
+    };
     let target_dir = plugin_path
         .parent()
         .and_then(Path::parent)
@@ -396,7 +466,7 @@ fn native_loader_rejects_extra_args_with_generated_arity_check() {
     let registry = standard_loader_registry();
 
     registry
-        .load_and_register(&mut cx, sim::kernel::LibSource::Path(plugin_path.clone()))
+        .load_and_register(&mut cx, sim::loaders::path_source(plugin_path.clone()))
         .unwrap();
 
     let error = cx

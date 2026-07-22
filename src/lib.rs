@@ -31,9 +31,8 @@
 //! `sim::list_*` families), and ships the core runtime installer plus the
 //! authoring helpers (`functions`, `classes`, `macros`, `shapes`, and
 //! `runtime`, available with the `shape` feature). The default feature set is
-//! `core`, `codec-lisp`, and
-//! `numbers-f64`; the canonical, current feature map is this crate's
-//! `Cargo.toml`.
+//! `core`, `shape`, `codec-lisp`, and `numbers-f64`; the canonical, current
+//! feature map is this crate's `Cargo.toml`.
 //!
 //! ## Kernel boundary
 //!
@@ -109,7 +108,7 @@ pub use femm_exports::*;
 #[rustfmt::skip] #[allow(unused_imports)] pub use numbers_exports::*;
 #[rustfmt::skip] #[allow(unused_imports)] pub use standard_exports::*;
 #[rustfmt::skip]
-#[cfg(any(feature = "server-net-http", feature = "agent-net", feature = "openai-server-http", feature = "standard", feature = "rank-codec-fallback", feature = "rank-expr", feature = "rank-learn", feature = "rank-music", feature = "rank-scatter", feature = "stream-bridge", feature = "stream-host"))]
+#[cfg(any(feature = "server-net-http", feature = "agent-net", feature = "glasses", feature = "openai-server-http", feature = "standard", feature = "rank-codec-fallback", feature = "rank-expr", feature = "rank-learn", feature = "rank-music", feature = "rank-scatter", feature = "stream-bridge", feature = "stream-host"))]
 const _: bool = true;
 #[allow(unused_imports)]
 pub use roadmap11_exports::*;
@@ -120,7 +119,7 @@ pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod classes;
 #[rustfmt::skip]
-#[cfg(all(test, feature = "shape", feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-algol"))]
+#[cfg(all(test, feature = "shape", feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-algol", feature = "codec-bridge", feature = "bridge"))]
 mod codec_matrix_tests;
 /// Stable hashing of lib manifests, shapes, and codecs for compatibility
 /// checks across versions of the constellation.
@@ -158,7 +157,7 @@ mod standard_exports;
 pub use sim_macros::*;
 // The macros' native_export output emits `::sim::codec_binary::{decode_frame,
 // encode_frame}`, so the feature that enables the macros must also expose that
-// module. `proc-macros` pulls `codec-binary`; this contract asserts it, so a future
+// module. `proc-macros` pulls `codec-binary`; this contract asserts it, so an
 // edit that drops it fails to compile instead of shipping macros that cannot expand.
 #[cfg(all(feature = "proc-macros", not(feature = "codec-binary")))]
 compile_error!("feature `proc-macros` requires `codec-binary` (macros emit `::sim::codec_binary`)");

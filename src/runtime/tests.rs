@@ -13,6 +13,8 @@ mod cards;
 #[cfg(feature = "cookbook")]
 mod cookbook_discovery;
 mod eval_policy;
+#[cfg(feature = "glasses-modeled")]
+mod glasses;
 mod lists;
 #[cfg(feature = "list-lazy")]
 mod lists_lazy;
@@ -33,6 +35,8 @@ mod numbers_r10_8;
 mod numbers_r8_09;
 mod numbers_surfaces;
 mod realize;
+#[cfg(feature = "device-reference")]
+mod reference_device;
 #[cfg(all(
     feature = "pitch",
     feature = "midi",
@@ -64,3 +68,5 @@ mod tables_core;
     feature = "table-remote"
 ))]
 mod tables_lisp;
+#[cfg(feature = "watch-modeled")]
+mod watch;

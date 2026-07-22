@@ -1,10 +1,9 @@
 use std::{cmp::Ordering, sync::Arc};
 
-use sim_kernel::{
-    Cx, Demand, Error, Expr, FunctionId, PreparedArgs, Result, Symbol, Value,
-    config_list_impl_capability,
-};
+use sim_kernel::{Cx, Demand, Error, Expr, FunctionId, PreparedArgs, Result, Symbol, Value};
 use sim_shape::{AnyShape, Bindings, CaptureShape, FunctionCase, FunctionObject, ListShape};
+
+use super::config_list_impl_capability;
 
 fn variadic_function(
     case_id: sim_kernel::CaseId,

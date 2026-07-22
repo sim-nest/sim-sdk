@@ -1,5 +1,9 @@
-use sim_kernel::{Cx, Error, PreparedArgs, Result, Symbol, Value, config_table_impl_capability};
+#[cfg(feature = "table-fs")]
+use sim_kernel::Expr;
+use sim_kernel::{Cx, Error, PreparedArgs, Result, Symbol, Value};
 use sim_shape::Bindings;
+
+use super::super::config_table_impl_capability;
 
 #[cfg(feature = "table-remote")]
 use sim_lib_server::Connection;
@@ -9,7 +13,7 @@ use sim_table_remote::remote_dir_value;
 #[cfg(feature = "table-db")]
 use sim_table_db::install_db_dir_lib;
 #[cfg(feature = "table-fs")]
-use sim_table_fs::install_fs_dir_lib;
+use sim_table_fs::{FindGlobResult, FindGrepResult, FindMatch, FsDir, install_fs_dir_lib};
 #[cfg(feature = "table-hash")]
 use sim_table_hash::HashTable;
 #[cfg(feature = "table-lazy")]
@@ -17,6 +21,8 @@ use sim_table_lazy::{LazyTable, ValueLoader};
 
 #[cfg(feature = "table-fs")]
 use super::helpers::required_string_arg;
+#[cfg(feature = "table-fs")]
+use super::helpers::value_kind;
 use super::helpers::{
     number_value, required_arg, required_dir_arg, required_symbol_arg, required_table_arg,
     table_entries_from_pairs, value_to_symbol_name,
@@ -93,6 +99,208 @@ pub(super) fn table_fs_impl(
 ) -> Result<Value> {
     let path = required_string_arg(cx, prepared, 0, "table/fs expects one root path string")?;
     install_fs_dir_lib(cx, &path)
+}
+
+#[cfg(feature = "table-fs")]
+pub(super) fn dir_edit_impl(
+    cx: &mut Cx,
+    prepared: &PreparedArgs,
+    _bindings: Bindings,
+) -> Result<Value> {
+    if !(prepared.len() == 4 || prepared.len() == 5) {
+        return Err(Error::Eval(
+            "dir/edit expects a filesystem directory, key, old text, new text, and optional replace_all bool"
+                .to_owned(),
+        ));
+    }
+    let dir = required_fs_dir_arg(
+        cx,
+        prepared,
+        0,
+        "dir/edit expects a filesystem directory as its first argument",
+    )?;
+    let key = required_symbol_arg(cx, prepared, 1, "dir/edit expects a target key")?;
+    let old = required_string_arg(cx, prepared, 2, "dir/edit expects old text")?;
+    let new = required_string_arg(cx, prepared, 3, "dir/edit expects new text")?;
+    let replace_all = optional_bool_arg(cx, prepared, 4, false)?;
+
+    dir.edit(cx, key, &old, &new, replace_all)?;
+    cx.factory().nil()
+}
+
+#[cfg(feature = "table-fs")]
+pub(super) fn find_grep_impl(
+    cx: &mut Cx,
+    prepared: &PreparedArgs,
+    _bindings: Bindings,
+) -> Result<Value> {
+    if !(prepared.len() >= 2 && prepared.len() <= 4) {
+        return Err(Error::Eval(
+            "find/grep expects a filesystem directory, pattern, optional glob, and optional max"
+                .to_owned(),
+        ));
+    }
+    let dir = required_fs_dir_arg(
+        cx,
+        prepared,
+        0,
+        "find/grep expects a filesystem directory as its first argument",
+    )?;
+    let pattern = required_string_arg(cx, prepared, 1, "find/grep expects a pattern string")?;
+    let glob = optional_string_arg(cx, prepared, 2)?;
+    let max = optional_usize_arg(cx, prepared, 3, 100)?;
+
+    let result = dir.find_grep(cx, &pattern, glob.as_deref(), max)?;
+    find_grep_result_value(cx, result)
+}
+
+#[cfg(feature = "table-fs")]
+pub(super) fn find_glob_impl(
+    cx: &mut Cx,
+    prepared: &PreparedArgs,
+    _bindings: Bindings,
+) -> Result<Value> {
+    if !(prepared.len() >= 2 && prepared.len() <= 3) {
+        return Err(Error::Eval(
+            "find/glob expects a filesystem directory, pattern, and optional max".to_owned(),
+        ));
+    }
+    let dir = required_fs_dir_arg(
+        cx,
+        prepared,
+        0,
+        "find/glob expects a filesystem directory as its first argument",
+    )?;
+    let pattern = required_string_arg(cx, prepared, 1, "find/glob expects a pattern string")?;
+    let max = optional_usize_arg(cx, prepared, 2, 100)?;
+
+    let result = dir.find_glob(cx, &pattern, max)?;
+    find_glob_result_value(cx, result)
+}
+
+#[cfg(feature = "table-fs")]
+fn required_fs_dir_arg<'a>(
+    cx: &mut Cx,
+    prepared: &'a PreparedArgs,
+    index: usize,
+    message: &str,
+) -> Result<&'a FsDir> {
+    let value = prepared
+        .get(index)
+        .ok_or_else(|| Error::Eval(message.to_owned()))?;
+    value.object().downcast_ref::<FsDir>().ok_or_else(|| {
+        Error::Eval(format!(
+            "{}; found {}",
+            message,
+            value_kind(cx, value).unwrap_or("unknown")
+        ))
+    })
+}
+
+#[cfg(feature = "table-fs")]
+fn optional_string_arg(
+    cx: &mut Cx,
+    prepared: &PreparedArgs,
+    index: usize,
+) -> Result<Option<String>> {
+    let Some(value) = prepared.get(index) else {
+        return Ok(None);
+    };
+    match value.object().as_expr(cx)? {
+        Expr::Nil => Ok(None),
+        Expr::String(text) => Ok(Some(text)),
+        _ => Err(Error::TypeMismatch {
+            expected: "string or nil",
+            found: value_kind(cx, value)?,
+        }),
+    }
+}
+
+#[cfg(feature = "table-fs")]
+fn optional_bool_arg(
+    cx: &mut Cx,
+    prepared: &PreparedArgs,
+    index: usize,
+    default: bool,
+) -> Result<bool> {
+    let Some(value) = prepared.get(index) else {
+        return Ok(default);
+    };
+    match value.object().as_expr(cx)? {
+        Expr::Bool(value) => Ok(value),
+        _ => Err(Error::TypeMismatch {
+            expected: "bool",
+            found: value_kind(cx, value)?,
+        }),
+    }
+}
+
+#[cfg(feature = "table-fs")]
+fn optional_usize_arg(
+    cx: &mut Cx,
+    prepared: &PreparedArgs,
+    index: usize,
+    default: usize,
+) -> Result<usize> {
+    let Some(value) = prepared.get(index) else {
+        return Ok(default);
+    };
+    match value.object().as_expr(cx)? {
+        Expr::Number(number) => number.canonical.parse::<usize>().map_err(|_| {
+            Error::Eval(format!(
+                "expected non-negative integer max, found {}",
+                number.canonical
+            ))
+        }),
+        _ => Err(Error::TypeMismatch {
+            expected: "number",
+            found: value_kind(cx, value)?,
+        }),
+    }
+}
+
+#[cfg(feature = "table-fs")]
+fn find_grep_result_value(cx: &mut Cx, result: FindGrepResult) -> Result<Value> {
+    let matches = result
+        .matches
+        .into_iter()
+        .map(|matched| find_match_value(cx, matched))
+        .collect::<Result<Vec<_>>>()?;
+    let matches = cx.new_list(matches)?;
+    let truncated = cx.factory().bool(result.truncated)?;
+    cx.new_table(vec![
+        (Symbol::new("matches"), matches),
+        (Symbol::new("truncated"), truncated),
+    ])
+}
+
+#[cfg(feature = "table-fs")]
+fn find_match_value(cx: &mut Cx, matched: FindMatch) -> Result<Value> {
+    let line = usize::try_from(matched.line)
+        .map_err(|_| Error::Eval("find/grep line number does not fit usize".to_owned()))?;
+    let path = cx.factory().string(matched.path)?;
+    let line = number_value(cx, line)?;
+    let text = cx.factory().string(matched.text)?;
+    cx.new_table(vec![
+        (Symbol::new("path"), path),
+        (Symbol::new("line"), line),
+        (Symbol::new("text"), text),
+    ])
+}
+
+#[cfg(feature = "table-fs")]
+fn find_glob_result_value(cx: &mut Cx, result: FindGlobResult) -> Result<Value> {
+    let paths = result
+        .paths
+        .into_iter()
+        .map(|path| cx.factory().string(path))
+        .collect::<Result<Vec<_>>>()?;
+    let paths = cx.new_list(paths)?;
+    let truncated = cx.factory().bool(result.truncated)?;
+    cx.new_table(vec![
+        (Symbol::new("paths"), paths),
+        (Symbol::new("truncated"), truncated),
+    ])
 }
 
 #[cfg(feature = "table-db")]

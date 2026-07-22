@@ -1,0 +1,8 @@
+id = "viture-two-rate"
+title = "Reproject a modeled Viture pose track"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 10
+tags = ["sdk", "glasses", "viture", "timing", "offline", "deterministic"]
+requires = ["glasses/sdk"]
