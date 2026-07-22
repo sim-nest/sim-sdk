@@ -7,7 +7,7 @@
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex, OnceLock};
 
 use sim::kernel::{EncodeOptions, ReadPolicy};
 use sim::{
@@ -179,6 +179,71 @@ fn add_native_plugin_patch_args(command: &mut Command, patches: &[(&str, &str, &
     }
 }
 
+fn native_build_lock() -> &'static Mutex<()> {
+    static LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+    LOCK.get_or_init(|| Mutex::new(()))
+}
+
+struct CargoLockSnapshot {
+    path: PathBuf,
+    contents: Option<Vec<u8>>,
+}
+
+impl CargoLockSnapshot {
+    fn capture(manifest_path: &Path) -> Self {
+        let path = cargo_lock_path(manifest_path);
+        let contents = std::fs::read(&path).ok();
+        Self { path, contents }
+    }
+}
+
+impl Drop for CargoLockSnapshot {
+    fn drop(&mut self) {
+        match &self.contents {
+            Some(contents) => {
+                std::fs::write(&self.path, contents).expect("Cargo.lock snapshot should restore");
+            }
+            None => {
+                if self.path.exists() {
+                    std::fs::remove_file(&self.path).expect("generated Cargo.lock should remove");
+                }
+            }
+        }
+    }
+}
+
+fn cargo_lock_path(manifest_path: &Path) -> PathBuf {
+    let mut current = manifest_path
+        .parent()
+        .expect("manifest path should have a parent");
+    loop {
+        let lock_path = current.join("Cargo.lock");
+        if lock_path.exists() {
+            return lock_path;
+        }
+        let Some(parent) = current.parent() else {
+            return manifest_path
+                .parent()
+                .expect("manifest path should have a parent")
+                .join("Cargo.lock");
+        };
+        current = parent;
+    }
+}
+
+fn refresh_native_lockfile(manifest_path: &Path, patches: &[(&str, &str, &str)]) {
+    let mut command = Command::new(cargo_bin());
+    command
+        .arg("update")
+        .arg("--manifest-path")
+        .arg(manifest_path);
+    add_native_plugin_patch_args(&mut command, patches);
+    let status = command
+        .status()
+        .unwrap_or_else(|err| panic!("cargo update for native fixture should start: {err}"));
+    assert!(status.success(), "native fixture dependency resolve failed");
+}
+
 fn build_native_plugin() -> Option<PathBuf> {
     build_native_dylib(
         plugin_manifest_dir().join("Cargo.toml"),
@@ -224,6 +289,21 @@ fn build_native_dylib(
         return None;
     }
 
+    let _lock = native_build_lock()
+        .lock()
+        .expect("native fixture build lock should not be poisoned");
+    let _lockfile = CargoLockSnapshot::capture(&manifest_path);
+    refresh_native_lockfile(&manifest_path, patches);
+    build_native_dylib_locked(&manifest_path, target_prefix, dylib_base, features, patches)
+}
+
+fn build_native_dylib_locked(
+    manifest_path: &Path,
+    target_prefix: &str,
+    dylib_base: &str,
+    features: &[&str],
+    patches: &[(&str, &str, &str)],
+) -> Option<PathBuf> {
     let target_dir = unique_target_dir();
     let mut command = Command::new(cargo_bin());
     command
