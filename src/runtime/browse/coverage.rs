@@ -138,7 +138,7 @@ fn test_infos(cx: &mut Cx, tests: Value) -> Result<Vec<TestInfo>> {
 
 fn test_info(expr: &sim_kernel::Expr) -> Option<TestInfo> {
     Some(TestInfo {
-        name: symbol_field(expr, "name")?.clone(),
+        name: symbol_value(expr, "name")?.clone(),
         example: bool_field(expr, "example").unwrap_or(false),
         capabilities: capabilities_field(expr, "capabilities"),
     })
@@ -187,7 +187,7 @@ fn capabilities_field(expr: &sim_kernel::Expr, name: &str) -> Vec<CapabilityName
         .collect()
 }
 
-fn symbol_field<'a>(expr: &'a sim_kernel::Expr, name: &str) -> Option<&'a Symbol> {
+fn symbol_value<'a>(expr: &'a sim_kernel::Expr, name: &str) -> Option<&'a Symbol> {
     match expr_field(expr, name) {
         Some(sim_kernel::Expr::Symbol(symbol)) => Some(symbol),
         _ => None,

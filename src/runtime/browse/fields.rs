@@ -8,6 +8,8 @@
 
 use sim_kernel::{Expr, Symbol, Value};
 
+pub(super) use sim_value::access::{entry_field as expr_entry_field, field as expr_field};
+
 /// A browse table key: a bare (unqualified) symbol named `name`.
 pub(super) fn key(name: &str) -> Symbol {
     Symbol::new(name.to_owned())
@@ -19,25 +21,6 @@ pub(super) fn value_field<'a>(entries: &'a [(Symbol, Value)], name: &str) -> Opt
     entries
         .iter()
         .find_map(|(field, value)| (field == &wanted).then_some(value))
-}
-
-/// Look up a field in `Expr::Map` entries by bare-symbol key.
-pub(super) fn expr_entry_field<'a>(entries: &'a [(Expr, Expr)], name: &str) -> Option<&'a Expr> {
-    let wanted = key(name);
-    entries
-        .iter()
-        .find_map(|(candidate, value)| match candidate {
-            Expr::Symbol(candidate) if candidate == &wanted => Some(value),
-            _ => None,
-        })
-}
-
-/// Look up a field on an `Expr::Map` value by bare-symbol key.
-pub(super) fn expr_field<'a>(map: &'a Expr, name: &str) -> Option<&'a Expr> {
-    let Expr::Map(entries) = map else {
-        return None;
-    };
-    expr_entry_field(entries, name)
 }
 
 /// Read a boolean field on an `Expr::Map` value.
@@ -61,5 +44,17 @@ mod tests {
         let map = Expr::Map(entries);
         assert_eq!(bool_field(&map, "a"), Some(true));
         assert_eq!(bool_field(&map, "missing"), None);
+    }
+
+    #[test]
+    fn expr_fields_reject_string_and_qualified_keys() {
+        let string_key = Expr::Map(vec![(Expr::String("a".into()), Expr::Bool(true))]);
+        let qualified_key = Expr::Map(vec![(
+            Expr::Symbol(Symbol::qualified("browse", "a")),
+            Expr::Bool(true),
+        )]);
+
+        assert_eq!(expr_field(&string_key, "a"), None);
+        assert_eq!(expr_field(&qualified_key, "a"), None);
     }
 }
