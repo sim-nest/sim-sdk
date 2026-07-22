@@ -78,7 +78,25 @@ fn toml_string(path: &Path) -> String {
     format!("\"{}\"", raw.replace('\\', "\\\\").replace('"', "\\\""))
 }
 
+fn all_ui_patch_manifests_present() -> bool {
+    for (crate_name, repo_name, source_path) in UI_PATCHES {
+        let manifest = local_patch_path(crate_name, repo_name, source_path).join("Cargo.toml");
+        if !manifest.is_file() {
+            eprintln!(
+                "using manifest dependencies for proc-macro UI fixtures; local patch manifest is absent at {}",
+                manifest.display()
+            );
+            return false;
+        }
+    }
+    true
+}
+
 fn add_ui_patch_args(command: &mut Command) {
+    if !all_ui_patch_manifests_present() {
+        return;
+    }
+
     for (crate_name, repo_name, source_path) in UI_PATCHES {
         let path = local_patch_path(crate_name, repo_name, source_path);
         command.arg("--config").arg(format!(
