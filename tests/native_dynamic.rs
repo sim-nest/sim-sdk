@@ -179,7 +179,7 @@ fn add_native_plugin_patch_args(command: &mut Command, patches: &[(&str, &str, &
     }
 }
 
-fn build_native_plugin() -> PathBuf {
+fn build_native_plugin() -> Option<PathBuf> {
     build_native_dylib(
         plugin_manifest_dir().join("Cargo.toml"),
         "sim-native-plugin",
@@ -189,7 +189,7 @@ fn build_native_plugin() -> PathBuf {
     )
 }
 
-fn build_native_numbers_f64() -> PathBuf {
+fn build_native_numbers_f64() -> Option<PathBuf> {
     build_native_dylib(
         numbers_f64_manifest_path(),
         "sim-native-numbers-f64",
@@ -199,7 +199,7 @@ fn build_native_numbers_f64() -> PathBuf {
     )
 }
 
-fn build_native_standard_core() -> PathBuf {
+fn build_native_standard_core() -> Option<PathBuf> {
     build_native_dylib(
         standard_core_manifest_path(),
         "sim-native-standard-core",
@@ -215,7 +215,15 @@ fn build_native_dylib(
     dylib_base: &str,
     features: &[&str],
     patches: &[(&str, &str, &str)],
-) -> PathBuf {
+) -> Option<PathBuf> {
+    if let Some(missing) = missing_native_build_input(&manifest_path, patches) {
+        eprintln!(
+            "skipping {target_prefix}: required local manifest is absent at {}",
+            missing.display()
+        );
+        return None;
+    }
+
     let target_dir = unique_target_dir();
     let mut command = Command::new(cargo_bin());
     command
@@ -233,7 +241,25 @@ fn build_native_dylib(
         .status()
         .unwrap_or_else(|err| panic!("cargo build for {target_prefix} should start: {err}"));
     assert!(status.success(), "{target_prefix} build failed");
-    target_dir.join("debug").join(dylib_file_name(dylib_base))
+    Some(target_dir.join("debug").join(dylib_file_name(dylib_base)))
+}
+
+fn missing_native_build_input(
+    manifest_path: &Path,
+    patches: &[(&str, &str, &str)],
+) -> Option<PathBuf> {
+    if !manifest_path.is_file() {
+        return Some(manifest_path.to_path_buf());
+    }
+
+    for (crate_name, repo_name, source_path) in patches {
+        let manifest = local_patch_path(crate_name, repo_name, source_path).join("Cargo.toml");
+        if !manifest.is_file() {
+            return Some(manifest);
+        }
+    }
+
+    None
 }
 
 fn remove_dir_all_if_exists(path: &Path) {
@@ -244,7 +270,9 @@ fn remove_dir_all_if_exists(path: &Path) {
 
 #[test]
 fn native_loader_can_build_and_load_external_plugin_dylib() {
-    let plugin_path = build_native_plugin();
+    let Some(plugin_path) = build_native_plugin() else {
+        return;
+    };
     assert!(
         plugin_path.is_file(),
         "missing plugin dylib {plugin_path:?}"
@@ -315,7 +343,9 @@ fn native_loader_can_build_and_load_external_plugin_dylib() {
 #[cfg(feature = "numbers-arith")]
 #[test]
 fn native_loader_can_load_f64_number_domain_dylib() {
-    let plugin_path = build_native_numbers_f64();
+    let Some(plugin_path) = build_native_numbers_f64() else {
+        return;
+    };
     assert!(
         plugin_path.is_file(),
         "missing numbers f64 dylib {plugin_path:?}"
@@ -366,7 +396,9 @@ fn native_loader_can_load_f64_number_domain_dylib() {
 
 #[test]
 fn native_loader_can_load_standard_core_class_and_macro_dylib() {
-    let plugin_path = build_native_standard_core();
+    let Some(plugin_path) = build_native_standard_core() else {
+        return;
+    };
     assert!(
         plugin_path.is_file(),
         "missing standard-core dylib {plugin_path:?}"
@@ -421,7 +453,9 @@ fn native_loader_can_load_standard_core_class_and_macro_dylib() {
 
 #[test]
 fn native_loader_rejects_extra_args_with_generated_arity_check() {
-    let plugin_path = build_native_plugin();
+    let Some(plugin_path) = build_native_plugin() else {
+        return;
+    };
     let target_dir = plugin_path
         .parent()
         .and_then(Path::parent)
