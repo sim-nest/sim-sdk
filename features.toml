@@ -2,7 +2,7 @@ schema = "sim.features"
 
 [enforcement.audience]
 user = "strict"
-code = "advisory"
+code = "strict"
 framework = "advisory"
 
 [enforcement.surface]
@@ -24,6 +24,7 @@ audiences = ["code"]
 guidance = "Use this row when checking the generated documentation and index lane for the SDK repo."
 claims_anchors = [
   "anchor/cli/xtask",
+  "anchor/crate/xtask",
   "anchor/doc/generated/feature-map",
   "anchor/doc/generated/sim-index-fragment",
 ]
@@ -42,11 +43,92 @@ guidance = "Use this row when starting from the SDK facade instead of an impleme
 claims_anchors = [
   "anchor/card/citizen/view/lens-descriptor",
   "anchor/cli/sim-nest",
+  "anchor/crate/sim-nest",
+  "anchor/runtime-lib/sim-nest/core-runtime-lib",
+  "anchor/runtime-lib/sim-nest/native-class-lib",
 ]
 claims_surfaces = [
   "cli/sim-nest",
   "view/sim-nest",
   "view-edit/sim-nest",
+]
+presents = [
+  "feature/sim-sdk/facade-codecs",
+  "feature/sim-sdk/facade-model-workflows",
+  "feature/sim-sdk/facade-shapes",
+]
+
+[[feature]]
+id = "feature/sim-sdk/facade-codecs"
+title = "Facade codec exports"
+summary = "Expose public codec exports through the SDK facade while implementation crates keep the codec behavior."
+owner = "crate/sim-nest"
+audiences = ["code"]
+guidance = "Use this row when checking which codec entry points the SDK facade re-exports."
+claims_anchors = [
+  "anchor/export/sim-nest/codec/algol",
+  "anchor/export/sim-nest/codec/anthropic",
+  "anchor/export/sim-nest/codec/binary",
+  "anchor/export/sim-nest/codec/binary-base64",
+  "anchor/export/sim-nest/codec/bitwise",
+  "anchor/export/sim-nest/codec/bitwise-base64",
+  "anchor/export/sim-nest/codec/bridge",
+  "anchor/export/sim-nest/codec/chat",
+  "anchor/export/sim-nest/codec/clojure-edn",
+  "anchor/export/sim-nest/codec/common-lisp-lite",
+  "anchor/export/sim-nest/codec/intent",
+  "anchor/export/sim-nest/codec/json",
+  "anchor/export/sim-nest/codec/lemonade",
+  "anchor/export/sim-nest/codec/lisp",
+  "anchor/export/sim-nest/codec/lm-studio",
+  "anchor/export/sim-nest/codec/mcp",
+  "anchor/export/sim-nest/codec/ollama",
+  "anchor/export/sim-nest/codec/scene",
+  "anchor/export/sim-nest/codec/scheme-r7rs-small",
+]
+
+[[feature]]
+id = "feature/sim-sdk/facade-model-workflows"
+title = "Facade model workflow exports"
+summary = "Expose model-facing facade exports for answer routing and drafter setup."
+owner = "crate/sim-nest"
+audiences = ["code"]
+guidance = "Use this row when checking the SDK facade exports used by model-connected workflows."
+claims_anchors = [
+  "anchor/export/sim-nest/bridge/answer-question",
+  "anchor/export/sim-nest/model-drafter",
+]
+
+[[feature]]
+id = "feature/sim-sdk/facade-shapes"
+title = "Facade Shape exports"
+summary = "Expose public Shape exports through the SDK facade while shape crates keep the matching behavior."
+owner = "crate/sim-nest"
+audiences = ["code"]
+guidance = "Use this row when checking which Shape entry points the SDK facade re-exports."
+claims_anchors = [
+  "anchor/export/sim-nest/shape-and",
+  "anchor/export/sim-nest/shape-compare",
+  "anchor/export/sim-nest/shape-compare-with",
+  "anchor/export/sim-nest/shape-hook",
+  "anchor/export/sim-nest/shape-hook-accept-on-no-diagnostics",
+  "anchor/export/sim-nest/shape-hook-discard-on-diagnostic-prefix",
+  "anchor/export/sim-nest/shape-hook-score-floor",
+  "anchor/export/sim-nest/shape-hook-trace",
+  "anchor/export/sim-nest/shape-list",
+  "anchor/export/sim-nest/shape-list-rest",
+  "anchor/export/sim-nest/shape-not",
+  "anchor/export/sim-nest/shape-or",
+  "anchor/export/sim-nest/shape-repeat",
+  "anchor/export/sim-nest/shape-repeat-bounds",
+  "anchor/export/sim-nest/shape-table",
+  "anchor/export/sim-nest/shape-venn",
+  "anchor/export/sim-nest/shape-venn-exactly",
+  "anchor/export/sim-nest/shape-venn-intersection",
+  "anchor/export/sim-nest/shape-venn-only",
+  "anchor/export/sim-nest/shape-venn-outside",
+  "anchor/export/sim-nest/shape-venn-union",
+  "anchor/export/sim-nest/shape-without",
 ]
 
 [[feature]]
@@ -56,6 +138,13 @@ summary = "Exercise modeled device, watch, and glasses workflows through SDK-lev
 owner = "crate/sim-nest"
 audiences = ["user", "code"]
 guidance = "Use this row when following wearable and device workflows from the public facade."
+claims_anchors = [
+  "anchor/runtime-lib/sim-nest/glasses-stack-lib",
+  "anchor/runtime-lib/sim-nest/watch-stack-lib",
+]
+supports = [
+  "feature/sim-sdk/facade-runtime",
+]
 
 [[feature]]
 id = "feature/sim-sdk/conformance-contract"
@@ -64,6 +153,9 @@ summary = "Run the SDK conformance contract as a checked operational recipe."
 owner = "crate/sim-conformance"
 audiences = ["code", "framework"]
 guidance = "Use this row when verifying that a facade-facing runtime satisfies the public contract."
+claims_anchors = [
+  "anchor/crate/sim-conformance",
+]
 
 [[route]]
 id = "route/start-from-sdk"
