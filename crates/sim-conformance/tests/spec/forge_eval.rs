@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::sync::Mutex;
 
 use sim::codec_bridge::{
     BridgeBook, BridgeCallPayload, BridgeHeader, BridgePacket, BridgePart, BridgeProvenance,
@@ -10,14 +10,10 @@ use sim::forge::{
     run_intent_routed_report, standard_eval_arms, standard_eval_corpus,
 };
 use sim::kernel::{
-    ContentId, Cx, DefaultFactory, EagerPolicy, Error, EvalFabric, EvalReply, EvalRequest, Expr,
-    Result, Symbol,
+    ContentId, Cx, Error, EvalFabric, EvalReply, EvalRequest, Expr, Result, Symbol,
+    testing::eager_cx as cx,
 };
 use sim::lib_agent_runner_core::ModelResponse;
-
-fn cx() -> Cx {
-    Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory))
-}
 
 #[test]
 fn forge_eval_report_records_cache_replay_and_downshift_claims() {

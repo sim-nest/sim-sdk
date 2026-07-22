@@ -6,9 +6,9 @@ use std::{
 };
 
 use sim::kernel::{
-    AbiVersion, Args, Callable, Cx, DefaultFactory, EagerPolicy, Error, Export, ExportRecord,
-    ExportState, Lib, LibLoader, LibManifest, LibSource, LibSourceSpec, LibTarget, Linker, LoadCx,
-    LoaderRegistry, Object, ObjectCompat, RegistryBootState, Result, Symbol, Value, Version,
+    AbiVersion, Args, Callable, Cx, Error, Export, ExportRecord, ExportState, Lib, LibLoader,
+    LibManifest, LibSource, LibSourceSpec, LibTarget, Linker, LoadCx, LoaderRegistry, Object,
+    ObjectCompat, RegistryBootState, Result, Symbol, Value, Version, testing::eager_cx as cx,
 };
 
 #[test]
@@ -208,10 +208,6 @@ fn remove_dir_all_if_exists(path: &Path) {
     if path.exists() {
         let _ = std::fs::remove_dir_all(path);
     }
-}
-
-fn cx() -> Cx {
-    Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory))
 }
 
 struct CliBootFixtureLoader;
