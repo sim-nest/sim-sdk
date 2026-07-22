@@ -1,11 +1,5 @@
-use std::sync::Arc;
-
 use sim::forge::{AuthorArm, run_author_bench, standard_author_arms, standard_author_cases};
-use sim::kernel::{Cx, DefaultFactory, EagerPolicy};
-
-fn cx() -> Cx {
-    Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory))
-}
+use sim::kernel::testing::eager_cx as cx;
 
 #[test]
 fn forge_author_bench_runs_offline_and_proves_mechanism_metrics() {

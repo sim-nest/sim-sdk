@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::sync::Mutex;
 
 use sim::codec_bridge::{
     BridgeBook, BridgeCallPayload, BridgeHeader, BridgePacket, BridgePart, BridgeProvenance,
@@ -10,14 +10,11 @@ use sim::forge::{
     run_intent_routed_report, standard_eval_arms, standard_eval_corpus,
 };
 use sim::kernel::{
-    ContentId, Cx, DefaultFactory, EagerPolicy, Error, EvalFabric, EvalReply, EvalRequest, Expr,
-    Result, Symbol,
+    ContentId, Cx, Error, EvalFabric, EvalReply, EvalRequest, Expr, Result, Symbol,
+    testing::eager_cx as cx,
 };
 use sim::lib_agent_runner_core::ModelResponse;
-
-fn cx() -> Cx {
-    Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory))
-}
+use sim_value::access::field_any as field;
 
 #[test]
 fn forge_eval_report_records_cache_replay_and_downshift_claims() {
@@ -353,15 +350,25 @@ fn entry(key: &str, value: Expr) -> (Expr, Expr) {
     (Expr::Symbol(Symbol::new(key)), value)
 }
 
-fn field<'a>(expr: &'a Expr, key: &str) -> Option<&'a Expr> {
-    let Expr::Map(entries) = expr else {
-        return None;
-    };
-    entries
-        .iter()
-        .find_map(|(candidate, value)| match candidate {
-            Expr::Symbol(symbol) if symbol == &Symbol::new(key) => Some(value),
-            Expr::String(name) if name == key => Some(value),
-            _ => None,
-        })
+#[test]
+fn forge_eval_field_lookup_uses_provider_key_policy() {
+    let bare = Expr::Map(vec![entry("bridge-cid", Expr::String("bare".into()))]);
+    let string_key = Expr::Map(vec![(
+        Expr::String("bridge-cid".into()),
+        Expr::String("string".into()),
+    )]);
+    let qualified = Expr::Map(vec![(
+        Expr::Symbol(Symbol::qualified("bridge", "bridge-cid")),
+        Expr::String("qualified".into()),
+    )]);
+
+    assert_eq!(
+        field(&bare, "bridge-cid"),
+        Some(&Expr::String("bare".into()))
+    );
+    assert_eq!(
+        field(&string_key, "bridge-cid"),
+        Some(&Expr::String("string".into()))
+    );
+    assert_eq!(field(&qualified, "bridge-cid"), None);
 }
