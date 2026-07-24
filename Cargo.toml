@@ -43,12 +43,15 @@ homepage = "https://github.com/sim-nest/sim-sdk"
 unsafe_code = "forbid"
 
 [patch.crates-io]
-sim-lib-agent-runner-core = { git = "https://github.com/sim-nest/sim-agent-net", rev = "da7fad2ea70f9814225aa0981f1151f3a5b14f6d" }
-sim-lib-bridge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "da7fad2ea70f9814225aa0981f1151f3a5b14f6d" }
-sim-lib-cookbook = { git = "https://github.com/sim-nest/sim-agent-net", rev = "da7fad2ea70f9814225aa0981f1151f3a5b14f6d" }
-sim-lib-forge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "da7fad2ea70f9814225aa0981f1151f3a5b14f6d" }
-sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "da7fad2ea70f9814225aa0981f1151f3a5b14f6d" }
-sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "da7fad2ea70f9814225aa0981f1151f3a5b14f6d" }
+sim-lib-agent = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
+sim-lib-agent-runner-core = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
+sim-lib-agent-runner-http = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
+sim-lib-agent-runner-process = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
+sim-lib-bridge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
+sim-lib-cookbook = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
+sim-lib-forge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
+sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
+sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
 sim-lib-intent = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
 sim-lib-scene = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
 sim-lib-stream-core = { git = "https://github.com/sim-nest/sim-stream", rev = "fbc0d112d863ac6145b31b62ee5ec8e580c184b1" }
@@ -343,6 +346,9 @@ femm-solve = ["dep:sim-lib-femm-solve", "femm-core", "numbers-complex", "core"]
 femm-space = ["dep:sim-lib-femm-space", "femm-mesh", "core"]
 femm-tape = ["dep:sim-lib-femm-tape", "femm-core", "femm-function", "femm-post", "femm-solve", "core"]
 forge = ["dep:sim-lib-forge", "bridge", "codec-json"]
+genai = ["agent", "bridge", "codec-json", "cookbook"]
+genai-local = ["genai", "agent-runner-process", "agent-runner-ollama", "agent-runner-http"]
+genai-provider = ["genai", "agent-runner-http-tls"]
 intent = ["dep:sim-lib-intent", "core", "shape"]
 list-cell = ["dep:sim-list-cell", "core"]
 list-lazy = ["dep:sim-list-lazy", "core"]

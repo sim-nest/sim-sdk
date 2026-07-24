@@ -140,6 +140,29 @@ where
     }
 }
 
+// conformance: GenAI SDK bundle cookbook rows resolve the agent and bridge libraries.
+#[cfg(all(test, feature = "genai"))]
+mod genai_tests {
+    use sim_cookbook::recipes_from_embedded;
+
+    #[test]
+    fn genai_bundle_resolves_agent_bridge_and_recipe() {
+        let (dir, diags) = super::default_loadable_libs();
+        assert!(diags.is_empty(), "unresolved rows: {diags:?}");
+        assert!(dir.entry("bridge").is_some(), "bridge row");
+
+        let agent = dir.entry("agent").expect("agent row");
+        let recipes = agent.recipes.expect("agent recipes");
+        let cards = recipes_from_embedded(recipes).expect("agent recipes parse");
+        assert!(
+            cards
+                .iter()
+                .any(|card| card.id == "agent/01-basics/genai-assembly"),
+            "agent cookbook row should include the GenAI assembly recipe"
+        );
+    }
+}
+
 #[cfg(all(test, feature = "cookbook-all"))]
 mod tests {
     use std::collections::{BTreeMap, BTreeSet};

@@ -108,6 +108,24 @@ claims_anchors = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/genai-feature-bundles"
+title = "GenAI SDK feature bundles"
+summary = "Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Use `genai` for fake and cassette composition, `genai-local` before route/run-genai-locally, and `genai-provider` before route/run-genai-with-provider."
+claims_anchors = [
+  "anchor/export/sim-nest/bridge/answer-question",
+  "anchor/export/sim-nest/codec/json",
+  "anchor/rustdoc/sim-nest/cookbook_directory",
+  "anchor/rustdoc/sim-nest/default_loadable_libs",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/src/feature_contract_tests",
+  "spec-test/sim-sdk/src/runtime/cookbook_directory",
+]
+
+[[feature]]
 id = "feature/sim-sdk/facade-shapes"
 title = "Facade Shape exports"
 summary = "Expose public Shape exports through the SDK facade while shape crates keep the matching behavior."
