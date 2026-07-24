@@ -52,22 +52,22 @@ sim-lib-cookbook = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8
 sim-lib-forge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
 sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
 sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
-sim-lib-intent = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-scene = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
+sim-lib-intent = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-scene = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
 sim-lib-stream-core = { git = "https://github.com/sim-nest/sim-stream", rev = "fbc0d112d863ac6145b31b62ee5ec8e580c184b1" }
 sim-lib-stream-device = { git = "https://github.com/sim-nest/sim-stream", rev = "fbc0d112d863ac6145b31b62ee5ec8e580c184b1" }
-sim-lib-view = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-view-agent = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-view-bridge = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-view-codec = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-view-daw = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-view-device = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-view-doc = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-view-math = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-view-wasm-frame = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-web-bridge = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-web-layout = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-web-shell = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
+sim-lib-view = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-view-agent = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-view-bridge = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-view-codec = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-view-daw = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-view-device = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-view-doc = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-view-math = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-view-wasm-frame = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-web-bridge = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-web-layout = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-web-shell = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
 
 [dependencies]
 proc-macro2 = { version = "1", features = ["span-locations"], optional = true }
@@ -251,11 +251,11 @@ sim-lib-view-agent = { optional = true, version = "0.1.2" }
 sim-lib-view-bridge = { optional = true, version = "0.1.1" }
 sim-lib-view-codec = { optional = true, version = "0.1.2" }
 sim-lib-view-daw = { optional = true, version = "0.1.1" }
-sim-lib-view-device = { optional = true, version = "0.1.0", git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
+sim-lib-view-device = { optional = true, version = "0.1.0", git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
 sim-lib-view-doc = { optional = true, version = "0.1.3" }
 sim-lib-view-math = { optional = true, version = "0.1.2" }
-sim-lib-view-spatial = { optional = true, version = "0.1.0", git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
-sim-lib-view-wrist = { optional = true, version = "0.1.0", git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
+sim-lib-view-spatial = { optional = true, version = "0.1.0", git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-view-wrist = { optional = true, version = "0.1.0", git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
 sim-lib-view-wasm-frame = { optional = true, version = "0.1.2" }
 sim-lib-web-bridge = { optional = true, version = "0.1.2" }
 sim-lib-web-layout = { optional = true, version = "0.1.2" }
