@@ -72,6 +72,7 @@ jobs:
       - run: cargo fmt --all --check
       # `sim-conformance` is a workspace member, so this is its one default-mode
       # test pass as well as the rest of the standalone SDK workspace.
+      - run: cargo test -p sim-conformance
       - run: cargo test --workspace
       - run: cargo clippy --workspace --all-targets -- -D warnings
       - run: cargo doc --workspace --no-deps
