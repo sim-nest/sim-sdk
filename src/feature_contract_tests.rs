@@ -256,6 +256,45 @@ fn g6_mcp_feature_implications_stay_wired() {
     }
 }
 
+// conformance: GenAI SDK feature bundles keep base, local, and provider closures explicit.
+#[test]
+fn genai_feature_bundles_select_base_local_and_provider_closures() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(
+        &features,
+        "genai",
+        &["agent", "bridge", "codec-json", "cookbook"],
+    );
+    assert_feature_includes(
+        &features,
+        "genai-local",
+        &[
+            "genai",
+            "agent-runner-process",
+            "agent-runner-ollama",
+            "agent-runner-http",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "genai-provider",
+        &["genai", "agent-runner-http-tls"],
+    );
+
+    let base = features.get("genai").expect("genai feature");
+    for excluded in [
+        "agent-runner-process",
+        "agent-runner-ollama",
+        "agent-runner-http",
+        "agent-runner-http-tls",
+    ] {
+        assert!(
+            !base.contains(excluded),
+            "`genai` should not directly enable `{excluded}`"
+        );
+    }
+}
+
 #[test]
 fn r11_music_stack_feature_implications_stay_wired() {
     let features = collect_feature_dependencies(include_str!("../Cargo.toml"));

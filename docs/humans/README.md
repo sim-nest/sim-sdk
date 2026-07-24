@@ -21,6 +21,7 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | `feature/sim-sdk/facade-runtime` | `crate/sim-nest` | 1 | Boot the public SIM facade and expose its command plus reversible view surface. |
 | `feature/sim-sdk/facade-codecs` | `crate/sim-nest` | 0 | Expose public codec exports through the SDK facade while implementation crates keep the codec behavior. |
 | `feature/sim-sdk/facade-model-workflows` | `crate/sim-nest` | 0 | Expose model-facing facade exports for answer routing and drafter setup. |
+| `feature/sim-sdk/genai-feature-bundles` | `crate/sim-nest` | 2 | Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases. |
 | `feature/sim-sdk/facade-shapes` | `crate/sim-nest` | 0 | Expose public Shape exports through the SDK facade while shape crates keep the matching behavior. |
 | `feature/sim-sdk/device-recipes` | `crate/sim-nest` | 1 | Exercise modeled device, watch, and glasses workflows through SDK-level recipe entry points. |
 | `feature/sim-sdk/conformance-contract` | `crate/sim-conformance` | 1 | Run the SDK conformance contract as a checked operational recipe. |
@@ -104,6 +105,810 @@ Source `crates/sim-conformance/tests/cli_boot.rs`:
 ```rust
 #[path = "spec/cli_boot.rs"]
 mod cli_boot;
+```
+
+### `feature/sim-sdk/genai-feature-bundles`
+
+Specimen `spec-test/sim-sdk/src/feature_contract_tests` is checked by `cargo test`.
+
+Source `src/feature_contract_tests.rs`:
+
+```rust
+mod cfg_sentinels;
+mod facade_thinness;
+mod glasses;
+mod support;
+mod watch;
+
+use support::{
+    assert_all_feature_metadata_has_no_invalid_dependency_warnings,
+    assert_crate_cargo_tomls_do_not_contain, assert_dep_edges_reference_optional_dependencies,
+    assert_feature_includes, collect_cfg_features, collect_declared_features,
+    collect_feature_dependencies, collect_optional_dependencies, repo_root,
+};
+
+const PUBLIC_FACADE_ALIASES: &[(&str, &str)] = &[
+    ("agent-runner-core", "lib_agent_runner_core"),
+    ("agent-runner-http", "lib_agent_runner_http"),
+    ("agent-runner-process", "lib_agent_runner_process"),
+    ("discrete", "lib_discrete"),
+    ("view", "lib_view"),
+    ("view-agent", "lib_view_agent"),
+    ("view-bridge", "lib_view_bridge"),
+    ("view-codec", "lib_view_codec"),
+    ("view-daw", "lib_view_daw"),
+    ("view-doc", "lib_view_doc"),
+    ("view-math", "lib_view_math"),
+    ("web-layout", "lib_web_layout"),
+    ("web-wasm-frame", "lib_view_wasm_frame"),
+];
+
+#[test]
+fn declared_features_match_cfg_usage() {
+    let root = repo_root();
+    let cargo_toml = include_str!("../Cargo.toml");
+    let declared = collect_declared_features(cargo_toml);
+    let used = collect_cfg_features(&root);
+    assert_eq!(
+        declared, used,
+        "declared features must match cfg(feature = ...) usage in src/ and tests/"
+    );
+}
+
+#[test]
+fn default_features_support_readme_quickstart() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(
+        &features,
+        "default",
+        &["core", "shape", "codec-lisp", "numbers-f64"],
+    );
+}
+
+#[test]
+fn device_feature_installs_reference_base_and_recipes() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "device", &["device-reference", "cookbook"]);
+}
+
+#[test]
+fn public_facade_alias_table_mentions_declared_features() {
+    let declared = collect_declared_features(include_str!("../Cargo.toml"));
+    let missing = PUBLIC_FACADE_ALIASES
+        .iter()
+        .filter(|(feature, _)| !declared.contains(*feature))
+        .collect::<Vec<_>>();
+    assert!(
+        missing.is_empty(),
+        "public facade aliases must reference declared features: {missing:?}"
+    );
+}
+
+#[test]
+fn feature_dep_edges_reference_optional_dependencies() {
+    let cargo_toml = include_str!("../Cargo.toml");
+    let features = collect_feature_dependencies(cargo_toml);
+    let optional_dependencies = collect_optional_dependencies(cargo_toml);
+    assert_dep_edges_reference_optional_dependencies(&features, &optional_dependencies);
+}
+
+#[test]
+fn all_feature_metadata_has_no_ignored_optional_dependencies() {
+    assert_all_feature_metadata_has_no_invalid_dependency_warnings(&repo_root());
+}
+
+const REQUIRED_PUBLIC_GATES: &[&str] = &[
+    "cargo fmt --all --check",
+    "cargo test -p sim-conformance",
+    "cargo test --workspace",
+    "cargo clippy --workspace --all-targets -- -D warnings",
+    "cargo doc --workspace --no-deps",
+    "cargo clippy --workspace --all-features --all-targets -- -D warnings",
+    "cargo test --workspace --all-features",
+    "cargo run -p xtask -- simdoc --check",
+];
+
+#[test]
+fn ci_and_public_checklists_name_required_gates() {
+    let checked_files = [
+        (
+            ".github/workflows/ci.yml",
+            include_str!("../.github/workflows/ci.yml"),
+        ),
+        ("README.md", include_str!("../README.md")),
+        ("CONTRIBUTING.md", include_str!("../CONTRIBUTING.md")),
+        (
+            ".github/pull_request_template.md",
+            include_str!("../.github/pull_request_template.md"),
+        ),
+    ];
+    let missing = checked_files
+        .into_iter()
+        .flat_map(|(file, text)| {
+            REQUIRED_PUBLIC_GATES
+                .iter()
+                .filter(move |command| !text.contains(**command))
+                .map(move |command| format!("{file}: {command}"))
+        })
+        .collect::<Vec<_>>();
+    assert!(
+        missing.is_empty(),
+        "CI and public checklists must stay aligned with repos.toml gates: {missing:?}"
+    );
+}
+
+#[test]
+fn r10_numeric_feature_implications_stay_wired() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(
+        &features,
+        "numbers-rk",
+        &["numbers-numeric", "numbers-tensor"],
+    );
+    assert_feature_includes(
+        &features,
+        "numbers-rational",
+        &["numbers-arith", "numbers-bigint", "numbers-core"],
+    );
+    assert_feature_includes(
+        &features,
+        "numbers-tensor-linalg",
+        &["numbers-tensor", "numbers-cas"],
+    );
+    assert_feature_includes(
+        &features,
+        "numbers-tensor-cmplxf",
+        &["numbers-tensor", "numbers-complex", "numbers-f64"],
+    );
+    assert_feature_includes(
+        &features,
+        "numbers-codec",
+        &[
+            "numbers-core",
+            "numbers-f64",
+            "numbers-i64",
+            "numbers-bool",
+            "numbers-fixed",
+            "numbers-float",
+            "numbers-bigint",
+            "numbers-rational",
+            "numbers-complex",
+            "numbers-exotic",
+            "numbers-cas",
+            "numbers-func",
+            "numbers-numeric",
+            "numbers-rk",
+            "numbers-quad",
+            "numbers-tensor",
+            "numbers-tensor-bcast",
+            "numbers-tensor-linalg",
+            "numbers-tensor-bit",
+            "numbers-tensor-f64",
+            "numbers-tensor-i64",
+            "numbers-tensor-rat64",
+            "numbers-tensor-cmplxf",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "numbers-prelude",
+        &[
+            "numbers-ad",
+            "numbers-arith",
+            "numbers-core",
+            "numbers-f64",
+            "numbers-i64",
+            "numbers-rational",
+            "numbers-complex",
+            "numbers-bool",
+            "numbers-fixed",
+            "numbers-float",
+            "numbers-bigint",
+            "numbers-exotic",
+            "numbers-cas",
+            "numbers-cas-diff",
+            "numbers-cas-eval",
+            "numbers-func",
+            "numbers-numeric",
+            "numbers-rk",
+            "numbers-quad",
+            "numbers-tensor",
+            "numbers-tensor-bcast",
+            "numbers-tensor-linalg",
+            "numbers-tensor-bit",
+            "numbers-tensor-f64",
+            "numbers-tensor-i64",
+            "numbers-tensor-rat64",
+            "numbers-tensor-cmplxf",
+            "numbers-codec",
+        ],
+    );
+}
+
+#[test]
+fn r12_logic_feature_implications_stay_wired() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "logic", &["logic-core", "logic-numbers"]);
+    assert_feature_includes(&features, "logic-agent", &["logic-core", "agent"]);
+    assert_feature_includes(&features, "logic-server", &["logic-core", "server"]);
+    assert_feature_includes(&features, "logic-wasm", &["logic-core", "wasm"]);
+    assert_feature_includes(
+        &features,
+        "logic-numbers",
+        &[
+            "logic-core",
+            "numbers-arith",
+            "numbers-f64",
+            "numbers-i64",
+            "numbers-rational",
+        ],
+    );
+}
+
+#[rustfmt::skip] const MCP_STREAM_DEPS: &[&str] = &["mcp", "stream-core", "stream-fabric", "stream-combinators", "sim-lib-mcp/stream", "sim-lib-mcp/progress"];
+#[rustfmt::skip] const MCP_HTTP_DEPS: &[&str] = &["mcp-stream", "server", "server-net-http", "sim-lib-mcp/http"];
+const MCP_SAMPLING_DEPS: &[&str] = &["mcp", "agent-runner-core", "sim-lib-mcp/sampling"];
+
+#[test]
+fn g6_mcp_feature_implications_stay_wired() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    let cases: &[(&str, &[&str])] = &[
+        ("mcp", &["dep:sim-lib-mcp", "codec-mcp", "core", "shape"]),
+        ("mcp-skill", &["mcp", "skill", "sim-lib-mcp/skill"]),
+        ("mcp-stdio", &["mcp", "sim-lib-mcp/stdio"]),
+        ("mcp-stream", MCP_STREAM_DEPS),
+        ("mcp-http", MCP_HTTP_DEPS),
+        ("mcp-client", &["mcp-skill", "sim-lib-mcp/client"]),
+        ("mcp-sampling", MCP_SAMPLING_DEPS),
+        ("mcp-cassette", &["mcp", "sim-lib-mcp/cassette"]),
+        ("mcp-binary", &["mcp-stdio"]),
+        (
+            "skill-serve",
+            &["skill-mcp", "mcp-skill", "server", "sim-lib-skill/serve"],
+        ),
+    ];
+    for (feature, expected) in cases {
+        assert_feature_includes(&features, feature, expected);
+    }
+}
+
+// conformance: GenAI SDK feature bundles keep base, local, and provider closures explicit.
+#[test]
+fn genai_feature_bundles_select_base_local_and_provider_closures() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(
+        &features,
+        "genai",
+        &["agent", "bridge", "codec-json", "cookbook"],
+    );
+    assert_feature_includes(
+        &features,
+        "genai-local",
+        &[
+            "genai",
+            "agent-runner-process",
+            "agent-runner-ollama",
+            "agent-runner-http",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "genai-provider",
+        &["genai", "agent-runner-http-tls"],
+    );
+
+    let base = features.get("genai").expect("genai feature");
+    for excluded in [
+        "agent-runner-process",
+        "agent-runner-ollama",
+        "agent-runner-http",
+        "agent-runner-http-tls",
+    ] {
+        assert!(
+            !base.contains(excluded),
+            "`genai` should not directly enable `{excluded}`"
+        );
+    }
+}
+
+#[test]
+fn r11_music_stack_feature_implications_stay_wired() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(
+        &features,
+        "pitch",
+        &[
+            "pitch-core",
+            "pitch-set",
+            "pitch-scale",
+            "pitch-chord",
+            "pitch-namer",
+            "pitch-dissonance",
+            "pitch-shapes",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "pitch-namer",
+        &[
+            "pitch-namer-forte",
+            "pitch-namer-jazz",
+            "pitch-namer-roman",
+            "pitch-namer-riemann",
+            "pitch-set",
+            "pitch-scale",
+            "pitch-chord",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "midi",
+        &[
+            "midi-core",
+            "midi-smf",
+            "midi-live",
+            "midi-sysex",
+            "midi-shapes",
+        ],
+    );
+    assert_feature_includes(&features, "midi-sysex", &["midi-core"]);
+    assert_feature_includes(
+        &features,
+        "music",
+        &[
+            "music-core",
+            "music-combinators",
+            "music-analysis",
+            "music-transform",
+            "music-lower",
+            "music-lift",
+            "music-notation",
+            "music-shapes",
+            "pitch",
+            "midi",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "sound",
+        &[
+            "sound-core",
+            "sound-spectrum",
+            "sound-timbre",
+            "sound-tuning",
+            "sound-dissonance",
+            "sound-bridge",
+            "sound-render",
+            "sound-shapes",
+            "pitch",
+            "midi",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "music-stack",
+        &[
+            "pitch",
+            "midi",
+            "music",
+            "sound",
+            "sound-gm",
+            "sound-audio-lift",
+            "sound-music",
+        ],
+    );
+    assert_feature_includes(&features, "sound-music", &["sound", "music"]);
+    assert_feature_includes(
+        &features,
+        "sound-audio-lift",
+        &["sound-spectrum", "sound-tuning", "pitch"],
+    );
+    assert_feature_includes(&features, "sound-gm", &["sound-timbre"]);
+    assert_feature_includes(&features, "pitch-wasm-frame", &["pitch", "wasm"]);
+    assert_feature_includes(&features, "midi-wasm-frame", &["midi", "wasm"]);
+    assert_feature_includes(&features, "stream-host", &["stream-midi"]);
+    assert_feature_includes(&features, "music-wasm-frame", &["music", "wasm"]);
+    assert_feature_includes(
+        &features,
+        "sound-wasm-frame",
+        &[
+            "sim-lib-sound-wasm-frame/sound-music",
+            "sound",
+            "sound-music",
+            "wasm",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "music-stack-wasm-frame",
+        &[
+            "music-stack",
+            "pitch-wasm-frame",
+            "midi-wasm-frame",
+            "music-wasm-frame",
+            "sound-wasm-frame",
+        ],
+    );
+}
+
+#[test]
+fn r11_production_crate_dependency_boundaries_stay_wired() {
+    let root = repo_root();
+    assert_crate_cargo_tomls_do_not_contain(
+        &root,
+        "sim-lib-pitch-",
+        &["sim-lib-midi-", "sim-lib-music-", "sim-lib-sound-"],
+    );
+    assert_crate_cargo_tomls_do_not_contain(
+        &root,
+        "sim-lib-midi-",
+        &["sim-lib-pitch-", "sim-lib-music-", "sim-lib-sound-"],
+    );
+    assert_crate_cargo_tomls_do_not_contain(&root, "sim-lib-music-", &["sim-lib-sound-"]);
+}
+
+#[test]
+fn r10_femm_feature_implications_stay_wired() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "femm-geometry", &["femm-core"]);
+    assert_feature_includes(&features, "femm-material", &["femm-core", "numbers-ad"]);
+    assert_feature_includes(&features, "femm-mesh", &["femm-geometry", "femm-material"]);
+    assert_feature_includes(&features, "femm-assembly", &["femm-space", "numbers-ad"]);
+    assert_feature_includes(&features, "femm-solve", &["femm-core", "numbers-complex"]);
+    assert_feature_includes(
+        &features,
+        "femm-flow",
+        &[
+            "femm-core",
+            "femm-assembly",
+            "femm-solve",
+            "numbers-numeric",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "femm-physics",
+        &["femm-core", "femm-assembly", "numbers-complex"],
+    );
+    assert_feature_includes(&features, "femm-post", &["femm-core", "femm-physics"]);
+    assert_feature_includes(
+        &features,
+        "femm-field",
+        &["femm-core", "femm-post", "numbers-func", "numbers-tensor"],
+    );
+    assert_feature_includes(
+        &features,
+        "femm-function",
+        &["femm-core", "femm-field", "numbers-func"],
+    );
+    assert_feature_includes(
+        &features,
+        "femm-sensitiv",
+        &["femm-core", "femm-function", "femm-solve", "numbers-ad"],
+    );
+    assert_feature_includes(
+        &features,
+        "femm-tape",
+        &["femm-core", "femm-function", "femm-solve"],
+    );
+    assert_feature_includes(
+        &features,
+        "femm-ode",
+        &["femm-core", "femm-tape", "numbers-rk", "numbers-tensor"],
+    );
+    assert_feature_includes(
+        &features,
+        "femm-codec",
+        &[
+            "femm-core",
+            "femm-geometry",
+            "femm-material",
+            "femm-mesh",
+            "femm-space",
+            "femm-assembly",
+            "femm-solve",
+            "femm-flow",
+            "femm-physics",
+            "femm-post",
+            "femm-field",
+            "femm-function",
+            "femm-sensitiv",
+            "femm-tape",
+            "femm-ode",
+            "numbers-codec",
+        ],
+    );
+    assert_feature_includes(&features, "femm-fixtures", &["femm-prelude"]);
+    assert_feature_includes(
+        &features,
+        "femm-prelude",
+        &[
+            "femm-core",
+            "femm-geometry",
+            "femm-material",
+            "femm-mesh",
+            "femm-space",
+            "femm-assembly",
+            "femm-solve",
+            "femm-flow",
+            "femm-physics",
+            "femm-post",
+            "femm-field",
+            "femm-function",
+            "femm-sensitiv",
+            "femm-tape",
+            "femm-ode",
+            "femm-codec",
+            "numbers-prelude",
+        ],
+    );
+}
+```
+
+Specimen `spec-test/sim-sdk/src/runtime/cookbook_directory` is checked by `cargo test`.
+
+Source `src/runtime/cookbook_directory.rs`:
+
+```rust
+//! sim-nest's product cookbook loadable-lib directory.
+//!
+//! `sim-lib-cookbook` keeps a small standalone fixture directory. The umbrella
+//! crate owns the product directory because only this crate sees the
+//! constellation feature graph without adding back-edges to the cookbook lib.
+
+use std::sync::Arc;
+
+use sim_cookbook::EmbeddedDir;
+use sim_kernel::{CodecId, Lib};
+use sim_lib_cookbook::{
+    ConfigProvider, CookbookConfig, LoadableLibConfig, LoadableLibList, LoadableLibResolver,
+    ResolvedLoadable,
+};
+
+#[macro_use]
+mod audio_stream;
+#[macro_use]
+mod codecs;
+#[macro_use]
+mod data;
+#[macro_use]
+mod device;
+#[macro_use]
+mod femm;
+#[macro_use]
+mod glasses;
+#[macro_use]
+mod music;
+#[macro_use]
+mod numbers;
+#[macro_use]
+mod runtime_libs;
+#[macro_use]
+mod watch;
+
+macro_rules! loadable_libs {
+    ($m:ident) => {
+        cookbook_directory_codecs!($m);
+        cookbook_directory_numbers!($m);
+        cookbook_directory_runtime_libs!($m);
+        cookbook_directory_femm!($m);
+        cookbook_directory_glasses!($m);
+        cookbook_directory_music!($m);
+        cookbook_directory_audio_stream!($m);
+        cookbook_directory_data!($m);
+        cookbook_directory_device!($m);
+        cookbook_directory_watch!($m);
+    };
+}
+
+/// Product default cookbook config for the enabled sim-nest feature set.
+pub fn default_cookbook_config() -> CookbookConfig {
+    CookbookConfig {
+        minimum_loaded: vec!["codec/lisp".to_owned(), "core".to_owned()],
+        loadable_libs: loadable_rows(),
+    }
+}
+
+/// Resolve the product default directory for the enabled sim-nest feature set.
+pub fn default_loadable_libs() -> (LoadableLibList, Vec<String>) {
+    ConfigProvider::new(default_cookbook_config(), &SimNestCookbookResolver).loadable_libs()
+}
+
+/// Loadable-lib ids compiled into a `cookbook-all` build.
+#[cfg(feature = "cookbook-all")]
+pub fn cookbook_all_lib_ids() -> Vec<&'static str> {
+    let mut ids = Vec::new();
+    macro_rules! push_id {
+        ($id:literal, $title:literal, $feature:literal, $recipes:expr, $make:expr) => {
+            #[cfg(feature = $feature)]
+            {
+                let _ = $title;
+                ids.push($id);
+            }
+        };
+    }
+    loadable_libs!(push_id);
+    ids
+}
+
+fn loadable_rows() -> Vec<LoadableLibConfig> {
+    let mut rows = Vec::new();
+    macro_rules! push_row {
+        ($id:literal, $title:literal, $feature:literal, $recipes:expr, $make:expr) => {
+            #[cfg(feature = $feature)]
+            {
+                let _ = $title;
+                rows.push(row($id));
+            }
+        };
+    }
+    loadable_libs!(push_row);
+    rows
+}
+
+fn row(id: &str) -> LoadableLibConfig {
+    LoadableLibConfig {
+        id: id.to_owned(),
+        source: format!("sim-nest:{id}"),
+    }
+}
+
+/// Resolver over the loadable libs linked into this sim-nest build.
+pub struct SimNestCookbookResolver;
+
+impl LoadableLibResolver for SimNestCookbookResolver {
+    fn resolve(&self, source: &str, id: &str) -> Option<ResolvedLoadable> {
+        if source != format!("sim-nest:{id}") {
+            return None;
+        }
+
+        macro_rules! resolve_if {
+            ($row_id:literal, $title:literal, $feature:literal, $recipes:expr, $make:expr) => {
+                #[cfg(feature = $feature)]
+                if id == $row_id {
+                    return Some(resolved($title, $recipes, $make));
+                }
+            };
+        }
+        loadable_libs!(resolve_if);
+        None
+    }
+}
+
+#[allow(dead_code)]
+fn codec_id(offset: u32) -> CodecId {
+    const PRODUCT_CODEC_BASE: u32 = 10_000;
+    CodecId(PRODUCT_CODEC_BASE + offset)
+}
+
+fn resolved<F>(title: &str, recipes: Option<EmbeddedDir>, make: F) -> ResolvedLoadable
+where
+    F: Fn() -> Box<dyn Lib + Send + Sync> + Send + Sync + 'static,
+{
+    ResolvedLoadable {
+        title: title.to_owned(),
+        recipes,
+        factory: Arc::new(make),
+    }
+}
+
+// conformance: GenAI SDK bundle cookbook rows resolve the agent and bridge libraries.
+#[cfg(all(test, feature = "genai"))]
+mod genai_tests {
+    use sim_cookbook::recipes_from_embedded;
+
+    #[test]
+    fn genai_bundle_resolves_agent_bridge_and_recipe() {
+        let (dir, diags) = super::default_loadable_libs();
+        assert!(diags.is_empty(), "unresolved rows: {diags:?}");
+        assert!(dir.entry("bridge").is_some(), "bridge row");
+
+        let agent = dir.entry("agent").expect("agent row");
+        let recipes = agent.recipes.expect("agent recipes");
+        let cards = recipes_from_embedded(recipes).expect("agent recipes parse");
+        assert!(
+            cards
+                .iter()
+                .any(|card| card.id == "agent/01-basics/genai-assembly"),
+            "agent cookbook row should include the GenAI assembly recipe"
+        );
+    }
+}
+
+#[cfg(all(test, feature = "cookbook-all"))]
+mod tests {
+    use std::collections::{BTreeMap, BTreeSet};
+
+    #[test]
+    fn every_loadable_lib_has_a_directory_row() {
+        let cfg = super::default_cookbook_config();
+        assert_eq!(cfg.minimum_loaded, ["codec/lisp", "core"]);
+
+        let ids = super::cookbook_all_lib_ids();
+        let mut counts = BTreeMap::new();
+        for row in &cfg.loadable_libs {
+            *counts.entry(row.id.as_str()).or_insert(0usize) += 1;
+            assert_eq!(row.source, format!("sim-nest:{}", row.id));
+        }
+        for id in &ids {
+            assert_eq!(counts.get(id).copied(), Some(1), "{id} row count");
+        }
+        assert_eq!(counts.len(), ids.len());
+
+        let (dir, diags) = super::default_loadable_libs();
+        assert!(diags.is_empty(), "unresolved rows: {diags:?}");
+        let resolved = dir
+            .entries()
+            .iter()
+            .map(|entry| entry.id.as_str())
+            .collect::<BTreeSet<_>>();
+        for id in &ids {
+            assert!(
+                dir.entry(id).is_some(),
+                "loadable lib `{id}` missing a directory row"
+            );
+            assert!(
+                resolved.contains(id),
+                "loadable lib `{id}` missing a factory"
+            );
+        }
+        assert_eq!(dir.entries().len(), ids.len());
+    }
+
+    #[test]
+    fn cookbook_all_feature_matches_directory_features() {
+        let cargo_toml = include_str!("../../Cargo.toml");
+        let cookbook_features = parse_feature(cargo_toml, "cookbook-all");
+        let mut row_features = BTreeSet::new();
+        macro_rules! push_feature {
+            ($id:literal, $title:literal, $feature:literal, $recipes:expr, $make:expr) => {
+                #[cfg(feature = $feature)]
+                {
+                    let _ = ($id, $title);
+                    row_features.insert($feature);
+                }
+            };
+        }
+        loadable_libs!(push_feature);
+
+        for feature in &row_features {
+            assert!(
+                cookbook_features.contains(*feature),
+                "`cookbook-all` does not enable `{feature}`"
+            );
+        }
+
+        let no_directory_rows = BTreeSet::from([
+            "citizen",
+            "cookbook",
+            "exec",
+            "shape",
+            "discrete-rank",
+            "table-fs",
+            "table-http",
+        ]);
+        for feature in cookbook_features {
+            assert!(
+                row_features.contains(feature) || no_directory_rows.contains(feature),
+                "`cookbook-all` enables `{feature}` without a loadable-lib directory row"
+            );
+        }
+    }
+
+    fn parse_feature<'a>(cargo_toml: &'a str, feature: &str) -> BTreeSet<&'a str> {
+        let prefix = format!("{feature} = [");
+        let line = cargo_toml
+            .lines()
+            .find(|line| line.starts_with(&prefix))
+            .expect("feature line");
+        line[prefix.len()..]
+            .trim_end_matches(']')
+            .split(',')
+            .map(str::trim)
+            .filter_map(|part| part.strip_prefix('"')?.strip_suffix('"'))
+            .collect()
+    }
+}
 ```
 
 ### `feature/sim-sdk/device-recipes`

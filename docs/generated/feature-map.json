@@ -732,6 +732,34 @@
         },
         {
           "edges": [
+            "agent",
+            "bridge",
+            "codec-json",
+            "cookbook"
+          ],
+          "name": "genai",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "genai",
+            "agent-runner-process",
+            "agent-runner-ollama",
+            "agent-runner-http"
+          ],
+          "name": "genai-local",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "genai",
+            "agent-runner-http-tls"
+          ],
+          "name": "genai-provider",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "glasses-modeled"
           ],
           "name": "glasses",
