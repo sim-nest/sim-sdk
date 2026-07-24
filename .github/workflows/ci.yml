@@ -4,10 +4,47 @@ on:
   pull_request: {}
   push:
     branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
-  check:
+  scope:
+    name: select validation scope
+    runs-on: ubuntu-latest
+    outputs:
+      run-heavy: ${{ steps.scope.outputs.run-heavy }}
+    steps:
+      - id: scope
+        name: Avoid duplicate PR and main validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          run_heavy=true
+          if [ "$EVENT_NAME" = pull_request ]; then
+            sleep 30
+            state="$(gh api "repos/$REPOSITORY/pulls/$PR_NUMBER" --jq .state)"
+            if [ "$state" != open ]; then
+              run_heavy=false
+            fi
+          fi
+          echo "run-heavy=$run_heavy" >> "$GITHUB_OUTPUT"
+
+  default:
+    name: default features
+    needs: scope
+    if: ${{ needs.scope.outputs.run-heavy == 'true' }}
     runs-on: ubuntu-latest
     env:
+      CARGO_TARGET_DIR: target/ci-default
       SIMDOC_TOOLING_MANIFEST: ${{ github.workspace }}/sim-tooling/Cargo.toml
     steps:
       - uses: actions/checkout@v4
@@ -20,13 +57,67 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            target/ci-default
+          key: ${{ runner.os }}-sim-sdk-default-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-sim-sdk-default-
       - run: cargo fmt --all --check
-      - run: cargo test -p sim-conformance
+      # `sim-conformance` is a workspace member, so this is its one default-mode
+      # test pass as well as the rest of the standalone SDK workspace.
       - run: cargo test --workspace
       - run: cargo clippy --workspace --all-targets -- -D warnings
       - run: cargo doc --workspace --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
+      - run: cargo run -p xtask -- simdoc --check
+
+  all-features:
+    name: all features
+    needs: scope
+    if: ${{ needs.scope.outputs.run-heavy == 'true' }}
+    runs-on: ubuntu-latest
+    env:
+      CARGO_TARGET_DIR: target/ci-all-features
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            target/ci-all-features
+          key: ${{ runner.os }}-sim-sdk-all-features-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-sim-sdk-all-features-
       - run: cargo clippy --workspace --all-features --all-targets -- -D warnings
       - run: cargo test --workspace --all-features
-      - run: cargo run -p xtask -- simdoc --check
+
+  check:
+    name: check
+    if: ${{ always() }}
+    needs: [scope, default, all-features]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every validation lane
+        env:
+          DEFAULT_RESULT: ${{ needs.default.result }}
+          ALL_FEATURES_RESULT: ${{ needs.all-features.result }}
+          RUN_HEAVY: ${{ needs.scope.outputs.run-heavy }}
+        run: |
+          if [ "$RUN_HEAVY" != true ]; then
+            exit 0
+          fi
+          test "$DEFAULT_RESULT" = success
+          test "$ALL_FEATURES_RESULT" = success

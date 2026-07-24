@@ -1,6 +1,6 @@
 [package]
 name = "sim-nest"
-version = "0.1.25"
+version = "0.1.26"
 edition = "2024"
 license = "MPL-2.0"
 description = "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features."
@@ -43,15 +43,15 @@ homepage = "https://github.com/sim-nest/sim-sdk"
 unsafe_code = "forbid"
 
 [patch.crates-io]
-sim-lib-agent = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
-sim-lib-agent-runner-core = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
-sim-lib-agent-runner-http = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
-sim-lib-agent-runner-process = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
-sim-lib-bridge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
-sim-lib-cookbook = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
-sim-lib-forge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
-sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
-sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "b9ab3fb67665883177c721d228393a82b5423984" }
+sim-lib-agent = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
+sim-lib-agent-runner-core = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
+sim-lib-agent-runner-http = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
+sim-lib-agent-runner-process = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
+sim-lib-bridge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
+sim-lib-cookbook = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
+sim-lib-forge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
+sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
+sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
 sim-lib-intent = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
 sim-lib-scene = { git = "https://github.com/sim-nest/sim-web", rev = "f55b4b201ee8cbb1c4c56f91bd951fed088c1a2e" }
 sim-lib-stream-core = { git = "https://github.com/sim-nest/sim-stream", rev = "fbc0d112d863ac6145b31b62ee5ec8e580c184b1" }
@@ -92,16 +92,16 @@ sim-codec-lisp = { optional = true, version = "0.1.1" }
 sim-codec-mcp = { optional = true, version = "0.1.3" }
 sim-cookbook = { optional = true, version = "0.1.3" }
 sim-kernel = { optional = true, version = "0.1.4" }
-sim-lib-agent = { optional = true, version = "0.1.12" }
+sim-lib-agent = { optional = true, version = "0.1.13" }
 sim-lib-agent-runner-core = { optional = true, version = "0.1.3" }
-sim-lib-agent-runner-http = { optional = true, version = "0.1.5" }
+sim-lib-agent-runner-http = { optional = true, version = "0.1.6" }
 sim-lib-agent-runner-process = { optional = true, version = "0.1.4" }
 sim-lib-audio-dsp = { optional = true, version = "0.1.2" }
 sim-lib-audio-graph-core = { optional = true, version = "0.1.1" }
 sim-lib-audio-graph-live = { optional = true, version = "0.1.1" }
 sim-lib-music-synth = { optional = true, version = "0.1.5" }
 sim-lib-binding = { optional = true, version = "0.1.1" }
-sim-lib-bridge = { optional = true, version = "0.1.4" }
+sim-lib-bridge = { optional = true, version = "0.1.5" }
 sim-lib-control = { optional = true, version = "0.1.1" }
 sim-lib-cookbook = { optional = true, version = "0.1.14" }
 sim-lib-core = { optional = true, version = "0.1.2" }
