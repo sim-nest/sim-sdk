@@ -492,10 +492,15 @@ fn stream_cassettes_replay_and_round_trip_through_codecs_and_publish_invariants(
     assert_eq!(preview_stream.take_packets(4).unwrap(), pcm_items);
     let mut web = FixtureTransport::new()
         .with_finite_stream(preview.metadata().clone(), preview.items().unwrap());
-    let inspector = web.stream_subscribe(preview.metadata().id()).unwrap();
+    let mut web_cx = cx();
+    let inspector = web
+        .stream_subscribe(&mut web_cx, preview.metadata().id())
+        .unwrap();
     assert_eq!(inspector.buffered, 2);
     assert_eq!(
-        web.stream_read(preview.metadata().id(), 4).unwrap().len(),
+        web.stream_read(&mut web_cx, preview.metadata().id(), 4)
+            .unwrap()
+            .len(),
         2
     );
     assert_publishable_fixture(

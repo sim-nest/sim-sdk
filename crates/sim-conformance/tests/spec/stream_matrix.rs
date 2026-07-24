@@ -362,8 +362,13 @@ fn run_cancel_fixture(row: &MatrixRow) {
             let metadata = matrix_metadata(row, StreamMedia::Data);
             let stream_id = metadata.id().clone();
             let mut transport = FixtureTransport::new().with_push_stream(metadata);
-            transport.stream_cancel(&stream_id).unwrap();
-            let inspector = transport.stream_inspector(&stream_id).unwrap();
+            let mut browser_cx = cx();
+            transport
+                .stream_cancel(&mut browser_cx, &stream_id)
+                .unwrap();
+            let inspector = transport
+                .stream_inspector(&mut browser_cx, &stream_id)
+                .unwrap();
             assert_eq!(inspector.status, BrowserStreamStatus::Cancelled);
             assert!(inspector.stats.cancelled);
         }
@@ -404,8 +409,16 @@ fn run_done_fixture(row: &MatrixRow) {
             let stream_id = metadata.id().clone();
             let mut transport =
                 FixtureTransport::new().with_finite_stream(metadata, vec![item.clone()]);
-            assert_eq!(transport.stream_read(&stream_id, 4).unwrap(), vec![item]);
-            let inspector = transport.stream_inspector(&stream_id).unwrap();
+            let mut browser_cx = cx();
+            assert_eq!(
+                transport
+                    .stream_read(&mut browser_cx, &stream_id, 4)
+                    .unwrap(),
+                vec![item]
+            );
+            let inspector = transport
+                .stream_inspector(&mut browser_cx, &stream_id)
+                .unwrap();
             assert_eq!(inspector.status, BrowserStreamStatus::Ended);
         }
         _ => {
@@ -438,15 +451,22 @@ fn run_overflow_fixture(row: &MatrixRow) {
             let mut transport = FixtureTransport::new().with_push_stream(metadata.clone());
             let first = StreamEnvelope::from_item(&metadata, 0, &first).unwrap();
             let second = StreamEnvelope::from_item(&metadata, 1, &second).unwrap();
+            let mut browser_cx = cx();
             assert_eq!(
-                transport.stream_push(&stream_id, first).unwrap(),
+                transport
+                    .stream_push(&mut browser_cx, &stream_id, first)
+                    .unwrap(),
                 PushResult::Accepted
             );
             assert!(matches!(
-                transport.stream_push(&stream_id, second).unwrap(),
+                transport
+                    .stream_push(&mut browser_cx, &stream_id, second)
+                    .unwrap(),
                 PushResult::Rejected(_)
             ));
-            let inspector = transport.stream_inspector(&stream_id).unwrap();
+            let inspector = transport
+                .stream_inspector(&mut browser_cx, &stream_id)
+                .unwrap();
             assert_eq!(inspector.status, BrowserStreamStatus::BufferOverflow);
         }
         _ => {
@@ -577,8 +597,20 @@ fn browser_roundtrip(row: &MatrixRow, item: StreamItem) {
     let metadata = matrix_metadata(row, item.packet().media());
     let stream_id = metadata.id().clone();
     let mut transport = FixtureTransport::new().with_finite_stream(metadata, vec![item.clone()]);
-    assert_eq!(transport.stream_subscribe(&stream_id).unwrap().buffered, 1);
-    assert_eq!(transport.stream_read(&stream_id, 2).unwrap(), vec![item]);
+    let mut browser_cx = cx();
+    assert_eq!(
+        transport
+            .stream_subscribe(&mut browser_cx, &stream_id)
+            .unwrap()
+            .buffered,
+        1
+    );
+    assert_eq!(
+        transport
+            .stream_read(&mut browser_cx, &stream_id, 2)
+            .unwrap(),
+        vec![item]
+    );
 }
 
 fn fabric_stream(row: &MatrixRow, item: StreamItem) -> StreamValue {
