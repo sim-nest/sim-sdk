@@ -1,12 +1,5 @@
 //! Executable conformance checks for the architecture claims in `SIM.md`.
 //!
-//! The suite intentionally lives outside the root `sim` crate and uses only the
-//! public facade. It protects the checkable pieces of the "Non-Negotiable
-//! Goals", "Security Model", and "Design Bets": codec totality over `Expr`,
-//! class-as-function behavior, replaceable number-domain parsing and
-//! promotion, read-eval/read-construct security, named eval policies, loader
-//! backends, wasm ABI v1 export scope, and stream transport conformance.
-//!
 //! The stream-cassette assertions validate the in-memory `to_expr`/`from_expr`
 //! serialization round-trip and the structural invariants a cassette must
 //! satisfy to be publishable as a golden fixture. They do not compare against a

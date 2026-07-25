@@ -1,25 +1,28 @@
 use std::time::Duration;
 
 use sim::{
-    kernel::{Expr, Ref, Symbol},
+    kernel::{Ref, Symbol},
     lib_server::FrameEnvelope,
     lib_stream_core::{
-        BufferOverflowPolicy, BufferPolicy, ClockDomain, PushResult, StreamDiagnostic,
-        StreamDirection, StreamEnvelope, StreamItem, StreamMedia, StreamMetadata, StreamPacket,
-        StreamValue, TransportProfile, stream_remote_network_capability,
+        BufferPolicy, ClockDomain, PushResult, StreamDiagnostic, StreamDirection, StreamEnvelope,
+        StreamItem, StreamMedia, StreamMetadata, StreamPacket, StreamValue, TransportProfile,
+        stream_remote_network_capability,
     },
     lib_stream_fabric::{
         event_buffer_to_stream, refused_profile_diagnostic_kind, stream_frames_to_stream,
         stream_to_frames_with_profile,
     },
-    lib_stream_host::{
-        FakeBackend, HostBackend, HostDirection, HostStreamConfigRequest, fake_backend_symbol,
-    },
+    lib_stream_host::{FakeBackend, HostBackend, HostDirection},
     lib_web_bridge::{BrowserStreamStatus, FixtureTransport, SessionStatus, Transport},
 };
 
+mod stream_matrix_helpers;
+
 use super::{conformance_metadata, midi_item, pcm_item};
 use crate::support::{cx, grant_capability, q, seated_cx};
+use stream_matrix_helpers::{
+    data_item, host_overflow_request, host_request, matrix_metadata, overflow_metadata,
+};
 
 pub(crate) const MATRIX_PATH: &str = "crates/sim-conformance/tests/spec/stream_matrix.rs";
 
@@ -658,71 +661,4 @@ fn fixture_item(fixture: StreamFixture) -> StreamItem {
         | StreamFixture::Reconnect
         | StreamFixture::RefusedProfile => unreachable!("not a packet fixture"),
     }
-}
-
-fn data_item(payload: &str) -> StreamItem {
-    StreamItem::new(StreamPacket::data(
-        Symbol::qualified("stream/data", "expr"),
-        Expr::String(payload.to_owned()),
-    ))
-}
-
-fn matrix_metadata(row: &MatrixRow, media: StreamMedia) -> StreamMetadata {
-    conformance_metadata(
-        &format!("stream/conformance-{}", row.layer),
-        media,
-        clock_for(row, media),
-    )
-}
-
-fn overflow_metadata(row: &MatrixRow) -> StreamMetadata {
-    StreamMetadata::new(
-        Symbol::new(format!("stream/conformance-overflow-{}", row.layer)),
-        StreamMedia::Data,
-        StreamDirection::Source,
-        ClockDomain::ServerFrame.symbol(),
-        BufferPolicy::bounded_with_overflow(1, BufferOverflowPolicy::Error).unwrap(),
-    )
-}
-
-fn clock_for(row: &MatrixRow, media: StreamMedia) -> ClockDomain {
-    match (row.runner, media) {
-        (MatrixRunner::Browser, StreamMedia::Pcm) => ClockDomain::BrowserFrame,
-        (_, StreamMedia::Pcm) => ClockDomain::Sample,
-        (_, StreamMedia::Midi) => ClockDomain::MidiTick,
-        _ => ClockDomain::ServerFrame,
-    }
-}
-
-fn host_request(media: StreamMedia) -> HostStreamConfigRequest {
-    match media {
-        StreamMedia::Pcm => HostStreamConfigRequest::new(
-            fake_backend_symbol(),
-            Symbol::new("fake/pcm"),
-            StreamMedia::Pcm,
-            HostDirection::Output,
-            BufferPolicy::bounded(8).unwrap(),
-        )
-        .with_clock(ClockDomain::Sample.symbol()),
-        StreamMedia::Midi => HostStreamConfigRequest::new(
-            fake_backend_symbol(),
-            Symbol::new("fake/midi"),
-            StreamMedia::Midi,
-            HostDirection::Input,
-            BufferPolicy::bounded(8).unwrap(),
-        )
-        .with_clock(ClockDomain::MidiTick.symbol()),
-        StreamMedia::Data => FakeBackend::data_request(8).unwrap(),
-        StreamMedia::Diagnostic => unreachable!("fake host does not expose diagnostic media"),
-    }
-}
-
-fn host_overflow_request() -> HostStreamConfigRequest {
-    HostStreamConfigRequest::new(
-        fake_backend_symbol(),
-        Symbol::new("fake/data"),
-        StreamMedia::Data,
-        HostDirection::Input,
-        BufferPolicy::bounded_with_overflow(1, BufferOverflowPolicy::Error).unwrap(),
-    )
 }
