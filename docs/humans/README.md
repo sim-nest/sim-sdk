@@ -22,6 +22,7 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | `feature/sim-sdk/facade-codecs` | `crate/sim-nest` | 0 | Expose public codec exports through the SDK facade while implementation crates keep the codec behavior. |
 | `feature/sim-sdk/facade-model-workflows` | `crate/sim-nest` | 0 | Expose model-facing facade exports for answer routing and drafter setup. |
 | `feature/sim-sdk/genai-feature-bundles` | `crate/sim-nest` | 2 | Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases. |
+| `feature/sim-sdk/gpu-math-composition` | `crate/sim-nest` | 1 | Expose opt-in Tensor, ODE, compute-provider, and FEMM solver composition through direct SDK re-exports. |
 | `feature/sim-sdk/facade-shapes` | `crate/sim-nest` | 0 | Expose public Shape exports through the SDK facade while shape crates keep the matching behavior. |
 | `feature/sim-sdk/device-recipes` | `crate/sim-nest` | 1 | Exercise modeled device, watch, and glasses workflows through SDK-level recipe entry points. |
 | `feature/sim-sdk/conformance-contract` | `crate/sim-conformance` | 1 | Run the SDK conformance contract as a checked operational recipe. |
@@ -79,6 +80,11 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 - `recipes/glasses/voice-site/README.md`
 - `recipes/glasses/voice-site/input.lisp`
 - `recipes/glasses/voice-site/recipe.toml`
+- `recipes/gpu-math/chapter.toml`
+- `recipes/gpu-math/modeled-matrix-ode-femm/README.md`
+- `recipes/gpu-math/modeled-matrix-ode-femm/expected.txt`
+- `recipes/gpu-math/modeled-matrix-ode-femm/input.lisp`
+- `recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml`
 - `recipes/watch/book.toml`
 - `recipes/watch/chapter.toml`
 - `recipes/watch/dual-quorum/README.md`
@@ -670,6 +676,8 @@ mod audio_stream;
 #[macro_use]
 mod codecs;
 #[macro_use]
+mod compute;
+#[macro_use]
 mod data;
 #[macro_use]
 mod device;
@@ -689,6 +697,7 @@ mod watch;
 macro_rules! loadable_libs {
     ($m:ident) => {
         cookbook_directory_codecs!($m);
+        cookbook_directory_compute!($m);
         cookbook_directory_numbers!($m);
         cookbook_directory_runtime_libs!($m);
         cookbook_directory_femm!($m);
@@ -882,6 +891,7 @@ mod tests {
             "citizen",
             "cookbook",
             "exec",
+            "gpu-math",
             "shape",
             "discrete-rank",
             "table-fs",
@@ -908,6 +918,102 @@ mod tests {
             .filter_map(|part| part.strip_prefix('"')?.strip_suffix('"'))
             .collect()
     }
+}
+```
+
+### `feature/sim-sdk/gpu-math-composition`
+
+Specimen `spec-test/sim-sdk/crates/sim-conformance/tests/spec/gpu_math` is checked by `cargo test`.
+
+Source `crates/sim-conformance/tests/spec/gpu_math.rs`:
+
+```rust
+use sim::kernel::{Expr, Symbol};
+
+use crate::support::CONFORMANCE_CONTRACT;
+
+pub(crate) const GPU_MATH_PATH: &str = "crates/sim-conformance/tests/spec/gpu_math.rs";
+
+#[test]
+fn gpu_math_composition_reexports_canonical_components() {
+    assert_eq!(
+        GPU_MATH_PATH,
+        "crates/sim-conformance/tests/spec/gpu_math.rs"
+    );
+    assert!(CONFORMANCE_CONTRACT.contains(GPU_MATH_PATH));
+
+    assert_eq!(
+        sim::compute_model::compute_model_site_symbol().as_qualified_str(),
+        "site/compute/model"
+    );
+    assert_eq!(
+        sim::compute_femm::compute_femm_lib_symbol().as_qualified_str(),
+        "compute/femm-lib"
+    );
+    assert_eq!(
+        sim::numbers_tensor::tensor_site_symbol().as_qualified_str(),
+        "site/tensor"
+    );
+    assert_eq!(
+        sim::femm_solve::linear_solver_symbol().as_qualified_str(),
+        "femm/linear-solver"
+    );
+}
+
+#[test]
+fn gpu_math_provider_swap_preserves_expression_structure() {
+    let modeled = gpu_math_expression(sim::compute_model::compute_model_site_symbol());
+    let automatic = gpu_math_expression(sim::compute_auto::compute_auto_site_symbol());
+
+    assert_eq!(
+        math_body(&modeled).canonical_key(),
+        math_body(&automatic).canonical_key()
+    );
+    assert_ne!(
+        placement(&modeled).canonical_key(),
+        placement(&automatic).canonical_key()
+    );
+}
+
+fn gpu_math_expression(site: Symbol) -> Expr {
+    Expr::Map(vec![
+        (
+            Expr::Symbol(Symbol::new("placement")),
+            Expr::Map(vec![(
+                Expr::Symbol(Symbol::new("site")),
+                Expr::Symbol(site),
+            )]),
+        ),
+        (
+            Expr::Symbol(Symbol::new("math")),
+            Expr::List(vec![
+                Expr::Symbol(Symbol::qualified("tensor", "matmul")),
+                Expr::Symbol(Symbol::qualified("ode", "rk-fixed")),
+                Expr::Symbol(Symbol::qualified("femm", "resident-csr-solve")),
+            ]),
+        ),
+    ])
+}
+
+fn math_body(expr: &Expr) -> &Expr {
+    map_value(expr, "math")
+}
+
+fn placement(expr: &Expr) -> &Expr {
+    map_value(expr, "placement")
+}
+
+fn map_value<'a>(expr: &'a Expr, key: &str) -> &'a Expr {
+    let Expr::Map(entries) = expr else {
+        panic!("expected map expression");
+    };
+    entries
+        .iter()
+        .find_map(|(candidate, value)| match candidate {
+            Expr::Symbol(symbol) if symbol.as_qualified_str() == key => Some(value),
+            _ => None,
+        })
+        .expect("map key present")
 }
 ```
 
@@ -1205,6 +1311,8 @@ mod conformance_support;
 mod forge_author;
 #[path = "spec/forge_eval.rs"]
 mod forge_eval;
+#[path = "spec/gpu_math.rs"]
+mod gpu_math;
 #[path = "spec/instrument_streams.rs"]
 mod instrument_streams;
 #[path = "spec/rust_intelligence.rs"]

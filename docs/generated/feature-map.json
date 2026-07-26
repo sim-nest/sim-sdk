@@ -230,6 +230,70 @@
         },
         {
           "edges": [
+            "dep:sim-lib-compute-auto",
+            "compute-model",
+            "table-hash"
+          ],
+          "name": "compute-auto",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-cli",
+            "compute-auto",
+            "compute-model",
+            "cookbook"
+          ],
+          "name": "compute-cli",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-cuda",
+            "compute-model"
+          ],
+          "name": "compute-cuda",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-femm",
+            "compute-model",
+            "femm-solve"
+          ],
+          "name": "compute-femm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-model",
+            "numbers-tensor-bcast",
+            "numbers-numeric",
+            "numbers-rk"
+          ],
+          "name": "compute-model",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-rocm",
+            "compute-model"
+          ],
+          "name": "compute-rocm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-wgpu",
+            "compute-model",
+            "numbers-tensor-f64",
+            "numbers-float"
+          ],
+          "name": "compute-wgpu",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-control",
             "core"
           ],
@@ -265,6 +329,13 @@
             "agent",
             "audio-dsp",
             "audio-graph-live",
+            "compute-auto",
+            "compute-cli",
+            "compute-cuda",
+            "compute-femm",
+            "compute-model",
+            "compute-rocm",
+            "compute-wgpu",
             "daw-session",
             "device-reference",
             "discrete-rank",
@@ -275,6 +346,7 @@
             "femm-function",
             "femm-ode",
             "glasses-modeled",
+            "gpu-math",
             "intent",
             "list-cell",
             "list-lazy",
@@ -790,6 +862,28 @@
             "dep:sim-lib-stream-viture"
           ],
           "name": "glasses-viture",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "compute-model",
+            "compute-femm",
+            "femm-prelude",
+            "numbers-tensor-linalg",
+            "cookbook"
+          ],
+          "name": "gpu-math",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "gpu-math",
+            "compute-auto",
+            "compute-wgpu",
+            "compute-cuda",
+            "compute-rocm"
+          ],
+          "name": "gpu-math-provider",
           "workspace_edges": []
         },
         {

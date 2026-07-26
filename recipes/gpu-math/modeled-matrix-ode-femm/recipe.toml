@@ -1,0 +1,18 @@
+id = "modeled-matrix-ode-femm"
+title = "Compose modeled matrix, ODE, and FEMM math"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+expected = "expected.txt"
+order = 10
+tags = ["gpu-math", "compute", "tensor", "ode", "femm", "modeled"]
+requires = [
+  "gpu-math",
+  "compute/model",
+  "compute/femm",
+  "numbers/tensor",
+  "numbers/tensor-linalg",
+  "numbers/rk",
+  "femm-ode",
+]
+assert_tags = ["gpu-math", "modeled"]

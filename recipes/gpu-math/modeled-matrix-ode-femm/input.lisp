@@ -1,0 +1,6 @@
+(gpu-math
+  (placement (site site/compute/model))
+  (math
+    (tensor/matmul A B)
+    (ode/rk-fixed tensor-state rhs)
+    (femm/resident-csr-solve plate-model)))

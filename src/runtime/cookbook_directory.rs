@@ -18,6 +18,8 @@ mod audio_stream;
 #[macro_use]
 mod codecs;
 #[macro_use]
+mod compute;
+#[macro_use]
 mod data;
 #[macro_use]
 mod device;
@@ -37,6 +39,7 @@ mod watch;
 macro_rules! loadable_libs {
     ($m:ident) => {
         cookbook_directory_codecs!($m);
+        cookbook_directory_compute!($m);
         cookbook_directory_numbers!($m);
         cookbook_directory_runtime_libs!($m);
         cookbook_directory_femm!($m);
@@ -230,6 +233,7 @@ mod tests {
             "citizen",
             "cookbook",
             "exec",
+            "gpu-math",
             "shape",
             "discrete-rank",
             "table-fs",

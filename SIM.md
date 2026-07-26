@@ -77,6 +77,11 @@ The placement conformance matrix lives at
 multi-thread, and multi-process deterministic placement with golden report and
 audio hashes.
 
+The GPU math composition conformance matrix lives at
+`crates/sim-conformance/tests/spec/gpu_math.rs`. It covers direct SDK re-exports
+for canonical Tensor, compute-provider, ODE, and FEMM solver pieces and proves
+that provider-site swapping leaves the math expression body unchanged.
+
 ## Stream cassette publishability
 
 Stream cassettes carry a `to_expr`/`from_expr` serialization that round-trips

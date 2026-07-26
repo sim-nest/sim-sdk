@@ -1,5 +1,5 @@
 {
-  "card_count": 250,
+  "card_count": 259,
   "cards": [
     {
       "id": "agent/effects",
@@ -86,6 +86,18 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/BigIntNumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-bigint",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/BoolNumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-bool",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/CasNumberDomain",
       "kind": "citizen-class",
       "owner": "sim-lib-numbers-cas",
@@ -101,6 +113,12 @@
       "id": "citizen/CodecRuntime",
       "kind": "citizen-class",
       "owner": "sim-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/CoefficientList",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-exotic",
       "summary": "citizen class constructor surface"
     },
     {
@@ -122,6 +140,12 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/ContinuedFraction",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-exotic",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/ControlResultValue",
       "kind": "citizen-class",
       "owner": "sim-lib-control",
@@ -140,9 +164,33 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/ExoticNumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-exotic",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/F32NumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-float",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/F64NumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-f64",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/FieldDomain",
       "kind": "citizen-class",
       "owner": "sim-lib-femm-field",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/FixedNumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-fixed",
       "summary": "citizen class constructor surface"
     },
     {
@@ -185,6 +233,12 @@
       "id": "citizen/GatewayRun",
       "kind": "citizen-class",
       "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/I64NumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-i64",
       "summary": "citizen class constructor surface"
     },
     {
