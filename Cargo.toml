@@ -76,7 +76,7 @@ serde_json = { version = "1", optional = true }
 sim-citizen = { optional = true, version = "0.1.1" }
 sim-citizen-derive = { optional = true, version = "0.1.0" }
 sim-run-loaders = { optional = true, version = "0.1.5", default-features = false }
-sim-run-core = { optional = true, version = "0.1.7" }
+sim-run-core = { optional = true, version = "0.2.0" }
 sim-lib-repl = { optional = true, version = "0.2.0" }
 sim-web-shell = { optional = true, version = "0.1.9", default-features = false }
 sim-codec = { optional = true, version = "0.1.5" }
