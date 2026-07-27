@@ -1,6 +1,6 @@
 [package]
 name = "sim-nest"
-version = "0.1.26"
+version = "0.1.27"
 edition = "2024"
 license = "MPL-2.0"
 description = "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features."
@@ -43,15 +43,15 @@ homepage = "https://github.com/sim-nest/sim-sdk"
 unsafe_code = "forbid"
 
 [patch.crates-io]
-sim-lib-agent = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
-sim-lib-agent-runner-core = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
-sim-lib-agent-runner-http = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
-sim-lib-agent-runner-process = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
-sim-lib-bridge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
-sim-lib-cookbook = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
-sim-lib-forge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
-sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
-sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "8e6cbfb6a1c31d26185b06a77e92f08d68f6d3c3" }
+sim-lib-agent = { git = "https://github.com/sim-nest/sim-agent-net", rev = "9010105143a3d593055170559225ee2c597b2673" }
+sim-lib-agent-runner-core = { git = "https://github.com/sim-nest/sim-agent-net", rev = "9010105143a3d593055170559225ee2c597b2673" }
+sim-lib-agent-runner-http = { git = "https://github.com/sim-nest/sim-agent-net", rev = "9010105143a3d593055170559225ee2c597b2673" }
+sim-lib-agent-runner-process = { git = "https://github.com/sim-nest/sim-agent-net", rev = "9010105143a3d593055170559225ee2c597b2673" }
+sim-lib-bridge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "9010105143a3d593055170559225ee2c597b2673" }
+sim-lib-cookbook = { git = "https://github.com/sim-nest/sim-agent-net", rev = "9010105143a3d593055170559225ee2c597b2673" }
+sim-lib-forge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "9010105143a3d593055170559225ee2c597b2673" }
+sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "9010105143a3d593055170559225ee2c597b2673" }
+sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "9010105143a3d593055170559225ee2c597b2673" }
 sim-lib-intent = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
 sim-lib-scene = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
 sim-lib-stream-core = { git = "https://github.com/sim-nest/sim-stream", rev = "fbc0d112d863ac6145b31b62ee5ec8e580c184b1" }
@@ -103,6 +103,13 @@ sim-lib-music-synth = { optional = true, version = "0.1.5" }
 sim-lib-binding = { optional = true, version = "0.1.1" }
 sim-lib-bridge = { optional = true, version = "0.1.5" }
 sim-lib-control = { optional = true, version = "0.1.1" }
+sim-lib-compute-auto = { optional = true, version = "0.2.0" }
+sim-lib-compute-cli = { optional = true, version = "0.1.1" }
+sim-lib-compute-cuda = { optional = true, version = "0.1.0" }
+sim-lib-compute-femm = { optional = true, version = "0.1.0" }
+sim-lib-compute-model = { optional = true, version = "0.2.0" }
+sim-lib-compute-rocm = { optional = true, version = "0.1.0" }
+sim-lib-compute-wgpu = { optional = true, version = "0.1.0" }
 sim-lib-cookbook = { optional = true, version = "0.1.14" }
 sim-lib-core = { optional = true, version = "0.1.2" }
 sim-lib-daw-session = { optional = true, version = "0.1.2" }
@@ -110,23 +117,23 @@ sim-lib-discrete = { optional = true, version = "0.1.3" }
 sim-lib-dispatch = { optional = true, version = "0.1.0" }
 sim-lib-exec = { optional = true, version = "0.1.0" }
 sim-lib-forge = { optional = true, version = "0.1.2" }
-sim-lib-femm-assembly = { optional = true, version = "0.1.1" }
-sim-lib-femm-codec = { optional = true, version = "0.1.1" }
-sim-lib-femm-core = { optional = true, version = "0.1.1" }
-sim-lib-femm-field = { optional = true, version = "0.1.1" }
+sim-lib-femm-assembly = { optional = true, version = "0.2.0" }
+sim-lib-femm-codec = { optional = true, version = "0.1.2" }
+sim-lib-femm-core = { optional = true, version = "0.2.0" }
+sim-lib-femm-field = { optional = true, version = "0.1.2" }
 sim-lib-femm-fixtures = { optional = true, version = "0.1.1" }
-sim-lib-femm-flow = { optional = true, version = "0.1.1" }
-sim-lib-femm-function = { optional = true, version = "0.1.2" }
-sim-lib-femm-geometry = { optional = true, version = "0.1.2" }
-sim-lib-femm-material = { optional = true, version = "0.1.2" }
-sim-lib-femm-mesh = { optional = true, version = "0.1.2" }
-sim-lib-femm-ode = { optional = true, version = "0.1.2" }
-sim-lib-femm-physics = { optional = true, version = "0.1.1" }
-sim-lib-femm-post = { optional = true, version = "0.1.3" }
-sim-lib-femm-prelude = { optional = true, version = "0.1.1" }
-sim-lib-femm-sensitiv = { optional = true, version = "0.1.3" }
-sim-lib-femm-solve = { optional = true, version = "0.1.2" }
-sim-lib-femm-space = { optional = true, version = "0.1.2" }
+sim-lib-femm-flow = { optional = true, version = "0.2.0" }
+sim-lib-femm-function = { optional = true, version = "0.1.3" }
+sim-lib-femm-geometry = { optional = true, version = "0.2.0" }
+sim-lib-femm-material = { optional = true, version = "0.2.0" }
+sim-lib-femm-mesh = { optional = true, version = "0.2.0" }
+sim-lib-femm-ode = { optional = true, version = "0.1.3" }
+sim-lib-femm-physics = { optional = true, version = "0.2.0" }
+sim-lib-femm-post = { optional = true, version = "0.2.0" }
+sim-lib-femm-prelude = { optional = true, version = "0.1.2" }
+sim-lib-femm-sensitiv = { optional = true, version = "0.1.4" }
+sim-lib-femm-solve = { optional = true, version = "0.2.0" }
+sim-lib-femm-space = { optional = true, version = "0.2.0" }
 sim-lib-femm-tape = { optional = true, version = "0.1.2" }
 sim-lib-intent = { optional = true, version = "0.1.3" }
 sim-lib-lang-cl = { optional = true, version = "0.1.3" }
@@ -158,36 +165,36 @@ sim-lib-music-transform = { optional = true, version = "0.1.3" }
 sim-lib-music-wasm-frame = { optional = true, version = "0.1.2" }
 sim-lib-mutation = { optional = true, version = "0.1.1" }
 sim-lib-namespace = { optional = true, version = "0.1.1" }
-sim-lib-numbers-ad = { optional = true, version = "0.1.1" }
-sim-lib-numbers-arith = { optional = true, version = "0.1.1" }
-sim-lib-numbers-bigint = { optional = true, version = "0.1.1" }
-sim-lib-numbers-bool = { optional = true, version = "0.1.1" }
-sim-lib-numbers-cas = { optional = true, version = "0.1.2" }
-sim-lib-numbers-cas-diff = { optional = true, version = "0.1.2" }
-sim-lib-numbers-cas-eval = { optional = true, version = "0.1.1" }
-sim-lib-numbers-codec = { optional = true, version = "0.1.1" }
-sim-lib-numbers-complex = { optional = true, version = "0.1.1" }
-sim-lib-numbers-core = { optional = true, version = "0.1.1" }
-sim-lib-numbers-exotic = { optional = true, version = "0.1.1" }
-sim-lib-numbers-f64 = { optional = true, version = "0.1.1" }
-sim-lib-numbers-fixed = { optional = true, version = "0.1.1" }
-sim-lib-numbers-float = { optional = true, version = "0.1.1" }
-sim-lib-numbers-func = { optional = true, version = "0.1.1" }
-sim-lib-numbers-i64 = { optional = true, version = "0.1.1" }
-sim-lib-numbers-numeric = { optional = true, version = "0.1.1" }
-sim-lib-numbers-prelude = { optional = true, version = "0.1.1" }
-sim-lib-numbers-quad = { optional = true, version = "0.1.1" }
-sim-lib-numbers-rational = { optional = true, version = "0.1.1" }
-sim-lib-numbers-rk = { optional = true, version = "0.1.1" }
-sim-lib-numbers-stats = { optional = true, version = "0.1.2" }
-sim-lib-numbers-tensor = { optional = true, version = "0.1.4" }
-sim-lib-numbers-tensor-bcast = { optional = true, version = "0.1.3" }
-sim-lib-numbers-tensor-bit = { optional = true, version = "0.1.3" }
-sim-lib-numbers-tensor-cmplxf = { optional = true, version = "0.1.2" }
-sim-lib-numbers-tensor-f64 = { optional = true, version = "0.1.2" }
-sim-lib-numbers-tensor-i64 = { optional = true, version = "0.1.2" }
-sim-lib-numbers-tensor-linalg = { optional = true, version = "0.1.3" }
-sim-lib-numbers-tensor-rat64 = { optional = true, version = "0.1.2" }
+sim-lib-numbers-ad = { optional = true, version = "0.2.0" }
+sim-lib-numbers-arith = { optional = true, version = "0.2.0" }
+sim-lib-numbers-bigint = { optional = true, version = "0.2.0" }
+sim-lib-numbers-bool = { optional = true, version = "0.2.0" }
+sim-lib-numbers-cas = { optional = true, version = "0.2.0" }
+sim-lib-numbers-cas-diff = { optional = true, version = "0.2.0" }
+sim-lib-numbers-cas-eval = { optional = true, version = "0.2.0" }
+sim-lib-numbers-codec = { optional = true, version = "0.2.0" }
+sim-lib-numbers-complex = { optional = true, version = "0.2.0" }
+sim-lib-numbers-core = { optional = true, version = "0.2.0" }
+sim-lib-numbers-exotic = { optional = true, version = "0.2.0" }
+sim-lib-numbers-f64 = { optional = true, version = "0.2.0" }
+sim-lib-numbers-fixed = { optional = true, version = "0.2.0" }
+sim-lib-numbers-float = { optional = true, version = "0.2.0" }
+sim-lib-numbers-func = { optional = true, version = "0.2.0" }
+sim-lib-numbers-i64 = { optional = true, version = "0.2.0" }
+sim-lib-numbers-numeric = { optional = true, version = "0.2.0" }
+sim-lib-numbers-prelude = { optional = true, version = "0.2.0" }
+sim-lib-numbers-quad = { optional = true, version = "0.2.0" }
+sim-lib-numbers-rational = { optional = true, version = "0.2.0" }
+sim-lib-numbers-rk = { optional = true, version = "0.2.0" }
+sim-lib-numbers-stats = { optional = true, version = "0.2.0" }
+sim-lib-numbers-tensor = { optional = true, version = "0.1.6" }
+sim-lib-numbers-tensor-bcast = { optional = true, version = "0.2.0" }
+sim-lib-numbers-tensor-bit = { optional = true, version = "0.2.0" }
+sim-lib-numbers-tensor-cmplxf = { optional = true, version = "0.2.0" }
+sim-lib-numbers-tensor-f64 = { optional = true, version = "0.2.0" }
+sim-lib-numbers-tensor-i64 = { optional = true, version = "0.2.0" }
+sim-lib-numbers-tensor-linalg = { optional = true, version = "0.2.0" }
+sim-lib-numbers-tensor-rat64 = { optional = true, version = "0.2.0" }
 sim-lib-openai-server = { optional = true, version = "0.1.6" }
 sim-lib-pattern = { optional = true, version = "0.1.1" }
 sim-lib-pitch-chord = { optional = true, version = "0.1.2" }
@@ -304,7 +311,14 @@ codec-lisp = ["dep:sim-codec", "dep:sim-codec-lisp", "dep:proc-macro2", "dep:sim
 codec-mcp = ["dep:sim-codec-mcp", "codec-json"]
 control = ["dep:sim-lib-control", "core"]
 cookbook = ["dep:sim-cookbook", "dep:sim-lib-cookbook", "core", "codec-lisp", "sim-lib-agent?/cookbook"]
-cookbook-all = ["cookbook", "shape", "citizen", "bridge", "codec-algol", "codec-binary", "codec-binary-base64", "codec-bitwise", "codec-bitwise-base64", "codec-bridge", "codec-chat", "codec-json", "codec-mcp", "agent", "audio-dsp", "audio-graph-live", "daw-session", "device-reference", "discrete-rank", "discrete-runtime", "exec", "femm-core", "femm-field", "femm-function", "femm-ode", "glasses-modeled", "intent", "list-cell", "list-lazy", "logic-core", "mcp", "midi-core", "midi-live", "midi-ble", "midi-rtmidi", "midi-shapes", "music-lift", "music-notation", "music-shapes", "music-synth", "numbers-i64", "numbers-arith", "numbers-bigint", "numbers-bool", "numbers-f64", "numbers-rational", "numbers-complex", "numbers-func", "numbers-cas", "numbers-cas-diff", "numbers-cas-eval", "numbers-exotic", "numbers-fixed", "numbers-float", "numbers-numeric", "numbers-quad", "numbers-rk", "numbers-stats", "numbers-tensor", "numbers-tensor-bcast", "numbers-tensor-bit", "numbers-tensor-cmplxf", "numbers-tensor-f64", "numbers-tensor-i64", "numbers-tensor-linalg", "numbers-tensor-rat64", "openai-server", "pitch-dissonance", "pitch-namer", "pitch-shapes", "plugin-clap", "plugin-vst3", "rank", "scene", "server", "skill", "sound-audio-lift", "sound-bridge", "sound-dissonance", "sound-render", "sound-shapes", "sound-timbre", "sound-tuning", "standard-binding", "control", "standard-sequence", "standard-pattern", "standard-scheme", "standard-cl", "standard-clojure", "stream-alsa", "stream-asio", "stream-bridge", "stream-core", "stream-coreaudio", "stream-jack", "stream-pipewire", "stream-portaudio", "stream-prelude", "table-fs", "table-hash", "table-http", "table-lazy", "topology-core", "watch-modeled"]
+compute-auto = ["dep:sim-lib-compute-auto", "compute-model", "table-hash"]
+compute-cli = ["dep:sim-lib-compute-cli", "compute-auto", "compute-model", "cookbook"]
+compute-cuda = ["dep:sim-lib-compute-cuda", "compute-model"]
+compute-femm = ["dep:sim-lib-compute-femm", "compute-model", "femm-solve"]
+compute-model = ["dep:sim-lib-compute-model", "numbers-tensor-bcast", "numbers-numeric", "numbers-rk"]
+compute-rocm = ["dep:sim-lib-compute-rocm", "compute-model"]
+compute-wgpu = ["dep:sim-lib-compute-wgpu", "compute-model", "numbers-tensor-f64", "numbers-float"]
+cookbook-all = ["cookbook", "shape", "citizen", "bridge", "codec-algol", "codec-binary", "codec-binary-base64", "codec-bitwise", "codec-bitwise-base64", "codec-bridge", "codec-chat", "codec-json", "codec-mcp", "agent", "audio-dsp", "audio-graph-live", "compute-auto", "compute-cli", "compute-cuda", "compute-femm", "compute-model", "compute-rocm", "compute-wgpu", "daw-session", "device-reference", "discrete-rank", "discrete-runtime", "exec", "femm-core", "femm-field", "femm-function", "femm-ode", "glasses-modeled", "gpu-math", "intent", "list-cell", "list-lazy", "logic-core", "mcp", "midi-core", "midi-live", "midi-ble", "midi-rtmidi", "midi-shapes", "music-lift", "music-notation", "music-shapes", "music-synth", "numbers-i64", "numbers-arith", "numbers-bigint", "numbers-bool", "numbers-f64", "numbers-rational", "numbers-complex", "numbers-func", "numbers-cas", "numbers-cas-diff", "numbers-cas-eval", "numbers-exotic", "numbers-fixed", "numbers-float", "numbers-numeric", "numbers-quad", "numbers-rk", "numbers-stats", "numbers-tensor", "numbers-tensor-bcast", "numbers-tensor-bit", "numbers-tensor-cmplxf", "numbers-tensor-f64", "numbers-tensor-i64", "numbers-tensor-linalg", "numbers-tensor-rat64", "openai-server", "pitch-dissonance", "pitch-namer", "pitch-shapes", "plugin-clap", "plugin-vst3", "rank", "scene", "server", "skill", "sound-audio-lift", "sound-bridge", "sound-dissonance", "sound-render", "sound-shapes", "sound-timbre", "sound-tuning", "standard-binding", "control", "standard-sequence", "standard-pattern", "standard-scheme", "standard-cl", "standard-clojure", "stream-alsa", "stream-asio", "stream-bridge", "stream-core", "stream-coreaudio", "stream-jack", "stream-pipewire", "stream-portaudio", "stream-prelude", "table-fs", "table-hash", "table-http", "table-lazy", "topology-core", "watch-modeled"]
 core = ["dep:sim-kernel", "dep:sim-value", "dep:sim-lib-core", "dep:sim-run-loaders"]
 daw-session = ["dep:sim-lib-daw-session", "audio-graph-live", "plugin-core", "stream-audio", "topology-core"]
 default = ["core", "shape", "codec-lisp", "numbers-f64"]
@@ -314,6 +328,8 @@ glasses = ["glasses-modeled"]
 glasses-halo = ["glasses-modeled"]
 glasses-modeled = ["device", "dep:sim-lib-stream-halo", "dep:sim-lib-stream-xr", "dep:sim-lib-view-spatial", "view-bridge", "web-bridge"]
 glasses-viture = ["glasses-modeled", "dep:sim-lib-stream-viture"]
+gpu-math = ["compute-model", "compute-femm", "femm-prelude", "numbers-tensor-linalg", "cookbook"]
+gpu-math-provider = ["gpu-math", "compute-auto", "compute-wgpu", "compute-cuda", "compute-rocm"]
 watch = ["watch-modeled"]
 watch-hardware = ["watch-modeled", "dep:sim-lib-stream-wristbridge"]
 watch-modeled = ["device-reference", "dep:sim-lib-stream-wrist", "dep:sim-lib-view-wrist", "cookbook"]

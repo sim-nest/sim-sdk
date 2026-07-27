@@ -112,6 +112,9 @@ pub use femm_exports::*;
 const _: bool = true;
 #[allow(unused_imports)]
 pub use roadmap11_exports::*;
+#[rustfmt::skip]
+#[cfg(any(feature = "compute-auto", feature = "compute-cli", feature = "compute-cuda", feature = "compute-femm", feature = "compute-model", feature = "compute-rocm", feature = "compute-wgpu"))]
+pub use compute_exports::*;
 #[cfg(feature = "agent")]
 pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
 /// Native class authoring helpers: a `Class` implementation plus the lib
@@ -125,6 +128,7 @@ mod codec_matrix_tests;
 /// checks across versions of the constellation.
 #[cfg(feature = "core")]
 pub mod compat;
+mod compute_exports;
 mod femm_exports;
 /// Function authoring helpers built on the shared `Shape` engine: overload
 /// cases, native function objects, and member-table construction.

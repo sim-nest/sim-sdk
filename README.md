@@ -245,6 +245,11 @@ The large optional surface is organized into families. Each feature is gated in
   `numbers-rational`, `numbers-complex`, `numbers-bigint`, `numbers-tensor-*`,
   the `numbers-cas-*` symbolic stack, and the `numbers-prelude` aggregate, among
   many more.
+- **`gpu-math` / `gpu-math-provider`** -- modeled-default Tensor, ODE, and
+  FEMM composition over the canonical compute provider contracts. `gpu-math`
+  re-exports the modeled compute and resident FEMM solver pieces without
+  pulling in GPU/vendor runtimes; `gpu-math-provider` opts into auto, wgpu,
+  CUDA, and ROCm providers.
 - **`list-*` / `table-*` / `exec`** -- pluggable list and table backends plus
   bounded host-process execution: `list-cell`, `list-lazy`, `table-hash`,
   `table-override`, `table-lazy`, `table-fs`, `table-http`, `table-db`,

@@ -1,5 +1,5 @@
 {
-  "card_count": 250,
+  "card_count": 259,
   "cards": [
     {
       "id": "agent/effects",
@@ -86,6 +86,18 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/BigIntNumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-bigint",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/BoolNumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-bool",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/CasNumberDomain",
       "kind": "citizen-class",
       "owner": "sim-lib-numbers-cas",
@@ -101,6 +113,12 @@
       "id": "citizen/CodecRuntime",
       "kind": "citizen-class",
       "owner": "sim-codec",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/CoefficientList",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-exotic",
       "summary": "citizen class constructor surface"
     },
     {
@@ -122,6 +140,12 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/ContinuedFraction",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-exotic",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/ControlResultValue",
       "kind": "citizen-class",
       "owner": "sim-lib-control",
@@ -140,9 +164,33 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/ExoticNumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-exotic",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/F32NumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-float",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/F64NumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-f64",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/FieldDomain",
       "kind": "citizen-class",
       "owner": "sim-lib-femm-field",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/FixedNumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-fixed",
       "summary": "citizen class constructor surface"
     },
     {
@@ -185,6 +233,12 @@
       "id": "citizen/GatewayRun",
       "kind": "citizen-class",
       "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/I64NumberDomain",
+      "kind": "citizen-class",
+      "owner": "sim-lib-numbers-i64",
       "summary": "citizen class constructor surface"
     },
     {
@@ -1502,7 +1556,7 @@
       "summary": "core"
     }
   ],
-  "citizen_count": 195,
+  "citizen_count": 204,
   "citizens": [
     {
       "arity": 1,
@@ -2388,6 +2442,18 @@
     },
     {
       "arity": 0,
+      "crate": "sim-lib-numbers-bigint",
+      "symbol": "BigIntNumberDomain",
+      "version": 0
+    },
+    {
+      "arity": 0,
+      "crate": "sim-lib-numbers-bool",
+      "symbol": "BoolNumberDomain",
+      "version": 0
+    },
+    {
+      "arity": 0,
       "crate": "sim-lib-numbers-cas",
       "symbol": "CasNumberDomain",
       "version": 0
@@ -2402,6 +2468,12 @@
       "arity": 0,
       "crate": "sim-codec",
       "symbol": "CodecRuntime",
+      "version": 0
+    },
+    {
+      "arity": 0,
+      "crate": "sim-lib-numbers-exotic",
+      "symbol": "CoefficientList",
       "version": 0
     },
     {
@@ -2424,6 +2496,12 @@
     },
     {
       "arity": 0,
+      "crate": "sim-lib-numbers-exotic",
+      "symbol": "ContinuedFraction",
+      "version": 0
+    },
+    {
+      "arity": 0,
       "crate": "sim-lib-control",
       "symbol": "ControlResultValue",
       "version": 0
@@ -2442,8 +2520,32 @@
     },
     {
       "arity": 0,
+      "crate": "sim-lib-numbers-exotic",
+      "symbol": "ExoticNumberDomain",
+      "version": 0
+    },
+    {
+      "arity": 0,
+      "crate": "sim-lib-numbers-float",
+      "symbol": "F32NumberDomain",
+      "version": 0
+    },
+    {
+      "arity": 0,
+      "crate": "sim-lib-numbers-f64",
+      "symbol": "F64NumberDomain",
+      "version": 0
+    },
+    {
+      "arity": 0,
       "crate": "sim-lib-femm-field",
       "symbol": "FieldDomain",
+      "version": 0
+    },
+    {
+      "arity": 0,
+      "crate": "sim-lib-numbers-fixed",
+      "symbol": "FixedNumberDomain",
       "version": 0
     },
     {
@@ -2486,6 +2588,12 @@
       "arity": 0,
       "crate": "sim-lib-openai-server",
       "symbol": "GatewayRun",
+      "version": 0
+    },
+    {
+      "arity": 0,
+      "crate": "sim-lib-numbers-i64",
+      "symbol": "I64NumberDomain",
       "version": 0
     },
     {
@@ -3033,6 +3141,70 @@
         },
         {
           "edges": [
+            "dep:sim-lib-compute-auto",
+            "compute-model",
+            "table-hash"
+          ],
+          "name": "compute-auto",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-cli",
+            "compute-auto",
+            "compute-model",
+            "cookbook"
+          ],
+          "name": "compute-cli",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-cuda",
+            "compute-model"
+          ],
+          "name": "compute-cuda",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-femm",
+            "compute-model",
+            "femm-solve"
+          ],
+          "name": "compute-femm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-model",
+            "numbers-tensor-bcast",
+            "numbers-numeric",
+            "numbers-rk"
+          ],
+          "name": "compute-model",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-rocm",
+            "compute-model"
+          ],
+          "name": "compute-rocm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-compute-wgpu",
+            "compute-model",
+            "numbers-tensor-f64",
+            "numbers-float"
+          ],
+          "name": "compute-wgpu",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-control",
             "core"
           ],
@@ -3068,6 +3240,13 @@
             "agent",
             "audio-dsp",
             "audio-graph-live",
+            "compute-auto",
+            "compute-cli",
+            "compute-cuda",
+            "compute-femm",
+            "compute-model",
+            "compute-rocm",
+            "compute-wgpu",
             "daw-session",
             "device-reference",
             "discrete-rank",
@@ -3078,6 +3257,7 @@
             "femm-function",
             "femm-ode",
             "glasses-modeled",
+            "gpu-math",
             "intent",
             "list-cell",
             "list-lazy",
@@ -3593,6 +3773,28 @@
             "dep:sim-lib-stream-viture"
           ],
           "name": "glasses-viture",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "compute-model",
+            "compute-femm",
+            "femm-prelude",
+            "numbers-tensor-linalg",
+            "cookbook"
+          ],
+          "name": "gpu-math",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "gpu-math",
+            "compute-auto",
+            "compute-wgpu",
+            "compute-cuda",
+            "compute-rocm"
+          ],
+          "name": "gpu-math-provider",
           "workspace_edges": []
         },
         {
@@ -5589,6 +5791,16 @@
           "kind": [
             "test"
           ],
+          "name": "gpu_math_feature_bundles",
+          "src": "tests/gpu_math_feature_bundles.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "native_dynamic",
           "src": "tests/native_dynamic.rs"
         },
@@ -5807,10 +6019,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "c4856f7e102c8091cc5e9f3cea395fe744c40143",
+    "git_commit": "70b356619caf152a8a509eb17babf25d0cf2c918",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "c4856f7e102c8091cc5e9f3cea395fe744c40143",
+    "source_commit": "70b356619caf152a8a509eb17babf25d0cf2c918",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -5823,9 +6035,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "de514be908a897d9",
+    "workspace_hash": "d8f9c45471ee9823",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 222,
+    "workspace_hash_input_count": 226,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -5843,6 +6055,7 @@
       "crates/sim-conformance/tests/spec/cli_boot.rs",
       "crates/sim-conformance/tests/spec/forge_author.rs",
       "crates/sim-conformance/tests/spec/forge_eval.rs",
+      "crates/sim-conformance/tests/spec/gpu_math.rs",
       "crates/sim-conformance/tests/spec/instrument_streams.rs",
       "crates/sim-conformance/tests/spec/lib_lifecycle.rs",
       "crates/sim-conformance/tests/spec/placement.rs",
@@ -5865,6 +6078,7 @@
       "recipes/glasses/review-in-space/recipe.toml",
       "recipes/glasses/viture-two-rate/recipe.toml",
       "recipes/glasses/voice-site/recipe.toml",
+      "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
       "recipes/watch/book.toml",
       "recipes/watch/dual-quorum/recipe.toml",
       "recipes/watch/glance-pager/recipe.toml",
@@ -5885,6 +6099,7 @@
       "src/codec_matrix_tests/value_roundtrip.rs",
       "src/codec_matrix_tests.rs",
       "src/compat.rs",
+      "src/compute_exports.rs",
       "src/feature_contract_tests/cfg_sentinels.rs",
       "src/feature_contract_tests/facade_thinness.rs",
       "src/feature_contract_tests/glasses.rs",
@@ -5937,6 +6152,7 @@
       "src/runtime/capabilities.rs",
       "src/runtime/cookbook_directory/audio_stream.rs",
       "src/runtime/cookbook_directory/codecs.rs",
+      "src/runtime/cookbook_directory/compute.rs",
       "src/runtime/cookbook_directory/data.rs",
       "src/runtime/cookbook_directory/device.rs",
       "src/runtime/cookbook_directory/femm.rs",
@@ -6079,7 +6295,7 @@
       "card_id": "cookbook/sim-sdk",
       "group": "workspace",
       "package": "sim-nest",
-      "recipe_count": 13,
+      "recipe_count": 14,
       "recipes": [
         {
           "card_id": "sim-sdk/01-basics/boot-runtime",
@@ -6152,6 +6368,14 @@
           "package": "sim-nest",
           "recipe_toml": "recipes/glasses/voice-site/recipe.toml",
           "title": "Recognize voice through a modeled site"
+        },
+        {
+          "card_id": "sim-sdk/gpu-math/modeled-matrix-ode-femm",
+          "codec": "lisp",
+          "id": "modeled-matrix-ode-femm",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
+          "title": "Compose modeled matrix, ODE, and FEMM math"
         },
         {
           "card_id": "sim-sdk/watch/dual-quorum",

@@ -1,0 +1,3 @@
+title = "GPU Math"
+order = 20
+summary = "Compose Tensor, ODE, compute-provider, and FEMM pieces through the SDK facade."

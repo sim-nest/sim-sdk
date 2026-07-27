@@ -126,6 +126,20 @@ claims_specimens = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/gpu-math-composition"
+title = "GPU math SDK composition"
+summary = "Expose opt-in Tensor, ODE, compute-provider, and FEMM solver composition through direct SDK re-exports."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Use `gpu-math` for the modeled default matrix/ODE/FEMM stack and `gpu-math-provider` when a host intentionally opts into auto, wgpu, CUDA, or ROCm provider crates. The math expression stays provider-neutral; swap only the placement site."
+claims_anchors = [
+  "anchor/crate/sim-nest",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/crates/sim-conformance/tests/spec/gpu_math",
+]
+
+[[feature]]
 id = "feature/sim-sdk/facade-shapes"
 title = "Facade Shape exports"
 summary = "Expose public Shape exports through the SDK facade while shape crates keep the matching behavior."
@@ -197,4 +211,13 @@ steps = [
   { feature = "feature/sim-sdk/facade-runtime", why = "The facade row owns the public command and reversible view surface." },
   { feature = "feature/sim-sdk/device-recipes", why = "The device row gives wearable workflows through facade-level recipes." },
   { specimen = "recipe/sim-sdk/01-basics/boot-runtime", why = "The boot-runtime recipe checks the smallest facade path." },
+]
+
+[[route]]
+id = "route/compose-gpu-math-from-sdk"
+task = "Compose GPU math from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/gpu-math-composition", why = "The SDK row owns the facade feature aliases and direct re-exports." },
+  { specimen = "recipe/sim-sdk/gpu-math/modeled-matrix-ode-femm", why = "The SDK recipe shows the modeled default composition and provider-neutral placement boundary." },
 ]

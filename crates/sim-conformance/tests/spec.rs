@@ -23,6 +23,8 @@ mod conformance_support;
 mod forge_author;
 #[path = "spec/forge_eval.rs"]
 mod forge_eval;
+#[path = "spec/gpu_math.rs"]
+mod gpu_math;
 #[path = "spec/instrument_streams.rs"]
 mod instrument_streams;
 #[path = "spec/rust_intelligence.rs"]
