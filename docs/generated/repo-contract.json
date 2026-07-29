@@ -1,5 +1,5 @@
 {
-  "card_count": 259,
+  "card_count": 275,
   "cards": [
     {
       "id": "agent/effects",
@@ -236,6 +236,12 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/GraphHandle",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/I64NumberDomain",
       "kind": "citizen-class",
       "owner": "sim-lib-numbers-i64",
@@ -251,6 +257,12 @@
       "id": "citizen/LazySequence",
       "kind": "citizen-class",
       "owner": "sim-lib-sequence",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/LiveCell",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
       "summary": "citizen class constructor surface"
     },
     {
@@ -386,9 +398,21 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/StageHandle",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/StoredTableValue",
       "kind": "citizen-class",
       "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/StreamHandle",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
       "summary": "citizen class constructor surface"
     },
     {
@@ -689,6 +713,78 @@
       "id": "citizen/intent/Intent",
       "kind": "citizen-class",
       "owner": "sim-lib-intent",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Emitter",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Medium",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/PhasorField",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Plane",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Problem",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Projection",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/ProjectionCertificate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/ProjectionRequest",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/SamplingCertificate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Study",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/StudyEvidence",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/WorkEstimate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
       "summary": "citizen class constructor surface"
     },
     {
@@ -1556,7 +1652,7 @@
       "summary": "core"
     }
   ],
-  "citizen_count": 204,
+  "citizen_count": 220,
   "citizens": [
     {
       "arity": 1,
@@ -1820,6 +1916,78 @@
       "arity": 1,
       "crate": "sim-lib-intent",
       "symbol": "intent/Intent",
+      "version": 1
+    },
+    {
+      "arity": 6,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Emitter",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Medium",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/PhasorField",
+      "version": 1
+    },
+    {
+      "arity": 7,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Plane",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Problem",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Projection",
+      "version": 1
+    },
+    {
+      "arity": 15,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/ProjectionCertificate",
+      "version": 1
+    },
+    {
+      "arity": 6,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/ProjectionRequest",
+      "version": 1
+    },
+    {
+      "arity": 12,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/SamplingCertificate",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Study",
+      "version": 1
+    },
+    {
+      "arity": 16,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/StudyEvidence",
+      "version": 1
+    },
+    {
+      "arity": 6,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/WorkEstimate",
       "version": 1
     },
     {
@@ -2592,6 +2760,12 @@
     },
     {
       "arity": 0,
+      "crate": "sim-lib-stream-prelude",
+      "symbol": "GraphHandle",
+      "version": 0
+    },
+    {
+      "arity": 0,
       "crate": "sim-lib-numbers-i64",
       "symbol": "I64NumberDomain",
       "version": 0
@@ -2606,6 +2780,12 @@
       "arity": 0,
       "crate": "sim-lib-sequence",
       "symbol": "LazySequence",
+      "version": 0
+    },
+    {
+      "arity": 0,
+      "crate": "sim-lib-stream-prelude",
+      "symbol": "LiveCell",
       "version": 0
     },
     {
@@ -2736,8 +2916,20 @@
     },
     {
       "arity": 0,
+      "crate": "sim-lib-stream-prelude",
+      "symbol": "StageHandle",
+      "version": 0
+    },
+    {
+      "arity": 0,
       "crate": "sim-lib-openai-server",
       "symbol": "StoredTableValue",
+      "version": 0
+    },
+    {
+      "arity": 0,
+      "crate": "sim-lib-stream-prelude",
+      "symbol": "StreamHandle",
       "version": 0
     },
     {
@@ -3260,6 +3452,8 @@
             "gpu-math",
             "intent",
             "interference",
+            "interference-runtime",
+            "interference-compute",
             "list-cell",
             "list-lazy",
             "logic-core",
@@ -6077,10 +6271,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "115635c44abf17d52ed8b038a7a3f54b3d1b8836",
+    "git_commit": "2b0c5ca6367136b696d2a20e9cfa12b21ede090b",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "115635c44abf17d52ed8b038a7a3f54b3d1b8836",
+    "source_commit": "2b0c5ca6367136b696d2a20e9cfa12b21ede090b",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6093,7 +6287,7 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "a30eee4af66c5364",
+    "workspace_hash": "88f3ea879e624118",
     "workspace_hash_algorithm": "fnv1a64",
     "workspace_hash_input_count": 231,
     "workspace_hash_inputs": [

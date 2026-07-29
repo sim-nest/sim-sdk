@@ -349,6 +349,8 @@
             "gpu-math",
             "intent",
             "interference",
+            "interference-runtime",
+            "interference-compute",
             "list-cell",
             "list-lazy",
             "logic-core",

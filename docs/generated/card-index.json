@@ -1,5 +1,5 @@
 {
-  "card_count": 259,
+  "card_count": 275,
   "cards": [
     {
       "id": "agent/effects",
@@ -236,6 +236,12 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/GraphHandle",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/I64NumberDomain",
       "kind": "citizen-class",
       "owner": "sim-lib-numbers-i64",
@@ -251,6 +257,12 @@
       "id": "citizen/LazySequence",
       "kind": "citizen-class",
       "owner": "sim-lib-sequence",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/LiveCell",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
       "summary": "citizen class constructor surface"
     },
     {
@@ -386,9 +398,21 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/StageHandle",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/StoredTableValue",
       "kind": "citizen-class",
       "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/StreamHandle",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
       "summary": "citizen class constructor surface"
     },
     {
@@ -689,6 +713,78 @@
       "id": "citizen/intent/Intent",
       "kind": "citizen-class",
       "owner": "sim-lib-intent",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Emitter",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Medium",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/PhasorField",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Plane",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Problem",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Projection",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/ProjectionCertificate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/ProjectionRequest",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/SamplingCertificate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Study",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/StudyEvidence",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/WorkEstimate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
       "summary": "citizen class constructor surface"
     },
     {
