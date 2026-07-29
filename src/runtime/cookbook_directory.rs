@@ -28,6 +28,8 @@ mod femm;
 #[macro_use]
 mod glasses;
 #[macro_use]
+mod interference;
+#[macro_use]
 mod music;
 #[macro_use]
 mod numbers;
@@ -43,6 +45,7 @@ macro_rules! loadable_libs {
         cookbook_directory_numbers!($m);
         cookbook_directory_runtime_libs!($m);
         cookbook_directory_femm!($m);
+        cookbook_directory_interference!($m);
         cookbook_directory_glasses!($m);
         cookbook_directory_music!($m);
         cookbook_directory_audio_stream!($m);
@@ -143,6 +146,53 @@ where
     }
 }
 
+#[cfg(all(test, feature = "interference", feature = "cookbook"))]
+mod interference_tests {
+    use sim_cookbook::recipes_from_embedded;
+
+    #[test]
+    fn interference_directory_preserves_dependency_order_and_recipes() {
+        let (directory, diagnostics) = super::default_loadable_libs();
+        assert!(diagnostics.is_empty(), "unresolved rows: {diagnostics:?}");
+        let ids = directory
+            .entries()
+            .iter()
+            .map(|entry| entry.id.as_str())
+            .collect::<Vec<_>>();
+        let records = position(&ids, "interference/records");
+        let runtime = position(&ids, "interference/runtime");
+        let compute = position(&ids, "interference/compute");
+        assert!(records < runtime && runtime < compute);
+
+        for (id, recipe) in [
+            (
+                "interference/runtime",
+                "interference-runtime/01-basics/two-source-cancellation",
+            ),
+            (
+                "interference/compute",
+                "interference-compute/01-basics/modeled-resident-study",
+            ),
+        ] {
+            let recipes = directory
+                .entry(id)
+                .and_then(|entry| entry.recipes)
+                .unwrap_or_else(|| panic!("{id} recipes"));
+            let cards = recipes_from_embedded(recipes).unwrap();
+            assert!(
+                cards.iter().any(|card| card.id == recipe),
+                "{id} should expose {recipe}"
+            );
+        }
+    }
+
+    fn position(ids: &[&str], expected: &str) -> usize {
+        ids.iter()
+            .position(|id| *id == expected)
+            .unwrap_or_else(|| panic!("missing {expected} directory row"))
+    }
+}
+
 // conformance: GenAI SDK bundle cookbook rows resolve the agent and bridge libraries.
 #[cfg(all(test, feature = "genai"))]
 mod genai_tests {
@@ -234,6 +284,7 @@ mod tests {
             "cookbook",
             "exec",
             "gpu-math",
+            "interference",
             "shape",
             "discrete-rank",
             "table-fs",

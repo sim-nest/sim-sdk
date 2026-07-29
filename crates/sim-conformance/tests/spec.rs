@@ -27,6 +27,8 @@ mod forge_eval;
 mod gpu_math;
 #[path = "spec/instrument_streams.rs"]
 mod instrument_streams;
+#[path = "spec/interference.rs"]
+mod interference;
 #[path = "spec/rust_intelligence.rs"]
 mod rust_intelligence;
 #[path = "spec/stream_matrix.rs"]

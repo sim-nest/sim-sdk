@@ -140,6 +140,21 @@ claims_specimens = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/interference-composition"
+title = "Interference SDK composition"
+summary = "Compose canonical interference records, solve/runtime, Tensor compute, and reversible view behavior through direct SDK re-exports."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable only the granular layer needed by a headless host, or use `interference` for modeled compute plus the reversible view. Keep the solve expression provider-neutral and swap its EvalFabric placement site."
+claims_anchors = [
+  "anchor/crate/sim-nest",
+  "anchor/rustdoc/sim-nest/default_loadable_libs",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/crates/sim-conformance/tests/spec/interference",
+]
+
+[[feature]]
 id = "feature/sim-sdk/facade-shapes"
 title = "Facade Shape exports"
 summary = "Expose public Shape exports through the SDK facade while shape crates keep the matching behavior."
@@ -220,4 +235,14 @@ audiences = ["user", "code", "framework"]
 steps = [
   { feature = "feature/sim-sdk/gpu-math-composition", why = "The SDK row owns the facade feature aliases and direct re-exports." },
   { specimen = "recipe/sim-sdk/gpu-math/modeled-matrix-ode-femm", why = "The SDK recipe shows the modeled default composition and provider-neutral placement boundary." },
+]
+
+[[route]]
+id = "route/compose-interference-from-sdk"
+task = "Compose an interference study from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/interference-composition", why = "The SDK row owns granular headless features, direct canonical exports, standard installation, compute, and reversible views." },
+  { specimen = "recipe/sim-sdk/interference/modeled-study", why = "The facade recipe shows solve, view, projection edit, model edit, re-solve, and provider-neutral site swapping." },
+  { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/interference", why = "The public-facade conformance specimen executes the complete modeled workflow and unchanged-expression site swap." },
 ]

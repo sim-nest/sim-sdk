@@ -1,0 +1,16 @@
+id = "modeled-study"
+title = "Solve, view, edit, and swap an interference study site"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+expected = "expected.txt"
+order = 10
+tags = ["interference", "compute", "view", "edit", "modeled", "placement"]
+requires = [
+  "interference-runtime",
+  "interference-compute",
+  "view/interference",
+  "site/compute/model",
+  "numbers/tensor",
+]
+assert_tags = ["interference", "modeled", "placement"]

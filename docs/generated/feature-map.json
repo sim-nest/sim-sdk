@@ -348,6 +348,7 @@
             "glasses-modeled",
             "gpu-math",
             "intent",
+            "interference",
             "list-cell",
             "list-lazy",
             "logic-core",
@@ -893,6 +894,45 @@
             "shape"
           ],
           "name": "intent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-compute",
+            "view-interference"
+          ],
+          "name": "interference",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-runtime",
+            "dep:sim-lib-interference-compute"
+          ],
+          "name": "interference-compute",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-interference-core"
+          ],
+          "name": "interference-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-solve",
+            "dep:sim-lib-interference-runtime"
+          ],
+          "name": "interference-runtime",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-core",
+            "dep:sim-lib-interference-solve"
+          ],
+          "name": "interference-solve",
           "workspace_edges": []
         },
         {
@@ -2658,6 +2698,14 @@
             "dep:sim-lib-view-doc"
           ],
           "name": "view-doc",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-runtime",
+            "dep:sim-lib-view-interference"
+          ],
+          "name": "view-interference",
           "workspace_edges": []
         },
         {

@@ -82,6 +82,12 @@ The GPU math composition conformance matrix lives at
 for canonical Tensor, compute-provider, ODE, and FEMM solver pieces and proves
 that provider-site swapping leaves the math expression body unchanged.
 
+The interference composition conformance matrix lives at
+`crates/sim-conformance/tests/spec/interference.rs`. It covers direct canonical
+SDK re-exports, modeled and local placement of one unchanged solve expression,
+Study rendering, reversible projection and model edits, and the re-solve and
+refreshed view after a model edit.
+
 ## Stream cassette publishability
 
 Stream cassettes carry a `to_expr`/`from_expr` serialization that round-trips
@@ -103,6 +109,8 @@ Covered by executable conformance in this suite, with the listed feature set on:
   capability aliases;
 - the stream-core, stream-combinators, stream-fabric, stream-file, stream-host,
   and web-bridge transport surfaces;
+- the headless interference solve/compute stack and reversible interference
+  view surface;
 - the topology placement surface and the CLI boot surface.
 
 Explicit ignored checks lint offline, deterministic sibling recipe corpora (not

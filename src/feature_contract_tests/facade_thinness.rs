@@ -6,6 +6,7 @@ const REEXPORT_AND_WIRING: &[&str] = &[
     "src/bin/sim.rs",
     "src/compute_exports.rs",
     "src/femm_exports.rs",
+    "src/interference_exports.rs",
     "src/lib.rs",
     "src/loaders.rs",
     "src/loaders/registry.rs",

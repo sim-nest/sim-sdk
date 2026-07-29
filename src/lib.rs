@@ -115,6 +115,9 @@ pub use roadmap11_exports::*;
 #[rustfmt::skip]
 #[cfg(any(feature = "compute-auto", feature = "compute-cli", feature = "compute-cuda", feature = "compute-femm", feature = "compute-model", feature = "compute-rocm", feature = "compute-wgpu"))]
 pub use compute_exports::*;
+#[rustfmt::skip]
+#[cfg(any(feature = "interference-core", feature = "interference-solve", feature = "interference-runtime", feature = "interference-compute", feature = "view-interference"))]
+pub use interference_exports::*;
 #[cfg(feature = "agent")]
 pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
 /// Native class authoring helpers: a `Class` implementation plus the lib
@@ -134,6 +137,7 @@ mod femm_exports;
 /// cases, native function objects, and member-table construction.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod functions;
+mod interference_exports;
 /// Lib loaders for the supported source formats (host, Lisp source, binary
 /// pack, native dynamic library, and wasm) plus the standard loader registry.
 #[cfg(feature = "core")]

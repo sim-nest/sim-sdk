@@ -3259,6 +3259,7 @@
             "glasses-modeled",
             "gpu-math",
             "intent",
+            "interference",
             "list-cell",
             "list-lazy",
             "logic-core",
@@ -3804,6 +3805,45 @@
             "shape"
           ],
           "name": "intent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-compute",
+            "view-interference"
+          ],
+          "name": "interference",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-runtime",
+            "dep:sim-lib-interference-compute"
+          ],
+          "name": "interference-compute",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-interference-core"
+          ],
+          "name": "interference-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-solve",
+            "dep:sim-lib-interference-runtime"
+          ],
+          "name": "interference-runtime",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-core",
+            "dep:sim-lib-interference-solve"
+          ],
+          "name": "interference-solve",
           "workspace_edges": []
         },
         {
@@ -5573,6 +5613,14 @@
         },
         {
           "edges": [
+            "interference-runtime",
+            "dep:sim-lib-view-interference"
+          ],
+          "name": "view-interference",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "view",
             "numbers-numeric",
             "dep:sim-lib-view-math"
@@ -5801,6 +5849,16 @@
           "kind": [
             "test"
           ],
+          "name": "interference_feature_bundles",
+          "src": "tests/interference_feature_bundles.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "native_dynamic",
           "src": "tests/native_dynamic.rs"
         },
@@ -6019,10 +6077,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "2b05882c3f2ed0c680ade239ee67938adfcf0bce",
+    "git_commit": "115635c44abf17d52ed8b038a7a3f54b3d1b8836",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "2b05882c3f2ed0c680ade239ee67938adfcf0bce",
+    "source_commit": "115635c44abf17d52ed8b038a7a3f54b3d1b8836",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6035,9 +6093,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "781ae2e7dde030dc",
+    "workspace_hash": "a30eee4af66c5364",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 226,
+    "workspace_hash_input_count": 231,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -6057,6 +6115,7 @@
       "crates/sim-conformance/tests/spec/forge_eval.rs",
       "crates/sim-conformance/tests/spec/gpu_math.rs",
       "crates/sim-conformance/tests/spec/instrument_streams.rs",
+      "crates/sim-conformance/tests/spec/interference.rs",
       "crates/sim-conformance/tests/spec/lib_lifecycle.rs",
       "crates/sim-conformance/tests/spec/placement.rs",
       "crates/sim-conformance/tests/spec/rust_intelligence.rs",
@@ -6079,6 +6138,7 @@
       "recipes/glasses/viture-two-rate/recipe.toml",
       "recipes/glasses/voice-site/recipe.toml",
       "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
+      "recipes/interference/modeled-study/recipe.toml",
       "recipes/watch/book.toml",
       "recipes/watch/dual-quorum/recipe.toml",
       "recipes/watch/glance-pager/recipe.toml",
@@ -6090,6 +6150,7 @@
       "src/classes/tests.rs",
       "src/classes.rs",
       "src/codec_matrix_tests/bridge_roundtrip.rs",
+      "src/codec_matrix_tests/interference_roundtrip.rs",
       "src/codec_matrix_tests/numbers_r10_14.rs",
       "src/codec_matrix_tests/roadmap11.rs",
       "src/codec_matrix_tests/roundtrip.rs",
@@ -6108,6 +6169,7 @@
       "src/feature_contract_tests.rs",
       "src/femm_exports.rs",
       "src/functions.rs",
+      "src/interference_exports.rs",
       "src/lib.rs",
       "src/loaders/registry.rs",
       "src/loaders/tests/binary_pack.rs",
@@ -6157,6 +6219,7 @@
       "src/runtime/cookbook_directory/device.rs",
       "src/runtime/cookbook_directory/femm.rs",
       "src/runtime/cookbook_directory/glasses.rs",
+      "src/runtime/cookbook_directory/interference.rs",
       "src/runtime/cookbook_directory/music.rs",
       "src/runtime/cookbook_directory/numbers.rs",
       "src/runtime/cookbook_directory/runtime_libs.rs",
@@ -6295,7 +6358,7 @@
       "card_id": "cookbook/sim-sdk",
       "group": "workspace",
       "package": "sim-nest",
-      "recipe_count": 14,
+      "recipe_count": 15,
       "recipes": [
         {
           "card_id": "sim-sdk/01-basics/boot-runtime",
@@ -6376,6 +6439,14 @@
           "package": "sim-nest",
           "recipe_toml": "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
           "title": "Compose modeled matrix, ODE, and FEMM math"
+        },
+        {
+          "card_id": "sim-sdk/interference/modeled-study",
+          "codec": "lisp",
+          "id": "modeled-study",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/interference/modeled-study/recipe.toml",
+          "title": "Solve, view, edit, and swap an interference study site"
         },
         {
           "card_id": "sim-sdk/watch/dual-quorum",
