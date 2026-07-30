@@ -1,5 +1,5 @@
 {
-  "card_count": 275,
+  "card_count": 277,
   "cards": [
     {
       "id": "agent/effects",
@@ -611,6 +611,18 @@
       "id": "citizen/doc/Article",
       "kind": "citizen-class",
       "owner": "sim-lib-view-doc",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/expr-tree/PolicyRecord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-expr-tree",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/expr-tree/SourceRecord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-expr-tree",
       "summary": "citizen class constructor surface"
     },
     {
@@ -1652,7 +1664,7 @@
       "summary": "core"
     }
   ],
-  "citizen_count": 220,
+  "citizen_count": 222,
   "citizens": [
     {
       "arity": 1,
@@ -1814,6 +1826,18 @@
       "arity": 1,
       "crate": "sim-lib-view-doc",
       "symbol": "doc/Article",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-expr-tree",
+      "symbol": "expr-tree/PolicyRecord",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-expr-tree",
+      "symbol": "expr-tree/SourceRecord",
       "version": 1
     },
     {
@@ -3676,6 +3700,20 @@
             "core"
           ],
           "name": "exec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-expr-tree-core",
+            "dep:sim-expr-tree-calc",
+            "dep:sim-lib-expr-tree",
+            "dep:sim-lib-view-expr-tree",
+            "dep:sim-lib-expr-tree-server",
+            "codec-lisp",
+            "server",
+            "web-bridge"
+          ],
+          "name": "expr-tree",
           "workspace_edges": []
         },
         {
@@ -6013,6 +6051,16 @@
           "kind": [
             "test"
           ],
+          "name": "expr_tree_features",
+          "src": "tests/expr_tree_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "facade_aliases",
           "src": "tests/facade_aliases.rs"
         },
@@ -6271,10 +6319,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "9a780b4257460608e73b67c62348d7518e2765d7",
+    "git_commit": "0e194f83dd8b6b18fd2446cb964d8d41f9060361",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "9a780b4257460608e73b67c62348d7518e2765d7",
+    "source_commit": "0e194f83dd8b6b18fd2446cb964d8d41f9060361",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6287,9 +6335,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "a45638673b9092f9",
+    "workspace_hash": "5180fb3ed45d2e77",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 231,
+    "workspace_hash_input_count": 233,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -6305,6 +6353,7 @@
       "crates/sim-conformance/tests/placement_matrix.rs",
       "crates/sim-conformance/tests/shape_grammar.rs",
       "crates/sim-conformance/tests/spec/cli_boot.rs",
+      "crates/sim-conformance/tests/spec/expr_tree.rs",
       "crates/sim-conformance/tests/spec/forge_author.rs",
       "crates/sim-conformance/tests/spec/forge_eval.rs",
       "crates/sim-conformance/tests/spec/gpu_math.rs",
@@ -6355,6 +6404,7 @@
       "src/codec_matrix_tests.rs",
       "src/compat.rs",
       "src/compute_exports.rs",
+      "src/expr_tree_exports.rs",
       "src/feature_contract_tests/cfg_sentinels.rs",
       "src/feature_contract_tests/facade_thinness.rs",
       "src/feature_contract_tests/glasses.rs",

@@ -91,6 +91,8 @@ sim-codec-json = { optional = true, version = "0.1.2" }
 sim-codec-lisp = { optional = true, version = "0.1.1" }
 sim-codec-mcp = { optional = true, version = "0.1.3" }
 sim-cookbook = { optional = true, version = "0.1.3" }
+sim-expr-tree-calc = { optional = true, version = "=0.1.0" }
+sim-expr-tree-core = { optional = true, version = "=0.1.0" }
 sim-kernel = { optional = true, version = "0.1.4" }
 sim-lib-agent = { optional = true, version = "0.1.13" }
 sim-lib-agent-runner-core = { optional = true, version = "0.1.3" }
@@ -116,6 +118,8 @@ sim-lib-daw-session = { optional = true, version = "0.1.2" }
 sim-lib-discrete = { optional = true, version = "0.1.3" }
 sim-lib-dispatch = { optional = true, version = "0.1.0" }
 sim-lib-exec = { optional = true, version = "0.1.0" }
+sim-lib-expr-tree = { optional = true, version = "=0.1.0" }
+sim-lib-expr-tree-server = { optional = true, version = "=0.1.0" }
 sim-lib-forge = { optional = true, version = "0.1.2" }
 sim-lib-femm-assembly = { optional = true, version = "0.2.0" }
 sim-lib-femm-codec = { optional = true, version = "0.1.2" }
@@ -264,6 +268,7 @@ sim-lib-view-codec = { optional = true, version = "0.1.2" }
 sim-lib-view-daw = { optional = true, version = "0.1.1" }
 sim-lib-view-device = { optional = true, version = "0.1.0" }
 sim-lib-view-doc = { optional = true, version = "0.1.3" }
+sim-lib-view-expr-tree = { optional = true, version = "=0.1.0" }
 sim-lib-view-interference = { optional = true, version = "0.1.0" }
 sim-lib-view-math = { optional = true, version = "0.1.2" }
 sim-lib-view-spatial = { optional = true, version = "0.1.0" }
@@ -354,6 +359,7 @@ discrete-runtime = ["dep:sim-lib-discrete", "sim-lib-discrete/runtime", "discret
 discrete-spectral = ["dep:sim-lib-discrete", "sim-lib-discrete/spectral", "core"]
 dynamic-native = ["dep:sim-run-loaders", "sim-run-loaders/dynamic-native", "codec-binary", "shape"]
 exec = ["dep:sim-lib-exec", "core"]
+expr-tree = ["dep:sim-expr-tree-core", "dep:sim-expr-tree-calc", "dep:sim-lib-expr-tree", "dep:sim-lib-view-expr-tree", "dep:sim-lib-expr-tree-server", "codec-lisp", "server", "web-bridge"]
 femm-assembly = ["dep:sim-lib-femm-assembly", "femm-space", "numbers-ad", "core"]
 femm-codec = ["dep:sim-lib-femm-codec", "femm-core", "femm-geometry", "femm-material", "femm-mesh", "femm-space", "femm-assembly", "femm-solve", "femm-flow", "femm-physics", "femm-post", "femm-field", "femm-function", "femm-sensitiv", "femm-tape", "femm-ode", "numbers-codec", "core"]
 femm-core = ["dep:sim-lib-femm-core", "numbers-numeric", "core"]

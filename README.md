@@ -250,6 +250,10 @@ The large optional surface is organized into families. Each feature is gated in
   re-exports the modeled compute and resident FEMM solver pieces without
   pulling in GPU/vendor runtimes; `gpu-math-provider` opts into auto, wgpu,
   CUDA, and ROCm providers.
+- **`expr-tree`** -- the complete stable expression-tree framework through
+  direct core, calculation, runtime, reversible-view, and authoritative-server
+  re-exports. It is opt-in and adds no SDK-specific builder, policy model, or
+  calculation wrapper.
 - **`list-*` / `table-*` / `exec`** -- pluggable list and table backends plus
   bounded host-process execution: `list-cell`, `list-lazy`, `table-hash`,
   `table-override`, `table-lazy`, `table-fs`, `table-http`, `table-db`,
@@ -526,6 +530,12 @@ The placement conformance matrix lives at
 multi-thread, and multi-process deterministic placement with golden report and
 audio hashes; server and LAN placements match their declared latency classes;
 and clock crossings that cannot be sample-exact carry bridge diagnostics.
+
+The expression-tree conformance scenario lives at
+`crates/sim-conformance/tests/spec/expr_tree.rs`. It executes the runtime
+crate's embedded finite-tree and automatic/directed recipes through the public
+SDK facade, then proves restart, server-backed reversible viewing, and
+read-only authority diminution across the real in-process transport.
 
 | Layer | Profile | Supported fixtures | Explicit skips |
 | --- | --- | --- | --- |

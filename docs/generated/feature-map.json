@@ -577,6 +577,20 @@
         },
         {
           "edges": [
+            "dep:sim-expr-tree-core",
+            "dep:sim-expr-tree-calc",
+            "dep:sim-lib-expr-tree",
+            "dep:sim-lib-view-expr-tree",
+            "dep:sim-lib-expr-tree-server",
+            "codec-lisp",
+            "server",
+            "web-bridge"
+          ],
+          "name": "expr-tree",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-femm-assembly",
             "femm-space",
             "numbers-ad",

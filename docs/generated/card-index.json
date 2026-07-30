@@ -1,5 +1,5 @@
 {
-  "card_count": 275,
+  "card_count": 277,
   "cards": [
     {
       "id": "agent/effects",
@@ -611,6 +611,18 @@
       "id": "citizen/doc/Article",
       "kind": "citizen-class",
       "owner": "sim-lib-view-doc",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/expr-tree/PolicyRecord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-expr-tree",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/expr-tree/SourceRecord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-expr-tree",
       "summary": "citizen class constructor surface"
     },
     {

@@ -155,6 +155,21 @@ claims_specimens = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/expression-tree-composition"
+title = "Expression-tree SDK composition"
+summary = "Expose the canonical finite-tree core, bounded calculator, loadable runtime, reversible view, and authoritative server behind one opt-in SDK feature."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable `expr-tree` when a Rust host needs the complete stable expression-tree framework through the SDK. Use the re-exported implementation contracts directly: `expr_tree_core`, `expr_tree_calc`, `expr_tree`, `view_expr_tree`, and `expr_tree_server`. The facade deliberately adds no builder, calculation wrapper, or policy model."
+claims_anchors = [
+  "anchor/crate/sim-nest",
+  "anchor/rustdoc/sim-nest/crate-root",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/crates/sim-conformance/tests/spec/expr_tree",
+]
+
+[[feature]]
 id = "feature/sim-sdk/facade-shapes"
 title = "Facade Shape exports"
 summary = "Expose public Shape exports through the SDK facade while shape crates keep the matching behavior."
@@ -245,4 +260,13 @@ steps = [
   { feature = "feature/sim-sdk/interference-composition", why = "The SDK row owns granular headless features, direct canonical exports, standard installation, compute, and reversible views." },
   { specimen = "recipe/sim-sdk/interference/modeled-study", why = "The facade recipe shows solve, view, projection edit, model edit, re-solve, and provider-neutral site swapping." },
   { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/interference", why = "The public-facade conformance specimen executes the complete modeled workflow and unchanged-expression site swap." },
+]
+
+[[route]]
+id = "route/compose-expression-tree-from-sdk"
+task = "Compose an expression tree from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/expression-tree-composition", why = "The SDK row owns the single opt-in feature and direct canonical re-exports without another domain abstraction." },
+  { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/expr_tree", why = "The public-facade specimen runs the real recipes, mixed storage, automatic and directed calculation, server-backed view, restart, and authority diminution." },
 ]
