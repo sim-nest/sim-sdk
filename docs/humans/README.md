@@ -2744,11 +2744,4 @@ fn pcm_item(value: f32) -> sim::lib_stream_core::StreamItem {
         sim::lib_stream_core::PcmPacket::f32(1, 1, vec![value]).unwrap(),
     ))
 }
-
-fn normalized_conformance_contract() -> String {
-    CONFORMANCE_CONTRACT
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ")
-}
 ```
