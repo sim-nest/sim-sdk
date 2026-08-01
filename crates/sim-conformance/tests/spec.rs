@@ -31,6 +31,8 @@ mod gpu_math;
 mod instrument_streams;
 #[path = "spec/interference.rs"]
 mod interference;
+#[path = "spec/music_algorithms.rs"]
+mod music_algorithms;
 #[path = "spec/rust_intelligence.rs"]
 mod rust_intelligence;
 #[path = "spec/stream_matrix.rs"]

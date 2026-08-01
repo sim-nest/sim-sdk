@@ -116,6 +116,7 @@ sim-lib-cookbook = { optional = true, version = "0.1.14" }
 sim-lib-core = { optional = true, version = "0.1.2" }
 sim-lib-daw-session = { optional = true, version = "0.1.2" }
 sim-lib-discrete = { optional = true, version = "0.1.3" }
+sim-lib-discrete-search = { optional = true, version = "=0.1.1" }
 sim-lib-dispatch = { optional = true, version = "0.1.0" }
 sim-lib-exec = { optional = true, version = "0.1.0" }
 sim-lib-expr-tree = { optional = true, version = "=0.1.0" }
@@ -164,7 +165,9 @@ sim-lib-midi-sysex = { optional = true, version = "0.1.1" }
 sim-lib-midi-wasm-frame = { optional = true, version = "0.1.3" }
 sim-lib-music-analysis = { optional = true, version = "0.1.2" }
 sim-lib-music-combinators = { optional = true, version = "0.1.2" }
+sim-lib-music-consonance = { optional = true, version = "=0.1.0" }
 sim-lib-music-core = { optional = true, version = "0.1.3" }
+sim-lib-music-counterpoint = { optional = true, version = "=0.1.0" }
 sim-lib-music-lift = { optional = true, version = "0.1.1" }
 sim-lib-music-lower = { optional = true, version = "0.1.1" }
 sim-lib-music-notation = { optional = true, version = "0.1.2" }
@@ -194,6 +197,7 @@ sim-lib-numbers-prelude = { optional = true, version = "0.2.0" }
 sim-lib-numbers-quad = { optional = true, version = "0.2.0" }
 sim-lib-numbers-rational = { optional = true, version = "0.2.0" }
 sim-lib-numbers-rk = { optional = true, version = "0.2.0" }
+sim-lib-numbers-signal = { optional = true, version = "=0.1.0" }
 sim-lib-numbers-stats = { optional = true, version = "0.2.0" }
 sim-lib-numbers-tensor = { optional = true, version = "0.1.6" }
 sim-lib-numbers-tensor-bcast = { optional = true, version = "0.2.0" }
@@ -213,6 +217,7 @@ sim-lib-pitch-namer-forte = { optional = true, version = "0.1.2" }
 sim-lib-pitch-namer-jazz = { optional = true, version = "0.1.1" }
 sim-lib-pitch-namer-riemann = { optional = true, version = "0.1.2" }
 sim-lib-pitch-namer-roman = { optional = true, version = "0.1.2" }
+sim-lib-pitch-ratio = { optional = true, version = "=0.1.0" }
 sim-lib-pitch-scale = { optional = true, version = "0.1.3" }
 sim-lib-pitch-set = { optional = true, version = "0.1.2" }
 sim-lib-pitch-shapes = { optional = true, version = "0.1.3" }
@@ -356,6 +361,7 @@ discrete-graph = ["dep:sim-lib-discrete", "sim-lib-discrete/graph", "core"]
 discrete-music = ["discrete-spectral", "music-analysis", "sim-lib-music-analysis/discrete-fwht"]
 discrete-rank = ["dep:sim-lib-discrete", "sim-lib-discrete/rank", "rank", "core"]
 discrete-runtime = ["dep:sim-lib-discrete", "sim-lib-discrete/runtime", "discrete", "core"]
+discrete-search = ["dep:sim-lib-discrete-search"]
 discrete-spectral = ["dep:sim-lib-discrete", "sim-lib-discrete/spectral", "core"]
 dynamic-native = ["dep:sim-run-loaders", "sim-run-loaders/dynamic-native", "codec-binary", "shape"]
 exec = ["dep:sim-lib-exec", "core"]
@@ -410,9 +416,13 @@ midi-smf = ["dep:sim-lib-midi-smf", "midi-core", "core", "sim-table-fs?/midi"]
 midi-sysex = ["dep:sim-lib-midi-sysex", "midi-core", "core"]
 midi-wasm-frame = ["dep:sim-lib-midi-wasm-frame", "midi", "wasm"]
 music = ["music-core", "music-combinators", "music-analysis", "music-transform", "music-lower", "music-lift", "music-notation", "music-shapes", "pitch", "midi"]
+music-algorithms = ["signal", "dep:sim-lib-discrete-search", "dep:sim-lib-pitch-ratio"]
 music-analysis = ["dep:sim-lib-music-analysis", "music-core", "pitch-set", "core"]
 music-combinators = ["dep:sim-lib-music-combinators", "music-core", "core"]
+music-consonance = ["dep:sim-lib-music-consonance"]
+music-counterpoint = ["dep:sim-lib-music-counterpoint"]
 music-core = ["dep:sim-lib-music-core", "pitch-core", "midi-core", "numbers-rational", "core"]
+music-inference = ["music-algorithms", "dep:sim-lib-music-consonance", "dep:sim-lib-music-counterpoint"]
 music-lift = ["dep:sim-lib-music-lift", "music-core", "music-analysis", "midi-smf", "pitch-namer", "core"]
 music-lower = ["dep:sim-lib-music-lower", "music-core", "midi-smf", "core"]
 music-notation = ["dep:sim-lib-music-notation", "music-core", "pitch-core", "sim-table-fs?/notation", "core"]
@@ -462,6 +472,7 @@ pitch-namer-forte = ["dep:sim-lib-pitch-namer-forte", "pitch-set", "core"]
 pitch-namer-jazz = ["dep:sim-lib-pitch-namer-jazz", "pitch-core", "pitch-set", "pitch-chord", "core"]
 pitch-namer-riemann = ["dep:sim-lib-pitch-namer-riemann", "pitch-chord", "core"]
 pitch-namer-roman = ["dep:sim-lib-pitch-namer-roman", "pitch-scale", "pitch-chord", "core"]
+pitch-ratio = ["dep:sim-lib-pitch-ratio"]
 pitch-scale = ["dep:sim-lib-pitch-scale", "pitch-set", "core"]
 pitch-set = ["dep:sim-lib-pitch-set", "pitch-core", "core"]
 pitch-shapes = ["dep:sim-lib-pitch-shapes", "pitch-core", "pitch-set", "pitch-scale", "pitch-chord", "shape", "core"]
@@ -510,6 +521,7 @@ sound-spectrum = ["dep:sim-lib-sound-spectrum", "sound-core", "core"]
 sound-timbre = ["dep:sim-lib-sound-timbre", "sound-core", "sound-spectrum", "core"]
 sound-tuning = ["dep:sim-lib-sound-tuning", "sound-core", "pitch-core", "sim-table-fs?/tuning", "core"]
 sound-wasm-frame = ["dep:sim-lib-sound-wasm-frame", "sim-lib-sound-wasm-frame/sound-music", "sound", "sound-music", "wasm"]
+signal = ["dep:sim-lib-numbers-signal"]
 standard = ["standard-core", "standard-binding", "standard-sequence", "standard-pattern", "standard-dispatch", "standard-namespace", "standard-mutation", "standard-scheme", "standard-islisp", "standard-clojure", "standard-cl", "standard-julia", "standard-lua", "standard-ruby", "standard-typed-lazy"]
 standard-binding = ["dep:sim-lib-binding", "standard-core"]
 standard-cl = ["dep:sim-lib-lang-cl", "standard-core", "standard-binding", "standard-dispatch", "standard-namespace", "standard-mutation", "control"]

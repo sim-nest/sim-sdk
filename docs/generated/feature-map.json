@@ -550,6 +550,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-discrete-search"
+          ],
+          "name": "discrete-search",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-discrete",
             "sim-lib-discrete/spectral",
             "core"
@@ -1205,6 +1212,15 @@
         },
         {
           "edges": [
+            "signal",
+            "dep:sim-lib-discrete-search",
+            "dep:sim-lib-pitch-ratio"
+          ],
+          "name": "music-algorithms",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-music-analysis",
             "music-core",
             "pitch-set",
@@ -1224,6 +1240,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-music-consonance"
+          ],
+          "name": "music-consonance",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-music-core",
             "pitch-core",
             "midi-core",
@@ -1231,6 +1254,22 @@
             "core"
           ],
           "name": "music-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-counterpoint"
+          ],
+          "name": "music-counterpoint",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "music-algorithms",
+            "dep:sim-lib-music-consonance",
+            "dep:sim-lib-music-counterpoint"
+          ],
+          "name": "music-inference",
           "workspace_edges": []
         },
         {
@@ -1786,6 +1825,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-pitch-ratio"
+          ],
+          "name": "pitch-ratio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-pitch-scale",
             "pitch-set",
             "core"
@@ -1967,6 +2013,13 @@
             "sim-run-loaders?/shape"
           ],
           "name": "shape",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-signal"
+          ],
+          "name": "signal",
           "workspace_edges": []
         },
         {

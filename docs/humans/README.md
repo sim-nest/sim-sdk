@@ -25,6 +25,7 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | `feature/sim-sdk/gpu-math-composition` | `crate/sim-nest` | 1 | Expose opt-in Tensor, ODE, compute-provider, and FEMM solver composition through direct SDK re-exports. |
 | `feature/sim-sdk/interference-composition` | `crate/sim-nest` | 1 | Compose canonical interference records, solve/runtime, Tensor compute, and reversible view behavior through direct SDK re-exports. |
 | `feature/sim-sdk/expression-tree-composition` | `crate/sim-nest` | 1 | Expose the canonical finite-tree core, bounded calculator, loadable runtime, reversible view, and authoritative server behind one opt-in SDK feature. |
+| `feature/sim-sdk/music-algorithm-composition` | `crate/sim-nest` | 1 | Select frozen signal, bounded-search, exact-ratio, consonance, and counterpoint candidates through focused features or curated SDK groups. |
 | `feature/sim-sdk/facade-shapes` | `crate/sim-nest` | 0 | Expose public Shape exports through the SDK facade while shape crates keep the matching behavior. |
 | `feature/sim-sdk/device-recipes` | `crate/sim-nest` | 1 | Exercise modeled device, watch, and glasses workflows through SDK-level recipe entry points. |
 | `feature/sim-sdk/conformance-contract` | `crate/sim-conformance` | 1 | Run the SDK conformance contract as a checked operational recipe. |
@@ -92,6 +93,11 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 - `recipes/interference/modeled-study/expected.txt`
 - `recipes/interference/modeled-study/input.lisp`
 - `recipes/interference/modeled-study/recipe.toml`
+- `recipes/music-algorithms/chapter.toml`
+- `recipes/music-algorithms/foundry-plan/README.md`
+- `recipes/music-algorithms/foundry-plan/expected.txt`
+- `recipes/music-algorithms/foundry-plan/input.lisp`
+- `recipes/music-algorithms/foundry-plan/recipe.toml`
 - `recipes/watch/book.toml`
 - `recipes/watch/chapter.toml`
 - `recipes/watch/dual-quorum/README.md`
@@ -542,6 +548,43 @@ fn r11_music_stack_feature_implications_stay_wired() {
             "sound-wasm-frame",
         ],
     );
+}
+
+#[test]
+fn music_algorithm_features_preserve_focused_and_grouped_selection() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "signal", &["dep:sim-lib-numbers-signal"]);
+    assert_feature_includes(
+        &features,
+        "music-algorithms",
+        &[
+            "signal",
+            "dep:sim-lib-discrete-search",
+            "dep:sim-lib-pitch-ratio",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "music-inference",
+        &[
+            "music-algorithms",
+            "dep:sim-lib-music-consonance",
+            "dep:sim-lib-music-counterpoint",
+        ],
+    );
+    for (feature, dependency) in [
+        ("discrete-search", "dep:sim-lib-discrete-search"),
+        ("pitch-ratio", "dep:sim-lib-pitch-ratio"),
+        ("music-consonance", "dep:sim-lib-music-consonance"),
+        ("music-counterpoint", "dep:sim-lib-music-counterpoint"),
+    ] {
+        assert_feature_includes(&features, feature, &[dependency]);
+    }
+
+    let exports = include_str!("music_algorithm_exports.rs");
+    assert!(!exports.contains("MeanDialect"));
+    assert!(!exports.contains("compile_counterpoint_csp"));
+    assert!(!exports.contains("CounterpointCsp"));
 }
 
 #[test]
@@ -1780,6 +1823,82 @@ fn error_code(expr: &Expr) -> Option<String> {
 }
 ```
 
+### `feature/sim-sdk/music-algorithm-composition`
+
+Specimen `spec-test/sim-sdk/crates/sim-conformance/tests/spec/music_algorithms` is checked by `cargo test`.
+
+Source `crates/sim-conformance/tests/spec/music_algorithms.rs`:
+
+```rust
+use sim::{discrete_search, music_consonance, music_counterpoint, pitch_ratio, signal};
+
+use crate::support::CONFORMANCE_CONTRACT;
+
+pub(crate) const MUSIC_ALGORITHMS_PATH: &str =
+    "crates/sim-conformance/tests/spec/music_algorithms.rs";
+
+const FOUNDRY_LOAD_RECIPE: &str =
+    include_str!("../../../../recipes/music-algorithms/foundry-plan/input.lisp");
+
+#[test]
+fn frozen_music_candidate_graph_composes_through_the_sdk() {
+    assert!(CONFORMANCE_CONTRACT.contains(MUSIC_ALGORITHMS_PATH));
+
+    let transform = signal::TransformPlan::new(signal::TransformKind::Fft, 4);
+    transform
+        .validate()
+        .expect("explicit signal transform plan");
+
+    let control = discrete_search::SearchControl::default()
+        .with_max_work(500_000)
+        .with_max_frontier(20_000)
+        .with_max_results(8)
+        .with_seed(42);
+    assert_eq!(control.max_work, Some(500_000));
+    assert_eq!(control.max_frontier, Some(20_000));
+    assert_eq!(control.max_results, Some(8));
+    assert_eq!(control.seed, 42);
+
+    let fifth = pitch_ratio::PitchRatio::new(3, 2).expect("exact fifth");
+    assert_eq!((fifth.numerator(), fifth.denominator()), (3, 2));
+    assert_eq!(
+        music_consonance::ConsonancePolicy::default()
+            .pitch_models
+            .len(),
+        4
+    );
+    music_counterpoint::RuleSet::open()
+        .validate()
+        .expect("open counterpoint rules");
+
+    for library in [
+        "sim-lib-numbers-signal",
+        "sim-lib-discrete-search",
+        "sim-lib-pitch-ratio",
+        "sim-lib-music-consonance",
+        "sim-lib-music-counterpoint",
+    ] {
+        assert!(
+            FOUNDRY_LOAD_RECIPE.contains(&format!("(load \"{library}\")")),
+            "foundry recipe must load {library}"
+        );
+    }
+    for plan_fact in [
+        "(music/algorithm-plan",
+        ":analysis '(pitch-track beat key chords)",
+        ":transform '(voice-lead harmonize counterpoint)",
+        ":render '(smf wav)",
+        ":budget {:work 500000 :frontier 20000 :results 8 :seed 42}",
+        "(realize plan :at 'local)",
+    ] {
+        assert!(
+            FOUNDRY_LOAD_RECIPE.contains(plan_fact),
+            "foundry recipe must retain {plan_fact}"
+        );
+    }
+}
+```
+
 ### `feature/sim-sdk/device-recipes`
 
 Specimen `spec-test/sim-sdk/crates/sim-conformance/tests/spec/surface_protocol` is checked by `cargo test`.
@@ -2082,6 +2201,8 @@ mod gpu_math;
 mod instrument_streams;
 #[path = "spec/interference.rs"]
 mod interference;
+#[path = "spec/music_algorithms.rs"]
+mod music_algorithms;
 #[path = "spec/rust_intelligence.rs"]
 mod rust_intelligence;
 #[path = "spec/stream_matrix.rs"]

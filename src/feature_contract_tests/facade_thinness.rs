@@ -11,6 +11,7 @@ const REEXPORT_AND_WIRING: &[&str] = &[
     "src/lib.rs",
     "src/loaders.rs",
     "src/loaders/registry.rs",
+    "src/music_algorithm_exports.rs",
     "src/numbers_exports.rs",
     "src/roadmap11_exports.rs",
     "src/runtime.rs",

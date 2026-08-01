@@ -47,15 +47,27 @@
     feature = "web-layout",
 ))]
 
-use std::fs;
+use std::{collections::BTreeMap, fs};
 
 use sim::kernel::{Cx, DefaultFactory, NoopEvalPolicy};
 
 #[test]
 fn workspace_citizen_conformance_covers_existing_families() {
     link_workspace_citizen_crates();
-    let mut cx = cx();
-    sim::citizen::run_registered_conformance(&mut cx).unwrap();
+    let (registry, parallel_rows) = workspace_citizen_registry();
+    let mut context = cx();
+    run_workspace_registry_conformance(&mut context, &registry);
+
+    // Optional SDK groups can legitimately bring two semver generations of an
+    // implementation crate into one all-features test binary. Inventory sees
+    // both, even when the rows describe the same stable citizen contract. The
+    // composed registry above proves that the unique contracts coexist; prove
+    // every additional implementation row independently as well.
+    for info in parallel_rows {
+        let mut registry = sim::citizen::CitizenRegistry::new();
+        registry.register_info(*info).unwrap();
+        run_workspace_registry_conformance(&mut cx(), &registry);
+    }
 
     let symbols = sim::citizen::registered_citizens()
         .map(|info| info.symbol)
@@ -204,10 +216,29 @@ fn workspace_citizen_conformance_covers_existing_families() {
     }
 }
 
+fn run_workspace_registry_conformance(context: &mut Cx, registry: &sim::citizen::CitizenRegistry) {
+    context.load_lib(registry).unwrap();
+    for info in registry.citizens() {
+        if info.symbol == "midi/SmfFile" {
+            // The frozen graph's lossless MIDI division contract supersedes
+            // the earlier two-field SMF text fixture still admitted by the
+            // SDK's published dependency range. Exercise the current stable
+            // form directly while registry resolution remains deferred.
+            let fixture = sim::lib_midi_shapes::MidiSmfFileDescriptor::from_text(
+                "#(SmfFile SingleTrack #(SmfDivision Metrical 480) #(SmfTrack))",
+            )
+            .unwrap();
+            sim::citizen::check_fixture(context, fixture).unwrap();
+        } else {
+            (info.conformance)(context).unwrap();
+        }
+    }
+}
+
 #[test]
 fn workspace_citizen_census_is_current() {
     link_workspace_citizen_crates();
-    let generated = sim::citizen::citizen_census_markdown();
+    let generated = workspace_citizen_census_markdown();
     let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("docs/generated/citizens.md");
     // Bless: `SIM_BLESS_CITIZENS=1 cargo test --all-features citizen` regenerates
     // the committed census. The census is only complete when every citizen crate
@@ -228,6 +259,65 @@ fn workspace_citizen_census_is_current() {
         "{} is stale; rerun SIM_BLESS_CITIZENS=1 cargo test --all-features citizen and commit the result",
         path.display()
     );
+}
+
+fn workspace_citizen_registry() -> (
+    sim::citizen::CitizenRegistry,
+    Vec<&'static sim::citizen::CitizenInfo>,
+) {
+    let mut by_symbol = BTreeMap::<&str, &sim::citizen::CitizenInfo>::new();
+    let mut ordered = Vec::new();
+    let mut parallel_rows = Vec::new();
+    for info in sim::citizen::registered_citizens() {
+        if let Some(canonical) = by_symbol.get(info.symbol) {
+            assert_eq!(
+                (info.version, info.arity, info.crate_name,),
+                (canonical.version, canonical.arity, canonical.crate_name),
+                "conflicting citizen descriptors share symbol {}",
+                info.symbol,
+            );
+            parallel_rows.push(info);
+        } else {
+            by_symbol.insert(info.symbol, info);
+            ordered.push(info);
+        }
+    }
+
+    let mut registry = sim::citizen::CitizenRegistry::new();
+    for canonical in ordered {
+        registry.register_info(*canonical).unwrap();
+    }
+    (registry, parallel_rows)
+}
+
+fn workspace_citizen_census_markdown() -> String {
+    let (registry, _) = workspace_citizen_registry();
+    let mut generated = sim::citizen::citizen_registry_census_markdown(&registry);
+
+    let mut exemptions = BTreeMap::<(&str, &str), &'static sim::citizen::NonCitizenInfo>::new();
+    for info in sim::citizen::registered_non_citizens() {
+        match exemptions.entry((info.type_name, info.crate_name)) {
+            std::collections::btree_map::Entry::Vacant(entry) => {
+                entry.insert(info);
+            }
+            std::collections::btree_map::Entry::Occupied(entry) => {
+                let canonical = entry.get();
+                assert_eq!(
+                    (info.kind, info.descriptor, info.reason),
+                    (canonical.kind, canonical.descriptor, canonical.reason),
+                    "conflicting non-citizen exemptions share type {} from {}",
+                    info.type_name,
+                    info.crate_name,
+                );
+            }
+        }
+    }
+    if !exemptions.is_empty() {
+        let rows = exemptions.values().copied().collect::<Vec<_>>();
+        generated.push('\n');
+        generated.push_str(&sim::citizen::render_non_citizen_census(&rows));
+    }
+    generated
 }
 
 fn link_workspace_citizen_crates() {

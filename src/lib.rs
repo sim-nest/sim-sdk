@@ -153,11 +153,14 @@ pub mod loaders;
 /// registry-backed expander, and shape constructors for macro syntax.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod macros;
+mod music_algorithm_exports;
 /// End-to-end music rendering stack that lowers a score to MIDI and renders it
 /// to PCM audio through the sound libs.
 #[cfg(feature = "sound-music")]
 pub mod music_stack;
 mod numbers_exports;
+#[allow(unused_imports)]
+pub use music_algorithm_exports::*;
 mod roadmap11_exports;
 /// Core runtime installer and the embedding entry point that wires classes,
 /// shapes, functions, and the default number domains into a `Cx`.

@@ -88,6 +88,12 @@ SDK re-exports, modeled and local placement of one unchanged solve expression,
 Study rendering, reversible projection and model edits, and the re-solve and
 refreshed view after a model edit.
 
+The music-algorithm composition specimen lives at
+`crates/sim-conformance/tests/spec/music_algorithms.rs`. It checks the frozen
+signal, bounded-search, exact-ratio, consonance, and counterpoint candidate graph
+through curated SDK contracts and binds the same limits to the Lisp foundry-load
+recipe.
+
 The expression-tree composition conformance matrix lives at
 `crates/sim-conformance/tests/spec/expr_tree.rs`. It runs the runtime crate's
 embedded finite-tree and automatic/directed recipes, verifies mixed storage and

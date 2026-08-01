@@ -2,6 +2,7 @@
 
 use sim_kernel::Severity;
 use sim_lib_midi_core::{Channel, MetaBucket, MetaEvent, MidiPayload};
+use sim_lib_midi_smf::{SmfDivision, SmpteRate};
 use sim_lib_music_core::{
     Articulation, Chord, Counterpoint, Melody, MelodyItem, Music, MusicObject, Note, Score, Time,
 };
@@ -18,7 +19,8 @@ use sim_lib_sound_render::{PcmRenderer, RendererOptions};
 use sim_lib_sound_tuning::TuningDescriptor;
 
 use crate::music_stack::{
-    MusicStackRenderOpts, render_score, render_score_report, render_smf_with_opts_report,
+    MusicStackError, MusicStackRenderOpts, render_score, render_score_report,
+    render_smf_with_opts_report,
 };
 
 fn quarter() -> Time {
@@ -271,8 +273,9 @@ fn multi_track_smf_fixture_emits_cross_layer_diagnostics() {
     )
     .expect("lower");
     let mut smf = smf;
+    let ticks_per_quarter = smf.ticks_per_quarter().expect("metrical fixture");
     smf.tracks[0].events.push(sim_lib_midi_core::MidiEvent {
-        time: sim_lib_midi_core::TickTime::new(0, smf.tpq + 1).expect("tick time"),
+        time: sim_lib_midi_core::TickTime::new(0, ticks_per_quarter + 1).expect("tick time"),
         origin: sim_lib_midi_core::synthetic_origin(),
         payload: MidiPayload::Meta(MetaEvent::Other(MetaBucket {
             type_byte: 0x09,
@@ -306,6 +309,22 @@ fn multi_track_smf_fixture_emits_cross_layer_diagnostics() {
             .iter()
             .any(|diag| diag.message.contains("voice stealing"))
     );
+}
+
+#[test]
+fn sound_bridge_rejects_non_metrical_smf_timing_explicitly() {
+    let mut smf = lower_score(&melody_fixture(), &LowerOpts::default()).expect("lower");
+    smf.division = SmfDivision::smpte(SmpteRate::Fps25, 40).expect("SMPTE division");
+
+    let error = render_smf_with_opts_report(
+        &smf,
+        &general_midi_bank(),
+        tuning().as_ref(),
+        &renderer(),
+        &BridgeOptions::default(),
+    )
+    .expect_err("quarter-note bridge must reject SMPTE timing");
+    assert!(matches!(error, MusicStackError::NonMetricalTiming));
 }
 
 #[test]

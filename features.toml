@@ -170,6 +170,21 @@ claims_specimens = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/music-algorithm-composition"
+title = "Music algorithm SDK composition"
+summary = "Select frozen signal, bounded-search, exact-ratio, consonance, and counterpoint candidates through focused features or curated SDK groups."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Use `signal` for the numeric signal owner, `music-algorithms` for signal plus generic search and exact pitch ratios, and `music-inference` for the consonance and counterpoint layer. The focused `discrete-search`, `pitch-ratio`, `music-consonance`, and `music-counterpoint` features remain individually selectable. Compose through the re-exported stable contracts; use the owner crates directly for compatibility dialects or compiled planner internals."
+claims_anchors = [
+  "anchor/crate/sim-nest",
+  "anchor/rustdoc/sim-nest/crate-root",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/crates/sim-conformance/tests/spec/music_algorithms",
+]
+
+[[feature]]
 id = "feature/sim-sdk/facade-shapes"
 title = "Facade Shape exports"
 summary = "Expose public Shape exports through the SDK facade while shape crates keep the matching behavior."
@@ -269,4 +284,14 @@ audiences = ["user", "code", "framework"]
 steps = [
   { feature = "feature/sim-sdk/expression-tree-composition", why = "The SDK row owns the single opt-in feature and direct canonical re-exports without another domain abstraction." },
   { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/expr_tree", why = "The public-facade specimen runs the real recipes, mixed storage, automatic and directed calculation, server-backed view, restart, and authority diminution." },
+]
+
+[[route]]
+id = "route/compose-music-algorithms-from-sdk"
+task = "Compose the modular music algorithm foundry from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/music-algorithm-composition", why = "The SDK row owns focused feature selection and curated re-exports over the frozen candidates while the music owner keeps the open data-plan registry and replaceable foundry stages." },
+  { specimen = "recipe/sim-sdk/music-algorithms/foundry-plan", why = "The Lisp load recipe reproduces the bounded foundry plan through the five focused candidate crates." },
+  { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/music_algorithms", why = "The Rust facade specimen checks the same transform, search, ratio, consonance, counterpoint, and plan bounds." },
 ]
