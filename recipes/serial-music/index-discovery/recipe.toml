@@ -1,0 +1,8 @@
+id = "index-discovery"
+title = "Check serial facade feature and route discovery in the generated SDK index"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 40
+tags = ["serial", "index", "discovery", "sdk", "rust", "docs"]
+requires = ["serial-music"]

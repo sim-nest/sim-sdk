@@ -189,7 +189,7 @@ fn build_realize_invocation(
         let key = realize_keyword(&pair[0])?;
         match key {
             "fabric" => {
-                fabric = Some(cx.eval_expr(pair[1].clone())?);
+                fabric = Some(resolve_fabric(cx, &pair[1])?);
             }
             "result" => {
                 let value = cx.eval_expr(pair[1].clone())?;
@@ -250,6 +250,15 @@ fn build_realize_invocation(
         },
         fabric,
     ))
+}
+
+fn resolve_fabric(cx: &mut Cx, expr: &sim_kernel::Expr) -> Result<Value> {
+    if let sim_kernel::Expr::Symbol(symbol) = expr
+        && let Some(site) = cx.registry().site_by_symbol(symbol)
+    {
+        return Ok(site.clone());
+    }
+    cx.eval_expr(expr.clone())
 }
 
 fn default_eval_fabric(cx: &mut Cx) -> Result<Value> {

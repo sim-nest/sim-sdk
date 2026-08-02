@@ -416,6 +416,67 @@ fn r11_music_stack_feature_implications_stay_wired() {
 }
 
 #[test]
+fn music_algorithm_features_preserve_focused_and_grouped_selection() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "signal", &["dep:sim-lib-numbers-signal"]);
+    assert_feature_includes(
+        &features,
+        "music-algorithms",
+        &[
+            "signal",
+            "dep:sim-lib-discrete-search",
+            "dep:sim-lib-pitch-ratio",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "music-inference",
+        &[
+            "music-algorithms",
+            "dep:sim-lib-music-consonance",
+            "dep:sim-lib-music-counterpoint",
+        ],
+    );
+    for (feature, dependency) in [
+        ("discrete-search", "dep:sim-lib-discrete-search"),
+        ("pitch-ratio", "dep:sim-lib-pitch-ratio"),
+        ("music-consonance", "dep:sim-lib-music-consonance"),
+        ("music-counterpoint", "dep:sim-lib-music-counterpoint"),
+    ] {
+        assert_feature_includes(&features, feature, &[dependency]);
+    }
+
+    let exports = include_str!("music_algorithm_exports.rs");
+    assert!(!exports.contains("MeanDialect"));
+    assert!(!exports.contains("compile_counterpoint_csp"));
+    assert!(!exports.contains("CounterpointCsp"));
+}
+
+#[test]
+fn serial_music_features_preserve_curated_grouping() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "serial-core", &["dep:sim-lib-serial-core"]);
+    assert_feature_includes(
+        &features,
+        "pitch-serial",
+        &["dep:sim-lib-pitch-serial", "serial-core", "pitch-core"],
+    );
+    assert_feature_includes(
+        &features,
+        "serial-music",
+        &[
+            "dep:sim-lib-music-serial",
+            "pitch-serial",
+            "music-consonance",
+            "music-notation",
+            "music-shapes",
+            "pitch-shapes",
+            "cookbook",
+        ],
+    );
+}
+
+#[test]
 fn r11_production_crate_dependency_boundaries_stay_wired() {
     let root = repo_root();
     assert_crate_cargo_tomls_do_not_contain(

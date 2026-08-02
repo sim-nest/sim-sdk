@@ -37,6 +37,13 @@ pub(crate) static CONFORMANCE_CONTRACT: LazyLock<String> = LazyLock::new(|| {
     panic!("could not locate the SIM.md conformance contract for sim-conformance")
 });
 
+pub(crate) fn normalized_conformance_contract() -> String {
+    CONFORMANCE_CONTRACT
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
 pub(crate) fn cx() -> Cx {
     seated_cx().0
 }

@@ -82,6 +82,32 @@ The GPU math composition conformance matrix lives at
 for canonical Tensor, compute-provider, ODE, and FEMM solver pieces and proves
 that provider-site swapping leaves the math expression body unchanged.
 
+The interference composition conformance matrix lives at
+`crates/sim-conformance/tests/spec/interference.rs`. It covers direct canonical
+SDK re-exports, modeled and local placement of one unchanged solve expression,
+Study rendering, reversible projection and model edits, and the re-solve and
+refreshed view after a model edit.
+
+The music-algorithm composition specimen lives at
+`crates/sim-conformance/tests/spec/music_algorithms.rs`. It checks the frozen
+signal, bounded-search, exact-ratio, consonance, and counterpoint candidate graph
+through curated SDK contracts and binds the same limits to the Lisp foundry-load
+recipe.
+
+The serial-music composition specimen lives at
+`crates/sim-conformance/tests/spec/serial_music.rs`. It checks the curated
+serial facade over the frozen candidate crates, proves row-family and matrix
+theory, verifies reversible additive completion preserves the immutable
+structural plan, checks the authored SDK recipes use the same public surface,
+and proves unknown registry components fail closed with stable ids.
+
+The expression-tree composition conformance matrix lives at
+`crates/sim-conformance/tests/spec/expr_tree.rs`. It runs the runtime crate's
+embedded finite-tree and automatic/directed recipes, verifies mixed storage and
+calculation results, opens a real server-backed reversible view, preserves
+diminished read-only authority, and proves restart invalidates stale sessions
+before a fresh view reconnects.
+
 ## Stream cassette publishability
 
 Stream cassettes carry a `to_expr`/`from_expr` serialization that round-trips
@@ -103,6 +129,10 @@ Covered by executable conformance in this suite, with the listed feature set on:
   capability aliases;
 - the stream-core, stream-combinators, stream-fabric, stream-file, stream-host,
   and web-bridge transport surfaces;
+- the expression-tree core, calculation, runtime, reversible view, and
+  authoritative server surfaces;
+- the headless interference solve/compute stack and reversible interference
+  view surface;
 - the topology placement surface and the CLI boot surface.
 
 Explicit ignored checks lint offline, deterministic sibling recipe corpora (not

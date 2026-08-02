@@ -3,6 +3,8 @@ mod numbers_r10_14;
 #[cfg(all(feature = "pitch", feature = "midi", feature = "music", feature = "sound"))]
 mod roadmap11;
 mod bridge_roundtrip;
+#[cfg(all(feature = "interference-runtime", feature = "citizen"))]
+mod interference_roundtrip;
 mod roundtrip;
 mod support;
 mod table_roundtrip;

@@ -23,6 +23,10 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | `feature/sim-sdk/facade-model-workflows` | `crate/sim-nest` | 0 | Expose model-facing facade exports for answer routing and drafter setup. |
 | `feature/sim-sdk/genai-feature-bundles` | `crate/sim-nest` | 2 | Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases. |
 | `feature/sim-sdk/gpu-math-composition` | `crate/sim-nest` | 1 | Expose opt-in Tensor, ODE, compute-provider, and FEMM solver composition through direct SDK re-exports. |
+| `feature/sim-sdk/interference-composition` | `crate/sim-nest` | 1 | Compose canonical interference records, solve/runtime, Tensor compute, and reversible view behavior through direct SDK re-exports. |
+| `feature/sim-sdk/expression-tree-composition` | `crate/sim-nest` | 1 | Expose the canonical finite-tree core, bounded calculator, loadable runtime, reversible view, and authoritative server behind one opt-in SDK feature. |
+| `feature/sim-sdk/music-algorithm-composition` | `crate/sim-nest` | 1 | Select frozen signal, bounded-search, exact-ratio, consonance, and counterpoint candidates through focused features or curated SDK groups. |
+| `feature/sim-sdk/serial-music-composition` | `crate/sim-nest` | 5 | Select the frozen serial-series, row-theory, immutable-plan, adaptation, and reversible-completion candidates through one curated SDK facade. |
 | `feature/sim-sdk/facade-shapes` | `crate/sim-nest` | 0 | Expose public Shape exports through the SDK facade while shape crates keep the matching behavior. |
 | `feature/sim-sdk/device-recipes` | `crate/sim-nest` | 1 | Exercise modeled device, watch, and glasses workflows through SDK-level recipe entry points. |
 | `feature/sim-sdk/conformance-contract` | `crate/sim-conformance` | 1 | Run the SDK conformance contract as a checked operational recipe. |
@@ -85,6 +89,29 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 - `recipes/gpu-math/modeled-matrix-ode-femm/expected.txt`
 - `recipes/gpu-math/modeled-matrix-ode-femm/input.lisp`
 - `recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml`
+- `recipes/interference/chapter.toml`
+- `recipes/interference/modeled-study/README.md`
+- `recipes/interference/modeled-study/expected.txt`
+- `recipes/interference/modeled-study/input.lisp`
+- `recipes/interference/modeled-study/recipe.toml`
+- `recipes/music-algorithms/chapter.toml`
+- `recipes/music-algorithms/foundry-plan/README.md`
+- `recipes/music-algorithms/foundry-plan/expected.txt`
+- `recipes/music-algorithms/foundry-plan/input.lisp`
+- `recipes/music-algorithms/foundry-plan/recipe.toml`
+- `recipes/serial-music/chapter.toml`
+- `recipes/serial-music/index-discovery/purpose.md`
+- `recipes/serial-music/index-discovery/recipe.toml`
+- `recipes/serial-music/index-discovery/setup.rs`
+- `recipes/serial-music/modal-realization/purpose.md`
+- `recipes/serial-music/modal-realization/recipe.toml`
+- `recipes/serial-music/modal-realization/setup.rs`
+- `recipes/serial-music/reversible-completion/purpose.md`
+- `recipes/serial-music/reversible-completion/recipe.toml`
+- `recipes/serial-music/reversible-completion/setup.rs`
+- `recipes/serial-music/row-matrix-analysis/purpose.md`
+- `recipes/serial-music/row-matrix-analysis/recipe.toml`
+- `recipes/serial-music/row-matrix-analysis/setup.rs`
 - `recipes/watch/book.toml`
 - `recipes/watch/chapter.toml`
 - `recipes/watch/dual-quorum/README.md`
@@ -538,6 +565,67 @@ fn r11_music_stack_feature_implications_stay_wired() {
 }
 
 #[test]
+fn music_algorithm_features_preserve_focused_and_grouped_selection() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "signal", &["dep:sim-lib-numbers-signal"]);
+    assert_feature_includes(
+        &features,
+        "music-algorithms",
+        &[
+            "signal",
+            "dep:sim-lib-discrete-search",
+            "dep:sim-lib-pitch-ratio",
+        ],
+    );
+    assert_feature_includes(
+        &features,
+        "music-inference",
+        &[
+            "music-algorithms",
+            "dep:sim-lib-music-consonance",
+            "dep:sim-lib-music-counterpoint",
+        ],
+    );
+    for (feature, dependency) in [
+        ("discrete-search", "dep:sim-lib-discrete-search"),
+        ("pitch-ratio", "dep:sim-lib-pitch-ratio"),
+        ("music-consonance", "dep:sim-lib-music-consonance"),
+        ("music-counterpoint", "dep:sim-lib-music-counterpoint"),
+    ] {
+        assert_feature_includes(&features, feature, &[dependency]);
+    }
+
+    let exports = include_str!("music_algorithm_exports.rs");
+    assert!(!exports.contains("MeanDialect"));
+    assert!(!exports.contains("compile_counterpoint_csp"));
+    assert!(!exports.contains("CounterpointCsp"));
+}
+
+#[test]
+fn serial_music_features_preserve_curated_grouping() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "serial-core", &["dep:sim-lib-serial-core"]);
+    assert_feature_includes(
+        &features,
+        "pitch-serial",
+        &["dep:sim-lib-pitch-serial", "serial-core", "pitch-core"],
+    );
+    assert_feature_includes(
+        &features,
+        "serial-music",
+        &[
+            "dep:sim-lib-music-serial",
+            "pitch-serial",
+            "music-consonance",
+            "music-notation",
+            "music-shapes",
+            "pitch-shapes",
+            "cookbook",
+        ],
+    );
+}
+
+#[test]
 fn r11_production_crate_dependency_boundaries_stay_wired() {
     let root = repo_root();
     assert_crate_cargo_tomls_do_not_contain(
@@ -686,6 +774,8 @@ mod femm;
 #[macro_use]
 mod glasses;
 #[macro_use]
+mod interference;
+#[macro_use]
 mod music;
 #[macro_use]
 mod numbers;
@@ -701,6 +791,7 @@ macro_rules! loadable_libs {
         cookbook_directory_numbers!($m);
         cookbook_directory_runtime_libs!($m);
         cookbook_directory_femm!($m);
+        cookbook_directory_interference!($m);
         cookbook_directory_glasses!($m);
         cookbook_directory_music!($m);
         cookbook_directory_audio_stream!($m);
@@ -801,6 +892,53 @@ where
     }
 }
 
+#[cfg(all(test, feature = "interference", feature = "cookbook"))]
+mod interference_tests {
+    use sim_cookbook::recipes_from_embedded;
+
+    #[test]
+    fn interference_directory_preserves_dependency_order_and_recipes() {
+        let (directory, diagnostics) = super::default_loadable_libs();
+        assert!(diagnostics.is_empty(), "unresolved rows: {diagnostics:?}");
+        let ids = directory
+            .entries()
+            .iter()
+            .map(|entry| entry.id.as_str())
+            .collect::<Vec<_>>();
+        let records = position(&ids, "interference/records");
+        let runtime = position(&ids, "interference/runtime");
+        let compute = position(&ids, "interference/compute");
+        assert!(records < runtime && runtime < compute);
+
+        for (id, recipe) in [
+            (
+                "interference/runtime",
+                "interference-runtime/01-basics/two-source-cancellation",
+            ),
+            (
+                "interference/compute",
+                "interference-compute/01-basics/modeled-resident-study",
+            ),
+        ] {
+            let recipes = directory
+                .entry(id)
+                .and_then(|entry| entry.recipes)
+                .unwrap_or_else(|| panic!("{id} recipes"));
+            let cards = recipes_from_embedded(recipes).unwrap();
+            assert!(
+                cards.iter().any(|card| card.id == recipe),
+                "{id} should expose {recipe}"
+            );
+        }
+    }
+
+    fn position(ids: &[&str], expected: &str) -> usize {
+        ids.iter()
+            .position(|id| *id == expected)
+            .unwrap_or_else(|| panic!("missing {expected} directory row"))
+    }
+}
+
 // conformance: GenAI SDK bundle cookbook rows resolve the agent and bridge libraries.
 #[cfg(all(test, feature = "genai"))]
 mod genai_tests {
@@ -892,6 +1030,7 @@ mod tests {
             "cookbook",
             "exec",
             "gpu-math",
+            "interference",
             "shape",
             "discrete-rank",
             "table-fs",
@@ -1014,6 +1153,1102 @@ fn map_value<'a>(expr: &'a Expr, key: &str) -> &'a Expr {
             _ => None,
         })
         .expect("map key present")
+}
+```
+
+### `feature/sim-sdk/interference-composition`
+
+Specimen `spec-test/sim-sdk/crates/sim-conformance/tests/spec/interference` is checked by `cargo test`.
+
+Source `crates/sim-conformance/tests/spec/interference.rs`:
+
+```rust
+use std::sync::Arc;
+
+use sim::{
+    interference_compute::{
+        InterferenceComputeLib, TensorStudyConfig, TensorStudySolver,
+        interference_compute_lib_symbol,
+    },
+    interference_core::{
+        Emitter, FieldAmplitude, Hertz, InterferenceProblem, MetresPerSecond, NepersPerMetre,
+        Point3M, PositiveMetres, Radians, SamplingPlane, ScalarMedium, SourceSet, UnitVector3,
+    },
+    interference_runtime::{
+        PlaneDescriptor, ProblemDescriptor, ScalarProjectionDescriptor, StudyDescriptor,
+        solve_function_symbol,
+    },
+    kernel::{
+        Args, CapabilityName, Consistency, Cx, Error, EvalFabric, EvalMode, EvalReply, EvalRequest,
+        Expr, NumberLiteral, ObjectCompat, Result, Symbol, Value,
+    },
+    lib_intent::{Origin, intent},
+    lib_view::{Operation, SurfaceCodec, surface},
+    view_interference::{
+        INTERFERENCE_PROJECT_CAPABILITY, INTERFERENCE_SOLVE_CAPABILITY, InterferenceSurfaceCodec,
+    },
+};
+
+use crate::support::{CONFORMANCE_CONTRACT, grant_capabilities, seated_cx};
+
+pub(crate) const INTERFERENCE_PATH: &str = "crates/sim-conformance/tests/spec/interference.rs";
+
+#[test]
+fn interference_modeled_workflow_and_site_swap_compose_through_the_sdk() {
+    assert!(CONFORMANCE_CONTRACT.contains(INTERFERENCE_PATH));
+
+    let (mut cx, seat) = seated_cx();
+    grant_capabilities(
+        &seat,
+        &mut cx,
+        [
+            CapabilityName::new(INTERFERENCE_PROJECT_CAPABILITY),
+            CapabilityName::new(INTERFERENCE_SOLVE_CAPABILITY),
+        ],
+    );
+    install_ci_sized_compute_provider(&mut cx);
+    cx.load_lib(&sim::compute_model::ComputeModelLib::new(
+        sim::compute_model::ModeledComputeProfile {
+            max_queue_depth: 64,
+            auto_flush_batches: true,
+            ..sim::compute_model::ModeledComputeProfile::default()
+        },
+    ))
+    .unwrap();
+
+    let solve = bound_solve_expression(&mut cx, 8, 8);
+    let solve_key = solve.canonical_key();
+    let modeled = solve_at_modeled_site(&mut cx, solve.clone());
+    assert_eq!(
+        modeled.evidence.provider,
+        Symbol::qualified("compute", "executor/model")
+    );
+
+    let codec = InterferenceSurfaceCodec::new();
+    let modeled_expr = modeled.as_expr(&mut cx).unwrap();
+    let scene = codec
+        .encode(&mut cx, &modeled_expr, &surface::preset("desktop").unwrap())
+        .unwrap();
+    assert!(sim::lib_scene::node_kind(&scene).is_some());
+
+    let project = checked_operation(
+        &codec,
+        &mut cx,
+        &modeled_expr,
+        edit(
+            &modeled_expr,
+            &["observable"],
+            Expr::Symbol(Symbol::new("phase")),
+        ),
+    );
+    let projection = realize_operation(&mut cx, &project)
+        .object()
+        .downcast_ref::<ScalarProjectionDescriptor>()
+        .cloned()
+        .expect("project edit realizes the canonical projection record");
+    assert_eq!((projection.rows, projection.columns), (8, 8));
+
+    let model = checked_operation(
+        &codec,
+        &mut cx,
+        &modeled_expr,
+        edit(&modeled_expr, &["frequency"], number(686.0)),
+    );
+    let refreshed = realize_operation(&mut cx, &model)
+        .object()
+        .downcast_ref::<StudyDescriptor>()
+        .cloned()
+        .expect("model edit realizes a re-solved canonical Study");
+    assert_eq!(refreshed.problem.frequency_hz, 686.0);
+    let refreshed_expr = refreshed.as_expr(&mut cx).unwrap();
+    let refreshed_scene = codec
+        .encode(
+            &mut cx,
+            &refreshed_expr,
+            &surface::preset("desktop").unwrap(),
+        )
+        .unwrap();
+    assert!(sim::lib_scene::node_kind(&refreshed_scene).is_some());
+
+    let local = cx
+        .eval_expr(solve.clone())
+        .unwrap()
+        .object()
+        .downcast_ref::<StudyDescriptor>()
+        .cloned()
+        .expect("local placement returns a canonical Study");
+    assert_eq!(solve.canonical_key(), solve_key);
+    assert_ne!(local.evidence.provider, modeled.evidence.provider);
+}
+
+fn install_ci_sized_compute_provider(cx: &mut Cx) {
+    let default_provider = cx
+        .registry()
+        .libs()
+        .iter()
+        .find(|loaded| loaded.manifest.id == interference_compute_lib_symbol())
+        .map(|loaded| loaded.id)
+        .expect("standard install registered the interference compute library");
+    cx.unload_lib(default_provider).unwrap();
+    cx.load_lib(&InterferenceComputeLib::new(TensorStudySolver::new(
+        TensorStudyConfig {
+            min_accelerated_cells: 1,
+            ..TensorStudyConfig::default()
+        },
+    )))
+    .unwrap();
+}
+
+fn bound_solve_expression(cx: &mut Cx, rows: usize, columns: usize) -> Expr {
+    let problem = InterferenceProblem::new(
+        Hertz::new(343.0).unwrap(),
+        ScalarMedium::new(
+            MetresPerSecond::new(343.0).unwrap(),
+            NepersPerMetre::new(0.01).unwrap(),
+        ),
+        SourceSet::new(vec![Emitter::Point {
+            id: "sdk-source".to_owned(),
+            position: Point3M::from_metres(0.0, 0.0, 0.0).unwrap(),
+            amplitude_at_reference: FieldAmplitude::new(1.0).unwrap(),
+            phase: Radians::new(0.25).unwrap(),
+        }])
+        .unwrap(),
+        PositiveMetres::new(0.01).unwrap(),
+    );
+    let plane = SamplingPlane::new(
+        Point3M::from_metres(1.0, -0.125, -0.125).unwrap(),
+        UnitVector3::new(0.0, 1.0, 0.0).unwrap(),
+        UnitVector3::new(0.0, 0.0, 1.0).unwrap(),
+        PositiveMetres::new(0.25).unwrap(),
+        PositiveMetres::new(0.25).unwrap(),
+        rows,
+        columns,
+    )
+    .unwrap();
+    let problem_symbol = Symbol::qualified("sdk-conformance", "problem");
+    let plane_symbol = Symbol::qualified("sdk-conformance", "plane");
+    let problem_value = cx
+        .factory()
+        .opaque(Arc::new(ProblemDescriptor::from_problem(&problem)))
+        .unwrap();
+    let plane_value = cx
+        .factory()
+        .opaque(Arc::new(PlaneDescriptor::from_plane(plane)))
+        .unwrap();
+    cx.env_mut().define(problem_symbol.clone(), problem_value);
+    cx.env_mut().define(plane_symbol.clone(), plane_value);
+
+    Expr::Call {
+        operator: Box::new(Expr::Symbol(solve_function_symbol())),
+        args: vec![
+            Expr::Symbol(problem_symbol),
+            Expr::Symbol(plane_symbol),
+            Expr::Map(vec![
+                (
+                    Expr::Symbol(Symbol::new("sampling")),
+                    Expr::Symbol(Symbol::new("annotate")),
+                ),
+                (
+                    Expr::Symbol(Symbol::new("work-budget")),
+                    Expr::Symbol(Symbol::new("default")),
+                ),
+            ]),
+        ],
+    }
+}
+
+fn solve_at_modeled_site(cx: &mut Cx, expr: Expr) -> StudyDescriptor {
+    let site = cx
+        .registry()
+        .site_by_symbol(&sim::compute_model::compute_model_site_symbol())
+        .cloned()
+        .expect("modeled compute site is registered");
+    site.object()
+        .as_eval_fabric()
+        .expect("modeled compute Site implements EvalFabric")
+        .realize(cx, eval_request(expr))
+        .unwrap()
+        .value
+        .object()
+        .downcast_ref::<StudyDescriptor>()
+        .cloned()
+        .expect("modeled placement returns a canonical Study")
+}
+
+fn checked_operation(
+    codec: &InterferenceSurfaceCodec,
+    cx: &mut Cx,
+    base: &Expr,
+    submitted: Expr,
+) -> Operation {
+    let draft = codec.decode(cx, base, &submitted).unwrap();
+    assert!(draft.committable, "submitted interference edit is valid");
+    codec.commit(cx, &draft).unwrap()
+}
+
+fn realize_operation(cx: &mut Cx, operation: &Operation) -> Value {
+    OperationFabric
+        .realize(
+            cx,
+            EvalRequest {
+                expr: operation.form.clone(),
+                result_shape: operation.result_shape.clone(),
+                required_capabilities: operation.required_capabilities.clone(),
+                ..eval_request(Expr::Nil)
+            },
+        )
+        .unwrap()
+        .value
+}
+
+struct OperationFabric;
+
+impl EvalFabric for OperationFabric {
+    fn realize(&self, cx: &mut Cx, request: EvalRequest) -> Result<EvalReply> {
+        for capability in &request.required_capabilities {
+            cx.require(capability)?;
+        }
+        let value = evaluate_operation(cx, request.expr)?;
+        if let Some(shape) = request.result_shape {
+            let matched = shape
+                .object()
+                .as_shape()
+                .expect("Operation result shape")
+                .check_value(cx, value.clone())?;
+            assert!(matched.accepted, "Operation result satisfies its Shape");
+        }
+        Ok(EvalReply {
+            value,
+            diagnostics: cx.take_diagnostics(),
+            trace: None,
+        })
+    }
+}
+
+fn evaluate_operation(cx: &mut Cx, form: Expr) -> Result<Value> {
+    let Expr::Call { operator, args } = form else {
+        return Err(Error::Eval(
+            "interference Operation must be a call".to_owned(),
+        ));
+    };
+    let Expr::Symbol(function) = operator.as_ref() else {
+        return Err(Error::Eval(
+            "interference Operation requires a symbol operator".to_owned(),
+        ));
+    };
+    let args = args
+        .iter()
+        .map(|arg| operation_argument(cx, arg))
+        .collect::<Result<Vec<_>>>()?;
+    cx.call_function(function, Args::new(args))
+}
+
+fn operation_argument(cx: &mut Cx, expr: &Expr) -> Result<Value> {
+    let Expr::Extension { tag, payload } = expr else {
+        return cx.eval_expr(expr.clone());
+    };
+    if *tag != Symbol::qualified("citizen", "read-construct") {
+        return cx.eval_expr(expr.clone());
+    }
+    let Expr::Vector(parts) = payload.as_ref() else {
+        return Err(Error::Eval(
+            "citizen read-construct payload must be a vector".to_owned(),
+        ));
+    };
+    let Some((Expr::Symbol(class), args)) = parts.split_first() else {
+        return Err(Error::Eval(
+            "citizen read-construct must begin with a class symbol".to_owned(),
+        ));
+    };
+    let args = args
+        .iter()
+        .map(|arg| sim::citizen::value_from_expr(cx, arg))
+        .collect::<Result<Vec<_>>>()?;
+    cx.read_construct(class, args)
+}
+
+fn edit(base: &Expr, path: &[&str], value: Expr) -> Expr {
+    intent(
+        "edit-field",
+        Origin::human(17),
+        vec![
+            ("target", base.clone()),
+            (
+                "path",
+                Expr::List(
+                    path.iter()
+                        .map(|segment| Expr::Symbol(Symbol::new(*segment)))
+                        .collect(),
+                ),
+            ),
+            ("value", value),
+        ],
+    )
+}
+
+fn number(value: f64) -> Expr {
+    Expr::Number(NumberLiteral {
+        domain: Symbol::new("f64"),
+        canonical: value.to_string(),
+    })
+}
+
+fn eval_request(expr: Expr) -> EvalRequest {
+    EvalRequest {
+        expr,
+        result_shape: None,
+        required_capabilities: Vec::new(),
+        deadline: None,
+        consistency: Consistency::LocalFirst,
+        mode: EvalMode::Eval,
+        answer_limit: None,
+        stream_buffer: None,
+        stream: false,
+        trace: false,
+    }
+}
+```
+
+### `feature/sim-sdk/expression-tree-composition`
+
+Specimen `spec-test/sim-sdk/crates/sim-conformance/tests/spec/expr_tree` is checked by `cargo test`.
+
+Source `crates/sim-conformance/tests/spec/expr_tree.rs`:
+
+```rust
+use std::sync::Arc;
+
+use sim::{
+    codec::{DecodePosition, DecodedForm, Input, decode_default_with_codec},
+    expr_tree::{
+        RECIPES, expr_tree_calculate_capability, expr_tree_mount_capability,
+        expr_tree_read_capability, expr_tree_write_capability, install_expr_tree_lib,
+    },
+    expr_tree_server::{ExpressionTreeServer, SessionId},
+    kernel::{
+        Consistency, Cx, EvalFabric, EvalMode, EvalRequest, Expr, NumberLiteral, ReadPolicy,
+        Symbol, Value,
+    },
+    lib_intent::{Origin, intent},
+    lib_server::{
+        DeterministicWallClock, EvalSite, ServerAddress, register_loopback_transport_endpoint,
+    },
+    lib_view::LensRegistry,
+    lib_web_bridge::{PhoneHost, RemoteTransport},
+    view_expr_tree::{
+        expression_tree_surface_codec_symbol, register_expression_tree_surface_codec,
+    },
+};
+
+use crate::support::{CONFORMANCE_CONTRACT, grant_capabilities, seated_cx};
+
+pub(crate) const EXPR_TREE_PATH: &str = "crates/sim-conformance/tests/spec/expr_tree.rs";
+const ADDRESS_THREAD: u64 = 17_029;
+
+#[test]
+fn expr_tree_recipe_restart_view_and_authority_compose_through_the_sdk() {
+    assert!(CONFORMANCE_CONTRACT.contains(EXPR_TREE_PATH));
+
+    let mut recipe_cx = full_runtime_cx();
+    let finite = eval_lisp(
+        &mut recipe_cx,
+        embedded_recipe("01-basics/finite-tree/setup.siml"),
+    );
+    let Expr::List(root_entries) = finite.object().as_expr(&mut recipe_cx).unwrap() else {
+        panic!("finite-tree recipe returns its bounded mixed-backend root");
+    };
+    assert_eq!(root_entries.len(), 3);
+    let finite_tree = eval_lisp(&mut recipe_cx, "(expr-tree/open \"recipe-finite-tree\")");
+    bind(&mut recipe_cx, "sdk-finite-tree", finite_tree);
+    assert_eq!(
+        eval_expr(
+            &mut recipe_cx,
+            "(expr-tree/ref sdk-finite-tree \"/measurements/trial-0001\")",
+        ),
+        Expr::String("measured-value".to_owned())
+    );
+
+    let explanation = eval_lisp(
+        &mut recipe_cx,
+        embedded_recipe("02-calculation/automatic-and-directed/setup.siml"),
+    );
+    assert_eq!(
+        table_field_expr(&mut recipe_cx, &explanation, "status"),
+        Expr::Symbol(Symbol::qualified("expr-tree/status", "fresh"))
+    );
+    let calculation_tree = eval_lisp(
+        &mut recipe_cx,
+        "(expr-tree/open \"recipe-automatic-and-directed\")",
+    );
+    bind(&mut recipe_cx, "sdk-calculation-tree", calculation_tree);
+    assert_eq!(
+        eval_expr(
+            &mut recipe_cx,
+            "(expr-tree/ref sdk-calculation-tree \"/manual\")",
+        ),
+        Expr::String("automatic-value".to_owned())
+    );
+    assert_eq!(
+        eval_expr(
+            &mut recipe_cx,
+            "(expr-tree/ref sdk-calculation-tree \"/cycle-a\")",
+        ),
+        Expr::String("recovered".to_owned())
+    );
+
+    let address = ServerAddress::InProcess {
+        thread: ADDRESS_THREAD,
+    };
+    let active_server = Arc::new(new_server(address.clone(), 10));
+    let active_site: Arc<dyn EvalSite> = active_server.clone();
+    let endpoint = register_loopback_transport_endpoint(address.clone(), active_site).unwrap();
+    let mut creator = full_runtime_cx();
+    let session = active_server
+        .create_session(&mut creator, "sdk-expression-tree")
+        .unwrap();
+    assert_eq!(
+        realize_expr(
+            &active_server,
+            &mut creator,
+            runtime_call(
+                &session,
+                "new-cell",
+                vec![
+                    Expr::String("/".to_owned()),
+                    Expr::String("answer".to_owned()),
+                    Expr::String("42".to_owned()),
+                ],
+            ),
+        ),
+        Expr::String("/answer".to_owned())
+    );
+
+    let registry = view_registry();
+    let mut viewer_cx = read_runtime_cx();
+    let viewer_transport = connect(&mut viewer_cx, &address);
+    let mut viewer =
+        PhoneHost::with_surface_codec(viewer_transport, expression_tree_surface_codec_symbol());
+    let scene = viewer
+        .open(&mut viewer_cx, &registry, session.resource())
+        .unwrap();
+    sim::lib_scene::validate_scene(&scene).unwrap();
+
+    let revision = active_server.revision(&session).unwrap();
+    let denied = viewer
+        .submit(
+            &mut viewer_cx,
+            &registry,
+            edit_source(&session, revision, "/answer", "forbidden"),
+        )
+        .unwrap_err();
+    assert!(
+        denied.to_string().contains("authority-denied"),
+        "server-backed view must preserve diminished read-only authority: {denied}"
+    );
+    assert_eq!(
+        realize_expr(
+            &active_server,
+            &mut creator,
+            runtime_call(&session, "ref", vec![Expr::String("/answer".to_owned())],),
+        ),
+        Expr::String("42".to_owned())
+    );
+
+    drop(viewer);
+    drop(endpoint);
+    drop(active_server);
+
+    let restarted = Arc::new(new_server(address.clone(), 100));
+    let restarted_site: Arc<dyn EvalSite> = restarted.clone();
+    let _restarted_endpoint =
+        register_loopback_transport_endpoint(address.clone(), restarted_site).unwrap();
+    let mut restarted_cx = full_runtime_cx();
+    let stale = realize_expr(
+        &restarted,
+        &mut restarted_cx,
+        runtime_call(&session, "list", vec![Expr::String("/".to_owned())]),
+    );
+    assert_eq!(error_code(&stale).as_deref(), Some("unknown-session"));
+
+    let fresh = restarted
+        .create_session(&mut restarted_cx, "sdk-expression-tree-restarted")
+        .unwrap();
+    let mut reconnected_cx = read_runtime_cx();
+    let reconnected_transport = connect(&mut reconnected_cx, &address);
+    let mut reconnected = PhoneHost::with_surface_codec(
+        reconnected_transport,
+        expression_tree_surface_codec_symbol(),
+    );
+    let fresh_scene = reconnected
+        .open(&mut reconnected_cx, &registry, fresh.resource())
+        .unwrap();
+    sim::lib_scene::validate_scene(&fresh_scene).unwrap();
+}
+
+fn embedded_recipe(path: &str) -> &'static str {
+    RECIPES
+        .iter()
+        .find_map(|(candidate, bytes)| {
+            (*candidate == path).then(|| {
+                std::str::from_utf8(bytes)
+                    .unwrap_or_else(|error| panic!("embedded recipe {path} is not UTF-8: {error}"))
+            })
+        })
+        .unwrap_or_else(|| panic!("missing embedded expression-tree recipe {path}"))
+}
+
+fn full_runtime_cx() -> Cx {
+    runtime_cx(true)
+}
+
+fn read_runtime_cx() -> Cx {
+    runtime_cx(false)
+}
+
+fn runtime_cx(writable: bool) -> Cx {
+    let (mut cx, seat) = seated_cx();
+    let mut capabilities = vec![expr_tree_read_capability()];
+    if writable {
+        capabilities.extend([
+            expr_tree_write_capability(),
+            expr_tree_calculate_capability(),
+            expr_tree_mount_capability(),
+        ]);
+    }
+    grant_capabilities(&seat, &mut cx, capabilities);
+    install_expr_tree_lib(&mut cx).unwrap();
+    cx
+}
+
+fn eval_lisp(cx: &mut Cx, source: &str) -> Value {
+    let decoded = decode_default_with_codec(
+        cx,
+        &Symbol::qualified("codec", "lisp"),
+        Input::Text(source.to_owned()),
+        ReadPolicy::default(),
+        DecodePosition::Eval,
+    )
+    .unwrap();
+    let expression = match decoded {
+        DecodedForm::Term(term) => Expr::from(term),
+        DecodedForm::Datum(datum) => Expr::from(datum),
+    };
+    cx.eval_expr(expression).unwrap()
+}
+
+fn eval_expr(cx: &mut Cx, source: &str) -> Expr {
+    eval_lisp(cx, source).object().as_expr(cx).unwrap()
+}
+
+fn bind(cx: &mut Cx, name: &str, value: Value) {
+    cx.env_mut().define(Symbol::new(name), value);
+}
+
+fn table_field_expr(cx: &mut Cx, table: &Value, name: &str) -> Expr {
+    table
+        .object()
+        .as_table_impl()
+        .expect("recipe explanation is a table")
+        .get(cx, Symbol::new(name))
+        .unwrap()
+        .object()
+        .as_expr(cx)
+        .unwrap()
+}
+
+fn new_server(address: ServerAddress, wall_start: u64) -> ExpressionTreeServer {
+    ExpressionTreeServer::new(
+        address,
+        vec![Symbol::qualified("codec", "lisp")],
+        Arc::new(DeterministicWallClock::new(wall_start, 1)),
+        Default::default(),
+    )
+    .unwrap()
+}
+
+fn request(expr: Expr) -> EvalRequest {
+    EvalRequest {
+        expr,
+        result_shape: None,
+        required_capabilities: Vec::new(),
+        deadline: None,
+        consistency: Consistency::LocalFirst,
+        mode: EvalMode::Eval,
+        answer_limit: None,
+        stream_buffer: None,
+        stream: false,
+        trace: false,
+    }
+}
+
+fn realize_expr(server: &ExpressionTreeServer, cx: &mut Cx, expr: Expr) -> Expr {
+    server
+        .realize(cx, request(expr))
+        .unwrap()
+        .value
+        .object()
+        .as_expr(cx)
+        .unwrap()
+}
+
+fn runtime_call(session: &SessionId, name: &str, args: Vec<Expr>) -> Expr {
+    let mut all = vec![Expr::Symbol(session.resource())];
+    all.extend(args);
+    Expr::Call {
+        operator: Box::new(Expr::Symbol(Symbol::qualified("expr-tree", name))),
+        args: all,
+    }
+}
+
+fn view_registry() -> LensRegistry {
+    let mut registry = LensRegistry::new();
+    register_expression_tree_surface_codec(&mut registry);
+    registry
+}
+
+fn connect(cx: &mut Cx, address: &ServerAddress) -> RemoteTransport {
+    let mut transport = RemoteTransport::local_server_address(
+        format!("in-process:{ADDRESS_THREAD}"),
+        address.clone(),
+    )
+    .with_offered_codecs(vec![Symbol::qualified("codec", "lisp")]);
+    transport.connect(cx).unwrap();
+    transport
+}
+
+fn edit_source(session: &SessionId, revision: u64, path: &str, source: &str) -> Expr {
+    intent(
+        "edit-field",
+        Origin::human(revision),
+        vec![
+            ("target", target(session, revision, path)),
+            ("path", Expr::List(vec![Expr::String("source".to_owned())])),
+            ("value", Expr::String(source.to_owned())),
+        ],
+    )
+}
+
+fn target(session: &SessionId, revision: u64, path: &str) -> Expr {
+    Expr::Map(vec![
+        (
+            Expr::Symbol(Symbol::new("tree")),
+            Expr::Symbol(session.resource()),
+        ),
+        (
+            Expr::Symbol(Symbol::new("revision")),
+            Expr::Number(NumberLiteral {
+                domain: Symbol::new("u64"),
+                canonical: revision.to_string(),
+            }),
+        ),
+        (
+            Expr::Symbol(Symbol::new("path")),
+            Expr::String(path.to_owned()),
+        ),
+    ])
+}
+
+fn error_code(expr: &Expr) -> Option<String> {
+    let Expr::Map(entries) = expr else {
+        return None;
+    };
+    entries.iter().find_map(|(key, value)| match (key, value) {
+        (Expr::Symbol(key), Expr::Symbol(value)) if key.as_qualified_str() == "error" => {
+            Some(value.name.to_string())
+        }
+        _ => None,
+    })
+}
+```
+
+### `feature/sim-sdk/music-algorithm-composition`
+
+Specimen `spec-test/sim-sdk/crates/sim-conformance/tests/spec/music_algorithms` is checked by `cargo test`.
+
+Source `crates/sim-conformance/tests/spec/music_algorithms.rs`:
+
+```rust
+use sim::{discrete_search, music_consonance, music_counterpoint, pitch_ratio, signal};
+
+use crate::support::CONFORMANCE_CONTRACT;
+
+pub(crate) const MUSIC_ALGORITHMS_PATH: &str =
+    "crates/sim-conformance/tests/spec/music_algorithms.rs";
+
+const FOUNDRY_LOAD_RECIPE: &str =
+    include_str!("../../../../recipes/music-algorithms/foundry-plan/input.lisp");
+
+#[test]
+fn frozen_music_candidate_graph_composes_through_the_sdk() {
+    assert!(CONFORMANCE_CONTRACT.contains(MUSIC_ALGORITHMS_PATH));
+
+    let transform = signal::TransformPlan::new(signal::TransformKind::Fft, 4);
+    transform
+        .validate()
+        .expect("explicit signal transform plan");
+
+    let control = discrete_search::SearchControl::default()
+        .with_max_work(500_000)
+        .with_max_frontier(20_000)
+        .with_max_results(8)
+        .with_seed(42);
+    assert_eq!(control.max_work, Some(500_000));
+    assert_eq!(control.max_frontier, Some(20_000));
+    assert_eq!(control.max_results, Some(8));
+    assert_eq!(control.seed, 42);
+
+    let fifth = pitch_ratio::PitchRatio::new(3, 2).expect("exact fifth");
+    assert_eq!((fifth.numerator(), fifth.denominator()), (3, 2));
+    assert_eq!(
+        music_consonance::ConsonancePolicy::default()
+            .pitch_models
+            .len(),
+        4
+    );
+    music_counterpoint::RuleSet::open()
+        .validate()
+        .expect("open counterpoint rules");
+
+    for library in [
+        "sim-lib-numbers-signal",
+        "sim-lib-discrete-search",
+        "sim-lib-pitch-ratio",
+        "sim-lib-music-consonance",
+        "sim-lib-music-counterpoint",
+    ] {
+        assert!(
+            FOUNDRY_LOAD_RECIPE.contains(&format!("(load \"{library}\")")),
+            "foundry recipe must load {library}"
+        );
+    }
+    for plan_fact in [
+        "(music/algorithm-plan",
+        ":analysis '(pitch-track beat key chords)",
+        ":transform '(voice-lead harmonize counterpoint)",
+        ":render '(smf wav)",
+        ":budget {:work 500000 :frontier 20000 :results 8 :seed 42}",
+        "(realize plan :at 'local)",
+    ] {
+        assert!(
+            FOUNDRY_LOAD_RECIPE.contains(plan_fact),
+            "foundry recipe must retain {plan_fact}"
+        );
+    }
+}
+```
+
+### `feature/sim-sdk/serial-music-composition`
+
+Specimen `recipe/sim-sdk/serial-music/row-matrix-analysis` is checked by `xtask check-recipes`.
+
+Source `recipes/serial-music/row-matrix-analysis/recipe.toml`:
+
+```toml
+id = "row-matrix-analysis"
+title = "Analyze a strict row family and matrix through the SDK facade"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 10
+tags = ["serial", "tone-row", "matrix", "sdk", "rust", "framework"]
+requires = ["serial-music"]
+```
+
+Specimen `recipe/sim-sdk/serial-music/modal-realization` is checked by `xtask check-recipes`.
+
+Source `recipes/serial-music/modal-realization/recipe.toml`:
+
+```toml
+id = "modal-realization"
+title = "Realize one immutable serial plan through a registry-backed modal spine"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 20
+tags = ["serial", "modal", "adaptation", "sdk", "rust", "framework"]
+requires = ["serial-music"]
+```
+
+Specimen `recipe/sim-sdk/serial-music/reversible-completion` is checked by `xtask check-recipes`.
+
+Source `recipes/serial-music/reversible-completion/recipe.toml`:
+
+```toml
+id = "reversible-completion"
+title = "Complete a serial statement reversibly through the SDK facade"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 30
+tags = ["serial", "completion", "reversible", "sdk", "rust", "framework"]
+requires = ["serial-music"]
+```
+
+Specimen `recipe/sim-sdk/serial-music/index-discovery` is checked by `xtask check-recipes`.
+
+Source `recipes/serial-music/index-discovery/recipe.toml`:
+
+```toml
+id = "index-discovery"
+title = "Check serial facade feature and route discovery in the generated SDK index"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 40
+tags = ["serial", "index", "discovery", "sdk", "rust", "docs"]
+requires = ["serial-music"]
+```
+
+Specimen `spec-test/sim-sdk/crates/sim-conformance/tests/spec/serial_music` is checked by `cargo test`.
+
+Source `crates/sim-conformance/tests/spec/serial_music.rs`:
+
+```rust
+use std::collections::BTreeMap;
+use std::sync::Arc;
+
+use sim::discrete_search::{NeverInterrupt, SearchControl};
+use sim::lib_music_core::{Articulation, Channel, Note, ObjectId, Pitch, StaffNote, Time};
+use sim::lib_pitch_core::PitchClass;
+use sim::serial_music::{
+    adaptation::default_realizer_registry,
+    completion::{
+        CompletionCandidate, CompletionRequest, NoteAddition, SerialCompletionAllowances,
+        SerialCompletionRequest, complete_serial,
+    },
+    practice::{
+        BuiltInPracticeRule, DeclaredWaivers, EventPlacement, OrdinalRef, PlannedSerialEvent,
+        PracticeId, PracticeRuleId, RowInstanceId, SerialEventId, SerialOrigin, SerialPlan,
+        SerialPractice, SerialRole, StrictEventSpec, StrictRealizationContext, StructuralLicense,
+        StructuralReadingId, realize_strict,
+    },
+    theory::{
+        ROW_MATRIX_SIZE, RowFamily, RowFamilySet, RowLabelConvention, RowMatrix, RowOperation,
+        ToneRow,
+    },
+};
+
+use crate::support::CONFORMANCE_CONTRACT;
+
+pub(crate) const SERIAL_MUSIC_PATH: &str = "crates/sim-conformance/tests/spec/serial_music.rs";
+
+const ROW_MATRIX_RECIPE: &str =
+    include_str!("../../../../recipes/serial-music/row-matrix-analysis/setup.rs");
+const MODAL_RECIPE: &str =
+    include_str!("../../../../recipes/serial-music/modal-realization/setup.rs");
+const COMPLETION_RECIPE: &str =
+    include_str!("../../../../recipes/serial-music/reversible-completion/setup.rs");
+const SDK_FEATURES: &str = include_str!("../../../../features.toml");
+
+#[test]
+fn serial_music_facade_claims_reversibility_parity_and_discovery()
+-> Result<(), Box<dyn std::error::Error>> {
+    assert!(CONFORMANCE_CONTRACT.contains(SERIAL_MUSIC_PATH));
+    assert!(SDK_FEATURES.contains("feature/sim-sdk/serial-music-composition"));
+    assert!(SDK_FEATURES.contains("route/compose-serial-music-from-sdk"));
+
+    let row = op25_row()?;
+    let family = RowFamilySet::of(&row);
+    assert_eq!(family.aliases().len(), 48);
+    let matrix = RowMatrix::new(&row, RowLabelConvention::FirstLastPitch);
+    assert_eq!(
+        matrix.render_data().cells().len(),
+        ROW_MATRIX_SIZE * ROW_MATRIX_SIZE
+    );
+
+    for snippet in [
+        "sim::serial_music::theory",
+        "RowFamilySet",
+        "RowMatrix",
+        "default_realizer_registry",
+        "complete_serial",
+    ] {
+        assert!(
+            ROW_MATRIX_RECIPE.contains(snippet)
+                || MODAL_RECIPE.contains(snippet)
+                || COMPLETION_RECIPE.contains(snippet)
+        );
+    }
+
+    let plan = serial_plan()?;
+    let specs = strict_specs()?;
+    let realization = realize_strict(&plan, &StrictRealizationContext::new(specs))?;
+    let practice = SerialPractice::new(
+        PracticeId::new("practice/sdk-conformance-serial")?,
+        vec![
+            Arc::new(BuiltInPracticeRule::aggregate(PracticeRuleId::new(
+                "rule/aggregate",
+            )?)),
+            Arc::new(BuiltInPracticeRule::order(PracticeRuleId::new(
+                "rule/order",
+            )?)),
+            Arc::new(BuiltInPracticeRule::repeats(PracticeRuleId::new(
+                "rule/repeats",
+            )?)),
+        ],
+    );
+    let result = complete_serial(
+        &realization,
+        &practice,
+        &DeclaredWaivers::default(),
+        &SerialCompletionRequest {
+            completion: CompletionRequest {
+                candidates: vec![CompletionCandidate::Note(NoteAddition {
+                    note: note(
+                        "voice/high",
+                        "added-e",
+                        64,
+                        Time::from_integer(0),
+                        quarter(),
+                    ),
+                })],
+                min_candidates: 1,
+                max_candidates: Some(1),
+                pitch_ranges: Vec::new(),
+            },
+            allowances: SerialCompletionAllowances::default(),
+        },
+        SearchControl::default(),
+        &NeverInterrupt,
+    )?;
+    assert_eq!(result.structural_plan, plan);
+    assert_eq!(result.structural_before, result.structural_after);
+    assert!(
+        result
+            .sounding_after
+            .entries()
+            .iter()
+            .any(|entry| entry.rule_id.as_str() == "rule/repeats")
+    );
+
+    let mut context = StrictRealizationContext::new(strict_specs()?);
+    context.modal_scale = Some(sim::lib_pitch_scale::PlayerScale::from_scale(
+        sim::lib_pitch_scale::Scale::dorian(PitchClass::C),
+    ));
+    let registry = default_realizer_registry();
+    let modal = registry.realize_named("realizer/modal-degree-cycle", &plan, &context)?;
+    assert_eq!(modal.plan(), &plan);
+    assert!(modal.spine_report().is_some());
+
+    let missing = registry.realize_named("realizer/sdk-missing", &plan, &context);
+    let detail = format!("{missing:?}");
+    assert!(detail.contains("sdk-missing"));
+    Ok(())
+}
+
+fn op25_row() -> Result<ToneRow, Box<dyn std::error::Error>> {
+    Ok(ToneRow::try_from_classes([
+        PitchClass::E,
+        PitchClass::F,
+        PitchClass::G,
+        PitchClass::CS,
+        PitchClass::FS,
+        PitchClass::DS,
+        PitchClass::GS,
+        PitchClass::D,
+        PitchClass::B,
+        PitchClass::C,
+        PitchClass::A,
+        PitchClass::AS,
+    ])?)
+}
+
+fn serial_plan() -> Result<SerialPlan, Box<dyn std::error::Error>> {
+    let row = op25_row()?.apply(RowOperation::new(RowFamily::P, 0));
+    let row_id = RowInstanceId::new("row/op25/p0")?;
+    let license = StructuralLicense::new(
+        StructuralReadingId::new("reading/sdk-conformance-serial")?,
+        "sdk serial conformance reading",
+    )?;
+    let event =
+        |id: &str, ordinal: usize| -> Result<PlannedSerialEvent, Box<dyn std::error::Error>> {
+            Ok(PlannedSerialEvent {
+                id: SerialEventId::new(id)?,
+                ordinals: vec![OrdinalRef::new(row_id.clone(), ordinal)],
+                role: SerialRole::Structural,
+                origin: SerialOrigin::Structural {
+                    rationale: "sdk serial conformance statement".to_owned(),
+                },
+                voice: ObjectId::new("voice/high")?,
+                placement: EventPlacement::independent(),
+                parents: Vec::new(),
+                licenses: vec![license.clone()],
+            })
+        };
+    SerialPlan::try_new(
+        [(row_id.clone(), row)].into_iter().collect(),
+        [
+            event("event/a", 0)?,
+            event("event/b", 1)?,
+            event("event/c", 2)?,
+            event("event/d", 3)?,
+            event("event/e", 4)?,
+            event("event/f", 5)?,
+            event("event/g", 6)?,
+            event("event/h", 7)?,
+            event("event/i", 8)?,
+            event("event/j", 9)?,
+            event("event/k", 10)?,
+            event("event/l", 11)?,
+        ]
+        .into_iter()
+        .map(|event| (event.id.clone(), event))
+        .collect(),
+        [
+            ("event/a", "event/b"),
+            ("event/b", "event/c"),
+            ("event/c", "event/d"),
+            ("event/d", "event/e"),
+            ("event/e", "event/f"),
+            ("event/f", "event/g"),
+            ("event/g", "event/h"),
+            ("event/h", "event/i"),
+            ("event/i", "event/j"),
+            ("event/j", "event/k"),
+            ("event/k", "event/l"),
+        ]
+        .into_iter()
+        .map(|(before, after)| Ok((SerialEventId::new(before)?, SerialEventId::new(after)?)))
+        .collect::<Result<Vec<_>, Box<dyn std::error::Error>>>()?,
+    )
+    .map_err(Into::into)
+}
+
+fn strict_specs() -> Result<BTreeMap<SerialEventId, StrictEventSpec>, Box<dyn std::error::Error>> {
+    let channel = Channel::new(0)?;
+    [
+        "event/a", "event/b", "event/c", "event/d", "event/e", "event/f", "event/g", "event/h",
+        "event/i", "event/j", "event/k", "event/l",
+    ]
+    .into_iter()
+    .map(|id| {
+        Ok((
+            SerialEventId::new(id)?,
+            StrictEventSpec::notes(4, quarter(), 96, channel, Articulation::Normal),
+        ))
+    })
+    .collect()
+}
+
+fn quarter() -> Time {
+    Time::new(1, 4)
+}
+
+fn note(voice_id: &str, event: &str, pitch: u8, onset: Time, duration: Time) -> StaffNote {
+    StaffNote {
+        voice_id: ObjectId::new(voice_id).expect("voice id"),
+        note_id: ObjectId::new(format!("note/{event}")).expect("note id"),
+        event_id: ObjectId::new(format!("event/{event}")).expect("event id"),
+        onset,
+        note: Note::new(
+            duration,
+            Pitch::from_midi(pitch),
+            96,
+            Channel::new(0).expect("channel"),
+            Articulation::Normal,
+        )
+        .expect("note"),
+    }
 }
 ```
 
@@ -1307,6 +2542,8 @@ use sim::{
 
 #[path = "conformance_support/mod.rs"]
 mod conformance_support;
+#[path = "spec/expr_tree.rs"]
+mod expr_tree;
 #[path = "spec/forge_author.rs"]
 mod forge_author;
 #[path = "spec/forge_eval.rs"]
@@ -1315,8 +2552,14 @@ mod forge_eval;
 mod gpu_math;
 #[path = "spec/instrument_streams.rs"]
 mod instrument_streams;
+#[path = "spec/interference.rs"]
+mod interference;
+#[path = "spec/music_algorithms.rs"]
+mod music_algorithms;
 #[path = "spec/rust_intelligence.rs"]
 mod rust_intelligence;
+#[path = "spec/serial_music.rs"]
+mod serial_music;
 #[path = "spec/stream_matrix.rs"]
 mod stream_matrix;
 #[path = "spec/support.rs"]
@@ -1976,12 +3219,5 @@ fn pcm_item(value: f32) -> sim::lib_stream_core::StreamItem {
     sim::lib_stream_core::StreamItem::new(sim::lib_stream_core::StreamPacket::Pcm(
         sim::lib_stream_core::PcmPacket::f32(1, 1, vec![value]).unwrap(),
     ))
-}
-
-fn normalized_conformance_contract() -> String {
-    CONFORMANCE_CONTRACT
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ")
 }
 ```

@@ -1,0 +1,8 @@
+id = "row-matrix-analysis"
+title = "Analyze a strict row family and matrix through the SDK facade"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 10
+tags = ["serial", "tone-row", "matrix", "sdk", "rust", "framework"]
+requires = ["serial-music"]

@@ -1,0 +1,16 @@
+id = "foundry-plan"
+title = "Load and compose the modular music algorithm foundry"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+expected = "expected.txt"
+order = 10
+tags = ["music", "algorithm", "foundry", "bounded-search", "inference", "realize"]
+requires = [
+  "signal",
+  "discrete-search",
+  "pitch-ratio",
+  "music-consonance",
+  "music-counterpoint",
+  "music/algorithm-plan",
+]

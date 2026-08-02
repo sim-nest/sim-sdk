@@ -48,6 +48,33 @@ fn realize_evaluates_through_local_fabric() {
 }
 
 #[test]
+fn realize_resolves_exported_site_symbols() {
+    let mut cx = eval_cx();
+    let site_symbol = Symbol::new("site/test/local");
+    let site = cx
+        .resolve_value(&Symbol::qualified("core", "local-fabric"))
+        .unwrap();
+    cx.registry_mut()
+        .register_site_value(site_symbol.clone(), site)
+        .unwrap();
+
+    let value = cx
+        .call_exprs(
+            cx.resolve_function(&Symbol::new("realize")).unwrap(),
+            vec![
+                Expr::Nil,
+                Expr::Symbol(Symbol::new(":fabric")),
+                Expr::Symbol(site_symbol),
+            ],
+        )
+        .unwrap();
+    assert!(matches!(
+        value.object().as_expr(&mut cx).unwrap(),
+        Expr::Nil
+    ));
+}
+
+#[test]
 fn realize_enforces_required_capabilities() {
     let mut cx = eval_cx();
     let denied = cx.call_exprs(

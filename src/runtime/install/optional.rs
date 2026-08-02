@@ -50,6 +50,23 @@ pub(super) fn install_optional_runtime_libs(cx: &mut Cx) {
             .expect("core runtime should install the statistics runtime library");
     }
 
+    #[cfg(feature = "interference-runtime")]
+    {
+        crate::interference_runtime::install_interference_records(cx)
+            .expect("core runtime should install the interference record classes and Shapes");
+        sim_lib_core::install_once(cx, &crate::interference_runtime::InterferenceLib)
+            .expect("core runtime should install the interference runtime library");
+    }
+
+    #[cfg(feature = "interference-compute")]
+    {
+        sim_lib_core::install_once(
+            cx,
+            &crate::interference_compute::InterferenceComputeLib::default(),
+        )
+        .expect("core runtime should install the interference Tensor provider");
+    }
+
     #[cfg(feature = "discrete-runtime")]
     {
         sim_lib_discrete::install_discrete_lib(cx)
@@ -216,6 +233,12 @@ pub(super) fn install_optional_runtime_libs(cx: &mut Cx) {
     {
         crate::lib_music_shapes::install_music_shapes_lib(cx)
             .expect("core runtime should install music shape docs");
+    }
+
+    #[cfg(feature = "serial-music")]
+    {
+        crate::runtime::serial_music_stack::install_serial_music_stack(cx)
+            .expect("core runtime should install the serial-music cookbook row");
     }
 
     #[cfg(feature = "sound-timbre")]

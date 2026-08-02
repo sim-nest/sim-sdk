@@ -1,5 +1,5 @@
 {
-  "card_count": 259,
+  "card_count": 278,
   "cards": [
     {
       "id": "agent/effects",
@@ -236,6 +236,12 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/GraphHandle",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/I64NumberDomain",
       "kind": "citizen-class",
       "owner": "sim-lib-numbers-i64",
@@ -251,6 +257,12 @@
       "id": "citizen/LazySequence",
       "kind": "citizen-class",
       "owner": "sim-lib-sequence",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/LiveCell",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
       "summary": "citizen class constructor surface"
     },
     {
@@ -386,9 +398,21 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/StageHandle",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/StoredTableValue",
       "kind": "citizen-class",
       "owner": "sim-lib-openai-server",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/StreamHandle",
+      "kind": "citizen-class",
+      "owner": "sim-lib-stream-prelude",
       "summary": "citizen class constructor surface"
     },
     {
@@ -590,6 +614,18 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/expr-tree/PolicyRecord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-expr-tree",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/expr-tree/SourceRecord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-expr-tree",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/femm/Field",
       "kind": "citizen-class",
       "owner": "sim-lib-femm-codec",
@@ -689,6 +725,78 @@
       "id": "citizen/intent/Intent",
       "kind": "citizen-class",
       "owner": "sim-lib-intent",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Emitter",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Medium",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/PhasorField",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Plane",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Problem",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Projection",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/ProjectionCertificate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/ProjectionRequest",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/SamplingCertificate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/Study",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/StudyEvidence",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/interference/WorkEstimate",
+      "kind": "citizen-class",
+      "owner": "sim-lib-interference-runtime",
       "summary": "citizen class constructor surface"
     },
     {
@@ -915,6 +1023,12 @@
     },
     {
       "id": "citizen/pitch/Scale",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/ToneRow",
       "kind": "citizen-class",
       "owner": "sim-lib-pitch-shapes",
       "summary": "citizen class constructor surface"
@@ -1556,7 +1670,7 @@
       "summary": "core"
     }
   ],
-  "citizen_count": 204,
+  "citizen_count": 223,
   "citizens": [
     {
       "arity": 1,
@@ -1721,6 +1835,18 @@
       "version": 1
     },
     {
+      "arity": 4,
+      "crate": "sim-lib-expr-tree",
+      "symbol": "expr-tree/PolicyRecord",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-expr-tree",
+      "symbol": "expr-tree/SourceRecord",
+      "version": 1
+    },
+    {
       "arity": 2,
       "crate": "sim-lib-femm-codec",
       "symbol": "femm/Field",
@@ -1820,6 +1946,78 @@
       "arity": 1,
       "crate": "sim-lib-intent",
       "symbol": "intent/Intent",
+      "version": 1
+    },
+    {
+      "arity": 6,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Emitter",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Medium",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/PhasorField",
+      "version": 1
+    },
+    {
+      "arity": 7,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Plane",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Problem",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Projection",
+      "version": 1
+    },
+    {
+      "arity": 15,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/ProjectionCertificate",
+      "version": 1
+    },
+    {
+      "arity": 6,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/ProjectionRequest",
+      "version": 1
+    },
+    {
+      "arity": 12,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/SamplingCertificate",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/Study",
+      "version": 1
+    },
+    {
+      "arity": 16,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/StudyEvidence",
+      "version": 1
+    },
+    {
+      "arity": 6,
+      "crate": "sim-lib-interference-runtime",
+      "symbol": "interference/WorkEstimate",
       "version": 1
     },
     {
@@ -2048,6 +2246,12 @@
       "arity": 1,
       "crate": "sim-lib-pitch-shapes",
       "symbol": "pitch/Scale",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-pitch-shapes",
+      "symbol": "pitch/ToneRow",
       "version": 1
     },
     {
@@ -2592,6 +2796,12 @@
     },
     {
       "arity": 0,
+      "crate": "sim-lib-stream-prelude",
+      "symbol": "GraphHandle",
+      "version": 0
+    },
+    {
+      "arity": 0,
       "crate": "sim-lib-numbers-i64",
       "symbol": "I64NumberDomain",
       "version": 0
@@ -2606,6 +2816,12 @@
       "arity": 0,
       "crate": "sim-lib-sequence",
       "symbol": "LazySequence",
+      "version": 0
+    },
+    {
+      "arity": 0,
+      "crate": "sim-lib-stream-prelude",
+      "symbol": "LiveCell",
       "version": 0
     },
     {
@@ -2736,8 +2952,20 @@
     },
     {
       "arity": 0,
+      "crate": "sim-lib-stream-prelude",
+      "symbol": "StageHandle",
+      "version": 0
+    },
+    {
+      "arity": 0,
       "crate": "sim-lib-openai-server",
       "symbol": "StoredTableValue",
+      "version": 0
+    },
+    {
+      "arity": 0,
+      "crate": "sim-lib-stream-prelude",
+      "symbol": "StreamHandle",
       "version": 0
     },
     {
@@ -3259,6 +3487,9 @@
             "glasses-modeled",
             "gpu-math",
             "intent",
+            "interference",
+            "interference-runtime",
+            "interference-compute",
             "list-cell",
             "list-lazy",
             "logic-core",
@@ -3306,6 +3537,7 @@
             "plugin-vst3",
             "rank",
             "scene",
+            "serial-music",
             "server",
             "skill",
             "sound-audio-lift",
@@ -3458,6 +3690,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-discrete-search"
+          ],
+          "name": "discrete-search",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-discrete",
             "sim-lib-discrete/spectral",
             "core"
@@ -3481,6 +3720,20 @@
             "core"
           ],
           "name": "exec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-expr-tree-core",
+            "dep:sim-expr-tree-calc",
+            "dep:sim-lib-expr-tree",
+            "dep:sim-lib-view-expr-tree",
+            "dep:sim-lib-expr-tree-server",
+            "codec-lisp",
+            "server",
+            "web-bridge"
+          ],
+          "name": "expr-tree",
           "workspace_edges": []
         },
         {
@@ -3808,6 +4061,45 @@
         },
         {
           "edges": [
+            "interference-compute",
+            "view-interference"
+          ],
+          "name": "interference",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-runtime",
+            "dep:sim-lib-interference-compute"
+          ],
+          "name": "interference-compute",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-interference-core"
+          ],
+          "name": "interference-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-solve",
+            "dep:sim-lib-interference-runtime"
+          ],
+          "name": "interference-runtime",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-core",
+            "dep:sim-lib-interference-solve"
+          ],
+          "name": "interference-solve",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-list-cell",
             "core"
           ],
@@ -4060,6 +4352,15 @@
         },
         {
           "edges": [
+            "signal",
+            "dep:sim-lib-discrete-search",
+            "dep:sim-lib-pitch-ratio"
+          ],
+          "name": "music-algorithms",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-music-analysis",
             "music-core",
             "pitch-set",
@@ -4079,6 +4380,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-music-consonance"
+          ],
+          "name": "music-consonance",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-music-core",
             "pitch-core",
             "midi-core",
@@ -4086,6 +4394,22 @@
             "core"
           ],
           "name": "music-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-counterpoint"
+          ],
+          "name": "music-counterpoint",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "music-algorithms",
+            "dep:sim-lib-music-consonance",
+            "dep:sim-lib-music-counterpoint"
+          ],
+          "name": "music-inference",
           "workspace_edges": []
         },
         {
@@ -4641,11 +4965,27 @@
         },
         {
           "edges": [
+            "dep:sim-lib-pitch-ratio"
+          ],
+          "name": "pitch-ratio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-pitch-scale",
             "pitch-set",
             "core"
           ],
           "name": "pitch-scale",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-serial",
+            "serial-core",
+            "pitch-core"
+          ],
+          "name": "pitch-serial",
           "workspace_edges": []
         },
         {
@@ -4784,6 +5124,28 @@
         },
         {
           "edges": [
+            "dep:sim-lib-serial-core"
+          ],
+          "name": "serial-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-serial",
+            "pitch-serial",
+            "pitch-scale",
+            "music-core",
+            "music-consonance",
+            "music-notation",
+            "music-shapes",
+            "pitch-shapes",
+            "cookbook"
+          ],
+          "name": "serial-music",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-run-core",
             "dep:sim-lib-repl",
             "mcp",
@@ -4822,6 +5184,13 @@
             "sim-run-loaders?/shape"
           ],
           "name": "shape",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-signal"
+          ],
+          "name": "signal",
           "workspace_edges": []
         },
         {
@@ -5573,6 +5942,14 @@
         },
         {
           "edges": [
+            "interference-runtime",
+            "dep:sim-lib-view-interference"
+          ],
+          "name": "view-interference",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "view",
             "numbers-numeric",
             "dep:sim-lib-view-math"
@@ -5771,6 +6148,16 @@
           "kind": [
             "test"
           ],
+          "name": "expr_tree_features",
+          "src": "tests/expr_tree_features.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "facade_aliases",
           "src": "tests/facade_aliases.rs"
         },
@@ -5793,6 +6180,16 @@
           ],
           "name": "gpu_math_feature_bundles",
           "src": "tests/gpu_math_feature_bundles.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "interference_feature_bundles",
+          "src": "tests/interference_feature_bundles.rs"
         },
         {
           "crate_types": [
@@ -6019,10 +6416,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "5afaed4a74a41c88dd72abd97280222503602d37",
+    "git_commit": "f845bba44ffcbcabc2dbca9586fb10fd36d008f4",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "5afaed4a74a41c88dd72abd97280222503602d37",
+    "source_commit": "f845bba44ffcbcabc2dbca9586fb10fd36d008f4",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6035,9 +6432,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "d8f9c45471ee9823",
+    "workspace_hash": "0a5358a48c2e61d1",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 226,
+    "workspace_hash_input_count": 244,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -6053,13 +6450,17 @@
       "crates/sim-conformance/tests/placement_matrix.rs",
       "crates/sim-conformance/tests/shape_grammar.rs",
       "crates/sim-conformance/tests/spec/cli_boot.rs",
+      "crates/sim-conformance/tests/spec/expr_tree.rs",
       "crates/sim-conformance/tests/spec/forge_author.rs",
       "crates/sim-conformance/tests/spec/forge_eval.rs",
       "crates/sim-conformance/tests/spec/gpu_math.rs",
       "crates/sim-conformance/tests/spec/instrument_streams.rs",
+      "crates/sim-conformance/tests/spec/interference.rs",
       "crates/sim-conformance/tests/spec/lib_lifecycle.rs",
+      "crates/sim-conformance/tests/spec/music_algorithms.rs",
       "crates/sim-conformance/tests/spec/placement.rs",
       "crates/sim-conformance/tests/spec/rust_intelligence.rs",
+      "crates/sim-conformance/tests/spec/serial_music.rs",
       "crates/sim-conformance/tests/spec/stream_matrix.rs",
       "crates/sim-conformance/tests/spec/stream_matrix_helpers.rs",
       "crates/sim-conformance/tests/spec/support.rs",
@@ -6079,6 +6480,12 @@
       "recipes/glasses/viture-two-rate/recipe.toml",
       "recipes/glasses/voice-site/recipe.toml",
       "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
+      "recipes/interference/modeled-study/recipe.toml",
+      "recipes/music-algorithms/foundry-plan/recipe.toml",
+      "recipes/serial-music/index-discovery/recipe.toml",
+      "recipes/serial-music/modal-realization/recipe.toml",
+      "recipes/serial-music/reversible-completion/recipe.toml",
+      "recipes/serial-music/row-matrix-analysis/recipe.toml",
       "recipes/watch/book.toml",
       "recipes/watch/dual-quorum/recipe.toml",
       "recipes/watch/glance-pager/recipe.toml",
@@ -6090,6 +6497,7 @@
       "src/classes/tests.rs",
       "src/classes.rs",
       "src/codec_matrix_tests/bridge_roundtrip.rs",
+      "src/codec_matrix_tests/interference_roundtrip.rs",
       "src/codec_matrix_tests/numbers_r10_14.rs",
       "src/codec_matrix_tests/roadmap11.rs",
       "src/codec_matrix_tests/roundtrip.rs",
@@ -6100,6 +6508,7 @@
       "src/codec_matrix_tests.rs",
       "src/compat.rs",
       "src/compute_exports.rs",
+      "src/expr_tree_exports.rs",
       "src/feature_contract_tests/cfg_sentinels.rs",
       "src/feature_contract_tests/facade_thinness.rs",
       "src/feature_contract_tests/glasses.rs",
@@ -6108,6 +6517,7 @@
       "src/feature_contract_tests.rs",
       "src/femm_exports.rs",
       "src/functions.rs",
+      "src/interference_exports.rs",
       "src/lib.rs",
       "src/loaders/registry.rs",
       "src/loaders/tests/binary_pack.rs",
@@ -6124,6 +6534,7 @@
       "src/macros/template.rs",
       "src/macros/tests.rs",
       "src/macros.rs",
+      "src/music_algorithm_exports.rs",
       "src/music_stack.rs",
       "src/music_stack_tests.rs",
       "src/numbers_exports.rs",
@@ -6157,6 +6568,7 @@
       "src/runtime/cookbook_directory/device.rs",
       "src/runtime/cookbook_directory/femm.rs",
       "src/runtime/cookbook_directory/glasses.rs",
+      "src/runtime/cookbook_directory/interference.rs",
       "src/runtime/cookbook_directory/music.rs",
       "src/runtime/cookbook_directory/numbers.rs",
       "src/runtime/cookbook_directory/runtime_libs.rs",
@@ -6193,6 +6605,8 @@
       "src/runtime/reference_device/route.rs",
       "src/runtime/reference_device/two_rate.rs",
       "src/runtime/reference_device.rs",
+      "src/runtime/serial_music_stack/cookbook.rs",
+      "src/runtime/serial_music_stack.rs",
       "src/runtime/shape_ops.rs",
       "src/runtime/shape_ops_impl/algebra.rs",
       "src/runtime/shape_ops_impl/compare.rs",
@@ -6257,6 +6671,7 @@
       "src/runtime/watch/proofs.rs",
       "src/runtime/watch.rs",
       "src/runtime.rs",
+      "src/serial_music.rs",
       "src/shapes.rs",
       "src/skill_tests.rs",
       "src/standard_exports.rs",
@@ -6295,7 +6710,7 @@
       "card_id": "cookbook/sim-sdk",
       "group": "workspace",
       "package": "sim-nest",
-      "recipe_count": 14,
+      "recipe_count": 20,
       "recipes": [
         {
           "card_id": "sim-sdk/01-basics/boot-runtime",
@@ -6376,6 +6791,54 @@
           "package": "sim-nest",
           "recipe_toml": "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
           "title": "Compose modeled matrix, ODE, and FEMM math"
+        },
+        {
+          "card_id": "sim-sdk/interference/modeled-study",
+          "codec": "lisp",
+          "id": "modeled-study",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/interference/modeled-study/recipe.toml",
+          "title": "Solve, view, edit, and swap an interference study site"
+        },
+        {
+          "card_id": "sim-sdk/music-algorithms/foundry-plan",
+          "codec": "lisp",
+          "id": "foundry-plan",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/music-algorithms/foundry-plan/recipe.toml",
+          "title": "Load and compose the modular music algorithm foundry"
+        },
+        {
+          "card_id": "sim-sdk/serial-music/index-discovery",
+          "codec": "rust",
+          "id": "index-discovery",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/serial-music/index-discovery/recipe.toml",
+          "title": "Check serial facade feature and route discovery in the generated SDK index"
+        },
+        {
+          "card_id": "sim-sdk/serial-music/modal-realization",
+          "codec": "rust",
+          "id": "modal-realization",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/serial-music/modal-realization/recipe.toml",
+          "title": "Realize one immutable serial plan through a registry-backed modal spine"
+        },
+        {
+          "card_id": "sim-sdk/serial-music/reversible-completion",
+          "codec": "rust",
+          "id": "reversible-completion",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/serial-music/reversible-completion/recipe.toml",
+          "title": "Complete a serial statement reversibly through the SDK facade"
+        },
+        {
+          "card_id": "sim-sdk/serial-music/row-matrix-analysis",
+          "codec": "rust",
+          "id": "row-matrix-analysis",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/serial-music/row-matrix-analysis/recipe.toml",
+          "title": "Analyze a strict row family and matrix through the SDK facade"
         },
         {
           "card_id": "sim-sdk/watch/dual-quorum",

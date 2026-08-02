@@ -19,6 +19,8 @@ use sim::{
 
 #[path = "conformance_support/mod.rs"]
 mod conformance_support;
+#[path = "spec/expr_tree.rs"]
+mod expr_tree;
 #[path = "spec/forge_author.rs"]
 mod forge_author;
 #[path = "spec/forge_eval.rs"]
@@ -27,8 +29,14 @@ mod forge_eval;
 mod gpu_math;
 #[path = "spec/instrument_streams.rs"]
 mod instrument_streams;
+#[path = "spec/interference.rs"]
+mod interference;
+#[path = "spec/music_algorithms.rs"]
+mod music_algorithms;
 #[path = "spec/rust_intelligence.rs"]
 mod rust_intelligence;
+#[path = "spec/serial_music.rs"]
+mod serial_music;
 #[path = "spec/stream_matrix.rs"]
 mod stream_matrix;
 #[path = "spec/support.rs"]
@@ -688,11 +696,4 @@ fn pcm_item(value: f32) -> sim::lib_stream_core::StreamItem {
     sim::lib_stream_core::StreamItem::new(sim::lib_stream_core::StreamPacket::Pcm(
         sim::lib_stream_core::PcmPacket::f32(1, 1, vec![value]).unwrap(),
     ))
-}
-
-fn normalized_conformance_contract() -> String {
-    CONFORMANCE_CONTRACT
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ")
 }

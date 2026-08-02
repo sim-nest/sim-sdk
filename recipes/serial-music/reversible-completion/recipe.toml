@@ -1,0 +1,8 @@
+id = "reversible-completion"
+title = "Complete a serial statement reversibly through the SDK facade"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 30
+tags = ["serial", "completion", "reversible", "sdk", "rust", "framework"]
+requires = ["serial-music"]

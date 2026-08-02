@@ -5,7 +5,7 @@ use sim_kernel::{Diagnostic, Severity};
 use sim_lib_midi_core::{
     MemoryMidiSource, MetaEvent, MidiPayload, PumpError, TrackedMidiEvent, pump,
 };
-use sim_lib_midi_smf::SmfFile;
+use sim_lib_midi_smf::{SmfError, SmfFile};
 use sim_lib_music_core::{MusicObject, Score, Time};
 use sim_lib_music_lower::{LowerError, LowerOpts, lower_score};
 use sim_lib_pitch_core::Pitch;
@@ -49,6 +49,11 @@ pub enum MusicStackError {
     },
     /// Lowering the score to MIDI failed.
     Lower(LowerError),
+    /// The MIDI file could not be merged onto one performance timeline.
+    Smf(SmfError),
+    /// The MIDI file uses SMPTE timing, which the musical sound bridge cannot
+    /// interpret as quarter-note ticks.
+    NonMetricalTiming,
     /// Pumping MIDI events through the sound bridge failed.
     Pump(PumpError<Infallible, SoundBridgeError>),
     /// The MIDI-to-sound bridge failed.
@@ -62,6 +67,10 @@ impl fmt::Display for MusicStackError {
         match self {
             Self::Preflight { .. } => f.write_str("score contains notes that cannot lower to MIDI"),
             Self::Lower(error) => error.fmt(f),
+            Self::Smf(error) => error.fmt(f),
+            Self::NonMetricalTiming => {
+                f.write_str("the music render stack requires metrical MIDI timing")
+            }
             Self::Pump(PumpError::Source(_)) => {
                 f.write_str("unexpected in-memory MIDI source failure")
             }
@@ -77,6 +86,12 @@ impl std::error::Error for MusicStackError {}
 impl From<LowerError> for MusicStackError {
     fn from(value: LowerError) -> Self {
         Self::Lower(value)
+    }
+}
+
+impl From<SmfError> for MusicStackError {
+    fn from(value: SmfError) -> Self {
+        Self::Smf(value)
     }
 }
 
@@ -145,12 +160,15 @@ pub fn render_smf_with_opts_report(
     pcm: &PcmRenderer,
     bridge_opts: &BridgeOptions,
 ) -> Result<RenderScoreReport, MusicStackError> {
-    let merged = smf.merged_events();
-    let mut diagnostics = collect_midi_diagnostics(smf, &merged);
+    let merged = smf.merged_events()?;
+    let ticks_per_quarter = smf
+        .ticks_per_quarter()
+        .ok_or(MusicStackError::NonMetricalTiming)?;
+    let mut diagnostics = collect_midi_diagnostics(&merged, ticks_per_quarter);
     let events = merged.into_iter().map(|tracked| tracked.event).collect();
-    let mut source = MemoryMidiSource::new(smf.tpq, events);
+    let mut source = MemoryMidiSource::new(ticks_per_quarter, events);
     let mut bridge = MidiToSoundBridge::new(
-        smf.tpq,
+        ticks_per_quarter,
         bank.clone(),
         Box::new(FrozenTuning::from_tuning(tuning)),
         bridge_opts.clone(),
@@ -197,7 +215,10 @@ fn preflight_score(score: &Score) -> Vec<Diagnostic> {
         .collect()
 }
 
-fn collect_midi_diagnostics(smf: &SmfFile, merged: &[TrackedMidiEvent]) -> Vec<Diagnostic> {
+fn collect_midi_diagnostics(
+    merged: &[TrackedMidiEvent],
+    ticks_per_quarter: u32,
+) -> Vec<Diagnostic> {
     let unknown_meta = merged
         .iter()
         .filter(|tracked| {
@@ -209,7 +230,7 @@ fn collect_midi_diagnostics(smf: &SmfFile, merged: &[TrackedMidiEvent]) -> Vec<D
         .count();
     let quantized = merged
         .iter()
-        .filter(|tracked| tracked.event.time.tpq != smf.tpq)
+        .filter(|tracked| tracked.event.time.tpq != ticks_per_quarter)
         .count();
     let mut diagnostics = Vec::new();
     if unknown_meta > 0 {
@@ -221,7 +242,7 @@ fn collect_midi_diagnostics(smf: &SmfFile, merged: &[TrackedMidiEvent]) -> Vec<D
     if quantized > 0 {
         diagnostics.push(warning(format!(
             "tick quantization: {} event(s) required TPQ rebasing into {} TPQ",
-            quantized, smf.tpq
+            quantized, ticks_per_quarter
         )));
     }
     diagnostics

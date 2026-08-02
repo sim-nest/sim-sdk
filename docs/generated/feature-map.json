@@ -348,6 +348,9 @@
             "glasses-modeled",
             "gpu-math",
             "intent",
+            "interference",
+            "interference-runtime",
+            "interference-compute",
             "list-cell",
             "list-lazy",
             "logic-core",
@@ -395,6 +398,7 @@
             "plugin-vst3",
             "rank",
             "scene",
+            "serial-music",
             "server",
             "skill",
             "sound-audio-lift",
@@ -547,6 +551,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-discrete-search"
+          ],
+          "name": "discrete-search",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-discrete",
             "sim-lib-discrete/spectral",
             "core"
@@ -570,6 +581,20 @@
             "core"
           ],
           "name": "exec",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-expr-tree-core",
+            "dep:sim-expr-tree-calc",
+            "dep:sim-lib-expr-tree",
+            "dep:sim-lib-view-expr-tree",
+            "dep:sim-lib-expr-tree-server",
+            "codec-lisp",
+            "server",
+            "web-bridge"
+          ],
+          "name": "expr-tree",
           "workspace_edges": []
         },
         {
@@ -897,6 +922,45 @@
         },
         {
           "edges": [
+            "interference-compute",
+            "view-interference"
+          ],
+          "name": "interference",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-runtime",
+            "dep:sim-lib-interference-compute"
+          ],
+          "name": "interference-compute",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-interference-core"
+          ],
+          "name": "interference-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-solve",
+            "dep:sim-lib-interference-runtime"
+          ],
+          "name": "interference-runtime",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-core",
+            "dep:sim-lib-interference-solve"
+          ],
+          "name": "interference-solve",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-list-cell",
             "core"
           ],
@@ -1149,6 +1213,15 @@
         },
         {
           "edges": [
+            "signal",
+            "dep:sim-lib-discrete-search",
+            "dep:sim-lib-pitch-ratio"
+          ],
+          "name": "music-algorithms",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-music-analysis",
             "music-core",
             "pitch-set",
@@ -1168,6 +1241,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-music-consonance"
+          ],
+          "name": "music-consonance",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-music-core",
             "pitch-core",
             "midi-core",
@@ -1175,6 +1255,22 @@
             "core"
           ],
           "name": "music-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-counterpoint"
+          ],
+          "name": "music-counterpoint",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "music-algorithms",
+            "dep:sim-lib-music-consonance",
+            "dep:sim-lib-music-counterpoint"
+          ],
+          "name": "music-inference",
           "workspace_edges": []
         },
         {
@@ -1730,11 +1826,27 @@
         },
         {
           "edges": [
+            "dep:sim-lib-pitch-ratio"
+          ],
+          "name": "pitch-ratio",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-pitch-scale",
             "pitch-set",
             "core"
           ],
           "name": "pitch-scale",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-pitch-serial",
+            "serial-core",
+            "pitch-core"
+          ],
+          "name": "pitch-serial",
           "workspace_edges": []
         },
         {
@@ -1873,6 +1985,28 @@
         },
         {
           "edges": [
+            "dep:sim-lib-serial-core"
+          ],
+          "name": "serial-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-serial",
+            "pitch-serial",
+            "pitch-scale",
+            "music-core",
+            "music-consonance",
+            "music-notation",
+            "music-shapes",
+            "pitch-shapes",
+            "cookbook"
+          ],
+          "name": "serial-music",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-run-core",
             "dep:sim-lib-repl",
             "mcp",
@@ -1911,6 +2045,13 @@
             "sim-run-loaders?/shape"
           ],
           "name": "shape",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-signal"
+          ],
+          "name": "signal",
           "workspace_edges": []
         },
         {
@@ -2658,6 +2799,14 @@
             "dep:sim-lib-view-doc"
           ],
           "name": "view-doc",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "interference-runtime",
+            "dep:sim-lib-view-interference"
+          ],
+          "name": "view-interference",
           "workspace_edges": []
         },
         {

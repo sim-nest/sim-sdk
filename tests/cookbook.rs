@@ -25,13 +25,20 @@ fn seeded_cookbook_is_visible_in_runtime() {
 #[cfg(all(
     feature = "codec-json",
     feature = "codec-lisp",
-    feature = "cookbook-all",
+    feature = "device-reference",
+    feature = "glasses-modeled",
+    feature = "gpu-math",
+    feature = "interference",
+    feature = "music-algorithms",
+    feature = "music-consonance",
+    feature = "music-counterpoint",
     feature = "numbers-arith",
     feature = "numbers-f64",
+    feature = "serial-music",
     feature = "stream-core"
 ))]
 #[test]
-fn cookbook_all_seeded_recipes_use_product_directory_under_all_features() {
+fn cookbook_recipe_gate_runs_every_seeded_sdk_recipe() {
     let mut cx = sim::kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
     sim::runtime::install_core_runtime(&mut cx);
     let lisp = sim::codec_lisp::LispCodecLib::new(cx.registry_mut().fresh_codec_id()).unwrap();

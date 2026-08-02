@@ -5,13 +5,17 @@ use super::support::repo_root;
 const REEXPORT_AND_WIRING: &[&str] = &[
     "src/bin/sim.rs",
     "src/compute_exports.rs",
+    "src/expr_tree_exports.rs",
     "src/femm_exports.rs",
+    "src/interference_exports.rs",
     "src/lib.rs",
     "src/loaders.rs",
     "src/loaders/registry.rs",
+    "src/music_algorithm_exports.rs",
     "src/numbers_exports.rs",
     "src/roadmap11_exports.rs",
     "src/runtime.rs",
+    "src/serial_music.rs",
     "src/standard_exports.rs",
 ];
 
@@ -44,6 +48,8 @@ const RUNTIME_BEHAVIOR_ALLOWLIST: &[&str] = &[
     "src/runtime/realize.rs",
     "src/runtime/reference_device.rs",
     "src/runtime/reference_device/",
+    "src/runtime/serial_music_stack.rs",
+    "src/runtime/serial_music_stack/",
     "src/runtime/watch.rs",
     "src/runtime/watch/",
     "src/runtime/shape_ops.rs",

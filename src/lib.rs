@@ -28,11 +28,14 @@
 //! aggregates them through optional dependencies and a feature map, re-exports
 //! them under stable module aliases (`sim::kernel`, `sim::shape`,
 //! `sim::codec`, the `sim::codec_*`, `sim::lib_*`, `sim::table_*`, and
-//! `sim::list_*` families), and ships the core runtime installer plus the
-//! authoring helpers (`functions`, `classes`, `macros`, `shapes`, and
-//! `runtime`, available with the `shape` feature). The default feature set is
-//! `core`, `shape`, `codec-lisp`, and `numbers-f64`; the canonical, current
-//! feature map is this crate's `Cargo.toml`.
+//! `sim::list_*` families). The opt-in `expr-tree` feature exposes the
+//! canonical expression-tree core, calculation, runtime, view, and server
+//! crates without adding a facade-specific builder or policy layer. This
+//! crate also ships the core runtime installer plus the authoring helpers
+//! (`functions`, `classes`, `macros`, `shapes`, and `runtime`, available with
+//! the `shape` feature). The default feature set is `core`, `shape`,
+//! `codec-lisp`, and `numbers-f64`; the canonical, current feature map is this
+//! crate's `Cargo.toml`.
 //!
 //! ## Kernel boundary
 //!
@@ -115,6 +118,11 @@ pub use roadmap11_exports::*;
 #[rustfmt::skip]
 #[cfg(any(feature = "compute-auto", feature = "compute-cli", feature = "compute-cuda", feature = "compute-femm", feature = "compute-model", feature = "compute-rocm", feature = "compute-wgpu"))]
 pub use compute_exports::*;
+#[rustfmt::skip]
+#[cfg(any(feature = "interference-core", feature = "interference-solve", feature = "interference-runtime", feature = "interference-compute", feature = "view-interference"))]
+pub use interference_exports::*;
+#[cfg(feature = "expr-tree")]
+pub use expr_tree_exports::*;
 #[cfg(feature = "agent")]
 pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
 /// Native class authoring helpers: a `Class` implementation plus the lib
@@ -129,11 +137,14 @@ mod codec_matrix_tests;
 #[cfg(feature = "core")]
 pub mod compat;
 mod compute_exports;
+#[cfg(feature = "expr-tree")]
+mod expr_tree_exports;
 mod femm_exports;
 /// Function authoring helpers built on the shared `Shape` engine: overload
 /// cases, native function objects, and member-table construction.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod functions;
+mod interference_exports;
 /// Lib loaders for the supported source formats (host, Lisp source, binary
 /// pack, native dynamic library, and wasm) plus the standard loader registry.
 #[cfg(feature = "core")]
@@ -142,16 +153,21 @@ pub mod loaders;
 /// registry-backed expander, and shape constructors for macro syntax.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod macros;
+mod music_algorithm_exports;
 /// End-to-end music rendering stack that lowers a score to MIDI and renders it
 /// to PCM audio through the sound libs.
 #[cfg(feature = "sound-music")]
 pub mod music_stack;
 mod numbers_exports;
+#[allow(unused_imports)]
+pub use music_algorithm_exports::*;
 mod roadmap11_exports;
 /// Core runtime installer and the embedding entry point that wires classes,
 /// shapes, functions, and the default number domains into a `Cx`.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod runtime;
+#[cfg(feature = "serial-music")]
+pub mod serial_music;
 /// Shape authoring helpers: documented and value-backed shape wrappers plus
 /// shape registration and checking utilities.
 #[cfg(all(feature = "core", feature = "shape"))]

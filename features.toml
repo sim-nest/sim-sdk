@@ -140,6 +140,71 @@ claims_specimens = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/interference-composition"
+title = "Interference SDK composition"
+summary = "Compose canonical interference records, solve/runtime, Tensor compute, and reversible view behavior through direct SDK re-exports."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable only the granular layer needed by a headless host, or use `interference` for modeled compute plus the reversible view. Keep the solve expression provider-neutral and swap its EvalFabric placement site."
+claims_anchors = [
+  "anchor/crate/sim-nest",
+  "anchor/rustdoc/sim-nest/default_loadable_libs",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/crates/sim-conformance/tests/spec/interference",
+]
+
+[[feature]]
+id = "feature/sim-sdk/expression-tree-composition"
+title = "Expression-tree SDK composition"
+summary = "Expose the canonical finite-tree core, bounded calculator, loadable runtime, reversible view, and authoritative server behind one opt-in SDK feature."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable `expr-tree` when a Rust host needs the complete stable expression-tree framework through the SDK. Use the re-exported implementation contracts directly: `expr_tree_core`, `expr_tree_calc`, `expr_tree`, `view_expr_tree`, and `expr_tree_server`. The facade deliberately adds no builder, calculation wrapper, or policy model."
+claims_anchors = [
+  "anchor/crate/sim-nest",
+  "anchor/rustdoc/sim-nest/crate-root",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/crates/sim-conformance/tests/spec/expr_tree",
+]
+
+[[feature]]
+id = "feature/sim-sdk/music-algorithm-composition"
+title = "Music algorithm SDK composition"
+summary = "Select frozen signal, bounded-search, exact-ratio, consonance, and counterpoint candidates through focused features or curated SDK groups."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Use `signal` for the numeric signal owner, `music-algorithms` for signal plus generic search and exact pitch ratios, and `music-inference` for the consonance and counterpoint layer. The focused `discrete-search`, `pitch-ratio`, `music-consonance`, and `music-counterpoint` features remain individually selectable. Compose through the re-exported stable contracts; use the owner crates directly for compatibility dialects or compiled planner internals."
+claims_anchors = [
+  "anchor/crate/sim-nest",
+  "anchor/rustdoc/sim-nest/crate-root",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/crates/sim-conformance/tests/spec/music_algorithms",
+]
+
+[[feature]]
+id = "feature/sim-sdk/serial-music-composition"
+title = "Serial music SDK composition"
+summary = "Select the frozen serial-series, row-theory, immutable-plan, adaptation, and reversible-completion candidates through one curated SDK facade."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable `serial-music` when a host wants the curated serial facade instead of depending on the owner crates directly. Use `serial_music::theory` for serial-series and row/matrix contracts, `serial_music::practice` for immutable plans and strict realization inputs, `serial_music::adaptation` for registry-selected modal or caller-defined realizers, `serial_music::completion` for reversible additive completion, and `serial_music::runtime` for audition and export helpers. The facade stays thin and reuses the existing SDK runtime installer by composing the already-owned shape, notation, and cookbook features."
+claims_anchors = [
+  "anchor/crate/sim-nest",
+  "anchor/rustdoc/sim-nest/crate-root",
+  "anchor/rustdoc/sim-nest/default_loadable_libs",
+]
+claims_specimens = [
+  "recipe/sim-sdk/serial-music/row-matrix-analysis",
+  "recipe/sim-sdk/serial-music/modal-realization",
+  "recipe/sim-sdk/serial-music/reversible-completion",
+  "recipe/sim-sdk/serial-music/index-discovery",
+  "spec-test/sim-sdk/crates/sim-conformance/tests/spec/serial_music",
+]
+
+[[feature]]
 id = "feature/sim-sdk/facade-shapes"
 title = "Facade Shape exports"
 summary = "Expose public Shape exports through the SDK facade while shape crates keep the matching behavior."
@@ -220,4 +285,46 @@ audiences = ["user", "code", "framework"]
 steps = [
   { feature = "feature/sim-sdk/gpu-math-composition", why = "The SDK row owns the facade feature aliases and direct re-exports." },
   { specimen = "recipe/sim-sdk/gpu-math/modeled-matrix-ode-femm", why = "The SDK recipe shows the modeled default composition and provider-neutral placement boundary." },
+]
+
+[[route]]
+id = "route/compose-interference-from-sdk"
+task = "Compose an interference study from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/interference-composition", why = "The SDK row owns granular headless features, direct canonical exports, standard installation, compute, and reversible views." },
+  { specimen = "recipe/sim-sdk/interference/modeled-study", why = "The facade recipe shows solve, view, projection edit, model edit, re-solve, and provider-neutral site swapping." },
+  { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/interference", why = "The public-facade conformance specimen executes the complete modeled workflow and unchanged-expression site swap." },
+]
+
+[[route]]
+id = "route/compose-expression-tree-from-sdk"
+task = "Compose an expression tree from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/expression-tree-composition", why = "The SDK row owns the single opt-in feature and direct canonical re-exports without another domain abstraction." },
+  { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/expr_tree", why = "The public-facade specimen runs the real recipes, mixed storage, automatic and directed calculation, server-backed view, restart, and authority diminution." },
+]
+
+[[route]]
+id = "route/compose-music-algorithms-from-sdk"
+task = "Compose the modular music algorithm foundry from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/music-algorithm-composition", why = "The SDK row owns focused feature selection and curated re-exports over the frozen candidates while the music owner keeps the open data-plan registry and replaceable foundry stages." },
+  { specimen = "recipe/sim-sdk/music-algorithms/foundry-plan", why = "The Lisp load recipe reproduces the bounded foundry plan through the five focused candidate crates." },
+  { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/music_algorithms", why = "The Rust facade specimen checks the same transform, search, ratio, consonance, counterpoint, and plan bounds." },
+]
+
+[[route]]
+id = "route/compose-serial-music-from-sdk"
+task = "Compose serial music from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/serial-music-composition", why = "The SDK row owns the single curated serial facade over the frozen candidates and the existing runtime-install surface for supporting shape and notation libs." },
+  { specimen = "recipe/sim-sdk/serial-music/row-matrix-analysis", why = "The theory recipe proves the facade reaches row-family and matrix analysis through public SDK names." },
+  { specimen = "recipe/sim-sdk/serial-music/modal-realization", why = "The adaptation recipe realizes one immutable plan through the registry-backed modal surface without mutating the source plan." },
+  { specimen = "recipe/sim-sdk/serial-music/reversible-completion", why = "The completion recipe proves additive serial completion is reversible through the facade." },
+  { specimen = "recipe/sim-sdk/serial-music/index-discovery", why = "The index recipe proves the generated feature and route ids are discoverable from the SDK repo surface." },
+  { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/serial_music", why = "The public-facade conformance specimen checks reversibility, recipe parity, fail-closed behavior, and the feature claim." },
 ]
