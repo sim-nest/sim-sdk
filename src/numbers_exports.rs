@@ -40,6 +40,8 @@ pub use sim_lib_numbers_quad as numbers_quad;
 pub use sim_lib_numbers_rational as numbers_rational;
 #[cfg(feature = "numbers-rk")]
 pub use sim_lib_numbers_rk as numbers_rk;
+#[cfg(feature = "signal")]
+pub use sim_lib_numbers_signal as numbers_signal;
 #[cfg(feature = "numbers-tensor")]
 pub use sim_lib_numbers_tensor as numbers_tensor;
 #[cfg(feature = "numbers-tensor-bcast")]
