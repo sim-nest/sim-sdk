@@ -220,6 +220,26 @@ mod genai_tests {
 mod tests {
     use std::collections::{BTreeMap, BTreeSet};
 
+    use sim_lib_cookbook::LibCatalog;
+
+    #[test]
+    fn discrete_graph_requirement_resolves_to_discrete_runtime() {
+        let (dir, diags) = super::default_loadable_libs();
+        assert!(diags.is_empty(), "unresolved rows: {diags:?}");
+
+        let row = dir
+            .entry("discrete-graph")
+            .expect("discrete-graph alias row");
+        assert!(
+            row.recipes.is_none(),
+            "alias row should not duplicate the discrete cookbook"
+        );
+        assert!(
+            dir.resolve("discrete-graph").is_some(),
+            "discrete-graph requirement should load the discrete runtime"
+        );
+    }
+
     #[test]
     fn every_loadable_lib_has_a_directory_row() {
         let cfg = super::default_cookbook_config();

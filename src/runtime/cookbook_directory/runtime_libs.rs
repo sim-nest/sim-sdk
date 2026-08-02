@@ -8,6 +8,13 @@ macro_rules! cookbook_directory_runtime_libs {
             || Box::new(sim_lib_discrete::DiscreteLib)
         );
         $m!(
+            "discrete-graph",
+            "Discrete graph runtime",
+            "discrete-runtime",
+            None,
+            || Box::new(sim_lib_discrete::DiscreteLib)
+        );
+        $m!(
             "organ/binding",
             "Binding organ",
             "standard-binding",
