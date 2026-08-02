@@ -453,6 +453,30 @@ fn music_algorithm_features_preserve_focused_and_grouped_selection() {
 }
 
 #[test]
+fn serial_music_features_preserve_curated_grouping() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "serial-core", &["dep:sim-lib-serial-core"]);
+    assert_feature_includes(
+        &features,
+        "pitch-serial",
+        &["dep:sim-lib-pitch-serial", "serial-core", "pitch-core"],
+    );
+    assert_feature_includes(
+        &features,
+        "serial-music",
+        &[
+            "dep:sim-lib-music-serial",
+            "pitch-serial",
+            "music-consonance",
+            "music-notation",
+            "music-shapes",
+            "pitch-shapes",
+            "cookbook",
+        ],
+    );
+}
+
+#[test]
 fn r11_production_crate_dependency_boundaries_stay_wired() {
     let root = repo_root();
     assert_crate_cargo_tomls_do_not_contain(

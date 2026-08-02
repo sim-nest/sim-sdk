@@ -92,6 +92,13 @@ macro_rules! cookbook_directory_music {
             || Box::new(crate::lib_pitch_shapes::PitchShapesLib)
         );
         $m!(
+            "serial-music",
+            "Serial music",
+            "serial-music",
+            Some(crate::runtime::serial_music_stack::RECIPES),
+            || Box::new(crate::runtime::serial_music_stack::SerialMusicCookbookLib)
+        );
+        $m!(
             "sound-audio-lift",
             "Sound audio lift",
             "sound-audio-lift",

@@ -398,6 +398,7 @@
             "plugin-vst3",
             "rank",
             "scene",
+            "serial-music",
             "server",
             "skill",
             "sound-audio-lift",
@@ -1841,6 +1842,15 @@
         },
         {
           "edges": [
+            "dep:sim-lib-pitch-serial",
+            "serial-core",
+            "pitch-core"
+          ],
+          "name": "pitch-serial",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-pitch-set",
             "pitch-core",
             "core"
@@ -1971,6 +1981,28 @@
             "codec-lisp"
           ],
           "name": "scene",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-serial-core"
+          ],
+          "name": "serial-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-serial",
+            "pitch-serial",
+            "pitch-scale",
+            "music-core",
+            "music-consonance",
+            "music-notation",
+            "music-shapes",
+            "pitch-shapes",
+            "cookbook"
+          ],
+          "name": "serial-music",
           "workspace_edges": []
         },
         {

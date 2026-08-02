@@ -94,6 +94,13 @@ signal, bounded-search, exact-ratio, consonance, and counterpoint candidate grap
 through curated SDK contracts and binds the same limits to the Lisp foundry-load
 recipe.
 
+The serial-music composition specimen lives at
+`crates/sim-conformance/tests/spec/serial_music.rs`. It checks the curated
+serial facade over the frozen candidate crates, proves row-family and matrix
+theory, verifies reversible additive completion preserves the immutable
+structural plan, checks the authored SDK recipes use the same public surface,
+and proves unknown registry components fail closed with stable ids.
+
 The expression-tree composition conformance matrix lives at
 `crates/sim-conformance/tests/spec/expr_tree.rs`. It runs the runtime crate's
 embedded finite-tree and automatic/directed recipes, verifies mixed storage and

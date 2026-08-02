@@ -166,6 +166,8 @@ mod roadmap11_exports;
 /// shapes, functions, and the default number domains into a `Cx`.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod runtime;
+#[cfg(feature = "serial-music")]
+pub mod serial_music;
 /// Shape authoring helpers: documented and value-backed shape wrappers plus
 /// shape registration and checking utilities.
 #[cfg(all(feature = "core", feature = "shape"))]

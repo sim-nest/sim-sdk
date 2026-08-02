@@ -54,6 +54,10 @@ sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "901
 sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "9010105143a3d593055170559225ee2c597b2673" }
 sim-lib-intent = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
 sim-lib-scene = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
+sim-lib-discrete-comb = { path = "../sim-discrete/crates/sim-lib-discrete-comb" }
+sim-lib-music-serial = { path = "../sim-music/crates/sim-lib-music-serial" }
+sim-lib-pitch-serial = { path = "../sim-music/crates/sim-lib-pitch-serial" }
+sim-lib-serial-core = { path = "../sim-music/crates/sim-lib-serial-core" }
 sim-lib-stream-core = { git = "https://github.com/sim-nest/sim-stream", rev = "fbc0d112d863ac6145b31b62ee5ec8e580c184b1" }
 sim-lib-stream-device = { git = "https://github.com/sim-nest/sim-stream", rev = "fbc0d112d863ac6145b31b62ee5ec8e580c184b1" }
 sim-lib-view = { git = "https://github.com/sim-nest/sim-web", rev = "c3d0397b287b2276dcd7d0a8ca90598a26fcf508" }
@@ -170,6 +174,7 @@ sim-lib-music-core = { optional = true, version = "0.1.3" }
 sim-lib-music-counterpoint = { optional = true, version = "=0.1.0" }
 sim-lib-music-lift = { optional = true, version = "0.1.1" }
 sim-lib-music-lower = { optional = true, version = "0.1.1" }
+sim-lib-music-serial = { optional = true, version = "=0.1.0" }
 sim-lib-music-notation = { optional = true, version = "0.1.2" }
 sim-lib-music-shapes = { optional = true, version = "0.1.4" }
 sim-lib-music-transform = { optional = true, version = "0.1.3" }
@@ -218,6 +223,7 @@ sim-lib-pitch-namer-jazz = { optional = true, version = "0.1.1" }
 sim-lib-pitch-namer-riemann = { optional = true, version = "0.1.2" }
 sim-lib-pitch-namer-roman = { optional = true, version = "0.1.2" }
 sim-lib-pitch-ratio = { optional = true, version = "=0.1.0" }
+sim-lib-pitch-serial = { optional = true, version = "=0.1.0" }
 sim-lib-pitch-scale = { optional = true, version = "0.1.3" }
 sim-lib-pitch-set = { optional = true, version = "0.1.2" }
 sim-lib-pitch-shapes = { optional = true, version = "0.1.3" }
@@ -228,6 +234,7 @@ sim-lib-plugin-lv2 = { optional = true, version = "0.1.1" }
 sim-lib-plugin-vst3 = { optional = true, version = "0.1.1" }
 sim-lib-rank = { optional = true, version = "0.1.1" }
 sim-lib-scene = { optional = true, version = "0.1.6" }
+sim-lib-serial-core = { optional = true, version = "=0.1.0" }
 sim-lib-sequence = { optional = true, version = "0.1.1" }
 sim-lib-server = { optional = true, version = "0.1.9" }
 sim-lib-skill = { optional = true, version = "0.1.2" }
@@ -333,7 +340,7 @@ compute-femm = ["dep:sim-lib-compute-femm", "compute-model", "femm-solve"]
 compute-model = ["dep:sim-lib-compute-model", "numbers-tensor-bcast", "numbers-numeric", "numbers-rk"]
 compute-rocm = ["dep:sim-lib-compute-rocm", "compute-model"]
 compute-wgpu = ["dep:sim-lib-compute-wgpu", "compute-model", "numbers-tensor-f64", "numbers-float"]
-cookbook-all = ["cookbook", "shape", "citizen", "bridge", "codec-algol", "codec-binary", "codec-binary-base64", "codec-bitwise", "codec-bitwise-base64", "codec-bridge", "codec-chat", "codec-json", "codec-mcp", "agent", "audio-dsp", "audio-graph-live", "compute-auto", "compute-cli", "compute-cuda", "compute-femm", "compute-model", "compute-rocm", "compute-wgpu", "daw-session", "device-reference", "discrete-rank", "discrete-runtime", "exec", "femm-core", "femm-field", "femm-function", "femm-ode", "glasses-modeled", "gpu-math", "intent", "interference", "interference-runtime", "interference-compute", "list-cell", "list-lazy", "logic-core", "mcp", "midi-core", "midi-live", "midi-ble", "midi-rtmidi", "midi-shapes", "music-lift", "music-notation", "music-shapes", "music-synth", "numbers-i64", "numbers-arith", "numbers-bigint", "numbers-bool", "numbers-f64", "numbers-rational", "numbers-complex", "numbers-func", "numbers-cas", "numbers-cas-diff", "numbers-cas-eval", "numbers-exotic", "numbers-fixed", "numbers-float", "numbers-numeric", "numbers-quad", "numbers-rk", "numbers-stats", "numbers-tensor", "numbers-tensor-bcast", "numbers-tensor-bit", "numbers-tensor-cmplxf", "numbers-tensor-f64", "numbers-tensor-i64", "numbers-tensor-linalg", "numbers-tensor-rat64", "openai-server", "pitch-dissonance", "pitch-namer", "pitch-shapes", "plugin-clap", "plugin-vst3", "rank", "scene", "server", "skill", "sound-audio-lift", "sound-bridge", "sound-dissonance", "sound-render", "sound-shapes", "sound-timbre", "sound-tuning", "standard-binding", "control", "standard-sequence", "standard-pattern", "standard-scheme", "standard-cl", "standard-clojure", "stream-alsa", "stream-asio", "stream-bridge", "stream-core", "stream-coreaudio", "stream-jack", "stream-pipewire", "stream-portaudio", "stream-prelude", "table-fs", "table-hash", "table-http", "table-lazy", "topology-core", "watch-modeled"]
+cookbook-all = ["cookbook", "shape", "citizen", "bridge", "codec-algol", "codec-binary", "codec-binary-base64", "codec-bitwise", "codec-bitwise-base64", "codec-bridge", "codec-chat", "codec-json", "codec-mcp", "agent", "audio-dsp", "audio-graph-live", "compute-auto", "compute-cli", "compute-cuda", "compute-femm", "compute-model", "compute-rocm", "compute-wgpu", "daw-session", "device-reference", "discrete-rank", "discrete-runtime", "exec", "femm-core", "femm-field", "femm-function", "femm-ode", "glasses-modeled", "gpu-math", "intent", "interference", "interference-runtime", "interference-compute", "list-cell", "list-lazy", "logic-core", "mcp", "midi-core", "midi-live", "midi-ble", "midi-rtmidi", "midi-shapes", "music-lift", "music-notation", "music-shapes", "music-synth", "numbers-i64", "numbers-arith", "numbers-bigint", "numbers-bool", "numbers-f64", "numbers-rational", "numbers-complex", "numbers-func", "numbers-cas", "numbers-cas-diff", "numbers-cas-eval", "numbers-exotic", "numbers-fixed", "numbers-float", "numbers-numeric", "numbers-quad", "numbers-rk", "numbers-stats", "numbers-tensor", "numbers-tensor-bcast", "numbers-tensor-bit", "numbers-tensor-cmplxf", "numbers-tensor-f64", "numbers-tensor-i64", "numbers-tensor-linalg", "numbers-tensor-rat64", "openai-server", "pitch-dissonance", "pitch-namer", "pitch-shapes", "plugin-clap", "plugin-vst3", "rank", "scene", "serial-music", "server", "skill", "sound-audio-lift", "sound-bridge", "sound-dissonance", "sound-render", "sound-shapes", "sound-timbre", "sound-tuning", "standard-binding", "control", "standard-sequence", "standard-pattern", "standard-scheme", "standard-cl", "standard-clojure", "stream-alsa", "stream-asio", "stream-bridge", "stream-core", "stream-coreaudio", "stream-jack", "stream-pipewire", "stream-portaudio", "stream-prelude", "table-fs", "table-hash", "table-http", "table-lazy", "topology-core", "watch-modeled"]
 core = ["dep:sim-kernel", "dep:sim-value", "dep:sim-lib-core", "dep:sim-run-loaders"]
 daw-session = ["dep:sim-lib-daw-session", "audio-graph-live", "plugin-core", "stream-audio", "topology-core"]
 default = ["core", "shape", "codec-lisp", "numbers-f64"]
@@ -423,6 +430,9 @@ music-consonance = ["dep:sim-lib-music-consonance"]
 music-counterpoint = ["dep:sim-lib-music-counterpoint"]
 music-core = ["dep:sim-lib-music-core", "pitch-core", "midi-core", "numbers-rational", "core"]
 music-inference = ["music-algorithms", "dep:sim-lib-music-consonance", "dep:sim-lib-music-counterpoint"]
+serial-core = ["dep:sim-lib-serial-core"]
+pitch-serial = ["dep:sim-lib-pitch-serial", "serial-core", "pitch-core"]
+serial-music = ["dep:sim-lib-music-serial", "pitch-serial", "pitch-scale", "music-core", "music-consonance", "music-notation", "music-shapes", "pitch-shapes", "cookbook"]
 music-lift = ["dep:sim-lib-music-lift", "music-core", "music-analysis", "midi-smf", "pitch-namer", "core"]
 music-lower = ["dep:sim-lib-music-lower", "music-core", "midi-smf", "core"]
 music-notation = ["dep:sim-lib-music-notation", "music-core", "pitch-core", "sim-table-fs?/notation", "core"]

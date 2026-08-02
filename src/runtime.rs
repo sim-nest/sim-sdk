@@ -14,6 +14,8 @@ mod lists;
 mod realize;
 #[cfg(feature = "device-reference")]
 pub mod reference_device;
+#[cfg(feature = "serial-music")]
+pub mod serial_music_stack;
 mod shape_ops;
 mod tables;
 pub(crate) mod test_runs;

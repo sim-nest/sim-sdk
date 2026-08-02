@@ -1,5 +1,5 @@
 {
-  "card_count": 277,
+  "card_count": 278,
   "cards": [
     {
       "id": "agent/effects",
@@ -1023,6 +1023,12 @@
     },
     {
       "id": "citizen/pitch/Scale",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/pitch/ToneRow",
       "kind": "citizen-class",
       "owner": "sim-lib-pitch-shapes",
       "summary": "citizen class constructor surface"

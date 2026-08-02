@@ -15,6 +15,7 @@ const REEXPORT_AND_WIRING: &[&str] = &[
     "src/numbers_exports.rs",
     "src/roadmap11_exports.rs",
     "src/runtime.rs",
+    "src/serial_music.rs",
     "src/standard_exports.rs",
 ];
 
@@ -47,6 +48,8 @@ const RUNTIME_BEHAVIOR_ALLOWLIST: &[&str] = &[
     "src/runtime/realize.rs",
     "src/runtime/reference_device.rs",
     "src/runtime/reference_device/",
+    "src/runtime/serial_music_stack.rs",
+    "src/runtime/serial_music_stack/",
     "src/runtime/watch.rs",
     "src/runtime/watch/",
     "src/runtime/shape_ops.rs",

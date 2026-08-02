@@ -40,4 +40,7 @@ fn readme_default_quickstart_compiles_and_installs_core_runtime() {
 }
 
 #[test]
-fn public_feature_aliases_compile() {}
+fn public_feature_aliases_compile() {
+    #[cfg(feature = "serial-music")]
+    let _ = std::any::type_name::<sim::serial_music::theory::ToneRow>();
+}

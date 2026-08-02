@@ -185,6 +185,26 @@ claims_specimens = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/serial-music-composition"
+title = "Serial music SDK composition"
+summary = "Select the frozen serial-series, row-theory, immutable-plan, adaptation, and reversible-completion candidates through one curated SDK facade."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable `serial-music` when a host wants the curated serial facade instead of depending on the owner crates directly. Use `serial_music::theory` for serial-series and row/matrix contracts, `serial_music::practice` for immutable plans and strict realization inputs, `serial_music::adaptation` for registry-selected modal or caller-defined realizers, `serial_music::completion` for reversible additive completion, and `serial_music::runtime` for audition and export helpers. The facade stays thin and reuses the existing SDK runtime installer by composing the already-owned shape, notation, and cookbook features."
+claims_anchors = [
+  "anchor/crate/sim-nest",
+  "anchor/rustdoc/sim-nest/crate-root",
+  "anchor/rustdoc/sim-nest/default_loadable_libs",
+]
+claims_specimens = [
+  "recipe/sim-sdk/serial-music/row-matrix-analysis",
+  "recipe/sim-sdk/serial-music/modal-realization",
+  "recipe/sim-sdk/serial-music/reversible-completion",
+  "recipe/sim-sdk/serial-music/index-discovery",
+  "spec-test/sim-sdk/crates/sim-conformance/tests/spec/serial_music",
+]
+
+[[feature]]
 id = "feature/sim-sdk/facade-shapes"
 title = "Facade Shape exports"
 summary = "Expose public Shape exports through the SDK facade while shape crates keep the matching behavior."
@@ -294,4 +314,17 @@ steps = [
   { feature = "feature/sim-sdk/music-algorithm-composition", why = "The SDK row owns focused feature selection and curated re-exports over the frozen candidates while the music owner keeps the open data-plan registry and replaceable foundry stages." },
   { specimen = "recipe/sim-sdk/music-algorithms/foundry-plan", why = "The Lisp load recipe reproduces the bounded foundry plan through the five focused candidate crates." },
   { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/music_algorithms", why = "The Rust facade specimen checks the same transform, search, ratio, consonance, counterpoint, and plan bounds." },
+]
+
+[[route]]
+id = "route/compose-serial-music-from-sdk"
+task = "Compose serial music from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/serial-music-composition", why = "The SDK row owns the single curated serial facade over the frozen candidates and the existing runtime-install surface for supporting shape and notation libs." },
+  { specimen = "recipe/sim-sdk/serial-music/row-matrix-analysis", why = "The theory recipe proves the facade reaches row-family and matrix analysis through public SDK names." },
+  { specimen = "recipe/sim-sdk/serial-music/modal-realization", why = "The adaptation recipe realizes one immutable plan through the registry-backed modal surface without mutating the source plan." },
+  { specimen = "recipe/sim-sdk/serial-music/reversible-completion", why = "The completion recipe proves additive serial completion is reversible through the facade." },
+  { specimen = "recipe/sim-sdk/serial-music/index-discovery", why = "The index recipe proves the generated feature and route ids are discoverable from the SDK repo surface." },
+  { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/serial_music", why = "The public-facade conformance specimen checks reversibility, recipe parity, fail-closed behavior, and the feature claim." },
 ]

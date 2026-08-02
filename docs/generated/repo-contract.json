@@ -1,5 +1,5 @@
 {
-  "card_count": 277,
+  "card_count": 278,
   "cards": [
     {
       "id": "agent/effects",
@@ -1028,6 +1028,12 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/pitch/ToneRow",
+      "kind": "citizen-class",
+      "owner": "sim-lib-pitch-shapes",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/plugin-core/PluginDescriptor",
       "kind": "citizen-class",
       "owner": "sim-lib-plugin-core",
@@ -1664,7 +1670,7 @@
       "summary": "core"
     }
   ],
-  "citizen_count": 222,
+  "citizen_count": 223,
   "citizens": [
     {
       "arity": 1,
@@ -2240,6 +2246,12 @@
       "arity": 1,
       "crate": "sim-lib-pitch-shapes",
       "symbol": "pitch/Scale",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-pitch-shapes",
+      "symbol": "pitch/ToneRow",
       "version": 1
     },
     {
@@ -3525,6 +3537,7 @@
             "plugin-vst3",
             "rank",
             "scene",
+            "serial-music",
             "server",
             "skill",
             "sound-audio-lift",
@@ -4968,6 +4981,15 @@
         },
         {
           "edges": [
+            "dep:sim-lib-pitch-serial",
+            "serial-core",
+            "pitch-core"
+          ],
+          "name": "pitch-serial",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-pitch-set",
             "pitch-core",
             "core"
@@ -5098,6 +5120,28 @@
             "codec-lisp"
           ],
           "name": "scene",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-serial-core"
+          ],
+          "name": "serial-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-music-serial",
+            "pitch-serial",
+            "pitch-scale",
+            "music-core",
+            "music-consonance",
+            "music-notation",
+            "music-shapes",
+            "pitch-shapes",
+            "cookbook"
+          ],
+          "name": "serial-music",
           "workspace_edges": []
         },
         {
@@ -6372,10 +6416,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "13e5507de929321897655e0e01efb0997ef81153",
+    "git_commit": "f845bba44ffcbcabc2dbca9586fb10fd36d008f4",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "13e5507de929321897655e0e01efb0997ef81153",
+    "source_commit": "f845bba44ffcbcabc2dbca9586fb10fd36d008f4",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6388,9 +6432,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "7bec5febacc5a564",
+    "workspace_hash": "0a5358a48c2e61d1",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 236,
+    "workspace_hash_input_count": 244,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -6416,6 +6460,7 @@
       "crates/sim-conformance/tests/spec/music_algorithms.rs",
       "crates/sim-conformance/tests/spec/placement.rs",
       "crates/sim-conformance/tests/spec/rust_intelligence.rs",
+      "crates/sim-conformance/tests/spec/serial_music.rs",
       "crates/sim-conformance/tests/spec/stream_matrix.rs",
       "crates/sim-conformance/tests/spec/stream_matrix_helpers.rs",
       "crates/sim-conformance/tests/spec/support.rs",
@@ -6437,6 +6482,10 @@
       "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
       "recipes/interference/modeled-study/recipe.toml",
       "recipes/music-algorithms/foundry-plan/recipe.toml",
+      "recipes/serial-music/index-discovery/recipe.toml",
+      "recipes/serial-music/modal-realization/recipe.toml",
+      "recipes/serial-music/reversible-completion/recipe.toml",
+      "recipes/serial-music/row-matrix-analysis/recipe.toml",
       "recipes/watch/book.toml",
       "recipes/watch/dual-quorum/recipe.toml",
       "recipes/watch/glance-pager/recipe.toml",
@@ -6556,6 +6605,8 @@
       "src/runtime/reference_device/route.rs",
       "src/runtime/reference_device/two_rate.rs",
       "src/runtime/reference_device.rs",
+      "src/runtime/serial_music_stack/cookbook.rs",
+      "src/runtime/serial_music_stack.rs",
       "src/runtime/shape_ops.rs",
       "src/runtime/shape_ops_impl/algebra.rs",
       "src/runtime/shape_ops_impl/compare.rs",
@@ -6620,6 +6671,7 @@
       "src/runtime/watch/proofs.rs",
       "src/runtime/watch.rs",
       "src/runtime.rs",
+      "src/serial_music.rs",
       "src/shapes.rs",
       "src/skill_tests.rs",
       "src/standard_exports.rs",
@@ -6658,7 +6710,7 @@
       "card_id": "cookbook/sim-sdk",
       "group": "workspace",
       "package": "sim-nest",
-      "recipe_count": 16,
+      "recipe_count": 20,
       "recipes": [
         {
           "card_id": "sim-sdk/01-basics/boot-runtime",
@@ -6755,6 +6807,38 @@
           "package": "sim-nest",
           "recipe_toml": "recipes/music-algorithms/foundry-plan/recipe.toml",
           "title": "Load and compose the modular music algorithm foundry"
+        },
+        {
+          "card_id": "sim-sdk/serial-music/index-discovery",
+          "codec": "rust",
+          "id": "index-discovery",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/serial-music/index-discovery/recipe.toml",
+          "title": "Check serial facade feature and route discovery in the generated SDK index"
+        },
+        {
+          "card_id": "sim-sdk/serial-music/modal-realization",
+          "codec": "rust",
+          "id": "modal-realization",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/serial-music/modal-realization/recipe.toml",
+          "title": "Realize one immutable serial plan through a registry-backed modal spine"
+        },
+        {
+          "card_id": "sim-sdk/serial-music/reversible-completion",
+          "codec": "rust",
+          "id": "reversible-completion",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/serial-music/reversible-completion/recipe.toml",
+          "title": "Complete a serial statement reversibly through the SDK facade"
+        },
+        {
+          "card_id": "sim-sdk/serial-music/row-matrix-analysis",
+          "codec": "rust",
+          "id": "row-matrix-analysis",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/serial-music/row-matrix-analysis/recipe.toml",
+          "title": "Analyze a strict row family and matrix through the SDK facade"
         },
         {
           "card_id": "sim-sdk/watch/dual-quorum",

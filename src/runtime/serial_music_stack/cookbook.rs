@@ -1,0 +1,56 @@
+/// Embedded cookbook recipes for the sim-sdk serial-music facade.
+pub static RECIPES: sim_cookbook::EmbeddedDir = &[
+    ("book.toml", include_bytes!("../../../recipes/book.toml")),
+    (
+        "serial-music/chapter.toml",
+        include_bytes!("../../../recipes/serial-music/chapter.toml"),
+    ),
+    (
+        "serial-music/row-matrix-analysis/purpose.md",
+        include_bytes!("../../../recipes/serial-music/row-matrix-analysis/purpose.md"),
+    ),
+    (
+        "serial-music/row-matrix-analysis/recipe.toml",
+        include_bytes!("../../../recipes/serial-music/row-matrix-analysis/recipe.toml"),
+    ),
+    (
+        "serial-music/row-matrix-analysis/setup.rs",
+        include_bytes!("../../../recipes/serial-music/row-matrix-analysis/setup.rs"),
+    ),
+    (
+        "serial-music/modal-realization/purpose.md",
+        include_bytes!("../../../recipes/serial-music/modal-realization/purpose.md"),
+    ),
+    (
+        "serial-music/modal-realization/recipe.toml",
+        include_bytes!("../../../recipes/serial-music/modal-realization/recipe.toml"),
+    ),
+    (
+        "serial-music/modal-realization/setup.rs",
+        include_bytes!("../../../recipes/serial-music/modal-realization/setup.rs"),
+    ),
+    (
+        "serial-music/reversible-completion/purpose.md",
+        include_bytes!("../../../recipes/serial-music/reversible-completion/purpose.md"),
+    ),
+    (
+        "serial-music/reversible-completion/recipe.toml",
+        include_bytes!("../../../recipes/serial-music/reversible-completion/recipe.toml"),
+    ),
+    (
+        "serial-music/reversible-completion/setup.rs",
+        include_bytes!("../../../recipes/serial-music/reversible-completion/setup.rs"),
+    ),
+    (
+        "serial-music/index-discovery/purpose.md",
+        include_bytes!("../../../recipes/serial-music/index-discovery/purpose.md"),
+    ),
+    (
+        "serial-music/index-discovery/recipe.toml",
+        include_bytes!("../../../recipes/serial-music/index-discovery/recipe.toml"),
+    ),
+    (
+        "serial-music/index-discovery/setup.rs",
+        include_bytes!("../../../recipes/serial-music/index-discovery/setup.rs"),
+    ),
+];

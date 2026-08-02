@@ -235,6 +235,12 @@ pub(super) fn install_optional_runtime_libs(cx: &mut Cx) {
             .expect("core runtime should install music shape docs");
     }
 
+    #[cfg(feature = "serial-music")]
+    {
+        crate::runtime::serial_music_stack::install_serial_music_stack(cx)
+            .expect("core runtime should install the serial-music cookbook row");
+    }
+
     #[cfg(feature = "sound-timbre")]
     {
         crate::lib_sound_timbre::install_sound_timbre_lib(cx)

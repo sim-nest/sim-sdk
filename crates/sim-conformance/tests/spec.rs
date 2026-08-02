@@ -35,6 +35,8 @@ mod interference;
 mod music_algorithms;
 #[path = "spec/rust_intelligence.rs"]
 mod rust_intelligence;
+#[path = "spec/serial_music.rs"]
+mod serial_music;
 #[path = "spec/stream_matrix.rs"]
 mod stream_matrix;
 #[path = "spec/support.rs"]
