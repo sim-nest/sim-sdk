@@ -54,10 +54,6 @@ sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "767
 sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "7674b48de5685ffe8da69ca1c10afb5f35270770" }
 sim-lib-intent = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
 sim-lib-scene = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-discrete-comb = { path = "../sim-discrete/crates/sim-lib-discrete-comb" }
-sim-lib-music-serial = { path = "../sim-music/crates/sim-lib-music-serial" }
-sim-lib-pitch-serial = { path = "../sim-music/crates/sim-lib-pitch-serial" }
-sim-lib-serial-core = { path = "../sim-music/crates/sim-lib-serial-core" }
 sim-lib-stream-core = { git = "https://github.com/sim-nest/sim-stream", rev = "9cc8c8453e92ef3e49b84de40992918fee8beea3" }
 sim-lib-stream-device = { git = "https://github.com/sim-nest/sim-stream", rev = "9cc8c8453e92ef3e49b84de40992918fee8beea3" }
 sim-lib-view = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }

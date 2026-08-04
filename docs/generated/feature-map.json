@@ -382,6 +382,7 @@
             "numbers-quad",
             "numbers-rk",
             "numbers-stats",
+            "signal",
             "numbers-tensor",
             "numbers-tensor-bcast",
             "numbers-tensor-bit",
