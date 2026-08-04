@@ -3521,6 +3521,7 @@
             "numbers-quad",
             "numbers-rk",
             "numbers-stats",
+            "signal",
             "numbers-tensor",
             "numbers-tensor-bcast",
             "numbers-tensor-bit",
@@ -6416,10 +6417,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "f845bba44ffcbcabc2dbca9586fb10fd36d008f4",
+    "git_commit": "18dce1a74ae2dd152469ec894193968a1ae5d003",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "f845bba44ffcbcabc2dbca9586fb10fd36d008f4",
+    "source_commit": "18dce1a74ae2dd152469ec894193968a1ae5d003",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6432,7 +6433,7 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "0a5358a48c2e61d1",
+    "workspace_hash": "cc1afeda69daf482",
     "workspace_hash_algorithm": "fnv1a64",
     "workspace_hash_input_count": 244,
     "workspace_hash_inputs": [
