@@ -200,6 +200,15 @@
         {
           "edges": [
             "dep:sim-codec",
+            "dep:sim-codec-javascript",
+            "core"
+          ],
+          "name": "codec-javascript",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
             "dep:sim-codec-json",
             "dep:serde",
             "dep:serde_json",
@@ -968,6 +977,14 @@
             "dep:sim-lib-interference-solve"
           ],
           "name": "interference-solve",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "standard-javascript",
+            "standard-gc-tracing"
+          ],
+          "name": "javascript",
           "workspace_edges": []
         },
         {
@@ -2334,6 +2351,7 @@
             "standard-cl",
             "standard-julia",
             "standard-lua",
+            "standard-javascript",
             "standard-python",
             "standard-ruby",
             "standard-typed-lazy"
@@ -2412,6 +2430,25 @@
             "standard-dispatch"
           ],
           "name": "standard-islisp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-javascript",
+            "codec-javascript",
+            "codec-json",
+            "shape",
+            "standard-core",
+            "standard-binding",
+            "standard-dispatch",
+            "standard-namespace",
+            "standard-mutation",
+            "standard-sequence",
+            "standard-pattern",
+            "standard-gc-tracing",
+            "control"
+          ],
+          "name": "standard-javascript",
           "workspace_edges": []
         },
         {

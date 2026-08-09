@@ -88,6 +88,7 @@ sim-codec-bitwise-base64 = { optional = true, version = "0.1.4" }
 sim-codec-bridge = { optional = true, version = "0.1.2" }
 sim-codec-chat = { optional = true, version = "0.2.0" }
 sim-codec-json = { optional = true, version = "0.2.0" }
+sim-codec-javascript = { optional = true, version = "0.1.0", path = "../sim-codecs/crates/sim-codec-javascript" }
 sim-codec-lisp = { optional = true, version = "0.2.0" }
 sim-codec-mcp = { optional = true, version = "0.1.4" }
 sim-codec-python = { optional = true, version = "0.1.0", path = "../sim-codecs/crates/sim-codec-python" }
@@ -105,7 +106,7 @@ sim-lib-audio-graph-live = { optional = true, version = "0.1.1" }
 sim-lib-music-synth = { optional = true, version = "0.1.5" }
 sim-lib-binding = { optional = true, version = "0.1.3" }
 sim-lib-bridge = { optional = true, version = "0.1.6" }
-sim-lib-control = { optional = true, version = "0.1.4" }
+sim-lib-control = { optional = true, version = "0.1.4", path = "../sim-runtime/crates/sim-lib-control" }
 sim-lib-compute-auto = { optional = true, version = "0.3.0" }
 sim-lib-compute-cli = { optional = true, version = "0.2.0" }
 sim-lib-compute-cuda = { optional = true, version = "0.2.0" }
@@ -151,6 +152,7 @@ sim-lib-lang-cl = { optional = true, version = "0.1.4" }
 sim-lib-lang-clojure = { optional = true, version = "0.1.4" }
 sim-lib-lang-islisp = { optional = true, version = "0.1.4" }
 sim-lib-lang-julia = { optional = true, version = "0.1.3" }
+sim-lib-lang-javascript = { optional = true, version = "0.1.0", path = "../sim-runtime/crates/sim-lib-lang-javascript" }
 sim-lib-lang-lua = { optional = true, version = "0.1.3" }
 sim-lib-lang-python = { optional = true, version = "0.1.0", path = "../sim-runtime/crates/sim-lib-lang-python" }
 sim-lib-lang-ruby = { optional = true, version = "0.1.3" }
@@ -328,6 +330,7 @@ codec-bitwise-base64 = ["dep:sim-codec", "dep:sim-codec-bitwise-base64", "codec-
 codec-bridge = ["dep:sim-codec", "dep:sim-codec-bridge", "core"]
 codec-chat = ["dep:sim-codec", "dep:sim-codec-chat", "core"]
 codec-json = ["dep:sim-codec", "dep:sim-codec-json", "dep:serde", "dep:serde_json", "core"]
+codec-javascript = ["dep:sim-codec", "dep:sim-codec-javascript", "core"]
 codec-lisp = ["dep:sim-codec", "dep:sim-codec-lisp", "dep:proc-macro2", "dep:sim-run-loaders", "sim-run-loaders/codec-lisp", "core"]
 codec-mcp = ["dep:sim-codec-mcp", "codec-json"]
 codec-python = ["dep:sim-codec", "dep:sim-codec-python", "core"]
@@ -532,7 +535,7 @@ sound-timbre = ["dep:sim-lib-sound-timbre", "sound-core", "sound-spectrum", "cor
 sound-tuning = ["dep:sim-lib-sound-tuning", "sound-core", "pitch-core", "sim-table-fs?/tuning", "core"]
 sound-wasm-frame = ["dep:sim-lib-sound-wasm-frame", "sim-lib-sound-wasm-frame/sound-music", "sound", "sound-music", "wasm"]
 signal = ["dep:sim-lib-numbers-signal"]
-standard = ["standard-core", "standard-binding", "standard-sequence", "standard-pattern", "standard-dispatch", "standard-namespace", "standard-mutation", "standard-gc-tracing", "standard-scheme", "standard-islisp", "standard-clojure", "standard-cl", "standard-julia", "standard-lua", "standard-python", "standard-ruby", "standard-typed-lazy"]
+standard = ["standard-core", "standard-binding", "standard-sequence", "standard-pattern", "standard-dispatch", "standard-namespace", "standard-mutation", "standard-gc-tracing", "standard-scheme", "standard-islisp", "standard-clojure", "standard-cl", "standard-julia", "standard-lua", "standard-javascript", "standard-python", "standard-ruby", "standard-typed-lazy"]
 standard-binding = ["dep:sim-lib-binding", "standard-core"]
 standard-cl = ["dep:sim-lib-lang-cl", "standard-core", "standard-binding", "standard-dispatch", "standard-namespace", "standard-mutation", "control"]
 standard-clojure = ["dep:sim-lib-lang-clojure", "standard-core", "standard-sequence", "standard-namespace", "control"]
@@ -541,6 +544,7 @@ standard-dispatch = ["dep:sim-lib-dispatch", "standard-core", "shape"]
 standard-islisp = ["dep:sim-lib-lang-islisp", "standard-core", "standard-dispatch"]
 standard-julia = ["dep:sim-lib-lang-julia", "standard-core", "standard-dispatch", "codec-algol"]
 standard-lua = ["dep:sim-lib-lang-lua", "standard-core", "standard-mutation", "control", "codec-algol"]
+standard-javascript = ["dep:sim-lib-lang-javascript", "codec-javascript", "codec-json", "shape", "standard-core", "standard-binding", "standard-dispatch", "standard-namespace", "standard-mutation", "standard-sequence", "standard-pattern", "standard-gc-tracing", "control"]
 standard-python = ["dep:sim-lib-lang-python", "codec-python", "shape", "standard-core", "standard-binding", "standard-dispatch", "standard-namespace", "standard-mutation", "standard-sequence", "standard-gc-tracing", "control"]
 standard-mutation = ["dep:sim-lib-mutation", "standard-core"]
 # Production standard distributions reclaim managed cycles. The retain-only
@@ -554,6 +558,7 @@ standard-scheme = ["dep:sim-lib-lang-scheme", "standard-core", "standard-binding
 standard-sequence = ["dep:sim-lib-sequence", "standard-core"]
 standard-typed-lazy = ["dep:sim-lib-lang-typed-lazy", "standard-core", "standard-pattern", "control", "codec-algol"]
 python = ["standard-python", "standard-gc-tracing"]
+javascript = ["standard-javascript", "standard-gc-tracing"]
 stream-alsa = ["dep:sim-lib-stream-alsa", "audio-graph-core", "stream-audio", "stream-host"]
 stream-asio = ["dep:sim-lib-stream-asio", "audio-graph-core", "stream-audio", "stream-host"]
 stream-audio = ["dep:sim-lib-stream-audio", "stream-core"]

@@ -3339,6 +3339,15 @@
         {
           "edges": [
             "dep:sim-codec",
+            "dep:sim-codec-javascript",
+            "core"
+          ],
+          "name": "codec-javascript",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
             "dep:sim-codec-json",
             "dep:serde",
             "dep:serde_json",
@@ -4107,6 +4116,14 @@
             "dep:sim-lib-interference-solve"
           ],
           "name": "interference-solve",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "standard-javascript",
+            "standard-gc-tracing"
+          ],
+          "name": "javascript",
           "workspace_edges": []
         },
         {
@@ -5473,6 +5490,7 @@
             "standard-cl",
             "standard-julia",
             "standard-lua",
+            "standard-javascript",
             "standard-python",
             "standard-ruby",
             "standard-typed-lazy"
@@ -5551,6 +5569,25 @@
             "standard-dispatch"
           ],
           "name": "standard-islisp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-javascript",
+            "codec-javascript",
+            "codec-json",
+            "shape",
+            "standard-core",
+            "standard-binding",
+            "standard-dispatch",
+            "standard-namespace",
+            "standard-mutation",
+            "standard-sequence",
+            "standard-pattern",
+            "standard-gc-tracing",
+            "control"
+          ],
+          "name": "standard-javascript",
           "workspace_edges": []
         },
         {
@@ -6252,6 +6289,16 @@
           "kind": [
             "test"
           ],
+          "name": "javascript",
+          "src": "tests/javascript.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "native_dynamic",
           "src": "tests/native_dynamic.rs"
         },
@@ -6480,10 +6527,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "b2d0ae36ca3fb34557285f147a90f62a7d7ee34a",
+    "git_commit": "d25eaed9bac5268c8c7154b959649aa96af69b48",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "b2d0ae36ca3fb34557285f147a90f62a7d7ee34a",
+    "source_commit": "d25eaed9bac5268c8c7154b959649aa96af69b48",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6496,9 +6543,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "b8bebcb293450866",
+    "workspace_hash": "c046808dc40955bc",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 246,
+    "workspace_hash_input_count": 247,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -6545,6 +6592,7 @@
       "recipes/glasses/voice-site/recipe.toml",
       "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
       "recipes/interference/modeled-study/recipe.toml",
+      "recipes/javascript/bounded-module/recipe.toml",
       "recipes/music-algorithms/foundry-plan/recipe.toml",
       "recipes/python/capability-scoped/recipe.toml",
       "recipes/serial-music/index-discovery/recipe.toml",
@@ -6776,7 +6824,7 @@
       "card_id": "cookbook/sim-sdk",
       "group": "workspace",
       "package": "sim-nest",
-      "recipe_count": 21,
+      "recipe_count": 22,
       "recipes": [
         {
           "card_id": "sim-sdk/01-basics/boot-runtime",
@@ -6865,6 +6913,14 @@
           "package": "sim-nest",
           "recipe_toml": "recipes/interference/modeled-study/recipe.toml",
           "title": "Solve, view, edit, and swap an interference study site"
+        },
+        {
+          "card_id": "sim-sdk/javascript/bounded-javascript-module",
+          "codec": "rust",
+          "id": "bounded-javascript-module",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/javascript/bounded-module/recipe.toml",
+          "title": "Evaluate a bounded JavaScript module"
         },
         {
           "card_id": "sim-sdk/music-algorithms/foundry-plan",

@@ -2,4 +2,4 @@ book = "sim-sdk"
 title = "sim-sdk facade recipes"
 summary = "Small recipes for booting and checking the umbrella SIM facade."
 order = 10
-chapters = ["01-basics", "python", "music-algorithms", "serial-music", "gpu-math", "interference", "device"]
+chapters = ["01-basics", "javascript", "python", "music-algorithms", "serial-music", "gpu-math", "interference", "device"]

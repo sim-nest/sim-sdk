@@ -1,0 +1,3 @@
+title = "JavaScript"
+order = 19
+summary = "Evaluate a bounded JavaScript module, explicitly drain promise jobs, and inspect fidelity gaps."

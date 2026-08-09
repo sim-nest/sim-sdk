@@ -23,6 +23,7 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | `feature/sim-sdk/facade-codecs` | `crate/sim-nest` | 0 | Expose public codec exports through the SDK facade while implementation crates keep the codec behavior. |
 | `feature/sim-sdk/facade-model-workflows` | `crate/sim-nest` | 0 | Expose model-facing facade exports for answer routing and drafter setup. |
 | `feature/sim-sdk/python-composition` | `crate/sim-nest` | 0 | Compose the Python source codec, thin runtime profile, and tracing collector through ordinary SDK and bootloader controls. |
+| `feature/sim-sdk/javascript-composition` | `crate/sim-nest` | 0 | Compose the JavaScript codec, direct profile, and tracing collector through ordinary SDK and bootloader controls. |
 | `feature/sim-sdk/genai-feature-bundles` | `crate/sim-nest` | 2 | Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases. |
 | `feature/sim-sdk/gpu-math-composition` | `crate/sim-nest` | 1 | Expose opt-in Tensor, ODE, compute-provider, and FEMM solver composition through direct SDK re-exports. |
 | `feature/sim-sdk/interference-composition` | `crate/sim-nest` | 1 | Compose canonical interference records, solve/runtime, Tensor compute, and reversible view behavior through direct SDK re-exports. |
@@ -96,6 +97,10 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 - `recipes/interference/modeled-study/expected.txt`
 - `recipes/interference/modeled-study/input.lisp`
 - `recipes/interference/modeled-study/recipe.toml`
+- `recipes/javascript/bounded-module/purpose.md`
+- `recipes/javascript/bounded-module/recipe.toml`
+- `recipes/javascript/bounded-module/setup.rs`
+- `recipes/javascript/chapter.toml`
 - `recipes/music-algorithms/chapter.toml`
 - `recipes/music-algorithms/foundry-plan/README.md`
 - `recipes/music-algorithms/foundry-plan/expected.txt`
@@ -230,6 +235,27 @@ fn python_features_preserve_the_one_way_distribution_boundary() {
     assert!(bootloader.contains("Bootloader::standard()"));
     assert!(!bootloader.contains("PythonRuntime"));
     assert!(!repo_root().join("src/bin/python.rs").exists());
+}
+
+#[test]
+fn javascript_features_preserve_the_one_way_distribution_boundary() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "codec-javascript", &["dep:sim-codec-javascript"]);
+    assert_feature_includes(
+        &features,
+        "standard-javascript",
+        &[
+            "dep:sim-lib-lang-javascript",
+            "codec-javascript",
+            "standard-gc-tracing",
+        ],
+    );
+    assert_feature_includes(&features, "javascript", &["standard-javascript"]);
+    assert_feature_includes(&features, "standard", &["standard-javascript"]);
+    let bootloader = include_str!("bin/sim.rs");
+    assert!(bootloader.contains("Bootloader::standard()"));
+    assert!(!repo_root().join("src/bin/javascript.rs").exists());
+    assert!(!repo_root().join("src/bin/node.rs").exists());
 }
 
 #[test]

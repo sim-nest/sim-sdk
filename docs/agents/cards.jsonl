@@ -46,6 +46,10 @@
 {"kind":"recipe","path":"recipes/interference/modeled-study/expected.txt"}
 {"kind":"recipe","path":"recipes/interference/modeled-study/input.lisp"}
 {"kind":"recipe","path":"recipes/interference/modeled-study/recipe.toml"}
+{"kind":"recipe","path":"recipes/javascript/bounded-module/purpose.md"}
+{"kind":"recipe","path":"recipes/javascript/bounded-module/recipe.toml"}
+{"kind":"recipe","path":"recipes/javascript/bounded-module/setup.rs"}
+{"kind":"recipe","path":"recipes/javascript/chapter.toml"}
 {"kind":"recipe","path":"recipes/music-algorithms/chapter.toml"}
 {"kind":"recipe","path":"recipes/music-algorithms/foundry-plan/README.md"}
 {"kind":"recipe","path":"recipes/music-algorithms/foundry-plan/expected.txt"}

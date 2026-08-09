@@ -1,5 +1,5 @@
 #[rustfmt::skip]
-#[cfg(any(feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-bitwise", feature = "codec-bitwise-base64", feature = "codec-bridge", feature = "codec-chat", feature = "codec-mcp", feature = "codec-algol", feature = "codec-python"))]
+#[cfg(any(feature = "codec-lisp", feature = "codec-json", feature = "codec-javascript", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-bitwise", feature = "codec-bitwise-base64", feature = "codec-bridge", feature = "codec-chat", feature = "codec-mcp", feature = "codec-algol", feature = "codec-python"))]
 pub use sim_codec as codec;
 #[cfg(feature = "codec-algol")]
 pub use sim_codec_algol as codec_algol;
@@ -15,6 +15,8 @@ pub use sim_codec_bitwise_base64 as codec_bitwise_base64;
 pub use sim_codec_bridge as codec_bridge;
 #[cfg(feature = "codec-chat")]
 pub use sim_codec_chat as codec_chat;
+#[cfg(feature = "codec-javascript")]
+pub use sim_codec_javascript as codec_javascript;
 #[cfg(feature = "codec-json")]
 pub use sim_codec_json as codec_json;
 #[cfg(feature = "codec-lisp")]
@@ -47,6 +49,8 @@ pub use sim_lib_lang_cl as lib_lang_cl;
 pub use sim_lib_lang_clojure as lib_lang_clojure;
 #[cfg(feature = "standard-islisp")]
 pub use sim_lib_lang_islisp as lib_lang_islisp;
+#[cfg(feature = "standard-javascript")]
+pub use sim_lib_lang_javascript as lib_lang_javascript;
 #[cfg(feature = "standard-julia")]
 pub use sim_lib_lang_julia as lib_lang_julia;
 #[cfg(feature = "standard-lua")]

@@ -131,6 +131,15 @@ claims_anchors = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/javascript-composition"
+title = "Embedded JavaScript SDK composition"
+summary = "Compose the JavaScript codec, direct profile, and tracing collector through ordinary SDK and bootloader controls."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable `codec-javascript` for syntax only, `standard-javascript` for the bounded direct profile, or `javascript` for the production profile with tracing collection. `standard` includes JavaScript deliberately; the minimal default does not. The codec loads through the existing cookbook and bootloader surface. No Node, compiler, JavaScript executable, ambient event loop, or alternate engine is implied."
+claims_anchors = ["anchor/crate/sim-nest", "anchor/rustdoc/sim-nest/default_loadable_libs"]
+
+[[feature]]
 id = "feature/sim-sdk/genai-feature-bundles"
 title = "GenAI SDK feature bundles"
 summary = "Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases."

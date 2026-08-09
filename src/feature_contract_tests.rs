@@ -78,6 +78,27 @@ fn python_features_preserve_the_one_way_distribution_boundary() {
 }
 
 #[test]
+fn javascript_features_preserve_the_one_way_distribution_boundary() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "codec-javascript", &["dep:sim-codec-javascript"]);
+    assert_feature_includes(
+        &features,
+        "standard-javascript",
+        &[
+            "dep:sim-lib-lang-javascript",
+            "codec-javascript",
+            "standard-gc-tracing",
+        ],
+    );
+    assert_feature_includes(&features, "javascript", &["standard-javascript"]);
+    assert_feature_includes(&features, "standard", &["standard-javascript"]);
+    let bootloader = include_str!("bin/sim.rs");
+    assert!(bootloader.contains("Bootloader::standard()"));
+    assert!(!repo_root().join("src/bin/javascript.rs").exists());
+    assert!(!repo_root().join("src/bin/node.rs").exists());
+}
+
+#[test]
 fn public_facade_alias_table_mentions_declared_features() {
     let declared = collect_declared_features(include_str!("../Cargo.toml"));
     let missing = PUBLIC_FACADE_ALIASES
