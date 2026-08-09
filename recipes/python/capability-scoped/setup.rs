@@ -40,12 +40,16 @@ pub fn capability_scoped_python() -> Result<(), Box<dyn std::error::Error>> {
         allow: CapabilitySet::new(),
         expected_shape: Arc::new(AnyShape),
     };
-    for authorized in [
-        dynamic.eval(&mut cx, "40 + 2", admitted()),
-        dynamic.exec(&mut cx, "answer = 40 + 2\nanswer", admitted()),
-    ] {
-        assert!(matches!(authorized, Err(Error::TypeMismatch { .. })));
-    }
+    let evaluated = dynamic.eval(&mut cx, "40 + 2", admitted());
+    let executed = dynamic.exec(&mut cx, "answer = 40 + 2\nanswer", admitted());
+    assert!(
+        matches!(&evaluated, Err(Error::TypeMismatch { .. })),
+        "unexpected dynamic eval result: {evaluated:?}"
+    );
+    assert!(
+        matches!(&executed, Err(Error::TypeMismatch { .. })),
+        "unexpected dynamic exec result: {executed:?}"
+    );
 
     let tree = sim::codec_python::parse_module("answer = 40 + 2\nanswer")?;
     let lowered = sim::codec_python::lower_python(&tree);
