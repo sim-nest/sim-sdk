@@ -51,6 +51,10 @@
 {"kind":"recipe","path":"recipes/music-algorithms/foundry-plan/expected.txt"}
 {"kind":"recipe","path":"recipes/music-algorithms/foundry-plan/input.lisp"}
 {"kind":"recipe","path":"recipes/music-algorithms/foundry-plan/recipe.toml"}
+{"kind":"recipe","path":"recipes/python/capability-scoped/purpose.md"}
+{"kind":"recipe","path":"recipes/python/capability-scoped/recipe.toml"}
+{"kind":"recipe","path":"recipes/python/capability-scoped/setup.rs"}
+{"kind":"recipe","path":"recipes/python/chapter.toml"}
 {"kind":"recipe","path":"recipes/serial-music/chapter.toml"}
 {"kind":"recipe","path":"recipes/serial-music/index-discovery/purpose.md"}
 {"kind":"recipe","path":"recipes/serial-music/index-discovery/recipe.toml"}

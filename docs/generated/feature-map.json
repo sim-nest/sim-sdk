@@ -230,6 +230,15 @@
         },
         {
           "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-python",
+            "core"
+          ],
+          "name": "codec-python",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-compute-auto",
             "compute-model",
             "table-hash"
@@ -326,6 +335,7 @@
             "codec-chat",
             "codec-json",
             "codec-mcp",
+            "codec-python",
             "agent",
             "audio-dsp",
             "audio-graph-live",
@@ -1928,6 +1938,14 @@
         },
         {
           "edges": [
+            "standard-python",
+            "standard-gc-tracing"
+          ],
+          "name": "python",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-rank",
             "core"
           ],
@@ -2015,7 +2033,8 @@
             "web",
             "dep:sim-web-shell",
             "numbers-prelude",
-            "cookbook-all"
+            "cookbook-all",
+            "python"
           ],
           "name": "serve-cli",
           "workspace_edges": []
@@ -2315,6 +2334,7 @@
             "standard-cl",
             "standard-julia",
             "standard-lua",
+            "standard-python",
             "standard-ruby",
             "standard-typed-lazy"
           ],
@@ -2438,6 +2458,23 @@
             "shape"
           ],
           "name": "standard-pattern",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-python",
+            "codec-python",
+            "shape",
+            "standard-core",
+            "standard-binding",
+            "standard-dispatch",
+            "standard-namespace",
+            "standard-mutation",
+            "standard-sequence",
+            "standard-gc-tracing",
+            "control"
+          ],
+          "name": "standard-python",
           "workspace_edges": []
         },
         {

@@ -22,6 +22,7 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | `feature/sim-sdk/facade-runtime` | `crate/sim-nest` | 1 | Boot the public SIM facade and expose its command plus reversible view surface. |
 | `feature/sim-sdk/facade-codecs` | `crate/sim-nest` | 0 | Expose public codec exports through the SDK facade while implementation crates keep the codec behavior. |
 | `feature/sim-sdk/facade-model-workflows` | `crate/sim-nest` | 0 | Expose model-facing facade exports for answer routing and drafter setup. |
+| `feature/sim-sdk/python-composition` | `crate/sim-nest` | 0 | Compose the Python source codec, thin runtime profile, and tracing collector through ordinary SDK and bootloader controls. |
 | `feature/sim-sdk/genai-feature-bundles` | `crate/sim-nest` | 2 | Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases. |
 | `feature/sim-sdk/gpu-math-composition` | `crate/sim-nest` | 1 | Expose opt-in Tensor, ODE, compute-provider, and FEMM solver composition through direct SDK re-exports. |
 | `feature/sim-sdk/interference-composition` | `crate/sim-nest` | 1 | Compose canonical interference records, solve/runtime, Tensor compute, and reversible view behavior through direct SDK re-exports. |
@@ -100,6 +101,10 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 - `recipes/music-algorithms/foundry-plan/expected.txt`
 - `recipes/music-algorithms/foundry-plan/input.lisp`
 - `recipes/music-algorithms/foundry-plan/recipe.toml`
+- `recipes/python/capability-scoped/purpose.md`
+- `recipes/python/capability-scoped/recipe.toml`
+- `recipes/python/capability-scoped/setup.rs`
+- `recipes/python/chapter.toml`
 - `recipes/serial-music/chapter.toml`
 - `recipes/serial-music/index-discovery/purpose.md`
 - `recipes/serial-music/index-discovery/recipe.toml`
@@ -203,6 +208,28 @@ fn default_features_support_readme_quickstart() {
 fn device_feature_installs_reference_base_and_recipes() {
     let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
     assert_feature_includes(&features, "device", &["device-reference", "cookbook"]);
+}
+
+#[test]
+fn python_features_preserve_the_one_way_distribution_boundary() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "codec-python", &["dep:sim-codec-python"]);
+    assert_feature_includes(
+        &features,
+        "standard-python",
+        &[
+            "dep:sim-lib-lang-python",
+            "codec-python",
+            "standard-gc-tracing",
+        ],
+    );
+    assert_feature_includes(&features, "python", &["standard-python"]);
+    assert_feature_includes(&features, "standard", &["standard-python"]);
+
+    let bootloader = include_str!("bin/sim.rs");
+    assert!(bootloader.contains("Bootloader::standard()"));
+    assert!(!bootloader.contains("PythonRuntime"));
+    assert!(!repo_root().join("src/bin/python.rs").exists());
 }
 
 #[test]

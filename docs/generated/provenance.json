@@ -3,10 +3,10 @@
   "generated_by": "cargo run -p xtask -- simdoc",
   "generation_timestamp": "2026-07-19T07:28:29+02:00",
   "generator": "xtask repo-contract v1",
-  "git_commit": "e130daa89b7f4b96762cf0d241a0aeb6d4b393d0",
+  "git_commit": "b2d0ae36ca3fb34557285f147a90f62a7d7ee34a",
   "repo": "sim-sdk",
   "schema": "sim.provenance.v1",
-  "source_commit": "e130daa89b7f4b96762cf0d241a0aeb6d4b393d0",
+  "source_commit": "b2d0ae36ca3fb34557285f147a90f62a7d7ee34a",
   "source_remote": "https://github.com/sim-nest/sim-sdk",
   "validation_commands": [
     "cargo fmt --all --check",
@@ -19,9 +19,9 @@
     "cargo run -p xtask -- validation-matrix --check --repo .",
     "cargo run -p xtask -- crate-catalog --check --repo ."
   ],
-  "workspace_hash": "63440127d9d97c42",
+  "workspace_hash": "b8bebcb293450866",
   "workspace_hash_algorithm": "fnv1a64",
-  "workspace_hash_input_count": 245,
+  "workspace_hash_input_count": 246,
   "workspace_hash_inputs": [
     "Cargo.toml",
     "crates/sim-conformance/Cargo.toml",
@@ -69,6 +69,7 @@
     "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
     "recipes/interference/modeled-study/recipe.toml",
     "recipes/music-algorithms/foundry-plan/recipe.toml",
+    "recipes/python/capability-scoped/recipe.toml",
     "recipes/serial-music/index-discovery/recipe.toml",
     "recipes/serial-music/modal-realization/recipe.toml",
     "recipes/serial-music/reversible-completion/recipe.toml",
