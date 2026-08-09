@@ -18,6 +18,7 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | Feature | Subject | Specimens | Summary |
 | --- | --- | ---: | --- |
 | `feature/sim-sdk/generated-docs` | `crate/xtask` | 0 | Publish generated package, card, recipe, and index facts for the SDK facade and conformance crate. |
+| `feature/sim-sdk/standard-gc-policy` | `crate/sim-nest` | 0 | Select bounded tracing reclamation for standard builds while keeping hard-capped cycle retention explicit and test-only. |
 | `feature/sim-sdk/facade-runtime` | `crate/sim-nest` | 1 | Boot the public SIM facade and expose its command plus reversible view surface. |
 | `feature/sim-sdk/facade-codecs` | `crate/sim-nest` | 0 | Expose public codec exports through the SDK facade while implementation crates keep the codec behavior. |
 | `feature/sim-sdk/facade-model-workflows` | `crate/sim-nest` | 0 | Expose model-facing facade exports for answer routing and drafter setup. |

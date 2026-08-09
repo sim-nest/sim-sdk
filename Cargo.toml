@@ -122,6 +122,7 @@ sim-lib-exec = { optional = true, version = "0.1.0" }
 sim-lib-expr-tree = { optional = true, version = "=0.1.0" }
 sim-lib-expr-tree-server = { optional = true, version = "=0.1.0" }
 sim-lib-forge = { optional = true, version = "0.1.2" }
+sim-lib-gc-tracing = { optional = true, version = "0.1.0", path = "../sim-runtime/crates/sim-lib-gc-tracing" }
 sim-lib-femm-assembly = { optional = true, version = "0.3.0" }
 sim-lib-femm-codec = { optional = true, version = "0.2.0" }
 sim-lib-femm-core = { optional = true, version = "0.3.0" }
@@ -175,7 +176,7 @@ sim-lib-music-notation = { optional = true, version = "0.2.0" }
 sim-lib-music-shapes = { optional = true, version = "0.2.0" }
 sim-lib-music-transform = { optional = true, version = "0.1.3" }
 sim-lib-music-wasm-frame = { optional = true, version = "0.1.2" }
-sim-lib-mutation = { optional = true, version = "0.1.1" }
+sim-lib-mutation = { optional = true, version = "0.1.3", path = "../sim-runtime/crates/sim-lib-mutation" }
 sim-lib-namespace = { optional = true, version = "0.1.1" }
 sim-lib-numbers-ad = { optional = true, version = "0.2.1" }
 sim-lib-numbers-arith = { optional = true, version = "0.3.1" }
@@ -528,7 +529,7 @@ sound-timbre = ["dep:sim-lib-sound-timbre", "sound-core", "sound-spectrum", "cor
 sound-tuning = ["dep:sim-lib-sound-tuning", "sound-core", "pitch-core", "sim-table-fs?/tuning", "core"]
 sound-wasm-frame = ["dep:sim-lib-sound-wasm-frame", "sim-lib-sound-wasm-frame/sound-music", "sound", "sound-music", "wasm"]
 signal = ["dep:sim-lib-numbers-signal"]
-standard = ["standard-core", "standard-binding", "standard-sequence", "standard-pattern", "standard-dispatch", "standard-namespace", "standard-mutation", "standard-scheme", "standard-islisp", "standard-clojure", "standard-cl", "standard-julia", "standard-lua", "standard-ruby", "standard-typed-lazy"]
+standard = ["standard-core", "standard-binding", "standard-sequence", "standard-pattern", "standard-dispatch", "standard-namespace", "standard-mutation", "standard-gc-tracing", "standard-scheme", "standard-islisp", "standard-clojure", "standard-cl", "standard-julia", "standard-lua", "standard-ruby", "standard-typed-lazy"]
 standard-binding = ["dep:sim-lib-binding", "standard-core"]
 standard-cl = ["dep:sim-lib-lang-cl", "standard-core", "standard-binding", "standard-dispatch", "standard-namespace", "standard-mutation", "control"]
 standard-clojure = ["dep:sim-lib-lang-clojure", "standard-core", "standard-sequence", "standard-namespace", "control"]
@@ -538,6 +539,10 @@ standard-islisp = ["dep:sim-lib-lang-islisp", "standard-core", "standard-dispatc
 standard-julia = ["dep:sim-lib-lang-julia", "standard-core", "standard-dispatch", "codec-algol"]
 standard-lua = ["dep:sim-lib-lang-lua", "standard-core", "standard-mutation", "control", "codec-algol"]
 standard-mutation = ["dep:sim-lib-mutation", "standard-core"]
+# Production standard distributions reclaim managed cycles. The retain-only
+# closure is deliberately separate and must never be pulled by `standard`.
+standard-gc-tracing = ["dep:sim-lib-gc-tracing", "standard-mutation"]
+standard-gc-retain = ["standard-mutation"]
 standard-namespace = ["dep:sim-lib-namespace", "standard-core"]
 standard-pattern = ["dep:sim-lib-pattern", "standard-core", "shape"]
 standard-ruby = ["dep:sim-lib-lang-ruby", "standard-core", "standard-dispatch", "control", "codec-algol"]

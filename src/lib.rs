@@ -144,6 +144,9 @@ mod femm_exports;
 /// cases, native function objects, and member-table construction.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod functions;
+/// Managed-object collector selection for standard and minimal/test distributions.
+#[cfg(feature = "standard-mutation")]
+pub mod gc;
 mod interference_exports;
 /// Lib loaders for the supported source formats (host, Lisp source, binary
 /// pack, native dynamic library, and wasm) plus the standard loader registry.

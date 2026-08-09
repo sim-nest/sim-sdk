@@ -2308,6 +2308,7 @@
             "standard-dispatch",
             "standard-namespace",
             "standard-mutation",
+            "standard-gc-tracing",
             "standard-scheme",
             "standard-islisp",
             "standard-clojure",
@@ -2367,6 +2368,21 @@
             "shape"
           ],
           "name": "standard-dispatch",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "standard-mutation"
+          ],
+          "name": "standard-gc-retain",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-gc-tracing",
+            "standard-mutation"
+          ],
+          "name": "standard-gc-tracing",
           "workspace_edges": []
         },
         {

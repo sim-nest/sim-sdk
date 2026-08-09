@@ -31,6 +31,7 @@ const AUTHORING_HELPERS: &[&str] = &[
 ];
 
 const RUNTIME_BEHAVIOR_ALLOWLIST: &[&str] = &[
+    "src/gc.rs",
     "src/runtime/browse.rs",
     "src/runtime/browse/",
     "src/runtime/capabilities.rs",
