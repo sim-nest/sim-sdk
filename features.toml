@@ -46,8 +46,10 @@ owner = "crate/sim-nest"
 audiences = ["code", "framework"]
 guidance = "Use the `standard` feature for production guests that allocate managed cyclic graphs. Use `standard-gc-retain` only for an explicit minimal or test closure; inspect the selection with `gc::inspect_selected_policy`, and expect cyclic production admission to fail closed under retention."
 claims_anchors = [
-  "anchor/crate/sim-nest",
   "anchor/rustdoc/sim-nest/gc",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/src/gc",
 ]
 [[feature]]
 id = "feature/sim-sdk/facade-runtime"
@@ -60,6 +62,7 @@ claims_anchors = [
   "anchor/card/citizen/view/lens-descriptor",
   "anchor/cli/sim-nest",
   "anchor/crate/sim-nest",
+  "anchor/rustdoc/sim-nest/crate-root",
   "anchor/runtime-lib/sim-nest/core-runtime-lib",
   "anchor/runtime-lib/sim-nest/native-class-lib",
 ]
@@ -96,12 +99,14 @@ claims_anchors = [
   "anchor/export/sim-nest/codec/clojure-edn",
   "anchor/export/sim-nest/codec/common-lisp-lite",
   "anchor/export/sim-nest/codec/intent",
+  "anchor/export/sim-nest/codec/javascript",
   "anchor/export/sim-nest/codec/json",
   "anchor/export/sim-nest/codec/lemonade",
   "anchor/export/sim-nest/codec/lisp",
   "anchor/export/sim-nest/codec/lm-studio",
   "anchor/export/sim-nest/codec/mcp",
   "anchor/export/sim-nest/codec/ollama",
+  "anchor/export/sim-nest/codec/python",
   "anchor/export/sim-nest/codec/scene",
   "anchor/export/sim-nest/codec/scheme-r7rs-small",
 ]
@@ -125,10 +130,7 @@ summary = "Compose the Python source codec, thin runtime profile, and tracing co
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
 guidance = "Enable `codec-python` for syntax only, `standard-python` for the capability-scoped profile, or `python` for the production profile with tracing collection. `standard` includes Python deliberately; the minimal default does not. The codec loads through the existing cookbook and bootloader surface; hosts install the exported profile through the generic profile registry. There is no Python executable, compiler, or foreign runtime."
-claims_anchors = [
-  "anchor/crate/sim-nest",
-  "anchor/rustdoc/sim-nest/default_loadable_libs",
-]
+claims_specimens = ["recipe/sim-sdk/python/capability-scoped"]
 
 [[feature]]
 id = "feature/sim-sdk/javascript-composition"
@@ -137,7 +139,7 @@ summary = "Compose the JavaScript codec, direct profile, and tracing collector t
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
 guidance = "Enable `codec-javascript` for syntax only, `standard-javascript` for the bounded direct profile, or `javascript` for the production profile with tracing collection. `standard` includes JavaScript deliberately; the minimal default does not. The codec loads through the existing cookbook and bootloader surface. No Node, compiler, JavaScript executable, ambient event loop, or alternate engine is implied."
-claims_anchors = ["anchor/crate/sim-nest", "anchor/rustdoc/sim-nest/default_loadable_libs"]
+claims_specimens = ["recipe/sim-sdk/javascript/bounded-module"]
 
 [[feature]]
 id = "feature/sim-sdk/typescript-notation-composition"
@@ -146,7 +148,6 @@ summary = "TypeScript notation; does not type-check. Compose bounded syntax, Jav
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
 guidance = "Enable `codec-typescript` for bounded notation and erasure, `standard-typescript` for the generic `language/typescript-notation` profile, or `typescript` as its curated alias. `standard` includes the notation profile; JavaScript remains the only evaluator. This surface provides no tsc, tsserver, LSP service, compiler diagnostics, emit, or TypeScript executable."
-claims_anchors = ["anchor/crate/sim-nest", "anchor/rustdoc/sim-nest/default_loadable_libs"]
 claims_specimens = ["recipe/sim-sdk/typescript-notation/admitted-notation"]
 
 [[feature]]
@@ -157,8 +158,7 @@ owner = "crate/sim-nest"
 audiences = ["code", "framework"]
 guidance = "Use `genai` for fake and cassette composition, `genai-local` before route/run-genai-locally, and `genai-provider` before route/run-genai-with-provider."
 claims_anchors = [
-  "anchor/export/sim-nest/bridge/answer-question",
-  "anchor/export/sim-nest/codec/json",
+  "anchor/export/sim-nest/agent/01-basics/genai-assembly",
   "anchor/rustdoc/sim-nest/cookbook_directory",
   "anchor/rustdoc/sim-nest/default_loadable_libs",
 ]
@@ -174,9 +174,6 @@ summary = "Expose opt-in Tensor, ODE, compute-provider, and FEMM solver composit
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
 guidance = "Use `gpu-math` for the modeled default matrix/ODE/FEMM stack and `gpu-math-provider` when a host intentionally opts into auto, wgpu, CUDA, or ROCm provider crates. The math expression stays provider-neutral; swap only the placement site."
-claims_anchors = [
-  "anchor/crate/sim-nest",
-]
 claims_specimens = [
   "spec-test/sim-sdk/crates/sim-conformance/tests/spec/gpu_math",
 ]
@@ -188,10 +185,6 @@ summary = "Compose canonical interference records, solve/runtime, Tensor compute
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
 guidance = "Enable only the granular layer needed by a headless host, or use `interference` for modeled compute plus the reversible view. Keep the solve expression provider-neutral and swap its EvalFabric placement site."
-claims_anchors = [
-  "anchor/crate/sim-nest",
-  "anchor/rustdoc/sim-nest/default_loadable_libs",
-]
 claims_specimens = [
   "spec-test/sim-sdk/crates/sim-conformance/tests/spec/interference",
 ]
@@ -203,10 +196,6 @@ summary = "Expose the canonical finite-tree core, bounded calculator, loadable r
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
 guidance = "Enable `expr-tree` when a Rust host needs the complete stable expression-tree framework through the SDK. Use the re-exported implementation contracts directly: `expr_tree_core`, `expr_tree_calc`, `expr_tree`, `view_expr_tree`, and `expr_tree_server`. The facade deliberately adds no builder, calculation wrapper, or policy model."
-claims_anchors = [
-  "anchor/crate/sim-nest",
-  "anchor/rustdoc/sim-nest/crate-root",
-]
 claims_specimens = [
   "spec-test/sim-sdk/crates/sim-conformance/tests/spec/expr_tree",
 ]
@@ -218,10 +207,6 @@ summary = "Select frozen signal, bounded-search, exact-ratio, consonance, and co
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
 guidance = "Use `signal` for the numeric signal owner, `music-algorithms` for signal plus generic search and exact pitch ratios, and `music-inference` for the consonance and counterpoint layer. The focused `discrete-search`, `pitch-ratio`, `music-consonance`, and `music-counterpoint` features remain individually selectable. Compose through the re-exported stable contracts; use the owner crates directly for compatibility dialects or compiled planner internals."
-claims_anchors = [
-  "anchor/crate/sim-nest",
-  "anchor/rustdoc/sim-nest/crate-root",
-]
 claims_specimens = [
   "spec-test/sim-sdk/crates/sim-conformance/tests/spec/music_algorithms",
 ]
@@ -234,9 +219,7 @@ owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
 guidance = "Enable `serial-music` when a host wants the curated serial facade instead of depending on the owner crates directly. Use `serial_music::theory` for serial-series and row/matrix contracts, `serial_music::practice` for immutable plans and strict realization inputs, `serial_music::adaptation` for registry-selected modal or caller-defined realizers, `serial_music::completion` for reversible additive completion, and `serial_music::runtime` for audition and export helpers. The facade stays thin and reuses the existing SDK runtime installer by composing the already-owned shape, notation, and cookbook features."
 claims_anchors = [
-  "anchor/crate/sim-nest",
-  "anchor/rustdoc/sim-nest/crate-root",
-  "anchor/rustdoc/sim-nest/default_loadable_libs",
+  "anchor/runtime-lib/sim-nest/serial-music-cookbook-lib",
 ]
 claims_specimens = [
   "recipe/sim-sdk/serial-music/row-matrix-analysis",

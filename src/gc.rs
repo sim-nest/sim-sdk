@@ -4,6 +4,8 @@
 //! the explicit `standard-gc-retain` feature for minimal and test closures; it
 //! never reclaims cycles and fails closed at the arena's hard object cap.
 
+// conformance: SDK builds expose and enforce their selected collection policy.
+
 use sim_lib_standard_core::LanguageProfile;
 
 /// The managed-object policy selected by this SDK build.
