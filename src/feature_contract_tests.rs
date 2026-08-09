@@ -99,6 +99,39 @@ fn javascript_features_preserve_the_one_way_distribution_boundary() {
 }
 
 #[test]
+fn typescript_notation_features_preserve_the_one_way_distribution_boundary() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(
+        &features,
+        "codec-typescript",
+        &["dep:sim-codec-typescript", "codec-javascript", "shape"],
+    );
+    assert_feature_includes(
+        &features,
+        "standard-typescript",
+        &[
+            "dep:sim-lib-lang-typescript",
+            "codec-typescript",
+            "standard-javascript",
+            "shape",
+        ],
+    );
+    assert_feature_includes(&features, "typescript", &["standard-typescript"]);
+    assert_feature_includes(&features, "standard", &["standard-typescript"]);
+
+    let bootloader = include_str!("bin/sim.rs");
+    assert!(bootloader.contains("TypeScript notation; does not type-check"));
+    assert!(bootloader.contains("language/typescript-notation"));
+    for executable in ["typescript", "tsc", "tsserver"] {
+        assert!(
+            !repo_root()
+                .join(format!("src/bin/{executable}.rs"))
+                .exists()
+        );
+    }
+}
+
+#[test]
 fn public_facade_alias_table_mentions_declared_features() {
     let declared = collect_declared_features(include_str!("../Cargo.toml"));
     let missing = PUBLIC_FACADE_ALIASES

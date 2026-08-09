@@ -248,6 +248,17 @@
         },
         {
           "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-typescript",
+            "codec-javascript",
+            "shape",
+            "core"
+          ],
+          "name": "codec-typescript",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-compute-auto",
             "compute-model",
             "table-hash"
@@ -343,6 +354,7 @@
             "codec-bridge",
             "codec-chat",
             "codec-json",
+            "codec-javascript",
             "codec-mcp",
             "codec-python",
             "agent",
@@ -2051,7 +2063,8 @@
             "dep:sim-web-shell",
             "numbers-prelude",
             "cookbook-all",
-            "python"
+            "python",
+            "typescript"
           ],
           "name": "serve-cli",
           "workspace_edges": []
@@ -2352,6 +2365,7 @@
             "standard-julia",
             "standard-lua",
             "standard-javascript",
+            "standard-typescript",
             "standard-python",
             "standard-ruby",
             "standard-typed-lazy"
@@ -2554,6 +2568,16 @@
             "codec-algol"
           ],
           "name": "standard-typed-lazy",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-typescript",
+            "codec-typescript",
+            "standard-javascript",
+            "shape"
+          ],
+          "name": "standard-typescript",
           "workspace_edges": []
         },
         {
@@ -2831,6 +2855,13 @@
             "table-hash"
           ],
           "name": "topology-table",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "standard-typescript"
+          ],
+          "name": "typescript",
           "workspace_edges": []
         },
         {

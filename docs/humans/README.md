@@ -24,6 +24,7 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | `feature/sim-sdk/facade-model-workflows` | `crate/sim-nest` | 0 | Expose model-facing facade exports for answer routing and drafter setup. |
 | `feature/sim-sdk/python-composition` | `crate/sim-nest` | 0 | Compose the Python source codec, thin runtime profile, and tracing collector through ordinary SDK and bootloader controls. |
 | `feature/sim-sdk/javascript-composition` | `crate/sim-nest` | 0 | Compose the JavaScript codec, direct profile, and tracing collector through ordinary SDK and bootloader controls. |
+| `feature/sim-sdk/typescript-notation-composition` | `crate/sim-nest` | 1 | TypeScript notation; does not type-check. Compose bounded syntax, JavaScript erasure and observational Shape metadata through the SDK and ordinary bootloader controls. |
 | `feature/sim-sdk/genai-feature-bundles` | `crate/sim-nest` | 2 | Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases. |
 | `feature/sim-sdk/gpu-math-composition` | `crate/sim-nest` | 1 | Expose opt-in Tensor, ODE, compute-provider, and FEMM solver composition through direct SDK re-exports. |
 | `feature/sim-sdk/interference-composition` | `crate/sim-nest` | 1 | Compose canonical interference records, solve/runtime, Tensor compute, and reversible view behavior through direct SDK re-exports. |
@@ -123,6 +124,10 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 - `recipes/serial-music/row-matrix-analysis/purpose.md`
 - `recipes/serial-music/row-matrix-analysis/recipe.toml`
 - `recipes/serial-music/row-matrix-analysis/setup.rs`
+- `recipes/typescript-notation/admitted-notation/purpose.md`
+- `recipes/typescript-notation/admitted-notation/recipe.toml`
+- `recipes/typescript-notation/admitted-notation/setup.rs`
+- `recipes/typescript-notation/chapter.toml`
 - `recipes/watch/book.toml`
 - `recipes/watch/chapter.toml`
 - `recipes/watch/dual-quorum/README.md`
@@ -149,6 +154,23 @@ Source `crates/sim-conformance/tests/cli_boot.rs`:
 ```rust
 #[path = "spec/cli_boot.rs"]
 mod cli_boot;
+```
+
+### `feature/sim-sdk/typescript-notation-composition`
+
+Specimen `recipe/sim-sdk/typescript-notation/admitted-notation` is checked by `xtask check-recipes`.
+
+Source `recipes/typescript-notation/admitted-notation/recipe.toml`:
+
+```toml
+id = "admitted-notation"
+title = "Evaluate and browse TypeScript notation"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 10
+tags = ["typescript", "notation", "javascript", "shape", "checker-gap"]
+requires = ["language/typescript-notation"]
 ```
 
 ### `feature/sim-sdk/genai-feature-bundles`
@@ -256,6 +278,39 @@ fn javascript_features_preserve_the_one_way_distribution_boundary() {
     assert!(bootloader.contains("Bootloader::standard()"));
     assert!(!repo_root().join("src/bin/javascript.rs").exists());
     assert!(!repo_root().join("src/bin/node.rs").exists());
+}
+
+#[test]
+fn typescript_notation_features_preserve_the_one_way_distribution_boundary() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(
+        &features,
+        "codec-typescript",
+        &["dep:sim-codec-typescript", "codec-javascript", "shape"],
+    );
+    assert_feature_includes(
+        &features,
+        "standard-typescript",
+        &[
+            "dep:sim-lib-lang-typescript",
+            "codec-typescript",
+            "standard-javascript",
+            "shape",
+        ],
+    );
+    assert_feature_includes(&features, "typescript", &["standard-typescript"]);
+    assert_feature_includes(&features, "standard", &["standard-typescript"]);
+
+    let bootloader = include_str!("bin/sim.rs");
+    assert!(bootloader.contains("TypeScript notation; does not type-check"));
+    assert!(bootloader.contains("language/typescript-notation"));
+    for executable in ["typescript", "tsc", "tsserver"] {
+        assert!(
+            !repo_root()
+                .join(format!("src/bin/{executable}.rs"))
+                .exists()
+        );
+    }
 }
 
 #[test]

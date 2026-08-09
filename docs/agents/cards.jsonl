@@ -72,6 +72,10 @@
 {"kind":"recipe","path":"recipes/serial-music/row-matrix-analysis/purpose.md"}
 {"kind":"recipe","path":"recipes/serial-music/row-matrix-analysis/recipe.toml"}
 {"kind":"recipe","path":"recipes/serial-music/row-matrix-analysis/setup.rs"}
+{"kind":"recipe","path":"recipes/typescript-notation/admitted-notation/purpose.md"}
+{"kind":"recipe","path":"recipes/typescript-notation/admitted-notation/recipe.toml"}
+{"kind":"recipe","path":"recipes/typescript-notation/admitted-notation/setup.rs"}
+{"kind":"recipe","path":"recipes/typescript-notation/chapter.toml"}
 {"kind":"recipe","path":"recipes/watch/book.toml"}
 {"kind":"recipe","path":"recipes/watch/chapter.toml"}
 {"kind":"recipe","path":"recipes/watch/dual-quorum/README.md"}

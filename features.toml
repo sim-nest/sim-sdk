@@ -140,6 +140,16 @@ guidance = "Enable `codec-javascript` for syntax only, `standard-javascript` for
 claims_anchors = ["anchor/crate/sim-nest", "anchor/rustdoc/sim-nest/default_loadable_libs"]
 
 [[feature]]
+id = "feature/sim-sdk/typescript-notation-composition"
+title = "TypeScript notation SDK composition"
+summary = "TypeScript notation; does not type-check. Compose bounded syntax, JavaScript erasure and observational Shape metadata through the SDK and ordinary bootloader controls."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable `codec-typescript` for bounded notation and erasure, `standard-typescript` for the generic `language/typescript-notation` profile, or `typescript` as its curated alias. `standard` includes the notation profile; JavaScript remains the only evaluator. This surface provides no tsc, tsserver, LSP service, compiler diagnostics, emit, or TypeScript executable."
+claims_anchors = ["anchor/crate/sim-nest", "anchor/rustdoc/sim-nest/default_loadable_libs"]
+claims_specimens = ["recipe/sim-sdk/typescript-notation/admitted-notation"]
+
+[[feature]]
 id = "feature/sim-sdk/genai-feature-bundles"
 title = "GenAI SDK feature bundles"
 summary = "Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases."
