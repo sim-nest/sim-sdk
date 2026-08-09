@@ -1,0 +1,8 @@
+id = "capability-scoped-python"
+title = "Evaluate capability-scoped embedded Python"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 10
+tags = ["python", "sdk", "eval", "exec", "capability", "fidelity"]
+requires = ["python"]

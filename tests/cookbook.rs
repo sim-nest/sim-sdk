@@ -34,6 +34,7 @@ fn seeded_cookbook_is_visible_in_runtime() {
     feature = "music-counterpoint",
     feature = "numbers-arith",
     feature = "numbers-f64",
+    feature = "python",
     feature = "serial-music",
     feature = "stream-core"
 ))]

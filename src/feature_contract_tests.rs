@@ -56,6 +56,28 @@ fn device_feature_installs_reference_base_and_recipes() {
 }
 
 #[test]
+fn python_features_preserve_the_one_way_distribution_boundary() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "codec-python", &["dep:sim-codec-python"]);
+    assert_feature_includes(
+        &features,
+        "standard-python",
+        &[
+            "dep:sim-lib-lang-python",
+            "codec-python",
+            "standard-gc-tracing",
+        ],
+    );
+    assert_feature_includes(&features, "python", &["standard-python"]);
+    assert_feature_includes(&features, "standard", &["standard-python"]);
+
+    let bootloader = include_str!("bin/sim.rs");
+    assert!(bootloader.contains("Bootloader::standard()"));
+    assert!(!bootloader.contains("PythonRuntime"));
+    assert!(!repo_root().join("src/bin/python.rs").exists());
+}
+
+#[test]
 fn public_facade_alias_table_mentions_declared_features() {
     let declared = collect_declared_features(include_str!("../Cargo.toml"));
     let missing = PUBLIC_FACADE_ALIASES

@@ -119,6 +119,18 @@ claims_anchors = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/python-composition"
+title = "Embedded Python SDK composition"
+summary = "Compose the Python source codec, thin runtime profile, and tracing collector through ordinary SDK and bootloader controls."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable `codec-python` for syntax only, `standard-python` for the capability-scoped profile, or `python` for the production profile with tracing collection. `standard` includes Python deliberately; the minimal default does not. The codec loads through the existing cookbook and bootloader surface; hosts install the exported profile through the generic profile registry. There is no Python executable, compiler, or foreign runtime."
+claims_anchors = [
+  "anchor/crate/sim-nest",
+  "anchor/rustdoc/sim-nest/default_loadable_libs",
+]
+
+[[feature]]
 id = "feature/sim-sdk/genai-feature-bundles"
 title = "GenAI SDK feature bundles"
 summary = "Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases."

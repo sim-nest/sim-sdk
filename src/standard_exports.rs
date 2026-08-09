@@ -1,5 +1,5 @@
 #[rustfmt::skip]
-#[cfg(any(feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-bitwise", feature = "codec-bitwise-base64", feature = "codec-bridge", feature = "codec-chat", feature = "codec-mcp", feature = "codec-algol"))]
+#[cfg(any(feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-bitwise", feature = "codec-bitwise-base64", feature = "codec-bridge", feature = "codec-chat", feature = "codec-mcp", feature = "codec-algol", feature = "codec-python"))]
 pub use sim_codec as codec;
 #[cfg(feature = "codec-algol")]
 pub use sim_codec_algol as codec_algol;
@@ -21,6 +21,8 @@ pub use sim_codec_json as codec_json;
 pub use sim_codec_lisp as codec_lisp;
 #[cfg(feature = "codec-mcp")]
 pub use sim_codec_mcp as codec_mcp;
+#[cfg(feature = "codec-python")]
+pub use sim_codec_python as codec_python;
 #[cfg(feature = "core")]
 pub use sim_kernel as kernel;
 #[cfg(feature = "standard-binding")]
@@ -49,6 +51,8 @@ pub use sim_lib_lang_islisp as lib_lang_islisp;
 pub use sim_lib_lang_julia as lib_lang_julia;
 #[cfg(feature = "standard-lua")]
 pub use sim_lib_lang_lua as lib_lang_lua;
+#[cfg(feature = "standard-python")]
+pub use sim_lib_lang_python as lib_lang_python;
 #[cfg(feature = "standard-ruby")]
 pub use sim_lib_lang_ruby as lib_lang_ruby;
 #[cfg(feature = "standard-scheme")]
