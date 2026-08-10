@@ -1,8 +1,8 @@
 use std::{collections::BTreeMap, sync::Arc};
 
 use sim::kernel::{
-    CapabilitySet, Cx, DefaultFactory, EagerPolicy, Error, ReadPolicy, TrustLevel,
-    read_eval_capability,
+    CapabilitySet, Cx, DefaultFactory, EagerPolicy, Error, Expr, ReadPolicy, Symbol, TrustLevel,
+    macro_expand_eval_capability, read_eval_capability,
 };
 use sim::lib_lang_python::{
     DynamicAdmission, DynamicPython, PYTHON_FIDELITY, PythonEvalPolicy, PythonValue,
@@ -29,27 +29,32 @@ pub fn capability_scoped_python() -> Result<(), Box<dyn std::error::Error>> {
     );
     assert!(matches!(denied, Err(Error::TrustDenied { .. } | Error::CapabilityDenied { .. })));
 
-    seat.grant(&mut cx, read_eval_capability())?;
+    let read_eval = read_eval_capability();
+    let expand_eval = macro_expand_eval_capability();
+    seat.grant(&mut cx, read_eval.clone())?;
+    seat.grant(&mut cx, expand_eval.clone())?;
     let trusted = || ReadPolicy {
         trust: TrustLevel::TrustedSource,
-        capabilities: CapabilitySet::new().grant(read_eval_capability()),
+        capabilities: CapabilitySet::new().grant(read_eval.clone()),
     };
     let admitted = || DynamicAdmission {
         read_policy: trusted(),
-        requires: Vec::new(),
-        allow: CapabilitySet::new(),
+        requires: vec![read_eval.clone(), expand_eval.clone()],
+        allow: CapabilitySet::new().grant(expand_eval.clone()),
         expected_shape: Arc::new(AnyShape),
     };
-    let evaluated = dynamic.eval(&mut cx, "40 + 2", admitted());
-    let executed = dynamic.exec(&mut cx, "answer = 40 + 2\nanswer", admitted());
-    assert!(
-        matches!(&evaluated, Err(Error::TypeMismatch { .. })),
-        "unexpected dynamic eval result: {evaluated:?}"
-    );
-    assert!(
-        matches!(&executed, Err(Error::TypeMismatch { .. })),
-        "unexpected dynamic exec result: {executed:?}"
-    );
+    let evaluated = dynamic.eval(&mut cx, "40 + 2", admitted())?;
+    assert!(matches!(
+        evaluated.object().as_expr(&mut cx)?,
+        Expr::Call { operator, .. }
+            if *operator == Expr::Symbol(Symbol::qualified("python", "module"))
+    ));
+    let executed = dynamic.exec(&mut cx, "answer = 40 + 2\nanswer", admitted())?;
+    assert!(matches!(
+        executed.object().as_expr(&mut cx)?,
+        Expr::Call { operator, .. }
+            if *operator == Expr::Symbol(Symbol::qualified("python", "module"))
+    ));
 
     let tree = sim::codec_python::parse_module("answer = 40 + 2\nanswer")?;
     let lowered = sim::codec_python::lower_python(&tree);
