@@ -11,4 +11,4 @@ publish = false
 crate-type = ["cdylib"]
 
 [dependencies]
-sim = { package = "sim-nest", version = "0.1.27", path = "../..", default-features = false, features = ["core", "shape", "numbers-f64", "proc-macros", "dynamic-native"] }
+sim = { package = "sim-nest", version = "0.2.0", path = "../..", default-features = false, features = ["core", "shape", "numbers-f64", "proc-macros", "dynamic-native"] }
