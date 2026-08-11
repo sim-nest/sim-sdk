@@ -1,6 +1,6 @@
 [package]
 name = "sim-nest"
-version = "0.1.27"
+version = "0.2.0"
 edition = "2024"
 license = "MPL-2.0"
 description = "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features."
@@ -76,23 +76,23 @@ serde = { version = "1", features = ["derive"], optional = true }
 serde_json = { version = "1", optional = true }
 sim-citizen = { optional = true, version = "0.2.0" }
 sim-citizen-derive = { optional = true, version = "0.2.0" }
-sim-run-loaders = { optional = true, version = "0.1.5", default-features = false }
-sim-run-core = { optional = true, version = "0.2.0" }
-sim-lib-repl = { optional = true, version = "0.2.0" }
+sim-run-loaders = { optional = true, version = "0.2.0", default-features = false }
+sim-run-core = { optional = true, version = "0.3.0" }
+sim-lib-repl = { optional = true, version = "0.3.0" }
 sim-web-shell = { optional = true, version = "0.1.9", default-features = false }
-sim-codec = { optional = true, version = "0.1.7" }
-sim-codec-algol = { optional = true, version = "0.1.3" }
-sim-codec-binary = { optional = true, version = "0.2.0" }
-sim-codec-binary-base64 = { optional = true, version = "0.1.4" }
-sim-codec-bitwise = { optional = true, version = "0.1.4" }
-sim-codec-bitwise-base64 = { optional = true, version = "0.1.4" }
-sim-codec-bridge = { optional = true, version = "0.1.2" }
-sim-codec-chat = { optional = true, version = "0.2.0" }
-sim-codec-json = { optional = true, version = "0.2.0" }
+sim-codec = { optional = true, version = "0.1.8" }
+sim-codec-algol = { optional = true, version = "0.1.4" }
+sim-codec-binary = { optional = true, version = "0.2.1" }
+sim-codec-binary-base64 = { optional = true, version = "0.1.5" }
+sim-codec-bitwise = { optional = true, version = "0.1.5" }
+sim-codec-bitwise-base64 = { optional = true, version = "0.1.5" }
+sim-codec-bridge = { optional = true, version = "0.1.3" }
+sim-codec-chat = { optional = true, version = "0.2.1" }
+sim-codec-json = { optional = true, version = "0.2.1" }
 sim-codec-javascript = { optional = true, version = "0.1.0", path = "../sim-codecs/crates/sim-codec-javascript" }
 sim-codec-typescript = { optional = true, version = "0.1.0", path = "../sim-codecs/crates/sim-codec-typescript" }
-sim-codec-lisp = { optional = true, version = "0.2.0" }
-sim-codec-mcp = { optional = true, version = "0.1.4" }
+sim-codec-lisp = { optional = true, version = "0.2.1" }
+sim-codec-mcp = { optional = true, version = "0.1.5" }
 sim-codec-python = { optional = true, version = "0.1.0", path = "../sim-codecs/crates/sim-codec-python" }
 sim-cookbook = { optional = true, version = "0.2.0" }
 sim-expr-tree-calc = { optional = true, version = "=0.1.0" }
@@ -106,9 +106,9 @@ sim-lib-audio-dsp = { optional = true, version = "0.1.2" }
 sim-lib-audio-graph-core = { optional = true, version = "0.1.1" }
 sim-lib-audio-graph-live = { optional = true, version = "0.1.1" }
 sim-lib-music-synth = { optional = true, version = "0.1.5" }
-sim-lib-binding = { optional = true, version = "0.1.3" }
+sim-lib-binding = { optional = true, version = "0.1.4" }
 sim-lib-bridge = { optional = true, version = "0.1.6" }
-sim-lib-control = { optional = true, version = "0.1.4", path = "../sim-runtime/crates/sim-lib-control" }
+sim-lib-control = { optional = true, version = "0.1.5", path = "../sim-runtime/crates/sim-lib-control" }
 sim-lib-compute-auto = { optional = true, version = "0.3.0" }
 sim-lib-compute-cli = { optional = true, version = "0.2.0" }
 sim-lib-compute-cuda = { optional = true, version = "0.2.0" }
@@ -117,11 +117,11 @@ sim-lib-compute-model = { optional = true, version = "0.3.0" }
 sim-lib-compute-rocm = { optional = true, version = "0.1.1" }
 sim-lib-compute-wgpu = { optional = true, version = "0.2.0" }
 sim-lib-cookbook = { optional = true, version = "0.1.14" }
-sim-lib-core = { optional = true, version = "0.1.2" }
+sim-lib-core = { optional = true, version = "0.1.4" }
 sim-lib-daw-session = { optional = true, version = "0.1.2" }
 sim-lib-discrete = { optional = true, version = "0.1.4" }
 sim-lib-discrete-search = { optional = true, version = "=0.1.1" }
-sim-lib-dispatch = { optional = true, version = "0.1.2" }
+sim-lib-dispatch = { optional = true, version = "0.1.3" }
 sim-lib-exec = { optional = true, version = "0.1.0" }
 sim-lib-expr-tree = { optional = true, version = "=0.1.0" }
 sim-lib-expr-tree-server = { optional = true, version = "=0.1.0" }
@@ -150,18 +150,18 @@ sim-lib-interference-core = { optional = true, version = "0.1.0" }
 sim-lib-interference-runtime = { optional = true, version = "0.1.0" }
 sim-lib-interference-solve = { optional = true, version = "0.1.0" }
 sim-lib-intent = { optional = true, version = "0.2.0" }
-sim-lib-lang-cl = { optional = true, version = "0.1.4" }
-sim-lib-lang-clojure = { optional = true, version = "0.1.4" }
-sim-lib-lang-islisp = { optional = true, version = "0.1.4" }
-sim-lib-lang-julia = { optional = true, version = "0.1.3" }
+sim-lib-lang-cl = { optional = true, version = "0.1.5" }
+sim-lib-lang-clojure = { optional = true, version = "0.1.5" }
+sim-lib-lang-islisp = { optional = true, version = "0.1.5" }
+sim-lib-lang-julia = { optional = true, version = "0.1.4" }
 sim-lib-lang-javascript = { optional = true, version = "0.1.0", path = "../sim-runtime/crates/sim-lib-lang-javascript" }
 sim-lib-lang-typescript = { optional = true, version = "0.1.0", path = "../sim-runtime/crates/sim-lib-lang-typescript" }
-sim-lib-lang-lua = { optional = true, version = "0.1.3" }
+sim-lib-lang-lua = { optional = true, version = "0.1.4" }
 sim-lib-lang-python = { optional = true, version = "0.1.0", path = "../sim-runtime/crates/sim-lib-lang-python" }
-sim-lib-lang-ruby = { optional = true, version = "0.1.3" }
-sim-lib-lang-scheme = { optional = true, version = "0.1.5" }
-sim-lib-lang-typed-lazy = { optional = true, version = "0.1.3" }
-sim-lib-logic = { optional = true, version = "0.1.2" }
+sim-lib-lang-ruby = { optional = true, version = "0.1.4" }
+sim-lib-lang-scheme = { optional = true, version = "0.1.6" }
+sim-lib-lang-typed-lazy = { optional = true, version = "0.1.4" }
+sim-lib-logic = { optional = true, version = "0.1.4" }
 sim-lib-mcp = { optional = true, version = "0.1.6" }
 sim-lib-midi-ble = { optional = true, version = "0.1.4" }
 sim-lib-midi-core = { optional = true, version = "0.1.3" }
@@ -183,8 +183,8 @@ sim-lib-music-notation = { optional = true, version = "0.2.0" }
 sim-lib-music-shapes = { optional = true, version = "0.2.0" }
 sim-lib-music-transform = { optional = true, version = "0.1.3" }
 sim-lib-music-wasm-frame = { optional = true, version = "0.1.2" }
-sim-lib-mutation = { optional = true, version = "0.1.3", path = "../sim-runtime/crates/sim-lib-mutation" }
-sim-lib-namespace = { optional = true, version = "0.1.1" }
+sim-lib-mutation = { optional = true, version = "0.1.4", path = "../sim-runtime/crates/sim-lib-mutation" }
+sim-lib-namespace = { optional = true, version = "0.1.3" }
 sim-lib-numbers-ad = { optional = true, version = "0.2.1" }
 sim-lib-numbers-arith = { optional = true, version = "0.3.1" }
 sim-lib-numbers-bigint = { optional = true, version = "0.3.1" }
@@ -217,7 +217,7 @@ sim-lib-numbers-tensor-i64 = { optional = true, version = "0.3.0" }
 sim-lib-numbers-tensor-linalg = { optional = true, version = "0.3.1" }
 sim-lib-numbers-tensor-rat64 = { optional = true, version = "0.3.1" }
 sim-lib-openai-server = { optional = true, version = "0.2.0" }
-sim-lib-pattern = { optional = true, version = "0.1.3" }
+sim-lib-pattern = { optional = true, version = "0.1.4" }
 sim-lib-pitch-chord = { optional = true, version = "0.2.0" }
 sim-lib-pitch-core = { optional = true, version = "0.2.0" }
 sim-lib-pitch-dissonance = { optional = true, version = "0.1.1" }
@@ -253,7 +253,7 @@ sim-lib-sound-spectrum = { optional = true, version = "0.1.1" }
 sim-lib-sound-timbre = { optional = true, version = "0.1.1" }
 sim-lib-sound-tuning = { optional = true, version = "0.2.0" }
 sim-lib-sound-wasm-frame = { optional = true, version = "0.1.1" }
-sim-lib-standard-core = { optional = true, version = "0.1.3" }
+sim-lib-standard-core = { optional = true, version = "0.1.4" }
 sim-lib-stream-alsa = { optional = true, version = "0.1.1" }
 sim-lib-stream-asio = { optional = true, version = "0.1.0" }
 sim-lib-stream-audio = { optional = true, version = "0.1.2" }
@@ -295,7 +295,7 @@ sim-lib-web-layout = { optional = true, version = "0.1.2" }
 sim-list-cell = { optional = true, version = "0.1.3" }
 sim-list-lazy = { optional = true, version = "0.1.3" }
 sim-macros = { optional = true, version = "0.2.0" }
-sim-shape = { optional = true, version = "0.2.0" }
+sim-shape = { optional = true, version = "0.2.1" }
 sim-table-db = { optional = true, version = "0.1.2" }
 sim-table-fs = { optional = true, version = "0.1.3" }
 sim-table-hash = { optional = true, version = "0.1.3" }
@@ -304,7 +304,7 @@ sim-table-lazy = { optional = true, version = "0.1.3" }
 sim-table-override = { optional = true, version = "0.1.0" }
 sim-table-remote = { optional = true, version = "0.1.2" }
 sim-value = { optional = true, version = "0.2.0" }
-sim-wasm-abi = { optional = true, version = "0.2.0" }
+sim-wasm-abi = { optional = true, version = "0.3.0" }
 
 [dev-dependencies]
 sim-kernel = { version = "0.2.0", features = ["test-support"] }
