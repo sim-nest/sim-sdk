@@ -3339,6 +3339,15 @@
         {
           "edges": [
             "dep:sim-codec",
+            "dep:sim-codec-javascript",
+            "core"
+          ],
+          "name": "codec-javascript",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
             "dep:sim-codec-json",
             "dep:serde",
             "dep:serde_json",
@@ -3365,6 +3374,26 @@
             "codec-json"
           ],
           "name": "codec-mcp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-python",
+            "core"
+          ],
+          "name": "codec-python",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-codec",
+            "dep:sim-codec-typescript",
+            "codec-javascript",
+            "shape",
+            "core"
+          ],
+          "name": "codec-typescript",
           "workspace_edges": []
         },
         {
@@ -3464,7 +3493,9 @@
             "codec-bridge",
             "codec-chat",
             "codec-json",
+            "codec-javascript",
             "codec-mcp",
+            "codec-python",
             "agent",
             "audio-dsp",
             "audio-graph-live",
@@ -4097,6 +4128,14 @@
             "dep:sim-lib-interference-solve"
           ],
           "name": "interference-solve",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "standard-javascript",
+            "standard-gc-tracing"
+          ],
+          "name": "javascript",
           "workspace_edges": []
         },
         {
@@ -5067,6 +5106,14 @@
         },
         {
           "edges": [
+            "standard-python",
+            "standard-gc-tracing"
+          ],
+          "name": "python",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-rank",
             "core"
           ],
@@ -5154,7 +5201,9 @@
             "web",
             "dep:sim-web-shell",
             "numbers-prelude",
-            "cookbook-all"
+            "cookbook-all",
+            "python",
+            "typescript"
           ],
           "name": "serve-cli",
           "workspace_edges": []
@@ -5447,12 +5496,16 @@
             "standard-dispatch",
             "standard-namespace",
             "standard-mutation",
+            "standard-gc-tracing",
             "standard-scheme",
             "standard-islisp",
             "standard-clojure",
             "standard-cl",
             "standard-julia",
             "standard-lua",
+            "standard-javascript",
+            "standard-typescript",
+            "standard-python",
             "standard-ruby",
             "standard-typed-lazy"
           ],
@@ -5510,11 +5563,45 @@
         },
         {
           "edges": [
+            "standard-mutation"
+          ],
+          "name": "standard-gc-retain",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-gc-tracing",
+            "standard-mutation"
+          ],
+          "name": "standard-gc-tracing",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-lang-islisp",
             "standard-core",
             "standard-dispatch"
           ],
           "name": "standard-islisp",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-javascript",
+            "codec-javascript",
+            "codec-json",
+            "shape",
+            "standard-core",
+            "standard-binding",
+            "standard-dispatch",
+            "standard-namespace",
+            "standard-mutation",
+            "standard-sequence",
+            "standard-pattern",
+            "standard-gc-tracing",
+            "control"
+          ],
+          "name": "standard-javascript",
           "workspace_edges": []
         },
         {
@@ -5565,6 +5652,23 @@
         },
         {
           "edges": [
+            "dep:sim-lib-lang-python",
+            "codec-python",
+            "shape",
+            "standard-core",
+            "standard-binding",
+            "standard-dispatch",
+            "standard-namespace",
+            "standard-mutation",
+            "standard-sequence",
+            "standard-gc-tracing",
+            "control"
+          ],
+          "name": "standard-python",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-lang-ruby",
             "standard-core",
             "standard-dispatch",
@@ -5603,6 +5707,16 @@
             "codec-algol"
           ],
           "name": "standard-typed-lazy",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-typescript",
+            "codec-typescript",
+            "standard-javascript",
+            "shape"
+          ],
+          "name": "standard-typescript",
           "workspace_edges": []
         },
         {
@@ -5880,6 +5994,13 @@
             "table-hash"
           ],
           "name": "topology-table",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "standard-typescript"
+          ],
+          "name": "typescript",
           "workspace_edges": []
         },
         {
@@ -6199,6 +6320,16 @@
           "kind": [
             "test"
           ],
+          "name": "javascript",
+          "src": "tests/javascript.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "native_dynamic",
           "src": "tests/native_dynamic.rs"
         },
@@ -6221,6 +6352,16 @@
           ],
           "name": "proc_macros",
           "src": "tests/proc_macros.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "python",
+          "src": "tests/python.rs"
         },
         {
           "crate_types": [
@@ -6381,6 +6522,16 @@
           ],
           "name": "server_agent_swarm_e2e",
           "src": "tests/server_agent_swarm_e2e.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "typescript_notation",
+          "src": "tests/typescript_notation.rs"
         }
       ]
     },
@@ -6417,10 +6568,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "18dce1a74ae2dd152469ec894193968a1ae5d003",
+    "git_commit": "eb91ab611341523c3df1c66876a2a2dbdf4f89f6",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "18dce1a74ae2dd152469ec894193968a1ae5d003",
+    "source_commit": "eb91ab611341523c3df1c66876a2a2dbdf4f89f6",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6433,9 +6584,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "cc1afeda69daf482",
+    "workspace_hash": "347333d4213551d2",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 244,
+    "workspace_hash_input_count": 248,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -6482,11 +6633,14 @@
       "recipes/glasses/voice-site/recipe.toml",
       "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
       "recipes/interference/modeled-study/recipe.toml",
+      "recipes/javascript/bounded-module/recipe.toml",
       "recipes/music-algorithms/foundry-plan/recipe.toml",
+      "recipes/python/capability-scoped/recipe.toml",
       "recipes/serial-music/index-discovery/recipe.toml",
       "recipes/serial-music/modal-realization/recipe.toml",
       "recipes/serial-music/reversible-completion/recipe.toml",
       "recipes/serial-music/row-matrix-analysis/recipe.toml",
+      "recipes/typescript-notation/admitted-notation/recipe.toml",
       "recipes/watch/book.toml",
       "recipes/watch/dual-quorum/recipe.toml",
       "recipes/watch/glance-pager/recipe.toml",
@@ -6518,6 +6672,7 @@
       "src/feature_contract_tests.rs",
       "src/femm_exports.rs",
       "src/functions.rs",
+      "src/gc.rs",
       "src/interference_exports.rs",
       "src/lib.rs",
       "src/loaders/registry.rs",
@@ -6711,7 +6866,7 @@
       "card_id": "cookbook/sim-sdk",
       "group": "workspace",
       "package": "sim-nest",
-      "recipe_count": 20,
+      "recipe_count": 23,
       "recipes": [
         {
           "card_id": "sim-sdk/01-basics/boot-runtime",
@@ -6802,12 +6957,28 @@
           "title": "Solve, view, edit, and swap an interference study site"
         },
         {
+          "card_id": "sim-sdk/javascript/bounded-javascript-module",
+          "codec": "rust",
+          "id": "bounded-javascript-module",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/javascript/bounded-module/recipe.toml",
+          "title": "Evaluate a bounded JavaScript module"
+        },
+        {
           "card_id": "sim-sdk/music-algorithms/foundry-plan",
           "codec": "lisp",
           "id": "foundry-plan",
           "package": "sim-nest",
           "recipe_toml": "recipes/music-algorithms/foundry-plan/recipe.toml",
           "title": "Load and compose the modular music algorithm foundry"
+        },
+        {
+          "card_id": "sim-sdk/python/capability-scoped-python",
+          "codec": "rust",
+          "id": "capability-scoped-python",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/python/capability-scoped/recipe.toml",
+          "title": "Evaluate capability-scoped embedded Python"
         },
         {
           "card_id": "sim-sdk/serial-music/index-discovery",
@@ -6840,6 +7011,14 @@
           "package": "sim-nest",
           "recipe_toml": "recipes/serial-music/row-matrix-analysis/recipe.toml",
           "title": "Analyze a strict row family and matrix through the SDK facade"
+        },
+        {
+          "card_id": "sim-sdk/typescript-notation/admitted-notation",
+          "codec": "rust",
+          "id": "admitted-notation",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/typescript-notation/admitted-notation/recipe.toml",
+          "title": "Evaluate and browse TypeScript notation"
         },
         {
           "card_id": "sim-sdk/watch/dual-quorum",

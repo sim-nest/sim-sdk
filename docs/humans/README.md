@@ -18,9 +18,13 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | Feature | Subject | Specimens | Summary |
 | --- | --- | ---: | --- |
 | `feature/sim-sdk/generated-docs` | `crate/xtask` | 0 | Publish generated package, card, recipe, and index facts for the SDK facade and conformance crate. |
+| `feature/sim-sdk/standard-gc-policy` | `crate/sim-nest` | 1 | Select bounded tracing reclamation for standard builds while keeping hard-capped cycle retention explicit and test-only. |
 | `feature/sim-sdk/facade-runtime` | `crate/sim-nest` | 1 | Boot the public SIM facade and expose its command plus reversible view surface. |
 | `feature/sim-sdk/facade-codecs` | `crate/sim-nest` | 0 | Expose public codec exports through the SDK facade while implementation crates keep the codec behavior. |
 | `feature/sim-sdk/facade-model-workflows` | `crate/sim-nest` | 0 | Expose model-facing facade exports for answer routing and drafter setup. |
+| `feature/sim-sdk/python-composition` | `crate/sim-nest` | 1 | Compose the Python source codec, thin runtime profile, and tracing collector through ordinary SDK and bootloader controls. |
+| `feature/sim-sdk/javascript-composition` | `crate/sim-nest` | 1 | Compose the JavaScript codec, direct profile, and tracing collector through ordinary SDK and bootloader controls. |
+| `feature/sim-sdk/typescript-notation-composition` | `crate/sim-nest` | 1 | TypeScript notation; does not type-check. Compose bounded syntax, JavaScript erasure and observational Shape metadata through the SDK and ordinary bootloader controls. |
 | `feature/sim-sdk/genai-feature-bundles` | `crate/sim-nest` | 2 | Select base, local, and provider GenAI dependency bundles through SDK Cargo feature aliases. |
 | `feature/sim-sdk/gpu-math-composition` | `crate/sim-nest` | 1 | Expose opt-in Tensor, ODE, compute-provider, and FEMM solver composition through direct SDK re-exports. |
 | `feature/sim-sdk/interference-composition` | `crate/sim-nest` | 1 | Compose canonical interference records, solve/runtime, Tensor compute, and reversible view behavior through direct SDK re-exports. |
@@ -94,11 +98,19 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 - `recipes/interference/modeled-study/expected.txt`
 - `recipes/interference/modeled-study/input.lisp`
 - `recipes/interference/modeled-study/recipe.toml`
+- `recipes/javascript/bounded-module/purpose.md`
+- `recipes/javascript/bounded-module/recipe.toml`
+- `recipes/javascript/bounded-module/setup.rs`
+- `recipes/javascript/chapter.toml`
 - `recipes/music-algorithms/chapter.toml`
 - `recipes/music-algorithms/foundry-plan/README.md`
 - `recipes/music-algorithms/foundry-plan/expected.txt`
 - `recipes/music-algorithms/foundry-plan/input.lisp`
 - `recipes/music-algorithms/foundry-plan/recipe.toml`
+- `recipes/python/capability-scoped/purpose.md`
+- `recipes/python/capability-scoped/recipe.toml`
+- `recipes/python/capability-scoped/setup.rs`
+- `recipes/python/chapter.toml`
 - `recipes/serial-music/chapter.toml`
 - `recipes/serial-music/index-discovery/purpose.md`
 - `recipes/serial-music/index-discovery/recipe.toml`
@@ -112,6 +124,10 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 - `recipes/serial-music/row-matrix-analysis/purpose.md`
 - `recipes/serial-music/row-matrix-analysis/recipe.toml`
 - `recipes/serial-music/row-matrix-analysis/setup.rs`
+- `recipes/typescript-notation/admitted-notation/purpose.md`
+- `recipes/typescript-notation/admitted-notation/recipe.toml`
+- `recipes/typescript-notation/admitted-notation/setup.rs`
+- `recipes/typescript-notation/chapter.toml`
 - `recipes/watch/book.toml`
 - `recipes/watch/chapter.toml`
 - `recipes/watch/dual-quorum/README.md`
@@ -129,6 +145,204 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 
 ## Worked Examples
 
+### `feature/sim-sdk/standard-gc-policy`
+
+Specimen `spec-test/sim-sdk/src/gc` is checked by `cargo test`.
+
+Source `src/gc.rs`:
+
+```rust
+//! Standard-distribution managed-object collection policy.
+//!
+//! `standard` selects tracing collection. Retention is available only through
+//! the explicit `standard-gc-retain` feature for minimal and test closures; it
+//! never reclaims cycles and fails closed at the arena's hard object cap.
+
+// conformance: SDK builds expose and enforce their selected collection policy.
+
+use sim_lib_standard_core::LanguageProfile;
+
+/// The managed-object policy selected by this SDK build.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum CollectorPolicy {
+    /// Bounded stop-the-world tracing, including unreachable-cycle reclamation.
+    #[cfg(feature = "standard-gc-tracing")]
+    Tracing,
+    /// Hard-capped retention for explicit minimal/test builds; cycles leak.
+    #[cfg(feature = "standard-gc-retain")]
+    RetainCycles,
+}
+
+/// Stable inspection projection for the selected distribution policy.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct CollectorInspection {
+    /// Machine-readable policy name.
+    pub policy: &'static str,
+    /// Whether unreachable cycles are reclaimed.
+    pub reclaims_cycles: bool,
+    /// Intended distribution scope.
+    pub scope: &'static str,
+}
+
+/// Returns the policy selected by the feature closure.
+pub const fn selected_policy() -> CollectorPolicy {
+    #[cfg(feature = "standard-gc-tracing")]
+    return CollectorPolicy::Tracing;
+    #[cfg(all(not(feature = "standard-gc-tracing"), feature = "standard-gc-retain"))]
+    return CollectorPolicy::RetainCycles;
+    #[cfg(not(any(feature = "standard-gc-tracing", feature = "standard-gc-retain")))]
+    compile_error!("standard-mutation requires an explicit collector policy");
+}
+
+/// Projects the selected policy through the SDK's ordinary inspection API.
+pub const fn inspect_selected_policy() -> CollectorInspection {
+    match selected_policy() {
+        #[cfg(feature = "standard-gc-tracing")]
+        CollectorPolicy::Tracing => CollectorInspection {
+            policy: "gc/tracing",
+            reclaims_cycles: true,
+            scope: "standard-production",
+        },
+        #[cfg(feature = "standard-gc-retain")]
+        CollectorPolicy::RetainCycles => CollectorInspection {
+            policy: "gc/retain-hard-capped",
+            reclaims_cycles: false,
+            scope: "explicit-minimal-or-test",
+        },
+    }
+}
+
+/// Declares whether a guest profile allocates managed objects that may cycle.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ManagedAllocation {
+    /// The profile does not allocate managed cyclic graphs.
+    Acyclic,
+    /// The profile may allocate reference cycles and therefore needs reclamation.
+    Cyclic,
+}
+
+/// Admits a guest profile to a production distribution.
+///
+/// Cyclic profiles fail closed unless the build selected a reclaiming collector;
+/// retention is never silently treated as production garbage collection.
+pub fn require_production_collector(
+    profile: &LanguageProfile,
+    allocation: ManagedAllocation,
+) -> sim_kernel::Result<CollectorInspection> {
+    for (field, symbol) in [
+        ("reader", &profile.reader),
+        ("lowering", &profile.lowering),
+        ("eval policy", &profile.eval_policy),
+    ] {
+        if symbol.namespace.as_deref() == Some("standard/unspecified") {
+            return Err(sim_kernel::Error::Eval(format!(
+                "guest profile {} has no declared {field}",
+                profile.symbol
+            )));
+        }
+    }
+    if profile.organs.is_empty()
+        || profile.capabilities.is_empty()
+        || profile.unsupported_forms.is_empty()
+    {
+        return Err(sim_kernel::Error::Eval(format!(
+            "guest profile {} has incomplete production evidence",
+            profile.symbol
+        )));
+    }
+    let inspection = inspect_selected_policy();
+    if allocation == ManagedAllocation::Cyclic && !inspection.reclaims_cycles {
+        return Err(sim_kernel::Error::Eval(format!(
+            "production guest profile {} allocates managed cycles but selected policy {} does not reclaim them",
+            profile.symbol, inspection.policy
+        )));
+    }
+    Ok(inspection)
+}
+
+#[cfg(test)]
+mod tests {
+    use sim_kernel::{CapabilityName, Symbol};
+    #[cfg(feature = "standard-gc-tracing")]
+    use sim_lib_mutation::{
+        EdgeId, EdgeVisitor, HardCappedRetainPolicy, ManagedArena, ManagedId, ManagedObject,
+    };
+
+    use super::*;
+
+    #[cfg(feature = "standard-gc-tracing")]
+    #[derive(Clone, Default)]
+    struct Node(Vec<ManagedId>);
+    #[cfg(feature = "standard-gc-tracing")]
+    impl ManagedObject for Node {
+        fn trace_edges(&self, visitor: &mut dyn EdgeVisitor) {
+            for (edge, target) in self.0.iter().copied().enumerate() {
+                visitor.strong(EdgeId(edge as u32), target);
+            }
+        }
+        fn clear_weak_edge(&mut self, _: EdgeId, _: ManagedId) -> bool {
+            false
+        }
+    }
+
+    fn cyclic_guest() -> LanguageProfile {
+        LanguageProfile::new(Symbol::qualified("lang", "cyclic-specimen/v1"))
+            .with_reader(Symbol::qualified("codec", "lisp"))
+            .with_lowering(Symbol::qualified("lower", "cyclic"))
+            .with_eval_policy(Symbol::qualified("eval", "eager"))
+            .with_organ(sim_lib_standard_core::OrganUse::new(Symbol::qualified(
+                "organ", "mutation",
+            )))
+            .requiring(CapabilityName::new("managed.allocate"))
+            .with_unsupported_form(Symbol::qualified("gap", "native-finalizer"))
+    }
+
+    #[test]
+    #[cfg(feature = "standard-gc-tracing")]
+    fn standard_tracing_reclaims_cycle_while_explicit_retention_hits_cap() {
+        let inspection =
+            require_production_collector(&cyclic_guest(), ManagedAllocation::Cyclic).unwrap();
+        assert_eq!(inspection.policy, "gc/tracing");
+
+        let mut traced = ManagedArena::new(HardCappedRetainPolicy::new(2).unwrap());
+        let a = traced.allocate(Node::default()).unwrap();
+        let b = traced.allocate(Node(vec![a.id()])).unwrap();
+        traced.get_mut(a).unwrap().0.push(b.id());
+        let receipt = sim_lib_gc_tracing::collect(
+            &mut traced,
+            sim_lib_gc_tracing::CollectionLimits {
+                objects: 2,
+                edges: 2,
+                stack: 2,
+                work: 16,
+                clears: 0,
+                finalizers: 0,
+            },
+        )
+        .unwrap();
+        assert_eq!(receipt.swept, vec![a.id(), b.id()]);
+        assert!(traced.is_empty());
+
+        let mut retained = ManagedArena::new(HardCappedRetainPolicy::new(2).unwrap());
+        retained.allocate(Node::default()).unwrap();
+        retained.allocate(Node::default()).unwrap();
+        assert!(matches!(
+            retained.allocate(Node::default()),
+            Err(sim_lib_mutation::ArenaError::CapacityExceeded { cap: 2 })
+        ));
+    }
+
+    #[test]
+    #[cfg(all(feature = "standard-gc-retain", not(feature = "standard-gc-tracing")))]
+    fn explicit_retention_cannot_admit_a_cyclic_production_guest() {
+        let error = require_production_collector(&cyclic_guest(), ManagedAllocation::Cyclic)
+            .expect_err("retain-only policy must fail closed");
+        assert!(error.to_string().contains("does not reclaim"));
+        assert_eq!(inspect_selected_policy().scope, "explicit-minimal-or-test");
+    }
+}
+```
+
 ### `feature/sim-sdk/facade-runtime`
 
 Specimen `spec-test/sim-sdk/crates/sim-conformance/tests/cli_boot` is checked by `cargo test`.
@@ -138,6 +352,57 @@ Source `crates/sim-conformance/tests/cli_boot.rs`:
 ```rust
 #[path = "spec/cli_boot.rs"]
 mod cli_boot;
+```
+
+### `feature/sim-sdk/python-composition`
+
+Specimen `recipe/sim-sdk/python/capability-scoped` is checked by `xtask check-recipes`.
+
+Source `recipes/python/capability-scoped/recipe.toml`:
+
+```toml
+id = "capability-scoped-python"
+title = "Evaluate capability-scoped embedded Python"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 10
+tags = ["python", "sdk", "eval", "exec", "capability", "fidelity"]
+requires = ["python"]
+```
+
+### `feature/sim-sdk/javascript-composition`
+
+Specimen `recipe/sim-sdk/javascript/bounded-module` is checked by `xtask check-recipes`.
+
+Source `recipes/javascript/bounded-module/recipe.toml`:
+
+```toml
+id = "bounded-javascript-module"
+title = "Evaluate a bounded JavaScript module"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 10
+tags = ["javascript", "sdk", "module", "promise", "fidelity"]
+requires = ["javascript"]
+```
+
+### `feature/sim-sdk/typescript-notation-composition`
+
+Specimen `recipe/sim-sdk/typescript-notation/admitted-notation` is checked by `xtask check-recipes`.
+
+Source `recipes/typescript-notation/admitted-notation/recipe.toml`:
+
+```toml
+id = "admitted-notation"
+title = "Evaluate and browse TypeScript notation"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 10
+tags = ["typescript", "notation", "javascript", "shape", "checker-gap"]
+requires = ["language/typescript-notation"]
 ```
 
 ### `feature/sim-sdk/genai-feature-bundles`
@@ -202,6 +467,82 @@ fn default_features_support_readme_quickstart() {
 fn device_feature_installs_reference_base_and_recipes() {
     let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
     assert_feature_includes(&features, "device", &["device-reference", "cookbook"]);
+}
+
+#[test]
+fn python_features_preserve_the_one_way_distribution_boundary() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "codec-python", &["dep:sim-codec-python"]);
+    assert_feature_includes(
+        &features,
+        "standard-python",
+        &[
+            "dep:sim-lib-lang-python",
+            "codec-python",
+            "standard-gc-tracing",
+        ],
+    );
+    assert_feature_includes(&features, "python", &["standard-python"]);
+    assert_feature_includes(&features, "standard", &["standard-python"]);
+
+    let bootloader = include_str!("bin/sim.rs");
+    assert!(bootloader.contains("Bootloader::standard()"));
+    assert!(!bootloader.contains("PythonRuntime"));
+    assert!(!repo_root().join("src/bin/python.rs").exists());
+}
+
+#[test]
+fn javascript_features_preserve_the_one_way_distribution_boundary() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(&features, "codec-javascript", &["dep:sim-codec-javascript"]);
+    assert_feature_includes(
+        &features,
+        "standard-javascript",
+        &[
+            "dep:sim-lib-lang-javascript",
+            "codec-javascript",
+            "standard-gc-tracing",
+        ],
+    );
+    assert_feature_includes(&features, "javascript", &["standard-javascript"]);
+    assert_feature_includes(&features, "standard", &["standard-javascript"]);
+    let bootloader = include_str!("bin/sim.rs");
+    assert!(bootloader.contains("Bootloader::standard()"));
+    assert!(!repo_root().join("src/bin/javascript.rs").exists());
+    assert!(!repo_root().join("src/bin/node.rs").exists());
+}
+
+#[test]
+fn typescript_notation_features_preserve_the_one_way_distribution_boundary() {
+    let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert_feature_includes(
+        &features,
+        "codec-typescript",
+        &["dep:sim-codec-typescript", "codec-javascript", "shape"],
+    );
+    assert_feature_includes(
+        &features,
+        "standard-typescript",
+        &[
+            "dep:sim-lib-lang-typescript",
+            "codec-typescript",
+            "standard-javascript",
+            "shape",
+        ],
+    );
+    assert_feature_includes(&features, "typescript", &["standard-typescript"]);
+    assert_feature_includes(&features, "standard", &["standard-typescript"]);
+
+    let bootloader = include_str!("bin/sim.rs");
+    assert!(bootloader.contains("TypeScript notation; does not type-check"));
+    assert!(bootloader.contains("language/typescript-notation"));
+    for executable in ["typescript", "tsc", "tsserver"] {
+        assert!(
+            !repo_root()
+                .join(format!("src/bin/{executable}.rs"))
+                .exists()
+        );
+    }
 }
 
 #[test]

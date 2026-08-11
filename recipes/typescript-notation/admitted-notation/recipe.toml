@@ -1,0 +1,8 @@
+id = "admitted-notation"
+title = "Evaluate and browse TypeScript notation"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 10
+tags = ["typescript", "notation", "javascript", "shape", "checker-gap"]
+requires = ["language/typescript-notation"]

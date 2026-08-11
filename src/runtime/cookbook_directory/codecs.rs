@@ -132,5 +132,21 @@ macro_rules! cookbook_directory_codecs {
             Some(crate::lib_scene::RECIPES),
             || Box::new(crate::lib_scene::SceneCodecLib::new(codec_id(18)))
         );
+        $m!(
+            "codec/python",
+            "Python source codec",
+            "codec-python",
+            Some(crate::codec_python::RECIPES),
+            || Box::new(crate::codec_python::PythonCodecLib::new(codec_id(20)))
+        );
+        $m!(
+            "codec/javascript",
+            "JavaScript source codec",
+            "codec-javascript",
+            None,
+            || Box::new(crate::codec_javascript::JavascriptCodecLib::new(codec_id(
+                21
+            )))
+        );
     };
 }

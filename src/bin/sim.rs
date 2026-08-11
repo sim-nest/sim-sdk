@@ -26,6 +26,9 @@ use sim_run_core::Bootloader;
 const COMMANDS_HELP: &str = "\
 The SIM runtime command line.
 
+Language profiles:
+  language/typescript-notation  TypeScript notation; does not type-check.
+
 Commands:
   sim repl              Start a read-eval-print loop (Lisp).
   sim webui             Serve the browser Web UI.

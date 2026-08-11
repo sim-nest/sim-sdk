@@ -13,7 +13,7 @@ pub fn run(args: &[String]) -> Result<(), String> {
             "cookbook",
             "cookbook_recipe_gate_runs_every_seeded_sdk_recipe",
             "--features",
-            "codec-json,codec-lisp,device-reference,glasses-modeled,gpu-math,interference,music-algorithms,music-consonance,music-counterpoint,numbers-arith,numbers-f64,serial-music,stream-core",
+            "codec-json,codec-lisp,device-reference,glasses-modeled,gpu-math,interference,music-algorithms,music-consonance,music-counterpoint,numbers-arith,numbers-f64,python,serial-music,stream-core",
         ])
         .status()
         .map_err(|err| format!("run cookbook recipe gate: {err}"))?;
