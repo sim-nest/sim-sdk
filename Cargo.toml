@@ -178,7 +178,7 @@ sim-lib-music-core = { optional = true, version = "0.2.0" }
 sim-lib-music-counterpoint = { optional = true, version = "=0.1.0" }
 sim-lib-music-lift = { optional = true, version = "0.1.1" }
 sim-lib-music-lower = { optional = true, version = "0.1.1" }
-sim-lib-music-serial = { optional = true, version = "=0.1.0" }
+sim-lib-music-serial = { optional = true, version = "=0.1.1" }
 sim-lib-music-notation = { optional = true, version = "0.2.0" }
 sim-lib-music-shapes = { optional = true, version = "0.2.0" }
 sim-lib-music-transform = { optional = true, version = "0.1.3" }
@@ -227,7 +227,7 @@ sim-lib-pitch-namer-jazz = { optional = true, version = "0.2.0" }
 sim-lib-pitch-namer-riemann = { optional = true, version = "0.2.0" }
 sim-lib-pitch-namer-roman = { optional = true, version = "0.2.0" }
 sim-lib-pitch-ratio = { optional = true, version = "=0.1.0" }
-sim-lib-pitch-serial = { optional = true, version = "=0.1.0" }
+sim-lib-pitch-serial = { optional = true, version = "=0.1.1" }
 sim-lib-pitch-scale = { optional = true, version = "0.2.0" }
 sim-lib-pitch-set = { optional = true, version = "0.2.0" }
 sim-lib-pitch-shapes = { optional = true, version = "0.2.0" }
