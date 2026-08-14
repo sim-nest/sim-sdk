@@ -42,32 +42,6 @@ homepage = "https://github.com/sim-nest/sim-sdk"
 [workspace.lints.rust]
 unsafe_code = "forbid"
 
-[patch.crates-io]
-sim-lib-agent = { git = "https://github.com/sim-nest/sim-agent-net", rev = "7674b48de5685ffe8da69ca1c10afb5f35270770" }
-sim-lib-agent-runner-core = { git = "https://github.com/sim-nest/sim-agent-net", rev = "7674b48de5685ffe8da69ca1c10afb5f35270770" }
-sim-lib-agent-runner-http = { git = "https://github.com/sim-nest/sim-agent-net", rev = "7674b48de5685ffe8da69ca1c10afb5f35270770" }
-sim-lib-agent-runner-process = { git = "https://github.com/sim-nest/sim-agent-net", rev = "7674b48de5685ffe8da69ca1c10afb5f35270770" }
-sim-lib-bridge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "7674b48de5685ffe8da69ca1c10afb5f35270770" }
-sim-lib-cookbook = { git = "https://github.com/sim-nest/sim-agent-net", rev = "7674b48de5685ffe8da69ca1c10afb5f35270770" }
-sim-lib-forge = { git = "https://github.com/sim-nest/sim-agent-net", rev = "7674b48de5685ffe8da69ca1c10afb5f35270770" }
-sim-lib-server = { git = "https://github.com/sim-nest/sim-agent-net", rev = "7674b48de5685ffe8da69ca1c10afb5f35270770" }
-sim-lib-stream-fabric = { git = "https://github.com/sim-nest/sim-agent-net", rev = "7674b48de5685ffe8da69ca1c10afb5f35270770" }
-sim-lib-intent = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-scene = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-stream-core = { git = "https://github.com/sim-nest/sim-stream", rev = "9cc8c8453e92ef3e49b84de40992918fee8beea3" }
-sim-lib-stream-device = { git = "https://github.com/sim-nest/sim-stream", rev = "9cc8c8453e92ef3e49b84de40992918fee8beea3" }
-sim-lib-view = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-view-agent = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-view-bridge = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-view-codec = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-view-daw = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-view-device = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-view-doc = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-view-math = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-view-wasm-frame = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-web-bridge = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-lib-web-layout = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
-sim-web-shell = { git = "https://github.com/sim-nest/sim-web", rev = "9d929da25a2ad7fa5dcb3866a20ecc773e8770a4" }
 
 [dependencies]
 proc-macro2 = { version = "1", features = ["span-locations"], optional = true }
