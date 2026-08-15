@@ -8,6 +8,15 @@
 
 use sim_lib_standard_core::LanguageProfile;
 
+/// Shared heap wrapper and its explicit tracing-or-retain policy.
+#[cfg(feature = "standard-gc-tracing")]
+pub use sim_lib_gc_tracing::{ManagedHeap, ManagedHeapPolicy};
+/// Shared language-neutral arena, node, edge, and retention building blocks.
+pub use sim_lib_mutation::{
+    EdgeId, EdgeLimits, HardCappedRetainPolicy, ManagedArena, ManagedHandle, ManagedId,
+    ManagedNode, ManagedObject, ManagedRole, RoleBearingManagedObject,
+};
+
 /// The managed-object policy selected by this SDK build.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum CollectorPolicy {
@@ -115,6 +124,22 @@ mod tests {
     };
 
     use super::*;
+
+    #[test]
+    fn sdk_exports_the_shared_managed_node_and_stable_edge_laws() {
+        let mut arena = ManagedArena::new(HardCappedRetainPolicy::new(2).unwrap());
+        let first_target = arena.allocate(ManagedNode::new(())).unwrap().id();
+        let second_target = arena.allocate(ManagedNode::new(())).unwrap().id();
+        let mut node = ManagedNode::with_edge_limits((), EdgeLimits::new(3, 2, 1, 1));
+        let first = node.insert_strong(first_target).unwrap();
+        let removed = node.remove_strong(first, first_target).unwrap();
+        assert_eq!(removed, first_target);
+        let second = node.insert_strong(second_target).unwrap();
+        assert!(
+            second > first,
+            "removed edge identities must never be reused"
+        );
+    }
 
     #[cfg(feature = "standard-gc-tracing")]
     #[derive(Clone, Default)]

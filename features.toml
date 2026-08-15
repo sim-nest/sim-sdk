@@ -61,12 +61,16 @@ title = "Standard distribution garbage-collection policy"
 summary = "Select bounded tracing reclamation for standard builds while keeping hard-capped cycle retention explicit and test-only."
 owner = "crate/sim-nest"
 audiences = ["code", "framework"]
-guidance = "Use the `standard` feature for production guests that allocate managed cyclic graphs. Use `standard-gc-retain` only for an explicit minimal or test closure; inspect the selection with `gc::inspect_selected_policy`, and expect cyclic production admission to fail closed under retention."
+guidance = "Use the `standard` feature for production guests that allocate managed cyclic graphs. Import ManagedNode, ManagedArena, stable edge types, and (with tracing selected) ManagedHeap from `sim::gc`; keep language roles and payload policy open while reusing that substrate. Use `standard-gc-retain` only for an explicit minimal or test closure; inspect the selection with `gc::inspect_selected_policy`, and expect cyclic production admission to fail closed under retention."
 claims_anchors = [
   "anchor/rustdoc/sim-nest/gc",
 ]
 claims_specimens = [
   "spec-test/sim-sdk/src/gc",
+]
+presents = [
+  "feature/sim-runtime/mutation-organ",
+  "feature/sim-runtime/gc-tracing",
 ]
 [[feature]]
 id = "feature/sim-sdk/facade-runtime"
