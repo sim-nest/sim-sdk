@@ -39,6 +39,23 @@ claims_surfaces = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/characterization-facade"
+title = "Characterization migration facade"
+summary = "Capture public behavioral contracts before a refactor and compare canonical observations afterward through SDK-visible types."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable standard-core and use sim::characterization. Declare a bounded ScenarioSpec, record canonical observations before and after a migration, and require compare_characterization_captures to return no differences. Inspect located differences instead of private implementation state when a contract changes."
+claims_anchors = [
+  "anchor/rustdoc/sim-nest/characterization",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/tests/characterization",
+]
+presents = [
+  "feature/sim-runtime/characterization-captures",
+]
+
+[[feature]]
 id = "feature/sim-sdk/standard-gc-policy"
 title = "Standard distribution garbage-collection policy"
 summary = "Select bounded tracing reclamation for standard builds while keeping hard-capped cycle retention explicit and test-only."
