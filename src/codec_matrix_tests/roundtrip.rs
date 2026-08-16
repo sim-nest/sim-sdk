@@ -1,10 +1,11 @@
 use std::collections::BTreeSet;
 
+use sim_codec::DecodeLimits;
 use sim_kernel::{Expr, Symbol, catalog::CatalogSnapshot};
 
 use super::support::{
-    codec_symbols, corpus, cx, decode_once, encode_once, generated_expr_corpus, quote_mode_name,
-    quote_modes, variant_name,
+    codec_symbols, corpus, cx, decode_once, decode_once_with_limits, encode_once,
+    generated_expr_corpus, quote_mode_name, quote_modes, variant_name,
 };
 
 #[test]
@@ -29,6 +30,13 @@ fn every_codec_roundtrips_the_shared_corpus() {
 fn registry_catalog_snapshot_expr_roundtrips_through_snapshot_codecs() {
     let mut cx = cx();
     let expr = cx.registry().catalog_snapshot().to_expr();
+    // This snapshot is trusted local state and can legitimately exceed the
+    // conservative budget used for untrusted public input. Keep an explicit,
+    // finite ceiling here instead of weakening the runtime default.
+    let limits = DecodeLimits {
+        max_expr_nodes: 1_000_000,
+        ..DecodeLimits::default()
+    };
 
     for codec in [
         Symbol::qualified("codec", "lisp"),
@@ -37,7 +45,7 @@ fn registry_catalog_snapshot_expr_roundtrips_through_snapshot_codecs() {
         Symbol::qualified("codec", "binary-base64"),
     ] {
         let encoded = encode_once(&mut cx, &codec, &expr);
-        let decoded = decode_once(&mut cx, &codec, encoded);
+        let decoded = decode_once_with_limits(&mut cx, &codec, encoded, limits);
         assert!(
             decoded.canonical_eq(&expr),
             "codec {} failed to roundtrip registry catalog snapshot",

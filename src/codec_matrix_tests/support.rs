@@ -1,7 +1,10 @@
 use std::sync::Arc;
 use std::{panic::AssertUnwindSafe, panic::catch_unwind};
 
-use sim_codec::{CodecRuntime, Input, Output, decode_with_codec, encode_with_codec};
+use sim_codec::{
+    CodecRuntime, DecodeLimits, Input, Output, decode_with_codec,
+    decode_with_codec_and_limits, encode_with_codec,
+};
 use sim_kernel::{
     DefaultFactory, EagerPolicy, EncodeOptions, Expr, NumberLiteral, QuoteMode, ReadPolicy, Symbol,
     macro_expand_eval_capability,
@@ -338,11 +341,20 @@ pub fn encode_once(cx: &mut sim_kernel::Cx, codec: &Symbol, expr: &Expr) -> Outp
 }
 
 pub fn decode_once(cx: &mut sim_kernel::Cx, codec: &Symbol, output: Output) -> Expr {
+    decode_once_with_limits(cx, codec, output, DecodeLimits::default())
+}
+
+pub fn decode_once_with_limits(
+    cx: &mut sim_kernel::Cx,
+    codec: &Symbol,
+    output: Output,
+    limits: DecodeLimits,
+) -> Expr {
     let input = match output {
         Output::Text(text) => Input::Text(text),
         Output::Bytes(bytes) => Input::Bytes(bytes),
     };
-    decode_with_codec(cx, codec, input.clone(), ReadPolicy::default())
+    decode_with_codec_and_limits(cx, codec, input.clone(), ReadPolicy::default(), limits)
         .unwrap_or_else(|err| panic!("codec {codec} failed to decode {input:?}: {err:?}"))
 }
 
