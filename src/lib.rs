@@ -162,6 +162,8 @@ mod femm_exports;
 /// A guest obtains a class from its declared class descriptor, constructs
 /// [`Raised`], selects handlers through [`match_raised_class`], and stores
 /// recursive guest relations as stable edges in [`ManagedException`].
+// conformance: the facade exports the canonical raised envelope, matcher, and
+// managed relation adapter without defining a second exception carrier.
 #[cfg(feature = "control")]
 pub mod exceptions {
     pub use sim_lib_control::{
@@ -215,8 +217,9 @@ pub mod runtime;
 /// Canonical host-built source admission contracts.
 ///
 /// This module presents the shared runtime owner directly. Build one
-/// [`SourceAuthority`] in trusted host code, then pass it to
-/// [`ReadEvalRequest::new`] or a [`DynamicSourcePolicy`] evaluation method.
+/// [`source_authority::SourceAuthority`] in trusted host code, then pass it to
+/// [`source_authority::ReadEvalRequest::new`] or a
+/// [`source_authority::DynamicSourcePolicy`] evaluation method.
 /// Guest-language crates own syntax and semantics, not authority envelopes.
 #[cfg(feature = "core")]
 pub mod source_authority {

@@ -28,12 +28,14 @@ owner = "crate/xtask"
 audiences = ["code"]
 guidance = "Use this row when checking the generated documentation and index lane for the SDK repo."
 claims_anchors = [
+  "anchor/bin/sim",
   "anchor/cli/xtask",
   "anchor/crate/xtask",
   "anchor/doc/generated/feature-map",
   "anchor/doc/generated/sim-index-fragment",
 ]
 claims_surfaces = [
+  "cli/sim",
   "cli/xtask",
   "docs/sim-sdk/generated",
 ]
@@ -327,6 +329,9 @@ guidance = "Enable `control` and import `sim::exceptions`. Obtain the raised cla
 claims_anchors = [
   "anchor/rustdoc/sim-nest/exceptions",
 ]
+claims_specimens = [
+  "spec-test/sim-sdk/src/lib",
+]
 presents = [
   "feature/sim-runtime/organs",
 ]
@@ -362,7 +367,7 @@ summary = "Expose the classfile decoder, bounded JVM profile, source authority, 
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
 guidance = "Enable standard-jvm and use sim::codec_classfile, sim::lib_lang_jvm, and sim::source_authority. Java lambdas and method references link from caller-supplied classfile bytes into loader-local managed metadata; SIM callables enter Java only with jvm.functional-adapter. The facade re-exports the canonical owners directly and adds no JVM, decoder, authority, loader, host closure, overload ranker, generated classfile, function organ, cache, or execution policy."
-claims_anchors = ["anchor/crate/sim-nest"]
+claims_anchors = ["anchor/rustdoc/sim-nest/lib_lang_jvm"]
 claims_specimens = [
   "recipe/sim-sdk/jvm/product-surface",
   "recipe/sim-sdk/jvm/lambda-interop",

@@ -1,3 +1,5 @@
+// conformance: the SDK facade captures and compares bounded behavioral contracts.
+
 #![cfg(feature = "standard-core")]
 
 use sim::{

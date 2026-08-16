@@ -199,6 +199,14 @@
         },
         {
           "edges": [
+            "dep:sim-codec-classfile",
+            "core"
+          ],
+          "name": "codec-classfile",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-codec",
             "dep:sim-codec-javascript",
             "core"
@@ -2473,6 +2481,20 @@
             "codec-algol"
           ],
           "name": "standard-julia",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-lang-jvm",
+            "codec-classfile",
+            "standard-core",
+            "control",
+            "standard-gc-tracing",
+            "standard-mutation",
+            "standard-namespace",
+            "shape"
+          ],
+          "name": "standard-jvm",
           "workspace_edges": []
         },
         {

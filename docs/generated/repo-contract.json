@@ -3338,6 +3338,14 @@
         },
         {
           "edges": [
+            "dep:sim-codec-classfile",
+            "core"
+          ],
+          "name": "codec-classfile",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-codec",
             "dep:sim-codec-javascript",
             "core"
@@ -5616,6 +5624,20 @@
         },
         {
           "edges": [
+            "dep:sim-lib-lang-jvm",
+            "codec-classfile",
+            "standard-core",
+            "control",
+            "standard-gc-tracing",
+            "standard-mutation",
+            "standard-namespace",
+            "shape"
+          ],
+          "name": "standard-jvm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-lang-lua",
             "standard-core",
             "standard-mutation",
@@ -6210,8 +6232,28 @@
           "kind": [
             "example"
           ],
+          "name": "jvm_lambda_interop",
+          "src": "examples/jvm_lambda_interop.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "example"
+          ],
           "name": "repl",
           "src": "examples/repl.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "characterization",
+          "src": "tests/characterization.rs"
         },
         {
           "crate_types": [
@@ -6322,6 +6364,16 @@
           ],
           "name": "javascript",
           "src": "tests/javascript.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "jvm_exports",
+          "src": "tests/jvm_exports.rs"
         },
         {
           "crate_types": [
@@ -6568,10 +6620,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "7e2a63cd90ce75fb739e809b2eac571a4b9c2410",
+    "git_commit": "357ac33d402af09cf8b9964a40cc2f7a657f557f",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "7e2a63cd90ce75fb739e809b2eac571a4b9c2410",
+    "source_commit": "357ac33d402af09cf8b9964a40cc2f7a657f557f",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6584,9 +6636,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "2af8e11da73ea425",
+    "workspace_hash": "afa1e1b8ab8e80c8",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 248,
+    "workspace_hash_input_count": 251,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -6634,12 +6686,15 @@
       "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
       "recipes/interference/modeled-study/recipe.toml",
       "recipes/javascript/bounded-module/recipe.toml",
+      "recipes/jvm/lambda-interop/recipe.toml",
+      "recipes/jvm/product-surface/recipe.toml",
       "recipes/music-algorithms/foundry-plan/recipe.toml",
       "recipes/python/capability-scoped/recipe.toml",
       "recipes/serial-music/index-discovery/recipe.toml",
       "recipes/serial-music/modal-realization/recipe.toml",
       "recipes/serial-music/reversible-completion/recipe.toml",
       "recipes/serial-music/row-matrix-analysis/recipe.toml",
+      "recipes/source-authority/dynamic-text/recipe.toml",
       "recipes/typescript-notation/admitted-notation/recipe.toml",
       "recipes/watch/book.toml",
       "recipes/watch/dual-quorum/recipe.toml",
@@ -6866,7 +6921,7 @@
       "card_id": "cookbook/sim-sdk",
       "group": "workspace",
       "package": "sim-nest",
-      "recipe_count": 23,
+      "recipe_count": 26,
       "recipes": [
         {
           "card_id": "sim-sdk/01-basics/boot-runtime",
@@ -6965,6 +7020,22 @@
           "title": "Evaluate a bounded JavaScript module"
         },
         {
+          "card_id": "sim-sdk/jvm/lambda-interop",
+          "codec": "",
+          "id": "lambda-interop",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/jvm/lambda-interop/recipe.toml",
+          "title": "Reach both JVM lambda interop directions"
+        },
+        {
+          "card_id": "sim-sdk/jvm/product-surface",
+          "codec": "",
+          "id": "product-surface",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/jvm/product-surface/recipe.toml",
+          "title": "Reach the JVM product surface through the SDK"
+        },
+        {
           "card_id": "sim-sdk/music-algorithms/foundry-plan",
           "codec": "lisp",
           "id": "foundry-plan",
@@ -7011,6 +7082,14 @@
           "package": "sim-nest",
           "recipe_toml": "recipes/serial-music/row-matrix-analysis/recipe.toml",
           "title": "Analyze a strict row family and matrix through the SDK facade"
+        },
+        {
+          "card_id": "sim-sdk/source-authority/dynamic-text-source-authority",
+          "codec": "rust",
+          "id": "dynamic-text-source-authority",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/source-authority/dynamic-text/recipe.toml",
+          "title": "Admit dynamic text with shared source authority"
         },
         {
           "card_id": "sim-sdk/typescript-notation/admitted-notation",

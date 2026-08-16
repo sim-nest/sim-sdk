@@ -1,3 +1,5 @@
+// conformance: the standard JVM facade exports the complete public front door.
+
 #![cfg(feature = "standard-jvm")]
 
 #[test]

@@ -5,5 +5,5 @@
 | Package | Group | Features | Workspace feature edges |
 | --- | --- | ---: | ---: |
 | `sim-conformance` | `workspace` | 0 | 0 |
-| `sim-nest` | `workspace` | 251 | 0 |
+| `sim-nest` | `workspace` | 293 | 0 |
 | `xtask` | `workspace` | 0 | 0 |

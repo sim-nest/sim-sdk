@@ -50,6 +50,13 @@
 {"kind":"recipe","path":"recipes/javascript/bounded-module/recipe.toml"}
 {"kind":"recipe","path":"recipes/javascript/bounded-module/setup.rs"}
 {"kind":"recipe","path":"recipes/javascript/chapter.toml"}
+{"kind":"recipe","path":"recipes/jvm/chapter.toml"}
+{"kind":"recipe","path":"recipes/jvm/lambda-interop/purpose.md"}
+{"kind":"recipe","path":"recipes/jvm/lambda-interop/recipe.toml"}
+{"kind":"recipe","path":"recipes/jvm/lambda-interop/setup.rs"}
+{"kind":"recipe","path":"recipes/jvm/product-surface/purpose.md"}
+{"kind":"recipe","path":"recipes/jvm/product-surface/recipe.toml"}
+{"kind":"recipe","path":"recipes/jvm/product-surface/setup.rs"}
 {"kind":"recipe","path":"recipes/music-algorithms/chapter.toml"}
 {"kind":"recipe","path":"recipes/music-algorithms/foundry-plan/README.md"}
 {"kind":"recipe","path":"recipes/music-algorithms/foundry-plan/expected.txt"}
@@ -72,6 +79,10 @@
 {"kind":"recipe","path":"recipes/serial-music/row-matrix-analysis/purpose.md"}
 {"kind":"recipe","path":"recipes/serial-music/row-matrix-analysis/recipe.toml"}
 {"kind":"recipe","path":"recipes/serial-music/row-matrix-analysis/setup.rs"}
+{"kind":"recipe","path":"recipes/source-authority/chapter.toml"}
+{"kind":"recipe","path":"recipes/source-authority/dynamic-text/purpose.md"}
+{"kind":"recipe","path":"recipes/source-authority/dynamic-text/recipe.toml"}
+{"kind":"recipe","path":"recipes/source-authority/dynamic-text/setup.rs"}
 {"kind":"recipe","path":"recipes/typescript-notation/admitted-notation/purpose.md"}
 {"kind":"recipe","path":"recipes/typescript-notation/admitted-notation/recipe.toml"}
 {"kind":"recipe","path":"recipes/typescript-notation/admitted-notation/setup.rs"}
