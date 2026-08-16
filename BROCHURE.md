@@ -12,6 +12,9 @@ This is the one-stop crate you depend on to work with SIM. Instead of hunting do
 - A handful of lines boots a real runtime you can evaluate against.
 - You turn features on as you need them, keeping small projects small.
 - Stable module names shield your code from how the pieces are split up underneath.
+- `sim::source_authority` exposes the one shared host-built authority and
+  request-policy surface, so every guest source path is diminished and audited
+  without a language-specific admission envelope.
 
 ## Where it fits
 

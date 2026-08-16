@@ -39,6 +39,23 @@ claims_surfaces = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/source-authority-facade"
+title = "Shared source-authority facade"
+summary = "Build diminished source requests through the canonical runtime authority, broker, and dynamic policy without guest-specific admission envelopes."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable core and import sim::source_authority. Construct SourceAuthority only in trusted host code, then use ReadEvalRequest::new or DynamicSourcePolicy evaluation methods. The facade directly presents sim-lib-core contracts and adds no authority model or guest behavior."
+claims_anchors = [
+  "anchor/rustdoc/sim-nest/source_authority",
+]
+claims_specimens = [
+  "recipe/sim-sdk/source-authority/dynamic-text",
+]
+presents = [
+  "feature/sim-runtime/capabilities-read-eval",
+]
+
+[[feature]]
 id = "feature/sim-sdk/characterization-facade"
 title = "Characterization migration facade"
 summary = "Capture public behavioral contracts before a refactor and compare canonical observations afterward through SDK-visible types."
