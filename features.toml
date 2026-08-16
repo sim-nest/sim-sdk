@@ -301,6 +301,20 @@ supports = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/raised-exception-composition"
+title = "Raised exception SDK composition"
+summary = "Expose the one non-recursive envelope, bounded class matcher, and managed relation adapter for every guest runtime."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable `control` and import `sim::exceptions`. Obtain the raised class from the guest's declared class descriptor, construct Raised around the ordinary guest payload, select handlers with match_raised_class, and store cause, context, group, or suppression relations as stable ManagedException edges. Do not declare another throwable carrier or a Box/Vec exception chain."
+claims_anchors = [
+  "anchor/rustdoc/sim-nest/exceptions",
+]
+presents = [
+  "feature/sim-runtime/organs",
+]
+
+[[feature]]
 id = "feature/sim-sdk/conformance-contract"
 title = "Conformance contract"
 summary = "Run the SDK conformance contract as a checked operational recipe."
@@ -322,6 +336,15 @@ steps = [
   { feature = "feature/sim-sdk/facade-runtime", why = "The facade row owns the public command and reversible view surface." },
   { feature = "feature/sim-sdk/device-recipes", why = "The device row gives wearable workflows through facade-level recipes." },
   { specimen = "recipe/sim-sdk/01-basics/boot-runtime", why = "The boot-runtime recipe checks the smallest facade path." },
+]
+
+[[route]]
+id = "route/raise-guest-value-from-sdk"
+task = "Raise and match a guest value from the SDK"
+audiences = ["code", "framework"]
+steps = [
+  { feature = "feature/sim-runtime/organs", why = "The runtime organ owns Raised, bounded class matching, and ManagedException stable relation edges." },
+  { feature = "feature/sim-sdk/raised-exception-composition", why = "The SDK row exposes those canonical contracts together under sim::exceptions." },
 ]
 
 [[route]]

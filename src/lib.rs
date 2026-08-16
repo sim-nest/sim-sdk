@@ -157,6 +157,32 @@ mod compute_exports;
 #[cfg(feature = "expr-tree")]
 mod expr_tree_exports;
 mod femm_exports;
+/// Shared raised-exception contract for guest runtimes.
+///
+/// A guest obtains a class from its declared class descriptor, constructs
+/// [`Raised`], selects handlers through [`match_raised_class`], and stores
+/// recursive guest relations as stable edges in [`ManagedException`].
+#[cfg(feature = "control")]
+pub mod exceptions {
+    pub use sim_lib_control::{
+        BoundedSubclassOutcome, ClassMatchBudget, ClassMatchEvidence, ClassMatchOutcome,
+        ExceptionGraphBudget, ExceptionGraphEdge, ExceptionGraphView, ManagedException, Raised,
+        RaisedBrowseBudget, RaisedBrowseProjection, RaisedShape, match_raised_class,
+    };
+
+    #[cfg(test)]
+    mod tests {
+        #[allow(unused_imports)]
+        use super::match_raised_class;
+        use super::{ManagedException, Raised};
+
+        #[test]
+        fn exports_envelope_matcher_and_managed_adapter() {
+            let _ = std::any::type_name::<Raised>();
+            let _ = std::any::type_name::<ManagedException<(), ()>>();
+        }
+    }
+}
 /// Function authoring helpers built on the shared `Shape` engine: overload
 /// cases, native function objects, and member-table construction.
 #[cfg(all(feature = "core", feature = "shape"))]
