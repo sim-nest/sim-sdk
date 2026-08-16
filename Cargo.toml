@@ -600,3 +600,7 @@ required-features = ["core", "shape", "codec-lisp", "codec-json", "codec-binary"
 [[example]]
 name = "repl"
 required-features = ["core", "shape", "codec-lisp", "numbers-prelude"]
+
+[[example]]
+name = "jvm_lambda_interop"
+required-features = ["standard-jvm"]
