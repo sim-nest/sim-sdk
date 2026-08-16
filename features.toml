@@ -355,6 +355,30 @@ steps = [
   { specimen = "recipe/sim-sdk/01-basics/boot-runtime", why = "The boot-runtime recipe checks the smallest facade path." },
 ]
 
+[[feature]]
+id = "feature/sim-sdk/jvm-composition"
+title = "JVM SDK composition"
+summary = "Expose the classfile decoder, bounded JVM profile, source authority, invocation library, recipes, and product specimen through public SDK names."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable standard-jvm and use sim::codec_classfile, sim::lib_lang_jvm, and sim::source_authority. The facade re-exports the canonical owners directly and adds no JVM, decoder, authority, loader, or execution policy."
+claims_anchors = ["anchor/crate/sim-nest"]
+claims_specimens = [
+  "recipe/sim-sdk/jvm/product-surface",
+  "spec-test/sim-sdk/tests/jvm_exports",
+]
+presents = ["feature/sim-runtime/jvm-loadable-profile"]
+
+[[route]]
+id = "route/compose-jvm-from-sdk"
+task = "Compose the bounded JVM from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/jvm-composition", why = "One feature exposes the existing decoder, authority, profile, invocation, and specimen contracts without a facade-owned runtime." },
+  { specimen = "recipe/sim-sdk/jvm/product-surface", why = "The public recipe imports every JVM composition contract through sim alone." },
+  { specimen = "spec-test/sim-sdk/tests/jvm_exports", why = "The downstream-only test proves every JVM entry is reachable through the SDK." },
+]
+
 [[route]]
 id = "route/raise-guest-value-from-sdk"
 task = "Raise and match a guest value from the SDK"

@@ -1,0 +1,4 @@
+title = "Reach the JVM product surface through the SDK"
+kind = "rust"
+entry = "setup.rs"
+required_features = ["standard-jvm"]

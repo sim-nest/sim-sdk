@@ -61,6 +61,7 @@ sim-codec-bitwise = { optional = true, version = "0.1.5" }
 sim-codec-bitwise-base64 = { optional = true, version = "0.1.5" }
 sim-codec-bridge = { optional = true, version = "0.1.3" }
 sim-codec-chat = { optional = true, version = "0.2.1" }
+sim-codec-classfile = { optional = true, version = "0.1.0" }
 sim-codec-json = { optional = true, version = "0.2.1" }
 sim-codec-javascript = { optional = true, version = "0.1.0" }
 sim-codec-typescript = { optional = true, version = "0.1.0" }
@@ -128,6 +129,7 @@ sim-lib-lang-clojure = { optional = true, version = "0.1.5" }
 sim-lib-lang-islisp = { optional = true, version = "0.1.5" }
 sim-lib-lang-julia = { optional = true, version = "0.1.4" }
 sim-lib-lang-javascript = { optional = true, version = "0.1.0" }
+sim-lib-lang-jvm = { optional = true, version = "0.1.0" }
 sim-lib-lang-typescript = { optional = true, version = "0.1.0" }
 sim-lib-lang-lua = { optional = true, version = "0.1.4" }
 sim-lib-lang-python = { optional = true, version = "0.1.0" }
@@ -305,6 +307,7 @@ codec-bitwise = ["dep:sim-codec", "dep:sim-codec-bitwise", "core"]
 codec-bitwise-base64 = ["dep:sim-codec", "dep:sim-codec-bitwise-base64", "codec-bitwise", "core"]
 codec-bridge = ["dep:sim-codec", "dep:sim-codec-bridge", "core"]
 codec-chat = ["dep:sim-codec", "dep:sim-codec-chat", "core"]
+codec-classfile = ["dep:sim-codec-classfile", "core"]
 codec-json = ["dep:sim-codec", "dep:sim-codec-json", "dep:serde", "dep:serde_json", "core"]
 codec-javascript = ["dep:sim-codec", "dep:sim-codec-javascript", "core"]
 codec-typescript = ["dep:sim-codec", "dep:sim-codec-typescript", "codec-javascript", "shape", "core"]
@@ -522,6 +525,7 @@ standard-islisp = ["dep:sim-lib-lang-islisp", "standard-core", "standard-dispatc
 standard-julia = ["dep:sim-lib-lang-julia", "standard-core", "standard-dispatch", "codec-algol"]
 standard-lua = ["dep:sim-lib-lang-lua", "standard-core", "standard-mutation", "control", "codec-algol"]
 standard-javascript = ["dep:sim-lib-lang-javascript", "codec-javascript", "codec-json", "shape", "standard-core", "standard-binding", "standard-dispatch", "standard-namespace", "standard-mutation", "standard-sequence", "standard-pattern", "standard-gc-tracing", "control"]
+standard-jvm = ["dep:sim-lib-lang-jvm", "codec-classfile", "standard-core", "control", "standard-gc-tracing", "standard-mutation", "standard-namespace", "shape"]
 standard-typescript = ["dep:sim-lib-lang-typescript", "codec-typescript", "standard-javascript", "shape"]
 standard-python = ["dep:sim-lib-lang-python", "codec-python", "shape", "standard-core", "standard-binding", "standard-dispatch", "standard-namespace", "standard-mutation", "standard-sequence", "standard-gc-tracing", "control"]
 standard-mutation = ["dep:sim-lib-mutation", "standard-core"]
