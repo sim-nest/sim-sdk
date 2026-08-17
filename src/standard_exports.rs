@@ -15,6 +15,8 @@ pub use sim_codec_bitwise_base64 as codec_bitwise_base64;
 pub use sim_codec_bridge as codec_bridge;
 #[cfg(feature = "codec-chat")]
 pub use sim_codec_chat as codec_chat;
+#[cfg(feature = "codec-classfile")]
+pub use sim_codec_classfile as codec_classfile;
 #[cfg(feature = "codec-javascript")]
 pub use sim_codec_javascript as codec_javascript;
 #[cfg(feature = "codec-json")]
@@ -55,6 +57,8 @@ pub use sim_lib_lang_islisp as lib_lang_islisp;
 pub use sim_lib_lang_javascript as lib_lang_javascript;
 #[cfg(feature = "standard-julia")]
 pub use sim_lib_lang_julia as lib_lang_julia;
+#[cfg(feature = "standard-jvm")]
+pub use sim_lib_lang_jvm as lib_lang_jvm;
 #[cfg(feature = "standard-lua")]
 pub use sim_lib_lang_lua as lib_lang_lua;
 #[cfg(feature = "standard-python")]

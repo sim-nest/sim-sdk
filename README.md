@@ -303,6 +303,16 @@ install_core_runtime(&mut cx);
 
 `install_core_runtime` loads the core runtime through the lib registry and
 installs the default number domain(s) for the enabled `numbers-*` features.
+
+## Characterize a refactor
+
+With `standard-core` enabled, `sim::characterization` is the stable migration
+surface. Declare a bounded scenario and canonical observation lanes, capture the
+behavior before changing the implementation, then capture the same contract
+afterward and call `compare_characterization_captures`. An identical result has
+no differences; a mismatch reports stable paths and both canonical values,
+including source locations for failures. The contract deliberately excludes
+debug strings and private implementation state.
 Codecs and additional behavior libraries are installed the same way every other
 lib is: through their own `install_*` helper or directly through `Lib` and
 `Linker`.

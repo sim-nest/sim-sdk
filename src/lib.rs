@@ -129,6 +129,23 @@ pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
 /// wrapper that registers a host-defined class, its constructor, and members.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod classes;
+/// Stable SDK surface for capturing behavior before a refactor and comparing it afterward.
+///
+/// Enable the `standard-core` feature, declare a bounded [`ScenarioSpec`], and
+/// record only canonical observations. Publish captures when a content-addressed
+/// evidence identity is required; use [`compare_characterization_captures`] for
+/// a strict comparison whose differences retain stable field paths and both
+/// canonical values.
+#[cfg(feature = "standard-core")]
+pub mod characterization {
+    pub use sim_lib_standard_core::{
+        BoundedLane, CanonicalFailure, CanonicalObservation, CanonicalOutcome, CaptureComparison,
+        CaptureComparisonProjection, CaptureDifference, CharacterizationCapture, FailureLocation,
+        ScenarioInput, ScenarioLimits, ScenarioObservationLane, ScenarioSpec,
+        characterization_capture_kind, characterization_capture_predicate,
+        compare_characterization_captures, publish_characterization_capture,
+    };
+}
 #[rustfmt::skip]
 #[cfg(all(test, feature = "shape", feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-algol", feature = "codec-bridge", feature = "bridge"))]
 mod codec_matrix_tests;
@@ -140,6 +157,34 @@ mod compute_exports;
 #[cfg(feature = "expr-tree")]
 mod expr_tree_exports;
 mod femm_exports;
+/// Shared raised-exception contract for guest runtimes.
+///
+/// A guest obtains a class from its declared class descriptor, constructs
+/// [`Raised`], selects handlers through [`match_raised_class`], and stores
+/// recursive guest relations as stable edges in [`ManagedException`].
+// conformance: the facade exports the canonical raised envelope, matcher, and
+// managed relation adapter without defining a second exception carrier.
+#[cfg(feature = "control")]
+pub mod exceptions {
+    pub use sim_lib_control::{
+        BoundedSubclassOutcome, ClassMatchBudget, ClassMatchEvidence, ClassMatchOutcome,
+        ExceptionGraphBudget, ExceptionGraphEdge, ExceptionGraphView, ManagedException, Raised,
+        RaisedBrowseBudget, RaisedBrowseProjection, RaisedShape, match_raised_class,
+    };
+
+    #[cfg(test)]
+    mod tests {
+        #[allow(unused_imports)]
+        use super::match_raised_class;
+        use super::{ManagedException, Raised};
+
+        #[test]
+        fn exports_envelope_matcher_and_managed_adapter() {
+            let _ = std::any::type_name::<Raised>();
+            let _ = std::any::type_name::<ManagedException<(), ()>>();
+        }
+    }
+}
 /// Function authoring helpers built on the shared `Shape` engine: overload
 /// cases, native function objects, and member-table construction.
 #[cfg(all(feature = "core", feature = "shape"))]
@@ -169,6 +214,32 @@ mod roadmap11_exports;
 /// shapes, functions, and the default number domains into a `Cx`.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod runtime;
+/// Canonical host-built source admission contracts.
+///
+/// This module presents the shared runtime owner directly. Build one
+/// [`source_authority::SourceAuthority`] in trusted host code, then pass it to
+/// [`source_authority::ReadEvalRequest::new`] or a
+/// [`source_authority::DynamicSourcePolicy`] evaluation method.
+/// Guest-language crates own syntax and semantics, not authority envelopes.
+#[cfg(feature = "core")]
+pub mod source_authority {
+    pub use sim_lib_core::{
+        DynamicSourcePolicy, ReadEvalAdmission, ReadEvalBroker, ReadEvalDecision, ReadEvalOutcome,
+        ReadEvalRequest, ReadEvalSource, RequestOrigin, SourceAuthority,
+    };
+
+    #[cfg(test)]
+    mod tests {
+        use super::{DynamicSourcePolicy, ReadEvalRequest, SourceAuthority};
+
+        #[test]
+        fn exposes_canonical_request_builders_without_a_facade_envelope() {
+            let _ = std::any::type_name::<SourceAuthority>();
+            let _ = std::any::type_name::<ReadEvalRequest>();
+            let _ = std::any::type_name::<DynamicSourcePolicy>();
+        }
+    }
+}
 #[cfg(feature = "serial-music")]
 pub mod serial_music;
 /// Shape authoring helpers: documented and value-backed shape wrappers plus

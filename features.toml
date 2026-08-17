@@ -28,14 +28,50 @@ owner = "crate/xtask"
 audiences = ["code"]
 guidance = "Use this row when checking the generated documentation and index lane for the SDK repo."
 claims_anchors = [
+  "anchor/bin/sim",
   "anchor/cli/xtask",
   "anchor/crate/xtask",
   "anchor/doc/generated/feature-map",
   "anchor/doc/generated/sim-index-fragment",
 ]
 claims_surfaces = [
+  "cli/sim",
   "cli/xtask",
   "docs/sim-sdk/generated",
+]
+
+[[feature]]
+id = "feature/sim-sdk/source-authority-facade"
+title = "Shared source-authority facade"
+summary = "Build diminished source requests through the canonical runtime authority, broker, and dynamic policy without guest-specific admission envelopes."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable core and import sim::source_authority. Construct SourceAuthority only in trusted host code, then use ReadEvalRequest::new or DynamicSourcePolicy evaluation methods. The facade directly presents sim-lib-core contracts and adds no authority model or guest behavior."
+claims_anchors = [
+  "anchor/rustdoc/sim-nest/source_authority",
+]
+claims_specimens = [
+  "recipe/sim-sdk/source-authority/dynamic-text",
+]
+presents = [
+  "feature/sim-runtime/capabilities-read-eval",
+]
+
+[[feature]]
+id = "feature/sim-sdk/characterization-facade"
+title = "Characterization migration facade"
+summary = "Capture public behavioral contracts before a refactor and compare canonical observations afterward through SDK-visible types."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable standard-core and use sim::characterization. Declare a bounded ScenarioSpec, record canonical observations before and after a migration, and require compare_characterization_captures to return no differences. Inspect located differences instead of private implementation state when a contract changes."
+claims_anchors = [
+  "anchor/rustdoc/sim-nest/characterization",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/tests/characterization",
+]
+presents = [
+  "feature/sim-runtime/characterization-captures",
 ]
 
 [[feature]]
@@ -44,12 +80,16 @@ title = "Standard distribution garbage-collection policy"
 summary = "Select bounded tracing reclamation for standard builds while keeping hard-capped cycle retention explicit and test-only."
 owner = "crate/sim-nest"
 audiences = ["code", "framework"]
-guidance = "Use the `standard` feature for production guests that allocate managed cyclic graphs. Use `standard-gc-retain` only for an explicit minimal or test closure; inspect the selection with `gc::inspect_selected_policy`, and expect cyclic production admission to fail closed under retention."
+guidance = "Use the `standard` feature for production guests that allocate managed cyclic graphs. Import ManagedNode, ManagedArena, stable edge types, and (with tracing selected) ManagedHeap from `sim::gc`; keep language roles and payload policy open while reusing that substrate. Use `standard-gc-retain` only for an explicit minimal or test closure; inspect the selection with `gc::inspect_selected_policy`, and expect cyclic production admission to fail closed under retention."
 claims_anchors = [
   "anchor/rustdoc/sim-nest/gc",
 ]
 claims_specimens = [
   "spec-test/sim-sdk/src/gc",
+]
+presents = [
+  "feature/sim-runtime/mutation-organ",
+  "feature/sim-runtime/gc-tracing",
 ]
 [[feature]]
 id = "feature/sim-sdk/facade-runtime"
@@ -280,6 +320,23 @@ supports = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/raised-exception-composition"
+title = "Raised exception SDK composition"
+summary = "Expose the one non-recursive envelope, bounded class matcher, and managed relation adapter for every guest runtime."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable `control` and import `sim::exceptions`. Obtain the raised class from the guest's declared class descriptor, construct Raised around the ordinary guest payload, select handlers with match_raised_class, and store cause, context, group, or suppression relations as stable ManagedException edges. Do not declare another throwable carrier or a Box/Vec exception chain."
+claims_anchors = [
+  "anchor/rustdoc/sim-nest/exceptions",
+]
+claims_specimens = [
+  "spec-test/sim-sdk/src/lib",
+]
+presents = [
+  "feature/sim-runtime/organs",
+]
+
+[[feature]]
 id = "feature/sim-sdk/conformance-contract"
 title = "Conformance contract"
 summary = "Run the SDK conformance contract as a checked operational recipe."
@@ -301,6 +358,41 @@ steps = [
   { feature = "feature/sim-sdk/facade-runtime", why = "The facade row owns the public command and reversible view surface." },
   { feature = "feature/sim-sdk/device-recipes", why = "The device row gives wearable workflows through facade-level recipes." },
   { specimen = "recipe/sim-sdk/01-basics/boot-runtime", why = "The boot-runtime recipe checks the smallest facade path." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/jvm-composition"
+title = "JVM SDK composition"
+summary = "Expose the classfile decoder, bounded JVM profile, source authority, invocation library, bidirectional lambda adapters, recipes, and product specimens through public SDK names."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable standard-jvm and use sim::codec_classfile, sim::lib_lang_jvm, and sim::source_authority. Java lambdas and method references link from caller-supplied classfile bytes into loader-local managed metadata; SIM callables enter Java only with jvm.functional-adapter. The facade re-exports the canonical owners directly and adds no JVM, decoder, authority, loader, host closure, overload ranker, generated classfile, function organ, cache, or execution policy."
+claims_anchors = ["anchor/rustdoc/sim-nest/lib_lang_jvm"]
+claims_specimens = [
+  "recipe/sim-sdk/jvm/product-surface",
+  "recipe/sim-sdk/jvm/lambda-interop",
+  "spec-test/sim-sdk/tests/jvm_exports",
+]
+presents = ["feature/sim-runtime/jvm-loadable-profile"]
+
+[[route]]
+id = "route/compose-jvm-from-sdk"
+task = "Compose the bounded JVM from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/jvm-composition", why = "One feature exposes the existing decoder, authority, profile, invocation, and specimen contracts without a facade-owned runtime." },
+  { specimen = "recipe/sim-sdk/jvm/product-surface", why = "The public recipe imports every JVM composition contract through sim alone." },
+  { specimen = "recipe/sim-sdk/jvm/lambda-interop", why = "The public recipe reaches both lambda interop directions through sim alone." },
+  { specimen = "spec-test/sim-sdk/tests/jvm_exports", why = "The downstream-only test proves every JVM entry is reachable through the SDK." },
+]
+
+[[route]]
+id = "route/raise-guest-value-from-sdk"
+task = "Raise and match a guest value from the SDK"
+audiences = ["code", "framework"]
+steps = [
+  { feature = "feature/sim-runtime/organs", why = "The runtime organ owns Raised, bounded class matching, and ManagedException stable relation edges." },
+  { feature = "feature/sim-sdk/raised-exception-composition", why = "The SDK row exposes those canonical contracts together under sim::exceptions." },
 ]
 
 [[route]]

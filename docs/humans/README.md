@@ -18,6 +18,8 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | Feature | Subject | Specimens | Summary |
 | --- | --- | ---: | --- |
 | `feature/sim-sdk/generated-docs` | `crate/xtask` | 0 | Publish generated package, card, recipe, and index facts for the SDK facade and conformance crate. |
+| `feature/sim-sdk/source-authority-facade` | `crate/sim-nest` | 1 | Build diminished source requests through the canonical runtime authority, broker, and dynamic policy without guest-specific admission envelopes. |
+| `feature/sim-sdk/characterization-facade` | `crate/sim-nest` | 1 | Capture public behavioral contracts before a refactor and compare canonical observations afterward through SDK-visible types. |
 | `feature/sim-sdk/standard-gc-policy` | `crate/sim-nest` | 1 | Select bounded tracing reclamation for standard builds while keeping hard-capped cycle retention explicit and test-only. |
 | `feature/sim-sdk/facade-runtime` | `crate/sim-nest` | 1 | Boot the public SIM facade and expose its command plus reversible view surface. |
 | `feature/sim-sdk/facade-codecs` | `crate/sim-nest` | 0 | Expose public codec exports through the SDK facade while implementation crates keep the codec behavior. |
@@ -33,12 +35,15 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | `feature/sim-sdk/serial-music-composition` | `crate/sim-nest` | 5 | Select the frozen serial-series, row-theory, immutable-plan, adaptation, and reversible-completion candidates through one curated SDK facade. |
 | `feature/sim-sdk/facade-shapes` | `crate/sim-nest` | 0 | Expose public Shape exports through the SDK facade while shape crates keep the matching behavior. |
 | `feature/sim-sdk/device-recipes` | `crate/sim-nest` | 1 | Exercise modeled device, watch, and glasses workflows through SDK-level recipe entry points. |
+| `feature/sim-sdk/raised-exception-composition` | `crate/sim-nest` | 1 | Expose the one non-recursive envelope, bounded class matcher, and managed relation adapter for every guest runtime. |
 | `feature/sim-sdk/conformance-contract` | `crate/sim-conformance` | 1 | Run the SDK conformance contract as a checked operational recipe. |
+| `feature/sim-sdk/jvm-composition` | `crate/sim-nest` | 3 | Expose the classfile decoder, bounded JVM profile, source authority, invocation library, bidirectional lambda adapters, recipes, and product specimens through public SDK names. |
 
 ## Surfaces
 
 | Surface | Kind | Subject |
 | --- | --- | --- |
+| `cli/sim` | `cli` | `crate/sim-nest` |
 | `cli/sim-nest` | `cli` | `crate/sim-nest` |
 | `cli/xtask` | `cli` | `crate/xtask` |
 | `docs/sim-sdk/generated` | `docs` | `doc-set/sim-sdk/generated` |
@@ -102,6 +107,13 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 - `recipes/javascript/bounded-module/recipe.toml`
 - `recipes/javascript/bounded-module/setup.rs`
 - `recipes/javascript/chapter.toml`
+- `recipes/jvm/chapter.toml`
+- `recipes/jvm/lambda-interop/purpose.md`
+- `recipes/jvm/lambda-interop/recipe.toml`
+- `recipes/jvm/lambda-interop/setup.rs`
+- `recipes/jvm/product-surface/purpose.md`
+- `recipes/jvm/product-surface/recipe.toml`
+- `recipes/jvm/product-surface/setup.rs`
 - `recipes/music-algorithms/chapter.toml`
 - `recipes/music-algorithms/foundry-plan/README.md`
 - `recipes/music-algorithms/foundry-plan/expected.txt`
@@ -124,6 +136,10 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 - `recipes/serial-music/row-matrix-analysis/purpose.md`
 - `recipes/serial-music/row-matrix-analysis/recipe.toml`
 - `recipes/serial-music/row-matrix-analysis/setup.rs`
+- `recipes/source-authority/chapter.toml`
+- `recipes/source-authority/dynamic-text/purpose.md`
+- `recipes/source-authority/dynamic-text/recipe.toml`
+- `recipes/source-authority/dynamic-text/setup.rs`
 - `recipes/typescript-notation/admitted-notation/purpose.md`
 - `recipes/typescript-notation/admitted-notation/recipe.toml`
 - `recipes/typescript-notation/admitted-notation/setup.rs`
@@ -145,6 +161,110 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 
 ## Worked Examples
 
+### `feature/sim-sdk/source-authority-facade`
+
+Specimen `recipe/sim-sdk/source-authority/dynamic-text` is checked by `xtask check-recipes`.
+
+Source `recipes/source-authority/dynamic-text/recipe.toml`:
+
+```toml
+id = "dynamic-text-source-authority"
+title = "Admit dynamic text with shared source authority"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 10
+tags = ["source", "authority", "read-eval", "capability", "sdk"]
+requires = ["core", "shape", "codec-lisp"]
+```
+
+### `feature/sim-sdk/characterization-facade`
+
+Specimen `spec-test/sim-sdk/tests/characterization` is checked by `cargo test`.
+
+Source `tests/characterization.rs`:
+
+```rust
+// conformance: the SDK facade captures and compares bounded behavioral contracts.
+
+#![cfg(feature = "standard-core")]
+
+use sim::{
+    characterization::{
+        BoundedLane, CanonicalFailure, CanonicalObservation, CanonicalOutcome,
+        CaptureComparisonProjection, CharacterizationCapture, FailureLocation, ScenarioLimits,
+        ScenarioObservationLane, ScenarioSpec, compare_characterization_captures,
+    },
+    kernel::{Datum, Symbol},
+};
+
+fn contract() -> ScenarioSpec {
+    ScenarioSpec::new(
+        Symbol::qualified("example", "parser-contract"),
+        Symbol::qualified("example", "parser-setup/v1"),
+    )
+    .with_limits(ScenarioLimits::new(1, 1))
+    .observing(ScenarioObservationLane::ValueOrFailure)
+}
+
+fn captured(detail: &str, start: usize) -> CharacterizationCapture {
+    CharacterizationCapture::new(
+        Symbol::qualified("example", "stable-fields/v1"),
+        CanonicalObservation {
+            outcome: Some(CanonicalOutcome::Failure(CanonicalFailure {
+                class: Symbol::qualified("example", "parse-error"),
+                detail: Datum::String(detail.to_owned()),
+                location: Some(FailureLocation {
+                    source: Symbol::qualified("fixture", "invalid-input"),
+                    start,
+                    end: start + 1,
+                }),
+            })),
+            events: BoundedLane::Absent,
+            receipts: BoundedLane::Absent,
+            browse: BoundedLane::Absent,
+        },
+    )
+}
+
+#[test]
+fn downstream_migration_compares_only_public_contracts() {
+    let scenario = contract();
+    let projection =
+        CaptureComparisonProjection::new(Symbol::qualified("example", "stable-fields/v1"));
+    let before = captured("unexpected-token", 4);
+
+    let unchanged = compare_characterization_captures(
+        &scenario,
+        &before,
+        &scenario,
+        &captured("unexpected-token", 4),
+        &projection,
+    )
+    .expect("the public contract is comparable");
+    assert!(unchanged.is_same());
+
+    let changed = compare_characterization_captures(
+        &scenario,
+        &before,
+        &scenario,
+        &captured("unexpected-token", 9),
+        &projection,
+    )
+    .expect("a mismatch is returned as data");
+    assert!(!changed.is_same());
+    assert!(
+        changed
+            .differences
+            .iter()
+            .any(|difference| difference.path.ends_with(".location.start"))
+    );
+    assert!(changed.differences.iter().all(|difference| {
+        difference.left != difference.right && difference.path.starts_with('$')
+    }));
+}
+```
+
 ### `feature/sim-sdk/standard-gc-policy`
 
 Specimen `spec-test/sim-sdk/src/gc` is checked by `cargo test`.
@@ -161,6 +281,15 @@ Source `src/gc.rs`:
 // conformance: SDK builds expose and enforce their selected collection policy.
 
 use sim_lib_standard_core::LanguageProfile;
+
+/// Shared heap wrapper and its explicit tracing-or-retain policy.
+#[cfg(feature = "standard-gc-tracing")]
+pub use sim_lib_gc_tracing::{ManagedHeap, ManagedHeapPolicy};
+/// Shared language-neutral arena, node, edge, and retention building blocks.
+pub use sim_lib_mutation::{
+    EdgeId, EdgeLimits, HardCappedRetainPolicy, ManagedArena, ManagedHandle, ManagedId,
+    ManagedNode, ManagedObject, ManagedRole, RoleBearingManagedObject,
+};
 
 /// The managed-object policy selected by this SDK build.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -269,6 +398,22 @@ mod tests {
     };
 
     use super::*;
+
+    #[test]
+    fn sdk_exports_the_shared_managed_node_and_stable_edge_laws() {
+        let mut arena = ManagedArena::new(HardCappedRetainPolicy::new(2).unwrap());
+        let first_target = arena.allocate(ManagedNode::new(())).unwrap().id();
+        let second_target = arena.allocate(ManagedNode::new(())).unwrap().id();
+        let mut node = ManagedNode::with_edge_limits((), EdgeLimits::new(3, 2, 1, 1));
+        let first = node.insert_strong(first_target).unwrap();
+        let removed = node.remove_strong(first, first_target).unwrap();
+        assert_eq!(removed, first_target);
+        let second = node.insert_strong(second_target).unwrap();
+        assert!(
+            second > first,
+            "removed edge identities must never be reused"
+        );
+    }
 
     #[cfg(feature = "standard-gc-tracing")]
     #[derive(Clone, Default)]
@@ -2875,6 +3020,280 @@ fn golden_watch_nil() -> Expr {
 }
 ```
 
+### `feature/sim-sdk/raised-exception-composition`
+
+Specimen `spec-test/sim-sdk/src/lib` is checked by `cargo test`.
+
+Source `src/lib.rs`:
+
+```rust
+//! # sim-nest -- the SIM umbrella crate (imported as `sim`)
+//!
+//! Published on crates.io as **`sim-nest`** (the bare name `sim` is taken), but the
+//! library import identifier is `sim`. Add it as `sim-nest = "0.1"` (or, to make the
+//! rename explicit, `sim = { package = "sim-nest", version = "0.1" }`) and write
+//! `use sim::...` throughout; the `#[sim::sim_lib]` / `#[sim::sim_fn]` proc-macros
+//! resolve against it unchanged. Note: `use sim_nest::...` will NOT resolve -- the
+//! crate's library name is `sim`, so import `sim`, not `sim_nest`.
+//!
+//! SIM is an expandable Rust runtime built around a small protocol kernel plus
+//! a large set of loadable libraries. The kernel defines contracts; libraries
+//! provide behavior. The data flow is:
+//!
+//! ```text
+//! tokens -> checked forms -> objects -> checked calls -> objects -> encoded forms
+//! ```
+//!
+//! SIM is a Rust runtime with multiple codec surfaces. Lisp is one codec, not
+//! the system identity. Everything above the kernel is a lib: syntax, codecs,
+//! classes, functions, number domains, checkers, evaluators, wasm adapters,
+//! loaders, and even the standard language surface. The standard distribution
+//! is just a set of libs loaded by default.
+//!
+//! ## Umbrella role
+//!
+//! This crate (`sim`) is the umbrella and entry point of the SIM constellation.
+//! The implementation crates live in sibling repositories; this crate
+//! aggregates them through optional dependencies and a feature map, re-exports
+//! them under stable module aliases (`sim::kernel`, `sim::shape`,
+//! `sim::codec`, the `sim::codec_*`, `sim::lib_*`, `sim::table_*`, and
+//! `sim::list_*` families). The opt-in `expr-tree` feature exposes the
+//! canonical expression-tree core, calculation, runtime, view, and server
+//! crates without adding a facade-specific builder or policy layer. This
+//! crate also ships the core runtime installer plus the authoring helpers
+//! (`functions`, `classes`, `macros`, `shapes`, and `runtime`, available with
+//! the `shape` feature). The default feature set is `core`, `shape`,
+//! `codec-lisp`, and `numbers-f64`; the canonical, current feature map is this
+//! crate's `Cargo.toml`.
+//!
+//! ## Kernel boundary
+//!
+//! The central discipline is keeping the kernel small. The kernel may define
+//! identity and transport types (`Symbol`, `Expr`, `Value`, `Origin`, `Ref`,
+//! `Datum`, errors, stable ids), coordination types (`Cx`, `Registry`, `Lib`,
+//! `Linker`, `ExportRecord`, capabilities, claim/fact and handle stores, Card
+//! records, operation specs, event/effect ledgers, control policy, rank
+//! metadata), the object/callable/class/shape/factory/eval-policy/
+//! macro-expander behavior contracts, shape match and binding result types, and
+//! the ABI frame and manifest transport shapes. The kernel must not define
+//! concrete Lisp/JSON/Algol parsing, concrete number domains or arithmetic,
+//! concrete help/test/browse implementations, wasm guest behavior above the ABI
+//! transport, or remote transport and agent-product policy. New metadata is
+//! modeled as open `ExportRecord`-style data rather than new closed kernel
+//! enums. Concrete behavior is added as a lib through `Lib`, `Linker`, and
+//! `ExportRecord`.
+//!
+//! ## Load-bearing concepts
+//!
+//! - **`Shape`** is one shared engine for parsing, checking, binding, dispatch,
+//!   macro syntax, codec grammar, lambda locals, and overload selection. It is
+//!   a first-class kernel protocol (object-accessible via `as_shape`, callable
+//!   as a matcher); concrete shape behavior lives in `sim-shape` and other libs.
+//! - **Codecs are first-class runtime objects**, split into independent
+//!   decoders and encoders; encoders know their output position. General-purpose
+//!   expression codecs are total over the shared `Expr` graph and round-trip
+//!   every expression semantically; domain codecs round-trip only their domain
+//!   and fail closed outside it.
+//! - **`realize` and `EvalFabric`** are the location-transparent distributed
+//!   evaluation surface. Server and agent code targets these, never a
+//!   transport-specific API. Evaluation strategy itself is an injectable
+//!   `EvalPolicy` (eager, lazy, need, hybrid, no-op).
+//! - **Capability gating** makes power explicit: read-eval, native dynamic
+//!   loading, and host effects (file, network, clock, random, process) are
+//!   capabilities a host grants. **Read-construct** is the narrower
+//!   capability-gated path that backs Lisp `#(...)` literals; it is distinct
+//!   from broad **read-eval**, which evaluates during decode and is disabled by
+//!   default for untrusted input.
+//! - **Number domains, lists, and tables are pluggable libs**, not kernel
+//!   behavior; codecs delegate numeric literals to the active domains by parse
+//!   priority.
+//! - **Wasm** is a first-class runtime target and the portable plugin ABI.
+//!
+//! ## Embedding
+//!
+//! `runtime::install_core_runtime` (with the `shape` feature) is the entry
+//! point for embedding SIM.
+//! Build a `Cx` with an eval policy and a factory, install the core runtime,
+//! then install codecs and behavior libs through their `install_*` helpers or
+//! directly through `Lib` and `Linker`:
+//!
+//! ```ignore
+//! use std::sync::Arc;
+//! use sim::kernel::{Cx, DefaultFactory, EagerPolicy};
+//! use sim::runtime::install_core_runtime;
+//!
+//! let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+//! install_core_runtime(&mut cx);
+//! // install codecs and libs, then cx.eval_expr(...).
+//! ```
+//!
+//! `install_core_runtime` loads the core runtime through the lib registry and
+//! installs the default number domain(s) for the enabled `numbers-*` features.
+#![deny(unsafe_code)]
+#![deny(missing_docs)]
+#![allow(deprecated)]
+extern crate self as sim;
+
+#[rustfmt::skip]
+#[cfg(any(feature = "femm-assembly", feature = "femm-codec", feature = "femm-core", feature = "femm-fixtures", feature = "femm-field", feature = "femm-flow", feature = "femm-function", feature = "femm-geometry", feature = "femm-material", feature = "femm-mesh", feature = "femm-ode", feature = "femm-physics", feature = "femm-post", feature = "femm-prelude", feature = "femm-sensitiv", feature = "femm-solve", feature = "femm-space", feature = "femm-tape"))]
+pub use femm_exports::*;
+#[rustfmt::skip] #[allow(unused_imports)] pub use numbers_exports::*;
+#[rustfmt::skip] #[allow(unused_imports)] pub use standard_exports::*;
+#[rustfmt::skip]
+#[cfg(any(feature = "server-net-http", feature = "agent-net", feature = "glasses", feature = "openai-server-http", feature = "standard", feature = "rank-codec-fallback", feature = "rank-expr", feature = "rank-learn", feature = "rank-music", feature = "rank-scatter", feature = "stream-bridge", feature = "stream-host"))]
+const _: bool = true;
+#[allow(unused_imports)]
+pub use roadmap11_exports::*;
+#[rustfmt::skip]
+#[cfg(any(feature = "compute-auto", feature = "compute-cli", feature = "compute-cuda", feature = "compute-femm", feature = "compute-model", feature = "compute-rocm", feature = "compute-wgpu"))]
+pub use compute_exports::*;
+#[rustfmt::skip]
+#[cfg(any(feature = "interference-core", feature = "interference-solve", feature = "interference-runtime", feature = "interference-compute", feature = "view-interference"))]
+pub use interference_exports::*;
+#[cfg(feature = "expr-tree")]
+pub use expr_tree_exports::*;
+#[cfg(feature = "agent")]
+pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
+/// Native class authoring helpers: a `Class` implementation plus the lib
+/// wrapper that registers a host-defined class, its constructor, and members.
+#[cfg(all(feature = "core", feature = "shape"))]
+pub mod classes;
+/// Stable SDK surface for capturing behavior before a refactor and comparing it afterward.
+///
+/// Enable the `standard-core` feature, declare a bounded [`ScenarioSpec`], and
+/// record only canonical observations. Publish captures when a content-addressed
+/// evidence identity is required; use [`compare_characterization_captures`] for
+/// a strict comparison whose differences retain stable field paths and both
+/// canonical values.
+#[cfg(feature = "standard-core")]
+pub mod characterization {
+    pub use sim_lib_standard_core::{
+        BoundedLane, CanonicalFailure, CanonicalObservation, CanonicalOutcome, CaptureComparison,
+        CaptureComparisonProjection, CaptureDifference, CharacterizationCapture, FailureLocation,
+        ScenarioInput, ScenarioLimits, ScenarioObservationLane, ScenarioSpec,
+        characterization_capture_kind, characterization_capture_predicate,
+        compare_characterization_captures, publish_characterization_capture,
+    };
+}
+#[rustfmt::skip]
+#[cfg(all(test, feature = "shape", feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-algol", feature = "codec-bridge", feature = "bridge"))]
+mod codec_matrix_tests;
+/// Stable hashing of lib manifests, shapes, and codecs for compatibility
+/// checks across versions of the constellation.
+#[cfg(feature = "core")]
+pub mod compat;
+mod compute_exports;
+#[cfg(feature = "expr-tree")]
+mod expr_tree_exports;
+mod femm_exports;
+/// Shared raised-exception contract for guest runtimes.
+///
+/// A guest obtains a class from its declared class descriptor, constructs
+/// [`Raised`], selects handlers through [`match_raised_class`], and stores
+/// recursive guest relations as stable edges in [`ManagedException`].
+// conformance: the facade exports the canonical raised envelope, matcher, and
+// managed relation adapter without defining a second exception carrier.
+#[cfg(feature = "control")]
+pub mod exceptions {
+    pub use sim_lib_control::{
+        BoundedSubclassOutcome, ClassMatchBudget, ClassMatchEvidence, ClassMatchOutcome,
+        ExceptionGraphBudget, ExceptionGraphEdge, ExceptionGraphView, ManagedException, Raised,
+        RaisedBrowseBudget, RaisedBrowseProjection, RaisedShape, match_raised_class,
+    };
+
+    #[cfg(test)]
+    mod tests {
+        #[allow(unused_imports)]
+        use super::match_raised_class;
+        use super::{ManagedException, Raised};
+
+        #[test]
+        fn exports_envelope_matcher_and_managed_adapter() {
+            let _ = std::any::type_name::<Raised>();
+            let _ = std::any::type_name::<ManagedException<(), ()>>();
+        }
+    }
+}
+/// Function authoring helpers built on the shared `Shape` engine: overload
+/// cases, native function objects, and member-table construction.
+#[cfg(all(feature = "core", feature = "shape"))]
+pub mod functions;
+/// Managed-object collector selection for standard and minimal/test distributions.
+#[cfg(feature = "standard-mutation")]
+pub mod gc;
+mod interference_exports;
+/// Lib loaders for the supported source formats (host, Lisp source, binary
+/// pack, native dynamic library, and wasm) plus the standard loader registry.
+#[cfg(feature = "core")]
+pub mod loaders;
+/// Macro authoring and expansion: the `LispMacro` contract, macro objects, the
+/// registry-backed expander, and shape constructors for macro syntax.
+#[cfg(all(feature = "core", feature = "shape"))]
+pub mod macros;
+mod music_algorithm_exports;
+/// End-to-end music rendering stack that lowers a score to MIDI and renders it
+/// to PCM audio through the sound libs.
+#[cfg(feature = "sound-music")]
+pub mod music_stack;
+mod numbers_exports;
+#[allow(unused_imports)]
+pub use music_algorithm_exports::*;
+mod roadmap11_exports;
+/// Core runtime installer and the embedding entry point that wires classes,
+/// shapes, functions, and the default number domains into a `Cx`.
+#[cfg(all(feature = "core", feature = "shape"))]
+pub mod runtime;
+/// Canonical host-built source admission contracts.
+///
+/// This module presents the shared runtime owner directly. Build one
+/// [`source_authority::SourceAuthority`] in trusted host code, then pass it to
+/// [`source_authority::ReadEvalRequest::new`] or a
+/// [`source_authority::DynamicSourcePolicy`] evaluation method.
+/// Guest-language crates own syntax and semantics, not authority envelopes.
+#[cfg(feature = "core")]
+pub mod source_authority {
+    pub use sim_lib_core::{
+        DynamicSourcePolicy, ReadEvalAdmission, ReadEvalBroker, ReadEvalDecision, ReadEvalOutcome,
+        ReadEvalRequest, ReadEvalSource, RequestOrigin, SourceAuthority,
+    };
+
+    #[cfg(test)]
+    mod tests {
+        use super::{DynamicSourcePolicy, ReadEvalRequest, SourceAuthority};
+
+        #[test]
+        fn exposes_canonical_request_builders_without_a_facade_envelope() {
+            let _ = std::any::type_name::<SourceAuthority>();
+            let _ = std::any::type_name::<ReadEvalRequest>();
+            let _ = std::any::type_name::<DynamicSourcePolicy>();
+        }
+    }
+}
+#[cfg(feature = "serial-music")]
+pub mod serial_music;
+/// Shape authoring helpers: documented and value-backed shape wrappers plus
+/// shape registration and checking utilities.
+#[cfg(all(feature = "core", feature = "shape"))]
+pub mod shapes;
+mod standard_exports;
+#[cfg(feature = "proc-macros")]
+pub use sim_macros::*;
+// The macros' native_export output emits `::sim::codec_binary::{decode_frame,
+// encode_frame}`, so the feature that enables the macros must also expose that
+// module. `proc-macros` pulls `codec-binary`; this contract asserts it, so an
+// edit that drops it fails to compile instead of shipping macros that cannot expand.
+#[cfg(all(feature = "proc-macros", not(feature = "codec-binary")))]
+compile_error!("feature `proc-macros` requires `codec-binary` (macros emit `::sim::codec_binary`)");
+#[cfg(feature = "wasm")]
+pub use sim_wasm_abi as wasm_abi;
+#[cfg(test)]
+mod feature_contract_tests;
+#[cfg(all(test, feature = "music-stack"))]
+mod music_stack_tests;
+#[cfg(all(test, feature = "skill"))]
+mod skill_tests;
+```
+
 ### `feature/sim-sdk/conformance-contract`
 
 Specimen `spec-test/sim-sdk/crates/sim-conformance/tests/spec` is checked by `cargo test`.
@@ -3580,5 +3999,48 @@ fn pcm_item(value: f32) -> sim::lib_stream_core::StreamItem {
     sim::lib_stream_core::StreamItem::new(sim::lib_stream_core::StreamPacket::Pcm(
         sim::lib_stream_core::PcmPacket::f32(1, 1, vec![value]).unwrap(),
     ))
+}
+```
+
+### `feature/sim-sdk/jvm-composition`
+
+Specimen `recipe/sim-sdk/jvm/product-surface` is checked by `xtask check-recipes`.
+
+Source `recipes/jvm/product-surface/recipe.toml`:
+
+```toml
+title = "Reach the JVM product surface through the SDK"
+kind = "rust"
+entry = "setup.rs"
+required_features = ["standard-jvm"]
+```
+
+Specimen `recipe/sim-sdk/jvm/lambda-interop` is checked by `xtask check-recipes`.
+
+Source `recipes/jvm/lambda-interop/recipe.toml`:
+
+```toml
+title = "Reach both JVM lambda interop directions"
+kind = "rust"
+entry = "setup.rs"
+required_features = ["standard-jvm"]
+```
+
+Specimen `spec-test/sim-sdk/tests/jvm_exports` is checked by `cargo test`.
+
+Source `tests/jvm_exports.rs`:
+
+```rust
+// conformance: the standard JVM facade exports the complete public front door.
+
+#![cfg(feature = "standard-jvm")]
+
+#[test]
+fn sdk_exports_the_complete_jvm_front_door() {
+    let _ = std::any::type_name::<sim::codec_classfile::ClassShell>();
+    let _ = sim::lib_lang_jvm::jvm_language_profile();
+    let _ = std::any::type_name::<sim::source_authority::SourceAuthority>();
+    let _ = std::any::type_name::<sim::lib_lang_jvm::JvmLanguageLib>();
+    let _ = std::any::type_name::<sim::lib_lang_jvm::JvmProductSpecimen>();
 }
 ```

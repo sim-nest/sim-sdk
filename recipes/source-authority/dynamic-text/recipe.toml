@@ -1,0 +1,8 @@
+id = "dynamic-text-source-authority"
+title = "Admit dynamic text with shared source authority"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 10
+tags = ["source", "authority", "read-eval", "capability", "sdk"]
+requires = ["core", "shape", "codec-lisp"]

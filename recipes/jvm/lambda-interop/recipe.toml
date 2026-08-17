@@ -1,0 +1,4 @@
+title = "Reach both JVM lambda interop directions"
+kind = "rust"
+entry = "setup.rs"
+required_features = ["standard-jvm"]
