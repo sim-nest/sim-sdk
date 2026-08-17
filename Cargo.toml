@@ -244,7 +244,7 @@ sim-lib-stream-file = { optional = true, version = "0.1.2" }
 sim-lib-stream-host = { optional = true, version = "0.1.7" }
 sim-lib-stream-viture = { optional = true, version = "0.2.0" }
 sim-lib-stream-wrist = { optional = true, version = "0.1.2" }
-sim-lib-stream-wristbridge = { optional = true, version = "0.1.1" }
+sim-lib-stream-wristbridge = { optional = true, version = "0.1.2" }
 sim-lib-stream-xr = { optional = true, version = "0.1.2" }
 sim-lib-stream-jack = { optional = true, version = "0.1.2" }
 sim-lib-stream-midi = { optional = true, version = "0.1.2" }
