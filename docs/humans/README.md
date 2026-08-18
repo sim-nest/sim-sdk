@@ -3029,93 +3029,63 @@ Source `src/lib.rs`:
 ```rust
 //! # sim-nest -- the SIM umbrella crate (imported as `sim`)
 //!
-//! Published on crates.io as **`sim-nest`** (the bare name `sim` is taken), but the
-//! library import identifier is `sim`. Add it as `sim-nest = "0.1"` (or, to make the
-//! rename explicit, `sim = { package = "sim-nest", version = "0.1" }`) and write
-//! `use sim::...` throughout; the `#[sim::sim_lib]` / `#[sim::sim_fn]` proc-macros
-//! resolve against it unchanged. Note: `use sim_nest::...` will NOT resolve -- the
-//! crate's library name is `sim`, so import `sim`, not `sim_nest`.
+//! Published on crates.io as **`sim-nest`** (the bare name `sim` is taken), while
+//! its library import identifier is `sim`. Depend on `sim-nest` and write
+//! `use sim::...`; `use sim_nest::...` does not resolve. The `#[sim::sim_lib]`
+//! and `#[sim::sim_fn]` macros use the same stable import identifier.
 //!
-//! SIM is an expandable Rust runtime built around a small protocol kernel plus
-//! a large set of loadable libraries. The kernel defines contracts; libraries
-//! provide behavior. The data flow is:
+//! SIM is an expandable Rust runtime built around a small protocol kernel and
+//! loadable libraries. Its data flow is:
 //!
 //! ```text
 //! tokens -> checked forms -> objects -> checked calls -> objects -> encoded forms
 //! ```
 //!
-//! SIM is a Rust runtime with multiple codec surfaces. Lisp is one codec, not
-//! the system identity. Everything above the kernel is a lib: syntax, codecs,
-//! classes, functions, number domains, checkers, evaluators, wasm adapters,
-//! loaders, and even the standard language surface. The standard distribution
-//! is just a set of libs loaded by default.
+//! Lisp is one codec, not the system identity. Syntax, codecs, classes,
+//! functions, number domains, checkers, evaluators, wasm adapters, loaders, and
+//! the standard language surface are libraries loaded above the kernel.
 //!
 //! ## Umbrella role
 //!
-//! This crate (`sim`) is the umbrella and entry point of the SIM constellation.
-//! The implementation crates live in sibling repositories; this crate
-//! aggregates them through optional dependencies and a feature map, re-exports
-//! them under stable module aliases (`sim::kernel`, `sim::shape`,
-//! `sim::codec`, the `sim::codec_*`, `sim::lib_*`, `sim::table_*`, and
-//! `sim::list_*` families). The opt-in `expr-tree` feature exposes the
-//! canonical expression-tree core, calculation, runtime, view, and server
-//! crates without adding a facade-specific builder or policy layer. This
-//! crate also ships the core runtime installer plus the authoring helpers
-//! (`functions`, `classes`, `macros`, `shapes`, and `runtime`, available with
-//! the `shape` feature). The default feature set is `core`, `shape`,
-//! `codec-lisp`, and `numbers-f64`; the canonical, current feature map is this
-//! crate's `Cargo.toml`.
+//! This crate aggregates the constellation's implementation crates through an
+//! optional-dependency feature map and re-exports stable aliases including
+//! `sim::kernel`, `sim::shape`, `sim::codec`, and the `codec_*`, `lib_*`,
+//! `table_*`, and `list_*` families. The opt-in `expr-tree` feature exposes the
+//! canonical expression-tree crates without adding facade policy. Authoring
+//! helpers (`functions`, `classes`, `macros`, `shapes`, and `runtime`) are
+//! available with `shape`. The canonical feature map is in `Cargo.toml`.
 //!
 //! ## Kernel boundary
 //!
-//! The central discipline is keeping the kernel small. The kernel may define
-//! identity and transport types (`Symbol`, `Expr`, `Value`, `Origin`, `Ref`,
-//! `Datum`, errors, stable ids), coordination types (`Cx`, `Registry`, `Lib`,
-//! `Linker`, `ExportRecord`, capabilities, claim/fact and handle stores, Card
-//! records, operation specs, event/effect ledgers, control policy, rank
-//! metadata), the object/callable/class/shape/factory/eval-policy/
-//! macro-expander behavior contracts, shape match and binding result types, and
-//! the ABI frame and manifest transport shapes. The kernel must not define
-//! concrete Lisp/JSON/Algol parsing, concrete number domains or arithmetic,
-//! concrete help/test/browse implementations, wasm guest behavior above the ABI
-//! transport, or remote transport and agent-product policy. New metadata is
-//! modeled as open `ExportRecord`-style data rather than new closed kernel
-//! enums. Concrete behavior is added as a lib through `Lib`, `Linker`, and
-//! `ExportRecord`.
+//! The kernel owns identity and transport types, coordination types such as
+//! `Cx`, `Registry`, `Lib`, `Linker`, and `ExportRecord`, capabilities, stores,
+//! ledgers, control policy, object/callable/class/shape/factory/evaluation
+//! contracts, match results, and ABI transport shapes. It does not own concrete
+//! language or codec parsing, number domains, arithmetic, user-facing help and
+//! browse behavior, guest behavior above ABI transport, or product policy.
+//! Extensible metadata remains open `ExportRecord`-style data; concrete
+//! behavior is installed through `Lib`, `Linker`, and `ExportRecord`.
 //!
 //! ## Load-bearing concepts
 //!
-//! - **`Shape`** is one shared engine for parsing, checking, binding, dispatch,
-//!   macro syntax, codec grammar, lambda locals, and overload selection. It is
-//!   a first-class kernel protocol (object-accessible via `as_shape`, callable
-//!   as a matcher); concrete shape behavior lives in `sim-shape` and other libs.
-//! - **Codecs are first-class runtime objects**, split into independent
-//!   decoders and encoders; encoders know their output position. General-purpose
-//!   expression codecs are total over the shared `Expr` graph and round-trip
-//!   every expression semantically; domain codecs round-trip only their domain
-//!   and fail closed outside it.
-//! - **`realize` and `EvalFabric`** are the location-transparent distributed
-//!   evaluation surface. Server and agent code targets these, never a
-//!   transport-specific API. Evaluation strategy itself is an injectable
-//!   `EvalPolicy` (eager, lazy, need, hybrid, no-op).
-//! - **Capability gating** makes power explicit: read-eval, native dynamic
-//!   loading, and host effects (file, network, clock, random, process) are
-//!   capabilities a host grants. **Read-construct** is the narrower
-//!   capability-gated path that backs Lisp `#(...)` literals; it is distinct
-//!   from broad **read-eval**, which evaluates during decode and is disabled by
-//!   default for untrusted input.
-//! - **Number domains, lists, and tables are pluggable libs**, not kernel
-//!   behavior; codecs delegate numeric literals to the active domains by parse
-//!   priority.
-//! - **Wasm** is a first-class runtime target and the portable plugin ABI.
+//! - **`Shape`** is the shared engine for parsing, checking, binding, dispatch,
+//!   macro syntax, codec grammar, lambda locals, and overload selection.
+//! - **Codecs are first-class runtime objects**, split into decoders and
+//!   position-aware encoders. General codecs round-trip every shared `Expr`;
+//!   domain codecs fail closed outside the domain they accept.
+//! - **`realize` and `EvalFabric`** provide location-transparent distributed
+//!   evaluation. Evaluation strategy is an injectable `EvalPolicy`.
+//! - **Capabilities make power explicit.** Read-construct is the narrow path
+//!   behind Lisp `#(...)`; it is distinct from broad read-eval, which remains
+//!   disabled by default for untrusted input.
+//! - **Number domains, lists, and tables are pluggable libraries.**
+//! - **Wasm is a first-class runtime target and portable plugin ABI.**
 //!
 //! ## Embedding
 //!
-//! `runtime::install_core_runtime` (with the `shape` feature) is the entry
-//! point for embedding SIM.
-//! Build a `Cx` with an eval policy and a factory, install the core runtime,
-//! then install codecs and behavior libs through their `install_*` helpers or
-//! directly through `Lib` and `Linker`:
+//! `runtime::install_core_runtime` is the embedding entry point when `shape` is
+//! enabled. Build a `Cx`, install the core runtime, then install codecs and
+//! behavior libraries through their helpers or through `Lib` and `Linker`:
 //!
 //! ```ignore
 //! use std::sync::Arc;
@@ -3124,11 +3094,10 @@ Source `src/lib.rs`:
 //!
 //! let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
 //! install_core_runtime(&mut cx);
-//! // install codecs and libs, then cx.eval_expr(...).
 //! ```
 //!
-//! `install_core_runtime` loads the core runtime through the lib registry and
-//! installs the default number domain(s) for the enabled `numbers-*` features.
+//! The installer loads the registry-backed core and enabled default number
+//! domains; applications then add only the libraries their distribution needs.
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
 #![allow(deprecated)]
