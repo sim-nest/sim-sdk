@@ -51,6 +51,7 @@ sim-citizen = { optional = true, version = "0.2.0" }
 sim-citizen-derive = { optional = true, version = "0.2.0" }
 sim-run-loaders = { optional = true, version = "0.2.0", default-features = false }
 sim-run-core = { optional = true, version = "0.3.1" }
+sim-lib-platform = { optional = true, version = "0.1.0" }
 sim-lib-repl = { optional = true, version = "0.3.1" }
 sim-web-shell = { optional = true, version = "0.1.12", default-features = false }
 sim-codec = { optional = true, version = "0.1.8" }
@@ -327,6 +328,7 @@ cookbook-all = ["cookbook", "shape", "citizen", "bridge", "codec-algol", "codec-
 core = ["dep:sim-kernel", "dep:sim-value", "dep:sim-lib-core", "dep:sim-run-loaders"]
 daw-session = ["dep:sim-lib-daw-session", "audio-graph-live", "plugin-core", "stream-audio", "topology-core"]
 default = ["core", "shape", "codec-lisp", "numbers-f64"]
+platform = ["dep:sim-lib-platform"]
 device = ["device-reference", "cookbook"]
 device-reference = ["dep:sim-lib-stream-device", "dep:sim-lib-view-device", "dep:sim-lib-web-bridge", "core"]
 glasses = ["glasses-modeled"]

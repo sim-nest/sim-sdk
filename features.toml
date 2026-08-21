@@ -393,6 +393,16 @@ steps = [
   { feature = "feature/sim-sdk/raised-exception-composition", why = "The SDK row exposes those canonical contracts together under sim::exceptions." },
 ]
 
+[[feature]]
+id = "feature/sim-sdk/platform-composition"
+title = "Provider-neutral platform SDK"
+summary = "Re-export platform records, requirement builders, and provider-author contracts behind one non-default feature."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable platform to author requirements or providers through canonical sim-platform types. Concrete capsules remain distribution choices and are intentionally absent from the facade and its default closure."
+claims_anchors = ["anchor/crate/sim-nest"]
+presents = ["feature/sim-platform/product-membrane"]
+
 [[route]]
 id = "route/compose-gpu-math-from-sdk"
 task = "Compose GPU math from the SDK"

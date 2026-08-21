@@ -74,6 +74,21 @@
 #![allow(deprecated)]
 extern crate self as sim;
 
+#[cfg(feature = "serve-cli")]
+/// Process adapter for the optional SDK facade binary.
+pub mod facade_cli;
+
+#[cfg(feature = "platform")]
+/// Provider-neutral platform records and authoring contracts.
+pub mod platform {
+    pub use sim_lib_platform::{
+        Activation, BoundServices, BundleManifest, CapsuleManifest, ContractProvenance,
+        ExecutionEvidence, FactPort, Lifecycle, OpenSymbol, PlatformCard, PlatformProviderAuthor,
+        PlatformRecordError, PlatformRequest, RefusalKind, Requirement, RequirementBuilder,
+        ResolutionReceipt, ResolutionRefusal, ServiceBinding, ServiceOffer, platform_require,
+    };
+}
+
 #[rustfmt::skip]
 #[cfg(any(feature = "femm-assembly", feature = "femm-codec", feature = "femm-core", feature = "femm-fixtures", feature = "femm-field", feature = "femm-flow", feature = "femm-function", feature = "femm-geometry", feature = "femm-material", feature = "femm-mesh", feature = "femm-ode", feature = "femm-physics", feature = "femm-post", feature = "femm-prelude", feature = "femm-sensitiv", feature = "femm-solve", feature = "femm-space", feature = "femm-tape"))]
 pub use femm_exports::*;
