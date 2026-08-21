@@ -366,7 +366,7 @@ title = "JVM SDK composition"
 summary = "Expose the classfile decoder, bounded JVM profile, source authority, invocation library, bidirectional lambda adapters, recipes, and product specimens through public SDK names."
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
-guidance = "Enable standard-jvm and use sim::codec_classfile, sim::lib_lang_jvm, and sim::source_authority. Java lambdas and method references link from caller-supplied classfile bytes into loader-local managed metadata; SIM callables enter Java only with jvm.functional-adapter. The facade re-exports the canonical owners directly and adds no JVM, decoder, authority, loader, host closure, overload ranker, generated classfile, function organ, cache, or execution policy."
+guidance = "Enable standard-jvm and construct sim::lib_lang_jvm::JvmExecutionRequest with authority-resolved classfile bytes, exact class, member, descriptor, and integer arguments. JvmSurface::execute_i32 returns distinct value, Java throwable, and refusal lanes. Java lambdas and method references link from caller-supplied classfile bytes into loader-local managed metadata; SIM callables enter Java only with jvm.functional-adapter. The facade re-exports the canonical owners directly and adds no JVM, decoder, authority, loader, host closure, overload ranker, generated classfile, function organ, cache, or execution policy."
 claims_anchors = ["anchor/rustdoc/sim-nest/lib_lang_jvm"]
 claims_specimens = [
   "recipe/sim-sdk/jvm/product-surface",
