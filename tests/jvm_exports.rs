@@ -21,8 +21,17 @@ fn sdk_exports_caller_selected_jvm_execution() {
         descriptor: "(II)I".into(),
         arguments: vec![8, 2],
     };
+    let surface = sim::lib_lang_jvm::JvmSurface::new(1 << 20);
     assert!(matches!(
-        sim::lib_lang_jvm::JvmSurface::new(1 << 20).execute_i32(&mut cx, request),
+        surface.execute_i32(&mut cx, request),
         sim::lib_lang_jvm::JvmExecutionOutcome::Value(20)
     ));
+    let (preparation, drive) = surface
+        .last_drive_receipts()
+        .expect("SDK invocation must reach the prepared machine driver");
+    assert_eq!(surface.decode_count(), 1);
+    assert_eq!(preparation.instructions, drive.work.len());
+    assert!(!drive.work.is_empty());
+    assert!(drive.cleaned_up);
+    assert_eq!(surface.live_frame_leases(), 0);
 }
