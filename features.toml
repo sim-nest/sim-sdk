@@ -97,7 +97,7 @@ title = "Facade runtime entry point"
 summary = "Boot the public SIM facade and expose its command plus reversible view surface."
 owner = "crate/sim-nest"
 audiences = ["user", "code"]
-guidance = "Use this row when starting from the SDK facade instead of an implementation crate."
+guidance = "Enable platform and pass the same platform-composed PureBootEnvelope used by sim-run to platform::sdk_load_plan. The facade directly exposes the canonical plan and adds no SDK loader, target registration, provider selection, or fallback policy."
 claims_anchors = [
   "anchor/card/citizen/view/lens-descriptor",
   "anchor/cli/sim-nest",

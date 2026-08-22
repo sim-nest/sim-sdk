@@ -149,10 +149,13 @@ fn process_adapter_is_binary_only_and_host_tool_is_classified() {
     let manifest = fs::read_to_string(root.join("Cargo.toml")).expect("read SDK manifest");
     for target in ["native_dynamic", "proc_macro_compile_fail"] {
         let declaration = format!("name = \"{target}\"");
-        let offset = manifest.find(&declaration).expect("host test target is declared");
-        let target_block = &manifest[offset..manifest[offset..]
-            .find("\n\n")
-            .map_or(manifest.len(), |end| offset + end)];
+        let offset = manifest
+            .find(&declaration)
+            .expect("host test target is declared");
+        let target_block = &manifest[offset
+            ..manifest[offset..]
+                .find("\n\n")
+                .map_or(manifest.len(), |end| offset + end)];
         assert!(
             target_block.contains("required-features"),
             "host test {target} must be excluded from the default package closure"
