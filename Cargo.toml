@@ -98,6 +98,11 @@ sim-lib-discrete = { optional = true, version = "0.1.5" }
 sim-lib-discrete-search = { optional = true, version = "=0.1.1" }
 sim-lib-dispatch = { optional = true, version = "0.1.4" }
 sim-lib-exec = { optional = true, version = "0.1.0" }
+sim-estate-core = { optional = true, version = "0.1.0" }
+sim-estate-project = { optional = true, version = "0.1.0" }
+sim-lib-estate = { optional = true, version = "0.1.0" }
+sim-lib-estate-serve = { optional = true, version = "0.1.0" }
+sim-site-estate-model = { optional = true, version = "0.1.0" }
 sim-lib-expr-tree = { optional = true, version = "0.2.0" }
 sim-lib-expr-tree-server = { optional = true, version = "0.2.0" }
 sim-lib-forge = { optional = true, version = "0.1.2" }
@@ -259,6 +264,7 @@ sim-lib-view-bridge = { optional = true, version = "0.1.2" }
 sim-lib-view-codec = { optional = true, version = "0.1.3" }
 sim-lib-view-daw = { optional = true, version = "0.1.1" }
 sim-lib-view-device = { optional = true, version = "0.1.0" }
+sim-lib-view-estate = { optional = true, version = "0.1.0" }
 sim-lib-view-doc = { optional = true, version = "0.1.3" }
 sim-lib-view-expr-tree = { optional = true, version = "0.2.0" }
 sim-lib-view-interference = { optional = true, version = "0.1.0" }
@@ -328,6 +334,9 @@ cookbook-all = ["cookbook", "shape", "citizen", "bridge", "codec-algol", "codec-
 core = ["dep:sim-kernel", "dep:sim-value", "dep:sim-lib-core", "dep:sim-run-loaders"]
 daw-session = ["dep:sim-lib-daw-session", "audio-graph-live", "plugin-core", "stream-audio", "topology-core"]
 default = ["core", "shape", "codec-lisp", "numbers-f64"]
+estate = ["dep:sim-estate-core", "dep:sim-estate-project", "dep:sim-lib-estate", "dep:sim-lib-estate-serve"]
+estate-provider-model = ["estate", "dep:sim-site-estate-model"]
+estate-view = ["estate", "view", "dep:sim-lib-view-estate"]
 platform = ["dep:sim-lib-platform"]
 device = ["device-reference", "cookbook"]
 device-reference = ["dep:sim-lib-stream-device", "dep:sim-lib-view-device", "dep:sim-lib-web-bridge", "core"]

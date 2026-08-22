@@ -453,3 +453,17 @@ steps = [
   { specimen = "recipe/sim-sdk/serial-music/index-discovery", why = "The index recipe proves the generated feature and route ids are discoverable from the SDK repo surface." },
   { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/serial_music", why = "The public-facade conformance specimen checks reversibility, recipe parity, fail-closed behavior, and the feature claim." },
 ]
+[[feature]]
+id = "feature/sim-sdk/estate-facade"
+title = "Portable estate SDK facade"
+summary = "Opt-in features re-export estate core, authoring, organ, projection, provider, and Surface crates without enabling private controller bindings by default."
+owner = "crate/sim-nest"
+audience = "framework"
+guidance = "Enable estate for the portable core and organ, estate-view for Surface composition, and estate-provider-model only for host-free provider tests."
+claims_anchors = ["anchor/crate/sim-nest"]
+
+[[route]]
+id = "route/embed-estate-through-sdk"
+task = "Embed portable estate behavior"
+audience = "application"
+steps = [{ feature = "feature/sim-sdk/estate-facade", why = "Select only the portable facade features required by the embedding application." }]

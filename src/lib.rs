@@ -74,6 +74,20 @@
 #![allow(deprecated)]
 extern crate self as sim;
 
+/// Portable estate vocabulary, exposure compiler, organ, projection, and calls.
+/// Concrete controller bindings are intentionally absent; providers are opt-in.
+#[cfg(feature = "estate")]
+pub mod estate {
+    pub use sim_estate_core as core;
+    pub use sim_estate_project as project;
+    pub use sim_lib_estate as organ;
+    pub use sim_lib_estate_serve as serve;
+    #[cfg(feature = "estate-view")]
+    pub use sim_lib_view_estate as view;
+    #[cfg(feature = "estate-provider-model")]
+    pub use sim_site_estate_model as provider_model;
+}
+
 #[cfg(feature = "platform")]
 /// Provider-neutral platform records and authoring contracts.
 pub mod platform {
