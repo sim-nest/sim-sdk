@@ -595,6 +595,19 @@ name = "sim"
 path = "src/bin/sim.rs"
 required-features = ["serve-cli"]
 
+# Process-spawning compiler and native-loader acceptance is deliberately kept in
+# opt-in host test targets. Neither target participates in the SDK library or its
+# default feature closure.
+[[test]]
+name = "native_dynamic"
+path = "tests/native_dynamic.rs"
+required-features = ["dynamic-native", "proc-macros"]
+
+[[test]]
+name = "proc_macro_compile_fail"
+path = "tests/proc_macro_compile_fail.rs"
+required-features = ["proc-macros"]
+
 [[example]]
 name = "codec_roundtrip"
 required-features = ["core", "shape", "codec-lisp", "codec-json", "codec-binary", "numbers-prelude"]

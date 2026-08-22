@@ -74,10 +74,6 @@
 #![allow(deprecated)]
 extern crate self as sim;
 
-#[cfg(feature = "serve-cli")]
-/// Process adapter for the optional SDK facade binary.
-pub mod facade_cli;
-
 #[cfg(feature = "platform")]
 /// Provider-neutral platform records and authoring contracts.
 pub mod platform {

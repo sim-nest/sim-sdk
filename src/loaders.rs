@@ -15,13 +15,20 @@ pub mod native {
         NativeDylibLoader, encode_native_manifest_response, validate_native_abi_header,
     };
 }
-pub use registry::{HostLoader, standard_loader_registry, standard_loader_registry_with_sources};
+pub use registry::{
+    HostLoader, platform_loader_registry, standard_loader_registry,
+    standard_loader_registry_with_sources,
+};
 #[cfg(feature = "wasm")]
 pub use registry::{
     standard_loader_registry_with_wasm, standard_loader_registry_with_wasm_and_sources,
 };
 #[cfg(feature = "codec-lisp")]
 pub use sim_run_loaders::LispSourceLoader;
+pub use sim_run_loaders::{
+    LoadOutcome, LoadRequest, LoaderKind, LoaderPort, PortLoader, StaticRegistry, is_static_source,
+    static_artifact, static_source,
+};
 pub use sim_run_loaders::{ReexportKind, ReexportSpec};
 #[cfg(feature = "wasm")]
 pub use sim_run_loaders::{WasmLoader, wasm_load_capability};

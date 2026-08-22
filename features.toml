@@ -396,10 +396,10 @@ steps = [
 [[feature]]
 id = "feature/sim-sdk/platform-composition"
 title = "Provider-neutral platform SDK"
-summary = "Re-export platform records, requirement builders, and provider-author contracts behind one non-default feature."
+summary = "Re-export platform records, requirement builders, provider-author contracts, and the portable LoaderPort facade behind non-default features."
 owner = "crate/sim-nest"
 audiences = ["code", "framework"]
-guidance = "Enable platform to author requirements or providers through canonical sim-platform types. Concrete capsules remain distribution choices and are intentionally absent from the facade and its default closure."
+guidance = "Enable platform to author requirements or providers through canonical sim-platform types. With core enabled, construct loaders::platform_loader_registry from the LoaderPort installed by the selected platform capsule; source and package realization then stays behind that port. Concrete capsules remain distribution choices and are intentionally absent from the facade and its default closure. The optional sim facade binary is a bootstrap target, while xtask and native packaging acceptance are host-tool surfaces rather than SDK library behavior."
 claims_anchors = ["anchor/crate/sim-nest"]
 presents = ["feature/sim-platform/product-membrane"]
 

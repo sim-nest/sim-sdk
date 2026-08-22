@@ -1,5 +1,4 @@
 use std::path::PathBuf;
-#[cfg(all(feature = "codec-binary", feature = "codec-lisp", feature = "shape"))]
 use std::sync::Arc;
 #[cfg(all(feature = "codec-binary", feature = "codec-lisp", feature = "shape"))]
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -14,6 +13,56 @@ use super::support::{
 };
 #[cfg(all(feature = "codec-binary", feature = "codec-lisp", feature = "shape"))]
 use super::support::{TickCallable, cx_with_lisp_codec};
+
+struct ModelPort(sim_run_loaders::StaticRegistry);
+
+impl sim_run_loaders::LoaderPort for ModelPort {
+    fn loader_kinds(&self) -> Vec<sim_run_loaders::LoaderKind> {
+        vec![sim_run_loaders::LoaderKind::new(Symbol::qualified(
+            "loader",
+            "static-v1",
+        ))]
+    }
+
+    fn realize(
+        &self,
+        _: &mut sim_kernel::Cx,
+        request: sim_run_loaders::LoadRequest,
+    ) -> sim_kernel::Result<sim_run_loaders::LoadOutcome> {
+        let artifact = sim_run_loaders::static_artifact(&request.source)?
+            .ok_or_else(|| sim_kernel::Error::HostError("expected modeled static source".into()))?;
+        self.0.realize(&artifact)
+    }
+
+    fn inspect(
+        &self,
+        _: &mut sim_kernel::Cx,
+        request: &sim_run_loaders::LoadRequest,
+    ) -> sim_kernel::Result<Option<sim_kernel::LibManifest>> {
+        let artifact = sim_run_loaders::static_artifact(&request.source)?
+            .ok_or_else(|| sim_kernel::Error::HostError("expected modeled static source".into()))?;
+        Ok(Some(self.0.realize(&artifact)?.manifest))
+    }
+}
+
+#[test]
+fn platform_registry_routes_exact_artifacts_through_loader_port() {
+    let registry = sim_run_loaders::StaticRegistry::default();
+    let artifact = Symbol::qualified("artifact", "portable-sdk-test");
+    registry.register(artifact.clone(), || {
+        Box::new(StubLib {
+            symbol: Symbol::qualified("lib", "portable-sdk-test"),
+        })
+    });
+    let mut cx = cx();
+    let loaded = crate::loaders::platform_loader_registry(Arc::new(ModelPort(registry)))
+        .load_lib(&mut cx, sim_run_loaders::static_source(artifact))
+        .expect("platform port realizes exact static artifact");
+    assert_eq!(
+        loaded.manifest().id,
+        Symbol::qualified("lib", "portable-sdk-test")
+    );
+}
 
 #[test]
 fn host_loader_accepts_host_source() {

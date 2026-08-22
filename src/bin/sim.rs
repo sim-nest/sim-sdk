@@ -1,3 +1,6 @@
+#[path = "../facade_cli.rs"]
+mod facade_cli;
+
 fn main() -> std::process::ExitCode {
-    sim::facade_cli::process_main()
+    facade_cli::process_main()
 }

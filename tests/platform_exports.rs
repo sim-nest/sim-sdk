@@ -18,3 +18,11 @@ fn exports_requirement_builder_and_provider_contract_without_capsules() {
             .contains("platform")
     );
 }
+
+#[test]
+fn exports_portable_loader_contract_without_a_concrete_capsule() {
+    let _ = std::any::type_name::<dyn sim::loaders::LoaderPort>();
+    let manifest = include_str!("../Cargo.toml");
+    assert!(!manifest.contains("sim-platform-ubuntu-pc"));
+    assert!(!manifest.contains("sim-platform-model"));
+}
