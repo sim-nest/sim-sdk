@@ -152,6 +152,18 @@ pub use interference_exports::*;
 pub use expr_tree_exports::*;
 #[cfg(feature = "agent")]
 pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
+/// Stable opt-in provider control facade. This is intentionally excluded from
+/// the minimal/default SDK feature set.
+#[cfg(feature = "provider")]
+pub mod provider {
+    pub use sim_lib_provider::{
+        AuthMetadata, AuthMethod, AuthOwner, CensusEvidence, CensusRow, CensusState,
+        CredentialSource, Fanout, FanoutMode, FanoutReport, FanoutRow, FanoutSeat, FanoutStatus,
+        ProviderFamilyCard, ProviderInventory, ProviderRegistry, ProviderSeatCard,
+        ProviderSeatConfig, ProviderSeatId, SessionStatus, TermsAcknowledgement, discover,
+        families, open, seats, show_family, show_seat,
+    };
+}
 /// Native class authoring helpers: a `Class` implementation plus the lib
 /// wrapper that registers a host-defined class, its constructor, and members.
 #[cfg(all(feature = "core", feature = "shape"))]
