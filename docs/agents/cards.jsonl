@@ -50,6 +50,7 @@
 {"kind":"recipe","path":"recipes/javascript/bounded-module/recipe.toml"}
 {"kind":"recipe","path":"recipes/javascript/bounded-module/setup.rs"}
 {"kind":"recipe","path":"recipes/javascript/chapter.toml"}
+{"kind":"recipe","path":"recipes/jvm/StaticInt.hex"}
 {"kind":"recipe","path":"recipes/jvm/chapter.toml"}
 {"kind":"recipe","path":"recipes/jvm/lambda-interop/purpose.md"}
 {"kind":"recipe","path":"recipes/jvm/lambda-interop/recipe.toml"}

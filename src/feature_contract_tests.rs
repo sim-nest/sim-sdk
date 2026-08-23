@@ -306,7 +306,7 @@ fn r12_logic_feature_implications_stay_wired() {
 }
 
 #[rustfmt::skip] const MCP_STREAM_DEPS: &[&str] = &["mcp", "stream-core", "stream-fabric", "stream-combinators", "sim-lib-mcp/stream", "sim-lib-mcp/progress"];
-#[rustfmt::skip] const MCP_HTTP_DEPS: &[&str] = &["mcp-stream", "server", "server-net-http", "sim-lib-mcp/http"];
+#[rustfmt::skip] const MCP_HTTP_DEPS: &[&str] = &["mcp-stream", "server", "server-net-http", "dep:sim-lib-mcp-http"];
 const MCP_SAMPLING_DEPS: &[&str] = &["mcp", "agent-runner-core", "sim-lib-mcp/sampling"];
 
 #[test]
@@ -315,10 +315,31 @@ fn g6_mcp_feature_implications_stay_wired() {
     let cases: &[(&str, &[&str])] = &[
         ("mcp", &["dep:sim-lib-mcp", "codec-mcp", "core", "shape"]),
         ("mcp-skill", &["mcp", "skill", "sim-lib-mcp/skill"]),
-        ("mcp-stdio", &["mcp", "sim-lib-mcp/stdio"]),
+        (
+            "mcp-stdio",
+            &["mcp", "sim-lib-mcp/stdio", "dep:sim-lib-mcp-stdio"],
+        ),
         ("mcp-stream", MCP_STREAM_DEPS),
         ("mcp-http", MCP_HTTP_DEPS),
-        ("mcp-client", &["mcp-skill", "sim-lib-mcp/client"]),
+        ("mcp-legacy", &["mcp", "dep:sim-lib-mcp-legacy"]),
+        (
+            "mcp-oauth",
+            &[
+                "mcp-http",
+                "dep:sim-lib-oauth-core",
+                "dep:sim-lib-oauth-http",
+                "dep:sim-lib-oauth-jose",
+            ],
+        ),
+        (
+            "mcp-protected-state",
+            &["mcp", "dep:sim-lib-protected-state"],
+        ),
+        ("mcp-cancellation", &["mcp", "dep:sim-cancel"]),
+        (
+            "mcp-client",
+            &["mcp-skill", "sim-lib-mcp/client", "dep:sim-lib-mcp-client"],
+        ),
         ("mcp-sampling", MCP_SAMPLING_DEPS),
         ("mcp-cassette", &["mcp", "sim-lib-mcp/cassette"]),
         ("mcp-binary", &["mcp-stdio"]),

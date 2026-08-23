@@ -337,15 +337,16 @@ presents = [
 [[feature]]
 id = "feature/sim-sdk/conformance-contract"
 title = "Conformance contract"
-summary = "Run the SDK conformance contract as a checked operational recipe."
+summary = "Run one typed MCP vector authority bidirectionally across direct, compatibility, real transport, product, and runtime projections."
 owner = "crate/sim-conformance"
 audiences = ["code", "framework"]
-guidance = "Use this row when verifying that a facade-facing runtime satisfies the public contract."
+guidance = "Define MCP expectations only as ConformanceVector values, then adapt each applicable codec, service, legacy, stdio, HTTP JSON/SSE, OAuth, protected-state, cache, cancellation, product, and runtime surface to VectorRunner. Keep exhaustive dimensions small and use deterministic fake time/network for metamorphic permutations and hostile budgets."
 claims_anchors = [
   "anchor/crate/sim-conformance",
 ]
 claims_specimens = [
   "spec-test/sim-sdk/crates/sim-conformance/tests/spec",
+  "spec-test/sim-sdk/crates/sim-conformance/tests/mcp_vectors",
 ]
 
 [[route]]
@@ -458,12 +459,12 @@ id = "feature/sim-sdk/estate-facade"
 title = "Portable estate SDK facade"
 summary = "Opt-in features re-export estate core, authoring, organ, projection, provider, and Surface crates without enabling private controller bindings by default."
 owner = "crate/sim-nest"
-audience = "framework"
+audiences = ["framework"]
 guidance = "Enable estate for the portable core and organ, estate-view for Surface composition, and estate-provider-model only for host-free provider tests."
 claims_anchors = ["anchor/crate/sim-nest"]
 
 [[route]]
 id = "route/embed-estate-through-sdk"
 task = "Embed portable estate behavior"
-audience = "application"
+audiences = ["code"]
 steps = [{ feature = "feature/sim-sdk/estate-facade", why = "Select only the portable facade features required by the embedding application." }]

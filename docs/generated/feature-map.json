@@ -617,6 +617,33 @@
         },
         {
           "edges": [
+            "dep:sim-estate-core",
+            "dep:sim-estate-project",
+            "dep:sim-lib-estate",
+            "dep:sim-lib-estate-serve"
+          ],
+          "name": "estate",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "estate",
+            "dep:sim-site-estate-model"
+          ],
+          "name": "estate-provider-model",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "estate",
+            "view",
+            "dep:sim-lib-view-estate"
+          ],
+          "name": "estate-view",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-exec",
             "core"
           ],
@@ -1095,6 +1122,14 @@
         {
           "edges": [
             "mcp",
+            "dep:sim-cancel"
+          ],
+          "name": "mcp-cancellation",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
             "sim-lib-mcp/cassette"
           ],
           "name": "mcp-cassette",
@@ -1103,7 +1138,8 @@
         {
           "edges": [
             "mcp-skill",
-            "sim-lib-mcp/client"
+            "sim-lib-mcp/client",
+            "dep:sim-lib-mcp-client"
           ],
           "name": "mcp-client",
           "workspace_edges": []
@@ -1113,9 +1149,35 @@
             "mcp-stream",
             "server",
             "server-net-http",
-            "sim-lib-mcp/http"
+            "dep:sim-lib-mcp-http"
           ],
           "name": "mcp-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "dep:sim-lib-mcp-legacy"
+          ],
+          "name": "mcp-legacy",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp-http",
+            "dep:sim-lib-oauth-core",
+            "dep:sim-lib-oauth-http",
+            "dep:sim-lib-oauth-jose"
+          ],
+          "name": "mcp-oauth",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "dep:sim-lib-protected-state"
+          ],
+          "name": "mcp-protected-state",
           "workspace_edges": []
         },
         {
@@ -1139,7 +1201,8 @@
         {
           "edges": [
             "mcp",
-            "sim-lib-mcp/stdio"
+            "sim-lib-mcp/stdio",
+            "dep:sim-lib-mcp-stdio"
           ],
           "name": "mcp-stdio",
           "workspace_edges": []
@@ -1930,6 +1993,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-platform"
+          ],
+          "name": "platform",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-plugin-clap",
             "plugin-core",
             "audio-dsp"
@@ -1971,6 +2041,13 @@
             "codec-binary"
           ],
           "name": "proc-macros",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-provider"
+          ],
+          "name": "provider",
           "workspace_edges": []
         },
         {

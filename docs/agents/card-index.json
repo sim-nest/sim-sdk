@@ -53,6 +53,7 @@
     "recipes/javascript/bounded-module/recipe.toml",
     "recipes/javascript/bounded-module/setup.rs",
     "recipes/javascript/chapter.toml",
+    "recipes/jvm/StaticInt.hex",
     "recipes/jvm/chapter.toml",
     "recipes/jvm/lambda-interop/purpose.md",
     "recipes/jvm/lambda-interop/recipe.toml",

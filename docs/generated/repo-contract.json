@@ -3028,7 +3028,7 @@
   "package_count": 3,
   "packages": [
     {
-      "crate_name": "agents30",
+      "crate_name": "sim_conformance",
       "dependencies": [
         {
           "kind": "dev",
@@ -3045,11 +3045,22 @@
       "name": "sim-conformance",
       "publish": "false",
       "root": "crates/sim-conformance",
-      "rustdoc_summary": "Executable conformance tests for SIM architecture claims.",
+      "rustdoc_summary": "One typed truth source for bidirectional MCP conformance runners.",
       "target_kinds": [
+        "lib",
         "test"
       ],
       "targets": [
+        {
+          "crate_types": [
+            "lib"
+          ],
+          "kind": [
+            "lib"
+          ],
+          "name": "sim_conformance",
+          "src": "crates/sim-conformance/src/lib.rs"
+        },
         {
           "crate_types": [
             "bin"
@@ -3099,6 +3110,16 @@
           ],
           "name": "lib_lifecycle",
           "src": "crates/sim-conformance/tests/lib_lifecycle.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "mcp_vectors",
+          "src": "crates/sim-conformance/tests/mcp_vectors.rs"
         },
         {
           "crate_types": [
@@ -3756,6 +3777,33 @@
         },
         {
           "edges": [
+            "dep:sim-estate-core",
+            "dep:sim-estate-project",
+            "dep:sim-lib-estate",
+            "dep:sim-lib-estate-serve"
+          ],
+          "name": "estate",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "estate",
+            "dep:sim-site-estate-model"
+          ],
+          "name": "estate-provider-model",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "estate",
+            "view",
+            "dep:sim-lib-view-estate"
+          ],
+          "name": "estate-view",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-exec",
             "core"
           ],
@@ -4234,6 +4282,14 @@
         {
           "edges": [
             "mcp",
+            "dep:sim-cancel"
+          ],
+          "name": "mcp-cancellation",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
             "sim-lib-mcp/cassette"
           ],
           "name": "mcp-cassette",
@@ -4242,7 +4298,8 @@
         {
           "edges": [
             "mcp-skill",
-            "sim-lib-mcp/client"
+            "sim-lib-mcp/client",
+            "dep:sim-lib-mcp-client"
           ],
           "name": "mcp-client",
           "workspace_edges": []
@@ -4252,9 +4309,35 @@
             "mcp-stream",
             "server",
             "server-net-http",
-            "sim-lib-mcp/http"
+            "dep:sim-lib-mcp-http"
           ],
           "name": "mcp-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "dep:sim-lib-mcp-legacy"
+          ],
+          "name": "mcp-legacy",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp-http",
+            "dep:sim-lib-oauth-core",
+            "dep:sim-lib-oauth-http",
+            "dep:sim-lib-oauth-jose"
+          ],
+          "name": "mcp-oauth",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "mcp",
+            "dep:sim-lib-protected-state"
+          ],
+          "name": "mcp-protected-state",
           "workspace_edges": []
         },
         {
@@ -4278,7 +4361,8 @@
         {
           "edges": [
             "mcp",
-            "sim-lib-mcp/stdio"
+            "sim-lib-mcp/stdio",
+            "dep:sim-lib-mcp-stdio"
           ],
           "name": "mcp-stdio",
           "workspace_edges": []
@@ -5069,6 +5153,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-platform"
+          ],
+          "name": "platform",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-plugin-clap",
             "plugin-core",
             "audio-dsp"
@@ -5110,6 +5201,13 @@
             "codec-binary"
           ],
           "name": "proc-macros",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-provider"
+          ],
+          "name": "provider",
           "workspace_edges": []
         },
         {
@@ -6392,6 +6490,16 @@
           "kind": [
             "test"
           ],
+          "name": "platform_exports",
+          "src": "tests/platform_exports.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "proc_macro_compile_fail",
           "src": "tests/proc_macro_compile_fail.rs"
         },
@@ -6404,6 +6512,16 @@
           ],
           "name": "proc_macros",
           "src": "tests/proc_macros.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "provider_facade",
+          "src": "tests/provider_facade.rs"
         },
         {
           "crate_types": [
@@ -6620,10 +6738,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "a5df8c18cd49ab2437eaebcc99776d0b1c2cc7e2",
+    "git_commit": "12aec14f13a2f81210cda98d43b72442139d60e7",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "a5df8c18cd49ab2437eaebcc99776d0b1c2cc7e2",
+    "source_commit": "12aec14f13a2f81210cda98d43b72442139d60e7",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6636,20 +6754,22 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "cbc2f38cd4656cdf",
+    "workspace_hash": "1c13ecfc2b9bcfed",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 251,
+    "workspace_hash_input_count": 254,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
       "crates/sim-conformance/recipes/01-basics/run-contract/recipe.toml",
       "crates/sim-conformance/recipes/book.toml",
+      "crates/sim-conformance/src/lib.rs",
       "crates/sim-conformance/tests/agents30.rs",
       "crates/sim-conformance/tests/atelier_self_hosting.rs",
       "crates/sim-conformance/tests/cli_boot.rs",
       "crates/sim-conformance/tests/conformance_support/mod.rs",
       "crates/sim-conformance/tests/core_primitives.rs",
       "crates/sim-conformance/tests/lib_lifecycle.rs",
+      "crates/sim-conformance/tests/mcp_vectors.rs",
       "crates/sim-conformance/tests/no_direct_kernel_imports.rs",
       "crates/sim-conformance/tests/placement_matrix.rs",
       "crates/sim-conformance/tests/shape_grammar.rs",
@@ -6719,6 +6839,7 @@
       "src/compat.rs",
       "src/compute_exports.rs",
       "src/expr_tree_exports.rs",
+      "src/facade_cli.rs",
       "src/feature_contract_tests/cfg_sentinels.rs",
       "src/feature_contract_tests/facade_thinness.rs",
       "src/feature_contract_tests/glasses.rs",

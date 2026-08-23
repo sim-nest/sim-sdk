@@ -145,6 +145,15 @@ sim-lib-lang-scheme = { optional = true, version = "0.1.7" }
 sim-lib-lang-typed-lazy = { optional = true, version = "0.1.5" }
 sim-lib-logic = { optional = true, version = "0.1.5" }
 sim-lib-mcp = { optional = true, version = "0.1.9" }
+sim-lib-mcp-client = { optional = true, version = "0.1.0" }
+sim-lib-mcp-http = { optional = true, version = "0.1.0" }
+sim-lib-mcp-legacy = { optional = true, version = "0.1.0" }
+sim-lib-mcp-stdio = { optional = true, version = "0.1.0" }
+sim-lib-oauth-core = { optional = true, version = "0.1.0" }
+sim-lib-oauth-http = { optional = true, version = "0.1.0" }
+sim-lib-oauth-jose = { optional = true, version = "0.1.0" }
+sim-lib-protected-state = { optional = true, version = "0.1.0" }
+sim-cancel = { optional = true, version = "0.1.0" }
 sim-lib-midi-ble = { optional = true, version = "0.1.5" }
 sim-lib-midi-core = { optional = true, version = "0.1.5" }
 sim-lib-midi-live = { optional = true, version = "0.1.3" }
@@ -403,11 +412,15 @@ logic-wasm = ["logic-core", "wasm"]
 mcp = ["dep:sim-lib-mcp", "codec-mcp", "core", "shape"]
 mcp-binary = ["mcp-stdio"]
 mcp-cassette = ["mcp", "sim-lib-mcp/cassette"]
-mcp-client = ["mcp-skill", "sim-lib-mcp/client"]
-mcp-http = ["mcp-stream", "server", "server-net-http", "sim-lib-mcp/http"]
+mcp-client = ["mcp-skill", "sim-lib-mcp/client", "dep:sim-lib-mcp-client"]
+mcp-http = ["mcp-stream", "server", "server-net-http", "dep:sim-lib-mcp-http"]
+mcp-legacy = ["mcp", "dep:sim-lib-mcp-legacy"]
+mcp-oauth = ["mcp-http", "dep:sim-lib-oauth-core", "dep:sim-lib-oauth-http", "dep:sim-lib-oauth-jose"]
+mcp-protected-state = ["mcp", "dep:sim-lib-protected-state"]
+mcp-cancellation = ["mcp", "dep:sim-cancel"]
 mcp-sampling = ["mcp", "agent-runner-core", "sim-lib-mcp/sampling"]
 mcp-skill = ["mcp", "skill", "sim-lib-mcp/skill"]
-mcp-stdio = ["mcp", "sim-lib-mcp/stdio"]
+mcp-stdio = ["mcp", "sim-lib-mcp/stdio", "dep:sim-lib-mcp-stdio"]
 mcp-stream = ["mcp", "stream-core", "stream-fabric", "stream-combinators", "sim-lib-mcp/stream", "sim-lib-mcp/progress"]
 midi = ["midi-core", "midi-smf", "midi-live", "midi-sysex", "midi-shapes"]
 midi-ble = ["dep:sim-lib-midi-ble", "midi-rtmidi", "stream-host", "core"]
