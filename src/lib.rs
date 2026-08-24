@@ -132,6 +132,38 @@ pub mod platform {
     }
 }
 
+/// Direct, provider-replaceable relational assembly surface.
+///
+/// Raw logical plans are admitted by [`plan`] before reaching [`site`]. The
+/// checked plan and migration types remain opaque, and provider preparation
+/// artifacts are deliberately not re-exported. Enable `relation-sqlite` only
+/// when the SQLite capsule is part of the application.
+#[cfg(feature = "relation")]
+pub mod relation {
+    /// Open domains, typed cells, rows, and relational identities.
+    pub use sim_relation_core as core;
+    /// Checked adoption and migration programs.
+    pub use sim_relation_migrate as migrate;
+    /// Raw relational algebra, admission, and read-only checked-plan views.
+    pub use sim_relation_plan as plan;
+    /// Logical and normalized physical schemas plus their raw builders.
+    pub use sim_relation_schema as schema;
+    /// Runtime Shapes for cells, rows, and relational records.
+    pub use sim_relation_shape as shapes;
+    /// Provider-neutral placement, sessions, bounded effects, and receipts.
+    pub use sim_relation_site as site;
+    /// Standard Table/Dir paths and operation protocol.
+    pub use sim_table_core as table;
+    /// Mounted Table/Dir namespace composition.
+    pub use sim_table_mount as mount;
+    /// Relation-backed Table and Dir adapters.
+    pub use sim_table_relation as table_relation;
+
+    /// The sole SQL provider capsule; its prepared SQL remains private to it.
+    #[cfg(feature = "relation-sqlite")]
+    pub use sim_platform_sqlite as sqlite;
+}
+
 #[rustfmt::skip]
 #[cfg(any(feature = "femm-assembly", feature = "femm-codec", feature = "femm-core", feature = "femm-fixtures", feature = "femm-field", feature = "femm-flow", feature = "femm-function", feature = "femm-geometry", feature = "femm-material", feature = "femm-mesh", feature = "femm-ode", feature = "femm-physics", feature = "femm-post", feature = "femm-prelude", feature = "femm-sensitiv", feature = "femm-solve", feature = "femm-space", feature = "femm-tape"))]
 pub use femm_exports::*;

@@ -240,6 +240,16 @@ sim-lib-plugin-core = { optional = true, version = "0.1.3" }
 sim-lib-plugin-lv2 = { optional = true, version = "0.1.3" }
 sim-lib-plugin-vst3 = { optional = true, version = "0.1.3" }
 sim-lib-rank = { optional = true, version = "0.1.4" }
+sim-relation-core = { optional = true, version = "0.1.0" }
+sim-relation-schema = { optional = true, version = "0.1.0" }
+sim-relation-plan = { optional = true, version = "0.1.0" }
+sim-relation-migrate = { optional = true, version = "0.1.0" }
+sim-relation-site = { optional = true, version = "0.1.0" }
+sim-relation-shape = { optional = true, version = "0.1.0" }
+sim-table-core = { optional = true, version = "0.1.4" }
+sim-table-relation = { optional = true, version = "0.1.0" }
+sim-table-mount = { optional = true, version = "0.1.1" }
+sim-platform-sqlite = { optional = true, version = "0.1.0" }
 sim-lib-scene = { optional = true, version = "0.2.0" }
 sim-lib-serial-core = { optional = true, version = "=0.1.0" }
 sim-lib-sequence = { optional = true, version = "0.1.4" }
@@ -517,6 +527,8 @@ plugin-lv2 = ["dep:sim-lib-plugin-lv2", "plugin-core", "audio-dsp"]
 plugin-vst3 = ["dep:sim-lib-plugin-vst3", "plugin-core", "audio-dsp"]
 proc-macros = ["dep:sim-macros", "core", "shape", "codec-binary"]
 rank = ["dep:sim-lib-rank", "core"]
+relation = ["dep:sim-relation-core", "dep:sim-relation-schema", "dep:sim-relation-plan", "dep:sim-relation-migrate", "dep:sim-relation-site", "dep:sim-relation-shape", "dep:sim-table-core", "dep:sim-table-relation", "dep:sim-table-mount", "shape", "core"]
+relation-sqlite = ["relation", "dep:sim-platform-sqlite"]
 rank-codec-fallback = ["rank", "sim-lib-rank/rank-codec-fallback"]
 rank-expr = ["rank", "sim-lib-rank/rank-expr"]
 rank-learn = ["rank", "sim-lib-rank/rank-learn"]

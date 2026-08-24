@@ -1,0 +1,4 @@
+title = "Admit custom-domain CRUD through the relational SDK"
+kind = "rust"
+entry = "setup.rs"
+required_features = ["relation"]

@@ -369,6 +369,35 @@ supports = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/relation-composition"
+title = "Direct relational SDK composition"
+summary = "Expose the canonical relational model, admission, migration, Shape, bounded site, SQLite capsule, and Table/Dir assembly without a parallel facade model."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable `relation` for provider-neutral plans and effects, then add `relation-sqlite` only when that capsule is selected. Build raw plans through sim::relation::plan, admit them once, and pass the opaque checked view unchanged to a selected sim::relation::site. SQL preparation remains capsule-private."
+claims_anchors = ["anchor/rustdoc/sim-nest/relation"]
+claims_specimens = [
+  "spec-test/sim-sdk/tests/relation_exports",
+  "recipe/sim-sdk/relation/custom-domain-crud",
+  "recipe/sim-sdk/relation/exact-old-file-adoption",
+  "recipe/sim-sdk/relation/additive-migration",
+  "recipe/sim-sdk/relation/correlated-query",
+  "recipe/sim-sdk/relation/multi-source-aggregate",
+  "recipe/sim-sdk/relation/bounded-refusal",
+  "recipe/sim-sdk/relation/mounted-directory",
+]
+
+[[route]]
+id = "route/compose-relations-from-sdk"
+task = "Compose a replaceable relational lifecycle from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/relation-composition", why = "The SDK exposes each canonical owner behind one provider-neutral feature boundary." },
+  { specimen = "spec-test/sim-sdk/tests/relation_exports", why = "One admitted logical request runs unchanged through a recording site and SQLite." },
+  { specimen = "recipe/sim-sdk/relation/custom-domain-crud", why = "The recipe starts the complete custom-domain lifecycle using SDK paths only." },
+]
+
+[[feature]]
 id = "feature/sim-sdk/raised-exception-composition"
 title = "Raised exception SDK composition"
 summary = "Expose the one non-recursive envelope, bounded class matcher, and managed relation adapter for every guest runtime."
