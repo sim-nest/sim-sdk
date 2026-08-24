@@ -51,6 +51,25 @@ claims_anchors = ["anchor/rustdoc/sim-nest/study"]
 presents = ["feature/sim-runtime/domain-free-study-lifecycle"]
 
 [[feature]]
+id = "feature/sim-sdk/model-test-facade"
+title = "Opt-in model observatory facade"
+summary = "Expose the canonical model-test domain and loadable product behind one granular non-default SDK feature."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable model-test and import sim::model_test. The feature composes the canonical study and provider contracts but adds no provider authority, credentials, runner, scheduler, statistics, or model inventory, and it is absent from the minimal facade."
+claims_anchors = ["anchor/rustdoc/sim-nest/model_test"]
+presents = ["feature/sim-agent-net/model-test-product"]
+
+[[route]]
+id = "route/compose-model-observatory-from-sdk"
+task = "Compose the provider-neutral model observatory from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/model-test-facade", why = "The granular feature exposes the canonical observatory without changing the minimal facade." },
+  { feature = "feature/sim-agent-net/model-test-product", why = "The owning product supplies command semantics, offline projections, and deterministic evidence export." },
+]
+
+[[feature]]
 id = "feature/sim-sdk/source-authority-facade"
 title = "Shared source-authority facade"
 summary = "Build diminished source requests through the canonical runtime authority, broker, and dynamic policy without guest-specific admission envelopes."

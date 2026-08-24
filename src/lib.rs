@@ -169,6 +169,12 @@ pub mod provider {
 pub mod study {
     pub use sim_lib_study::*;
 }
+
+/// Model observatory types and its loadable product command.
+#[cfg(feature = "model-test")]
+pub mod model_test {
+    pub use sim_lib_model_test::*;
+}
 /// Native class authoring helpers: a `Class` implementation plus the lib
 /// wrapper that registers a host-defined class, its constructor, and members.
 #[cfg(all(feature = "core", feature = "shape"))]

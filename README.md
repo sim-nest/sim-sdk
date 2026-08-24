@@ -9,6 +9,12 @@ Just want to run SIM? Install the `sim` command from `sim-run`
 (`cargo install sim-run`) and see `sim-say` -- you do not need this crate to use
 SIM, only to build against it.
 
+Enable the non-default `model-test` feature to re-export the canonical model
+observatory as `sim::model_test`. It composes the granular `study` and
+`provider` facades and remains absent from the minimal facade; it adds no
+provider authority, credentials, runner, scheduler, statistics, or private
+model inventory.
+
 The opt-in `estate` feature exports the portable estate core, authoring, organ,
 and serving facade. `estate-view` adds the Surface facade and
 `estate-provider-model` adds the deterministic provider; private bindings and
