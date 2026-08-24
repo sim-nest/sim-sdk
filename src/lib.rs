@@ -152,6 +152,18 @@ pub use interference_exports::*;
 pub use expr_tree_exports::*;
 #[cfg(feature = "agent")]
 pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
+/// Pure, codec-stable agent conduct records and durable lifecycle contracts.
+#[cfg(feature = "agent-conduct-core")]
+pub mod agent_conduct_core {
+    pub use sim_lib_agent_conduct_core::*;
+}
+/// Certified topology-backed agent conducts and the shipped conduct catalog.
+#[cfg(feature = "agent-conduct")]
+pub mod agent_conduct {
+    pub use sim_lib_agent_conduct::*;
+}
+#[cfg(feature = "topology-core")]
+pub use sim_lib_topology as lib_topology;
 /// Stable opt-in provider control facade. This is intentionally excluded from
 /// the minimal/default SDK feature set.
 #[cfg(feature = "provider")]

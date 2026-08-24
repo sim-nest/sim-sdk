@@ -81,7 +81,9 @@ sim-cookbook = { optional = true, version = "0.2.0" }
 sim-expr-tree-calc = { optional = true, version = "0.2.0" }
 sim-expr-tree-core = { optional = true, version = "=0.1.0" }
 sim-kernel = { optional = true, version = "0.2.1" }
-sim-lib-agent = { optional = true, version = "0.1.16" }
+sim-lib-agent = { optional = true, version = "0.1.18" }
+sim-lib-agent-conduct = { optional = true, version = "0.1.0" }
+sim-lib-agent-conduct-core = { optional = true, version = "0.1.1" }
 sim-lib-agent-runner-core = { optional = true, version = "0.2.0" }
 sim-lib-agent-runner-http = { optional = true, version = "0.2.0" }
 sim-lib-agent-runner-process = { optional = true, version = "0.1.5" }
@@ -315,6 +317,8 @@ wat = "1.245.1"
 [features]
 web-search = ["dep:sim-lib-net-http", "dep:sim-lib-web-core", "dep:sim-lib-search-core", "dep:sim-lib-web-fetch", "dep:sim-lib-search-http", "dep:sim-lib-search", "dep:sim-lib-doc-web", "dep:sim-lib-view-search", "rank"]
 agent = ["dep:sim-lib-agent", "server"]
+agent-conduct-core = ["dep:sim-lib-agent-conduct-core", "core"]
+agent-conduct = ["dep:sim-lib-agent-conduct", "agent-conduct-core"]
 agent-net = ["agent", "sim-lib-agent/agent-net"]
 agent-runner-core = ["dep:sim-lib-agent-runner-core", "core"]
 agent-runner-http = ["dep:sim-lib-agent-runner-http", "dep:sim-lib-agent", "sim-lib-agent/runner-http", "agent-runner-core", "agent"]

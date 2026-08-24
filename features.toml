@@ -519,3 +519,12 @@ id = "route/embed-estate-through-sdk"
 task = "Embed portable estate behavior"
 audiences = ["code"]
 steps = [{ feature = "feature/sim-sdk/estate-facade", why = "Select only the portable facade features required by the embedding application." }]
+[[feature]]
+id = "feature/sim-sdk/agent-conduct-composition"
+title = "Agent conduct composition facade"
+summary = "Opt into pure conduct records or certified topology-backed conduct packages through direct canonical re-exports."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable agent-conduct-core for durable records and lifecycle contracts, or agent-conduct for the certified topology catalog. The facade adds no wrapper; combine agent and topology-core for standard Cards and package parsing."
+claims_anchors = ["anchor/crate/sim-nest"]
+claims_specimens = ["spec-test/sim-sdk/tests/agent_conduct_exports"]
