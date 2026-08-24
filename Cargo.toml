@@ -52,6 +52,14 @@ sim-citizen-derive = { optional = true, version = "0.2.0" }
 sim-run-loaders = { optional = true, version = "0.2.0", default-features = false }
 sim-run-core = { optional = true, version = "0.3.1" }
 sim-lib-platform = { optional = true, version = "0.1.0" }
+sim-lib-net-http = { optional = true, version = "0.1.0" }
+sim-lib-web-core = { optional = true, version = "0.1.0" }
+sim-lib-search-core = { optional = true, version = "0.1.0" }
+sim-lib-web-fetch = { optional = true, version = "0.1.0" }
+sim-lib-search-http = { optional = true, version = "0.1.0" }
+sim-lib-search = { optional = true, version = "0.1.0" }
+sim-lib-doc-web = { optional = true, version = "0.1.0" }
+sim-lib-view-search = { optional = true, version = "0.1.0" }
 sim-lib-repl = { optional = true, version = "0.3.1" }
 sim-web-shell = { optional = true, version = "0.1.12", default-features = false }
 sim-codec = { optional = true, version = "0.1.8" }
@@ -305,6 +313,7 @@ sim-kernel = { version = "0.2.1", features = ["test-support"] }
 wat = "1.245.1"
 
 [features]
+web-search = ["dep:sim-lib-net-http", "dep:sim-lib-web-core", "dep:sim-lib-search-core", "dep:sim-lib-web-fetch", "dep:sim-lib-search-http", "dep:sim-lib-search", "dep:sim-lib-doc-web", "dep:sim-lib-view-search", "rank"]
 agent = ["dep:sim-lib-agent", "server"]
 agent-net = ["agent", "sim-lib-agent/agent-net"]
 agent-runner-core = ["dep:sim-lib-agent-runner-core", "core"]

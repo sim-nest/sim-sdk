@@ -41,6 +41,28 @@ claims_surfaces = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/web-search-facade"
+title = "Network-free web research facade and conformance"
+summary = "Expose neutral HTTP, web, search, fetch, rank, office-evidence, and audit-view contracts behind one opt-in SDK feature, with a caller-owned fake-world proof."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable web-search and compose the reexported stable records and host traits. Provider-specific DTOs remain private to their codec; the default conformance fixture owns every input byte and opens no socket."
+claims_anchors = ["anchor/rustdoc/sim-nest/web_search"]
+claims_specimens = ["spec-test/sim-sdk/crates/sim-conformance/tests/web_search_offline", "recipe/sim-sdk/web-search/configured-searxng"]
+presents = ["feature/sim-agent-net/reproducible-federated-research", "feature/sim-web/search-audit-surface"]
+
+[[route]]
+id = "route/sdk-search-research-audit"
+task = "Run sim search research through deterministic conformance to the audit view"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-run/search-command", why = "The bootloader selects the canonical search product." },
+  { feature = "feature/sim-sdk/web-search-facade", why = "The SDK composes the stable public contracts and checked fake-world fixture." },
+  { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/web_search_offline", why = "The fixture proves network-free query-to-citation replay and attack boundaries." },
+  { feature = "feature/sim-web/search-audit-surface", why = "The inert view exposes ranking, capture, selector, office, and policy evidence." },
+]
+
+[[feature]]
 id = "feature/sim-sdk/study-facade"
 title = "Opt-in generic study facade"
 summary = "Expose the canonical study lifecycle, staged design, report graph, selection, and command contracts behind one granular feature."
