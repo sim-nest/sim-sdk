@@ -153,6 +153,7 @@ sim-lib-oauth-core = { optional = true, version = "0.1.0" }
 sim-lib-oauth-http = { optional = true, version = "0.1.0" }
 sim-lib-oauth-jose = { optional = true, version = "0.1.0" }
 sim-lib-protected-state = { optional = true, version = "0.1.0" }
+sim-lib-study = { optional = true, version = "0.1.0" }
 sim-cancel = { optional = true, version = "0.1.0" }
 sim-lib-midi-ble = { optional = true, version = "0.1.5" }
 sim-lib-midi-core = { optional = true, version = "0.1.5" }
@@ -518,6 +519,7 @@ server-net-http = ["server", "sim-lib-server/server-net-http"]
 shape = ["dep:sim-shape", "core", "sim-run-loaders?/shape"]
 skill = ["dep:sim-lib-skill", "core", "shape", "codec-json"]
 skill-agent = ["skill", "agent", "sim-lib-skill/agent"]
+study = ["dep:sim-lib-study"]
 skill-cache = ["skill", "sim-lib-skill/cache"]
 skill-cassette = ["skill", "sim-lib-skill/cassette"]
 skill-http = ["skill", "sim-lib-skill/http"]

@@ -164,6 +164,11 @@ pub mod provider {
         families, open, seats, show_family, show_seat,
     };
 }
+/// Domain-neutral durable study lifecycle, design, decision, and command product.
+#[cfg(feature = "study")]
+pub mod study {
+    pub use sim_lib_study::*;
+}
 /// Native class authoring helpers: a `Class` implementation plus the lib
 /// wrapper that registers a host-defined class, its constructor, and members.
 #[cfg(all(feature = "core", feature = "shape"))]

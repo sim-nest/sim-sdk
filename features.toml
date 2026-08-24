@@ -41,6 +41,16 @@ claims_surfaces = [
 ]
 
 [[feature]]
+id = "feature/sim-sdk/study-facade"
+title = "Opt-in generic study facade"
+summary = "Expose the canonical study lifecycle, staged design, report graph, selection, and command contracts behind one granular feature."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable study and import sim::study. This is a direct facade over sim-lib-study; it adds no journal, statistics, executor, model, or selection policy."
+claims_anchors = ["anchor/rustdoc/sim-nest/study"]
+presents = ["feature/sim-runtime/domain-free-study-lifecycle"]
+
+[[feature]]
 id = "feature/sim-sdk/source-authority-facade"
 title = "Shared source-authority facade"
 summary = "Build diminished source requests through the canonical runtime authority, broker, and dynamic policy without guest-specific admission envelopes."
