@@ -714,6 +714,26 @@ claims_anchors = ["anchor/crate/sim-nest"]
 claims_specimens = ["spec-test/sim-sdk/tests/validate_flock_pack", "recipe/sim-sdk/stewardship/calm-flock-care"]
 supports = ["feature/sim-sdk/taste-led-kitchen-pack"]
 
+[[feature]]
+id = "feature/sim-sdk/private-observation-pack"
+title = "Voluntary erasable private observation"
+summary = "Compose opt-in exact observations, explicit missingness and concurrency, sealed private storage, and reviewable export without medical inference or advice."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/private-observation/pack.toml only after explicit activation and opt into each field separately. Sum only entered exact events under reviewed unit rules. Keep missing and concurrent changes visible. Lock, revoke, or destroy the managed sealed generation to remove plaintext access; export only after preview and confirmation."
+claims_anchors = ["anchor/crate/sim-nest"]
+claims_specimens = ["spec-test/sim-sdk/tests/validate_private_observation_pack", "recipe/sim-sdk/stewardship/private-observation"]
+
+[[route]]
+id = "route/compose-private-observation-pack"
+task = "Keep, review, export, or erase voluntary private observations"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/private-observation-pack", why = "Use the closed voluntary data contract and sealed lane while leaving every field absent unless Mia opts in." },
+  { specimen = "recipe/sim-sdk/stewardship/private-observation", why = "Inspect a networkless exact entry and locally encrypted export preview." },
+  { specimen = "spec-test/sim-sdk/tests/validate_private_observation_pack", why = "Prove closed operations, missingness, concurrency, sealed erasure semantics, and explicit export acknowledgement." },
+]
+
 [[route]]
 id = "route/compose-calm-flock-care-pack"
 task = "Care for a flock without measuring its worth"

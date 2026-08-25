@@ -1,0 +1,27 @@
+schema = "sim.stewardship-private-observation-cases/v1"
+
+[[sum_case]]
+id = "entered-matching-units"
+events = ["1/2 tablet", "1/4 tablet"]
+expected = ["3/4 tablet"]
+missing = []
+
+[[sum_case]]
+id = "missing-stays-missing"
+events = ["1 tablet"]
+missing = ["dose-event:evening"]
+expected = ["1 tablet"]
+
+[[sum_case]]
+id = "units-stay-separate"
+events = ["1 tablet", "5 ml"]
+expected = ["1 tablet", "5 ml"]
+missing = []
+
+[[concurrent_case]]
+id = "competing-corrections-visible"
+field = "dose-event:morning"
+base_generation = "g1"
+left = "1 tablet"
+right = "2 tablet"
+expected_visible = 2
