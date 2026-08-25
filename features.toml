@@ -67,6 +67,16 @@ task = "Compose a switched-boundary physics solve, audit, verdict, and finding p
 steps = [{ feature = "feature/sim-sdk/layered-physics-facade", why = "Select the audit and findings closures without pulling adapter or provider stacks." }, { specimen = "recipe/sim-sdk/physics/switched-audit", why = "Inspect the complete composition and unresolved/certified verdict boundary." }]
 
 [[feature]]
+id = "feature/sim-sdk/media-edge-music-vertical"
+title = "Media-edge music SDK composition"
+summary = "Expose the owning music route plan and exact stream-host effect adapters behind one opt-in vertical feature."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable music-vertical and use sim::music_vertical; this facade composes the existing owner contracts and adds no generic command API or automation authority."
+claims_anchors = ["anchor/rustdoc/sim-nest/music-vertical"]
+presents = ["feature/sim-music/media-edge-vertical", "feature/sim-stream-host/named-music-effects"]
+
+[[feature]]
 id = "feature/sim-sdk/generated-docs"
 title = "Repository documentation surface"
 summary = "Publish generated package, card, recipe, and index facts for the SDK facade and conformance crate."

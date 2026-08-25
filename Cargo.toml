@@ -645,6 +645,7 @@ stream-coreaudio = ["dep:sim-lib-stream-coreaudio", "audio-graph-core", "stream-
 stream-fabric = ["dep:sim-lib-stream-fabric", "stream-core"]
 stream-file = ["dep:sim-lib-stream-file", "stream-audio", "stream-midi", "midi-smf"]
 stream-host = ["dep:sim-lib-stream-host", "stream-midi", "sim-lib-stream-host/rtp-midi"]
+music-vertical = ["music-core", "stream-host"]
 stream-jack = ["dep:sim-lib-stream-jack", "audio-graph-core", "stream-audio", "stream-clock", "stream-host"]
 stream-midi = ["dep:sim-lib-stream-midi", "stream-core", "midi-core"]
 stream-pipewire = ["dep:sim-lib-stream-pipewire", "audio-graph-core", "stream-audio", "stream-host"]

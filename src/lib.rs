@@ -274,6 +274,10 @@ pub mod continuity {
     pub use sim_lib_continuity::*;
 }
 
+/// Resilient music routing composed from the owning music and stream-host contracts.
+#[cfg(feature = "music-vertical")]
+pub mod music_vertical;
+
 /// Model observatory types and its loadable product command.
 #[cfg(feature = "model-test")]
 pub mod model_test {
