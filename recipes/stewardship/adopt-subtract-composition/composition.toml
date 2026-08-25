@@ -1,0 +1,44 @@
+schema = "sim.stewardship-adopt-subtract/v1"
+id = "example-stewardship-composition"
+brief_profile = "BRIDGE"
+brief_state = "human-reviewed-before-preview"
+assembly = "existing-pack-roots-and-pure-expressions-only"
+missing_contract_policy = "stop-and-record"
+
+[preview]
+closure = ["pack/kitchen", "pack/garden", "pack/private-observation"]
+data_access = ["copied-claim", "sealed-source-handle"]
+key_lanes = ["owner-key-provider", "sealed-store"]
+outputs = ["daily-card", "weekly-book"]
+channels = ["workstation", "worn"]
+attention = "bounded-cadence"
+retention = "per-source-declared"
+leakage = "deny-unlisted-projection"
+deletion = "tombstone-then-retention-action"
+manual_fallback = "owner-authored-card"
+
+[adoption]
+transaction = "atomic"
+rollback = "restore-prior-root-set"
+durable_inputs = ["pack-roots", "pure-expressions", "content-keys", "journal-receipt", "book-entry"]
+ephemeral_inputs = ["chat", "model-cache", "derived-views", "workshop-scratch"]
+rebuild_after_ephemeral_deletion = true
+
+[subtraction]
+retired_field = "garden/internal-note"
+retired_pack = "pack/private-observation"
+remove_from = ["closure", "projections", "grants", "recipe-roots"]
+retention_action = "delete-sealed-content-at-expiry"
+tombstones = ["garden/internal-note", "pack/private-observation"]
+replay_policy = "tombstones-win"
+
+[after_subtraction]
+closure = ["pack/kitchen", "pack/garden"]
+projections = ["kitchen/card", "garden/seasonal-card"]
+grants = ["kitchen:copied-claim", "garden:cited-source"]
+recipe_roots = ["pack/kitchen", "pack/garden"]
+
+[mutual_porch]
+invitation = "optional"
+decision = "declined"
+outcome = "success-no-shared-object"
