@@ -95,6 +95,7 @@ sim-lib-music-synth = { optional = true, version = "0.1.7" }
 sim-lib-binding = { optional = true, version = "0.1.4" }
 sim-lib-bridge = { optional = true, version = "0.1.6" }
 sim-lib-control = { optional = true, version = "0.1.6" }
+sim-lib-continuity = { optional = true, version = "0.1.0" }
 sim-lib-compute-auto = { optional = true, version = "0.3.0" }
 sim-lib-compute-cli = { optional = true, version = "0.2.0" }
 sim-lib-compute-cuda = { optional = true, version = "0.2.0" }
@@ -375,6 +376,7 @@ estate-provider-model = ["estate", "dep:sim-site-estate-model"]
 estate-view = ["estate", "view", "dep:sim-lib-view-estate"]
 platform = ["dep:sim-lib-platform"]
 device = ["device-reference", "cookbook"]
+continuity = ["dep:sim-lib-continuity", "core"]
 device-reference = ["dep:sim-lib-stream-device", "dep:sim-lib-view-device", "dep:sim-lib-web-bridge", "core"]
 glasses = ["glasses-modeled"]
 glasses-halo = ["glasses-modeled"]

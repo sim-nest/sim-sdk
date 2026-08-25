@@ -214,6 +214,15 @@ pub mod study {
     pub use sim_lib_study::*;
 }
 
+/// Canonical, pure continuity planning, replay, and journal contracts.
+///
+/// This module is a direct re-export: policy validation and reduction remain
+/// owned by `sim-lib-continuity`; the SDK adds no wrapper model or behavior.
+#[cfg(feature = "continuity")]
+pub mod continuity {
+    pub use sim_lib_continuity::*;
+}
+
 /// Model observatory types and its loadable product command.
 #[cfg(feature = "model-test")]
 pub mod model_test {

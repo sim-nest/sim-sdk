@@ -363,9 +363,12 @@ claims_anchors = [
 ]
 claims_specimens = [
   "spec-test/sim-sdk/crates/sim-conformance/tests/spec/surface_protocol",
+  "spec-test/sim-sdk/tests/continuity_exports",
+  "recipe/sim-sdk/continuity/plans",
 ]
 supports = [
   "feature/sim-sdk/facade-runtime",
+  "feature/sim-agent-net/pure-continuity",
 ]
 
 [[feature]]
@@ -436,6 +439,7 @@ audiences = ["user", "code"]
 steps = [
   { feature = "feature/sim-sdk/facade-runtime", why = "The facade row owns the public command and reversible view surface." },
   { feature = "feature/sim-sdk/device-recipes", why = "The device row gives wearable workflows through facade-level recipes." },
+  { specimen = "recipe/sim-sdk/continuity/plans", why = "Versioned plan data demonstrates an Android-rooted minimum and optional present and future endpoints without SDK-owned behavior." },
   { specimen = "recipe/sim-sdk/01-basics/boot-runtime", why = "The boot-runtime recipe checks the smallest facade path." },
 ]
 
