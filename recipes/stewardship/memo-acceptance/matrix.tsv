@@ -1,0 +1,38 @@
+promise_id	memo	disposition	specimen	positive	negative
+standard.sources	standard	specimen	month.sources	immutable ODB and statement sources	correction is a new draft
+standard.reconcile	standard	specimen	month.certificate	exact bridge recomputes	false high-rank candidate stays undecided
+standard.kitchen	standard	specimen	week.kitchen	human taste selects the week	no order or payment route
+standard.garden	standard	specimen	season.garden	observation gates seasonal advice	stale reference becomes a question
+standard.flock	standard	specimen	day.flock	eight individuals receive care	no score diagnosis or production rank
+standard.private	standard	specimen	log.optional	human may record exact words	absence is successful and no inference occurs
+standard.media	standard	specimen	media.chosen	only chosen trace and citation remain	no transcript or fabricated summary
+standard.cadence	standard	specimen	cadence.quiet	bounded daily weekly monthly seasonal cards	an empty brief succeeds
+standard.authority	standard	specimen	decision.human	human authors every consequential decision	candidate confidence never acts
+standard.manual	standard	manual	manual.cards	printable continuation preserves source ids	manual path requires no model
+ai.roles	ai	specimen	dialogue.roles	minimum specialist receives minimum facts	no household brain or cross-room spill
+ai.model	ai	specimen	dialogue.fake-model	deterministic model explains computed facts	model is never calculator or authority
+ai.refusal	ai	specimen	dialogue.refusals	unsafe requests return exact refusal	no diagnosis posting ordering or hidden sharing
+ai.handoff	ai	specimen	dialogue.handoff	disagreement and missing facts reach the human	no silent specialist decision
+ai.channels	ai	unsupported	channel.external	external channel remains visibly unavailable	no sensitive payload leaves offline run
+ai.devices	ai	unsupported	device.modeled	device trace is modeled and labeled	no camera microphone or effect claim
+ai.provenance	ai	specimen	dialogue.provenance	roles tools sources and placement are inspectable	no unsupported confidence claim
+ai.stop	ai	specimen	lifecycle.stop	stop cancels pending work	no delayed effect survives stop
+crew.roles	support-crew	specimen	crew.day	coordinator researcher challenger and scribe prepare	no crew member acts
+crew.brief	support-crew	specimen	crew.brief	brief separates facts options gaps and decisions	no recommendation masquerades as decision
+crew.refusal	support-crew	specimen	crew.refusal	payment posting diagnosis and sharing refused	no credentials or effect capability granted
+crew.handoff	support-crew	specimen	crew.handoff	consequential choices await named human	no autonomous escalation
+crew.audit	support-crew	specimen	crew.receipt	read set and prepared artifacts are listed	no hidden memory or private log access
+vibe.spoken-week	vibe	specimen	workshop.brief	spoken intent becomes reviewable BRIDGE brief	no composition mutation before review
+vibe.compose	vibe	specimen	workshop.compose	only existing packs and pure expressions compose	missing behavior becomes unsupported
+vibe.preview	vibe	specimen	workshop.preview	closure authority retention leakage and fallback visible	no hidden grant or output
+vibe.adopt	vibe	specimen	workshop.adopt	atomic adoption rebuilds without chat or cache	failed adoption leaves prior root
+vibe.subtract	vibe	specimen	workshop.subtract	field and pack disappear from roots grants and replay	retired data is not merely hidden
+vibe.decline	vibe	specimen	workshop.decline	declined porch invitation succeeds	no relationship pressure or retry
+vibe.offline	vibe	specimen	lifecycle.offline	complete specimen runs networkless	no online fallback
+vibe.backup	vibe	specimen	lifecycle.backup-restore	restore reproduces committed content keys	corrupt or wrong-key backup fails closed
+vibe.rotation	vibe	specimen	lifecycle.rotation	new generation decrypts after key rotation	old revoked grant cannot decrypt
+vibe.revocation	vibe	specimen	lifecycle.revocation	revoked capability loses access	cached authority cannot survive
+vibe.erasure	vibe	specimen	lifecycle.crypto-erasure	managed keys removed from tracked stores and backups	claim is limited to managed copies
+vibe.export	vibe	specimen	lifecycle.export	human-selected portable export has provenance	keys and unselected lanes excluded
+vibe.uninstall	vibe	specimen	lifecycle.uninstall	binary cache and projections removed	archive retained only by explicit choice
+vibe.continue	vibe	manual	lifecycle.manual	open formats and printed cards continue manually	uninstall does not hold data hostage

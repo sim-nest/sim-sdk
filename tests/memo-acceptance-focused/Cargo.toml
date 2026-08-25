@@ -1,0 +1,11 @@
+[package]
+name = "sim-sdk-memo-acceptance-focused"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[[test]]
+name = "memo_acceptance"
+path = "../memo_acceptance.rs"

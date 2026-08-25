@@ -1,0 +1,9 @@
+id = "memo-acceptance"
+title = "Execute the stewardship memo acceptance matrix"
+codec = "text"
+setup = "scenario.tsv"
+purpose = "README.md"
+order = 80
+tags = ["sdk", "stewardship", "acceptance", "offline", "privacy", "reversible"]
+requires = ["stewardship", "continuity", "claims"]
+network = false

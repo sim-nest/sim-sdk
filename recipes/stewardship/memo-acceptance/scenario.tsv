@@ -1,0 +1,26 @@
+step	kind	actor	state	evidence
+01	month.sources	human	accepted	statement.csv and odb.script frozen read-only
+02	month.certificate	engine	prepared	exact 43720 minor-unit bridge and false candidate open
+03	week.kitchen	human	accepted	seven choices stock questions and shopping draft only
+04	season.garden	human	accepted	three seasonal cards distinguish plan observation reference
+05	day.flock	human	accepted	eight synthetic bird ids water feed door and exception handoff
+06	log.optional	human	declined	no private observation record is success
+07	media.chosen	human	accepted	one timestamp note one page note citations only
+08	dialogue.fake-model	fake-model	prepared	explains exact result and labels missing egg count
+09	dialogue.refusals	fake-model	refused	diagnosis posting ordering and undisclosed sharing
+10	dialogue.handoff	human	accepted	human resolves taste match and disclosure choices
+11	workshop.brief	fake-model	prepared	reviewable brief before mutation
+12	workshop.adopt	human	accepted	atomic root selected by human
+13	workshop.subtract	human	accepted	retired field and flock pack absent from replay
+14	crew.day	crew	prepared	facts options questions and manual cards
+15	crew.refusal	crew	refused	no post pay diagnose order share or delete effect
+16	crew.handoff	human	accepted	all consequential decisions named human-authored
+17	lifecycle.stop	human	accepted	pending fake-model and crew work cancelled
+18	lifecycle.offline	engine	passed	zero network placements
+19	lifecycle.backup-restore	engine	passed	content keys reproduce and corrupt backup fails closed
+20	lifecycle.rotation	human	accepted	generation two active generation one grant revoked
+21	lifecycle.revocation	engine	passed	old capability and cached token denied
+22	lifecycle.crypto-erasure	human	accepted	managed keys absent from tracked store and backup
+23	lifecycle.export	human	accepted	selected open data and provenance no keys
+24	lifecycle.uninstall	human	accepted	program cache projections removed selected archive retained
+25	lifecycle.manual	human	passed	CSV ODB text print cards and source ids remain usable

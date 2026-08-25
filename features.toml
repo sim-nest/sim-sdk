@@ -805,3 +805,23 @@ steps = [
   { specimen = "recipe/sim-sdk/stewardship/adopt-subtract-composition", why = "Inspect the data-only composition, complete preview, rebuild inputs, tombstones, and declined mutual-porch outcome." },
   { specimen = "spec-test/sim-sdk/tests/validate_adopt_subtract_composition", why = "Prove ephemeral-state-independent rebuild and absence of retired parts from every surface and replay." },
 ]
+
+[[feature]]
+id = "feature/sim-sdk/stewardship-memo-acceptance"
+title = "Executable stewardship memo acceptance"
+summary = "Classify the four stewardship memo families and replay their complete synthetic product, human-authority, prepare-only crew, reversible lifecycle, privacy, and bounded-erasure evidence offline."
+owner = "repo/sim-sdk"
+audiences = ["user", "framework"]
+guidance = "Use the public stable promise ids as the acceptance contract; keep private memo prose and values outside fixtures. Every promise must resolve to a two-sided specimen, exact unsupported state, or manual path. Run the focused manifest to prove synthetic source formats, human decisions, refusals, lifecycle boundaries, and privacy language without loading product behavior into the SDK."
+claims_specimens = ["spec-test/sim-sdk/tests/memo_acceptance", "recipe/sim-sdk/stewardship/memo-acceptance"]
+supports = ["feature/sim-sdk/quiet-stewardship-cadence", "feature/sim-sdk/stewardship-adoption-subtraction"]
+
+[[route]]
+id = "route/execute-stewardship-memo-acceptance"
+task = "Turn stewardship memo promises into checked synthetic evidence"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/stewardship-memo-acceptance", why = "Classify every promise before claiming that the composed product satisfies it." },
+  { specimen = "recipe/sim-sdk/stewardship/memo-acceptance", why = "Inspect the synthetic month, week, season, flock, dialogue, crew, and lifecycle trace plus every explicit unsupported and manual state." },
+  { specimen = "spec-test/sim-sdk/tests/memo_acceptance", why = "Prove matrix completeness, exact source arithmetic, human authority, prepare-only crew behavior, privacy hygiene, and bounded managed-erasure claims." },
+]
