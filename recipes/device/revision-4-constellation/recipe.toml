@@ -1,0 +1,13 @@
+id = "revision-4-constellation"
+title = "Load a modeled revision-4 device constellation"
+codec = "toml"
+setup = "manifest.toml"
+purpose = "purpose.md"
+order = 40
+tags = ["sdk", "device", "modeled", "offline", "data-only"]
+requires = ["device/provider-manifest", "device/observation-session"]
+
+[evidence]
+cassette = "cassette.toml"
+expected_pack_count = 16
+imagined_instance = "imagined-light-meter-a"

@@ -1,0 +1,16 @@
+schema = "sim.device-selection/v1"
+catalog = "sim-stream-host/provider-packs/revision-4/catalog.toml"
+authority = "observe"
+
+packs = [
+  "computer-placement", "android-relay", "halo", "watch", "camera",
+  "cook-probe", "zigbee", "vehicle-read", "energy-read", "oasys-midi",
+  "oasys-audio", "rx-v777-digital-audio", "bench-instrument",
+  "calculator-file", "print-host-artifact", "imagined-light-meter",
+]
+
+[[instance]]
+id = "imagined-light-meter-a"
+pack = "imagined-light-meter"
+cassette = "cassette.toml#imagined-light-meter-a"
+mode = "modeled"

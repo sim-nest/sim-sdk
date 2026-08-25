@@ -402,7 +402,7 @@ title = "Device and wearable recipes"
 summary = "Exercise modeled device, watch, and glasses workflows through SDK-level recipe entry points."
 owner = "crate/sim-nest"
 audiences = ["user", "code"]
-guidance = "Use this row when following device workflows from the public facade. Atelier packs request only the default phone Scene and keyboard/touch semantic lane with no body prompt; expedition projection intersects mission, passport, route lease, and endpoint grant and fails closed for sensitive reduced-role disclosure."
+guidance = "Use this row when following device workflows from the public facade. The revision-4 constellation recipe composes generic stream-host packs and adds modeled instances through manifest and cassette data only. Atelier packs request only the default phone Scene and keyboard/touch semantic lane with no body prompt; expedition projection intersects mission, passport, route lease, and endpoint grant and fails closed for sensitive reduced-role disclosure."
 claims_anchors = [
   "anchor/runtime-lib/sim-nest/glasses-stack-lib",
   "anchor/runtime-lib/sim-nest/watch-stack-lib",
@@ -414,6 +414,7 @@ claims_specimens = [
   "recipe/sim-sdk/continuity/expedition-thought",
   "recipe/sim-sdk/continuity/quiet-stewardship-cards",
   "recipe/sim-sdk/atelier/expedition-first-light",
+  "recipe/sim-sdk/device/revision-4-constellation",
 ]
 supports = [
   "feature/sim-sdk/facade-runtime",

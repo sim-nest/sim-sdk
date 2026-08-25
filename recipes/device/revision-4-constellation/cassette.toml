@@ -1,0 +1,9 @@
+schema = "sim.device-recipe-cassette/v1"
+privacy = "synthetic-only"
+
+[[sample]]
+instance = "imagined-light-meter-a"
+endpoint = "cassette://imagined-light-meter-a"
+reading = "illuminance_lux=315"
+person = "sample-person-a"
+home = "sample-home-a"
