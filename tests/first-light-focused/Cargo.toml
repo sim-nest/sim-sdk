@@ -1,0 +1,27 @@
+[package]
+name = "sim-sdk-first-light-focused"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[features]
+default = ["continuity"]
+continuity = []
+
+[dependencies]
+sim-citizen = { path = "../../../sim-citizen/crates/sim-citizen" }
+sim-kernel = { path = "../../../sim-kernel" }
+sim-lib-capability-pack = { path = "../../../sim-agent-net/crates/sim-lib-capability-pack" }
+sim-lib-continuity = { path = "../../../sim-agent-net/crates/sim-lib-continuity" }
+sim-lib-expedition-book = { path = "../../../sim-expr-tree/crates/sim-lib-expedition-book" }
+
+[patch.crates-io]
+sim-citizen = { path = "../../../sim-citizen/crates/sim-citizen" }
+sim-citizen-derive = { path = "../../../sim-citizen/crates/sim-citizen-derive" }
+sim-kernel = { path = "../../../sim-kernel" }
+
+[[test]]
+name = "expedition_first_light"
+path = "../expedition_first_light.rs"

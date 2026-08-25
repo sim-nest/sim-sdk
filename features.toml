@@ -404,6 +404,7 @@ claims_specimens = [
   "recipe/sim-sdk/continuity/plans",
   "recipe/sim-sdk/continuity/expedition-thought",
   "recipe/sim-sdk/continuity/quiet-stewardship-cards",
+  "recipe/sim-sdk/atelier/expedition-first-light",
 ]
 supports = [
   "feature/sim-sdk/facade-runtime",
