@@ -21,6 +21,22 @@ major_entrypoints = "advisory"
 frameworks = "advisory"
 
 [[feature]]
+id = "feature/sim-sdk/layered-physics-facade"
+title = "Layered physics SDK composition"
+summary = "Curates one-way feature closures from quantities and physics core through audit, proof, studies, findings, and explicit adapters."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Start with numbers-quantity or physics-core and add only the required layer. Extended precision, FEMM, interference, and placement providers are independent opt-ins."
+claims_anchors = ["anchor/rustdoc/sim-nest/physics"]
+claims_specimens = ["recipe/sim-sdk/physics/switched-audit"]
+presents = ["feature/sim-physics/loadable-runtime-composition"]
+
+[[route]]
+id = "route/sdk-switched-physics-audit"
+task = "Compose a switched-boundary physics solve, audit, verdict, and finding projection"
+steps = [{ feature = "feature/sim-sdk/layered-physics-facade", why = "Select the audit and findings closures without pulling adapter or provider stacks." }, { specimen = "recipe/sim-sdk/physics/switched-audit", why = "Inspect the complete composition and unresolved/certified verdict boundary." }]
+
+[[feature]]
 id = "feature/sim-sdk/generated-docs"
 title = "Repository documentation surface"
 summary = "Publish generated package, card, recipe, and index facts for the SDK facade and conformance crate."

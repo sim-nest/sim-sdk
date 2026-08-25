@@ -1,0 +1,10 @@
+id = "switched-audit"
+title = "Audit a switched boundary and browse its finding"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+expected = "expected.txt"
+order = 10
+tags = ["physics", "boundary", "audit", "proof", "finding"]
+requires = ["physics/core", "physics/power", "physics/audit", "physics/proof", "physics/findings"]
+assert_tags = ["physics", "audit", "finding"]

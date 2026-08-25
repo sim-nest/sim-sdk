@@ -205,6 +205,8 @@ sim-lib-numbers-fixed = { optional = true, version = "0.3.0" }
 sim-lib-numbers-float = { optional = true, version = "0.3.1" }
 sim-lib-numbers-func = { optional = true, version = "0.3.1" }
 sim-lib-numbers-i64 = { optional = true, version = "0.3.1" }
+sim-lib-numbers-method = { optional = true, version = "0.1.0" }
+sim-lib-numbers-quantity = { optional = true, version = "0.1.0" }
 sim-lib-numbers-numeric = { optional = true, version = "0.3.0" }
 sim-lib-numbers-prelude = { optional = true, version = "0.3.1" }
 sim-lib-numbers-quad = { optional = true, version = "0.3.0" }
@@ -222,6 +224,15 @@ sim-lib-numbers-tensor-linalg = { optional = true, version = "0.3.1" }
 sim-lib-numbers-tensor-rat64 = { optional = true, version = "0.3.1" }
 sim-lib-openai-server = { optional = true, version = "0.3.1" }
 sim-lib-pattern = { optional = true, version = "0.2.0" }
+sim-lib-physics-adapter = { optional = true, version = "0.1.0" }
+sim-lib-physics-audit = { optional = true, version = "0.1.0" }
+sim-lib-physics-core = { optional = true, version = "0.1.0" }
+sim-lib-physics-findings = { optional = true, version = "0.1.0" }
+sim-lib-physics-influence = { optional = true, version = "0.1.0" }
+sim-lib-physics-power = { optional = true, version = "0.1.0" }
+sim-lib-physics-proof = { optional = true, version = "0.1.0" }
+sim-lib-physics-runtime = { optional = true, version = "0.1.0", default-features = false }
+sim-lib-physics-study = { optional = true, version = "0.1.0" }
 sim-lib-pitch-chord = { optional = true, version = "0.2.1" }
 sim-lib-pitch-core = { optional = true, version = "0.2.0" }
 sim-lib-pitch-dissonance = { optional = true, version = "0.1.3" }
@@ -428,6 +439,20 @@ genai = ["agent", "bridge", "codec-json", "cookbook"]
 genai-local = ["genai", "agent-runner-process", "agent-runner-ollama", "agent-runner-http"]
 genai-provider = ["genai", "agent-runner-http-tls"]
 intent = ["dep:sim-lib-intent", "core", "shape"]
+numbers-method = ["dep:sim-lib-numbers-method"]
+numbers-quantity = ["dep:sim-lib-numbers-quantity"]
+physics-core = ["dep:sim-lib-physics-core", "dep:sim-lib-physics-runtime", "sim-lib-physics-runtime/core", "numbers-quantity", "core"]
+physics-power = ["physics-core", "dep:sim-lib-physics-power", "sim-lib-physics-runtime/power"]
+physics-audit = ["physics-power", "numbers-method", "dep:sim-lib-physics-audit", "sim-lib-physics-runtime/audit"]
+physics-proof = ["physics-audit", "dep:sim-lib-physics-proof", "sim-lib-physics-runtime/proof"]
+physics-proof-extended = ["physics-proof", "sim-lib-physics-proof/extended-precision"]
+physics-influence = ["physics-core", "dep:sim-lib-physics-influence", "sim-lib-physics-runtime/influence"]
+physics-study = ["physics-influence", "dep:sim-lib-physics-study", "sim-lib-physics-runtime/study"]
+physics-findings = ["physics-study", "dep:sim-lib-physics-findings", "sim-lib-physics-runtime/findings"]
+physics-adapter = ["physics-core", "dep:sim-lib-physics-adapter"]
+physics-adapter-femm = ["physics-adapter", "femm-physics"]
+physics-adapter-interference = ["physics-adapter", "interference-core"]
+physics-full = ["physics-proof", "physics-findings"]
 list-cell = ["dep:sim-list-cell", "core"]
 list-lazy = ["dep:sim-list-lazy", "core"]
 logic = ["logic-core", "logic-numbers"]
