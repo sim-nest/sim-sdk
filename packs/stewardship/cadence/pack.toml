@@ -1,0 +1,59 @@
+schema = "sim.stewardship-cadence/v1"
+id = "quiet-cadence"
+title = "Quiet cadence from copied claims"
+projections = ["daily.toml", "weekly.toml", "monthly.toml", "seasonal.toml"]
+cases = "week.toml"
+recipe = "../../../recipes/stewardship/quiet-cadence"
+voice = "calm"
+network = false
+source_truth = "none"
+input_contract = "declared-copied-claims-only"
+forbidden_input_fields = ["source-handle", "room-handle", "ledger-handle", "vault-handle", "private-lane-handle"]
+
+[budget]
+daily_cards_min = 0
+daily_cards_max = 3
+normal_daily_seconds_max = 120
+flock_common_path_seconds_max = 20
+
+[finance]
+ambient = "summary-status-only"
+detail_requires = "explicit-open-reconciliation-session"
+closed_session_detail = "refused"
+
+[composition]
+roles = ["finance", "kitchen", "garden", "flock", "private", "media"]
+replaceable = true
+shared_voice = "calm"
+shared_source_handles = false
+conductor = "none"
+always_on_agent = false
+
+[successful_outcomes]
+states = ["cards", "silence", "lane-locked", "lane-destroyed", "model-unavailable", "device-unavailable", "stale-source", "paper-path", "refused", "pack-removed"]
+
+[[channel]]
+id = "workstation-kitchen"
+ceiling = "household"
+allowed = ["title", "summary", "question", "kitchen-claim", "garden-claim", "flock-common-care", "media-reference", "finance-status"]
+forbidden = ["finance-detail", "private-observation"]
+
+[[channel]]
+id = "telegram"
+ceiling = "low-disclosure"
+allowed = ["title", "summary", "question", "finance-status"]
+forbidden = ["finance-detail", "private-observation", "kitchen-claim", "garden-claim", "flock-common-care", "media-reference"]
+
+[[channel]]
+id = "worn"
+ceiling = "glance"
+optional = true
+allowed = ["title", "summary"]
+forbidden = ["finance-status", "finance-detail", "private-observation", "kitchen-claim", "garden-claim", "flock-common-care", "media-reference"]
+
+[[channel]]
+id = "export"
+ceiling = "reviewed"
+allowed = ["title", "summary", "question", "kitchen-claim", "garden-claim", "flock-common-care", "media-reference", "finance-status"]
+forbidden = ["finance-detail", "private-observation"]
+requires = ["preview", "explicit-confirmation"]

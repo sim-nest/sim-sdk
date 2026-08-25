@@ -764,3 +764,24 @@ steps = [
   { specimen = "recipe/sim-sdk/stewardship/chosen-media-traces", why = "Import and remove one selected synthetic trace with every remote and inference lane absent." },
   { specimen = "spec-test/sim-sdk/tests/validate_media_reference_packs", why = "Prove source-policy excerpts, predicate separation, guidance metadata, removal semantics, and networkless operation." },
 ]
+
+[[feature]]
+id = "feature/sim-sdk/quiet-stewardship-cadence"
+title = "Quiet stewardship cadence"
+summary = "Compose separate daily, weekly, monthly, and seasonal projections from minimum copied claims under strict time, card, reconciliation, and channel-disclosure ceilings."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/cadence/pack.toml after selecting replaceable finance, kitchen, garden, flock, private, and media roles. Pass only declared copied claims, attention, reconciliation status, and completed-pack status. Silence, refusal, stale evidence, locked or destroyed lanes, unavailable placements, paper paths, and removed packs are successful bounded outcomes; the cadence owns no source truth, source handle, conductor, or always-on agent."
+claims_anchors = ["anchor/crate/sim-nest"]
+claims_specimens = ["spec-test/sim-sdk/tests/validate_cadence_pack", "recipe/sim-sdk/stewardship/quiet-cadence"]
+supports = ["feature/sim-sdk/taste-led-kitchen-pack", "feature/sim-sdk/cited-seasonal-garden-pack", "feature/sim-sdk/calm-flock-care-pack", "feature/sim-sdk/private-observation-pack", "feature/sim-sdk/chosen-media-current-reference-packs"]
+
+[[route]]
+id = "route/compose-quiet-stewardship-cadence"
+task = "Compose a quiet cadence from minimum copied claims"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/quiet-stewardship-cadence", why = "Compose replaceable stewardship roles behind a calm, source-blind projection policy." },
+  { specimen = "recipe/sim-sdk/stewardship/quiet-cadence", why = "Replay a deterministic week containing bursts, silence, stale facts, refusals, unavailable placements, lock and revoke, paper operation, and pack removal." },
+  { specimen = "spec-test/sim-sdk/tests/validate_cadence_pack", why = "Prove daily interaction budgets, explicit finance detail, isolated source handles, and channel disclosure ceilings." },
+]

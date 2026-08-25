@@ -1,0 +1,9 @@
+schema = "sim.stewardship-cadence-recipe/v1"
+cadence = "../../../packs/stewardship/cadence/pack.toml"
+fixture = "../../../packs/stewardship/cadence/week.toml"
+source_truth = "none"
+network = false
+expected_days = 7
+expected_max_cards = 3
+expected_max_seconds = 120
+expected_flock_seconds = 20
