@@ -661,3 +661,23 @@ steps = [
   { feature = "feature/sim-sdk/reversible-atelier-product", why = "Compose the delivered layers and private root-set input without adding facade or bootloader behavior." },
   { specimen = "recipe/sim-sdk/atelier/reversible-product", why = "The deterministic pilot covers all current memos and rebuilds after deleting the derived worktable." },
 ]
+
+[[feature]]
+id = "feature/sim-sdk/taste-led-kitchen-pack"
+title = "Taste-led independent kitchen pack"
+summary = "Compose exact quantities, freshness-bounded claims, questions, preparation options, and shopping drafts as pure data while meal choice and commerce remain impossible effects."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/kitchen/pack.toml and supply a human-authored meal intention. Preserve unit labels unless an explicit reviewed exact-rational conversion is present; only fresh confirmed claims reduce needs. Copied harvest and egg claims need no source-room handle, and cost evidence remains an optional opaque ledger reference."
+claims_anchors = ["anchor/crate/sim-nest"]
+claims_specimens = ["spec-test/sim-sdk/tests/validate_kitchen_pack", "recipe/sim-sdk/stewardship/taste-led-kitchen"]
+
+[[route]]
+id = "route/compose-taste-led-kitchen-pack"
+task = "Prepare kitchen options and a shopping draft without choosing or buying"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/taste-led-kitchen-pack", why = "Compose the closed data contract and pure projection while Mia retains meal authority." },
+  { specimen = "recipe/sim-sdk/stewardship/taste-led-kitchen", why = "Exercise copied egg evidence, stale-stock questioning, exact unit labels, and an opaque optional cost reference with every provider lane absent." },
+  { specimen = "spec-test/sim-sdk/tests/validate_kitchen_pack", why = "Prove the Shapes, freshness lattice, source-room isolation, effect ceiling, and networkless fixture." },
+]

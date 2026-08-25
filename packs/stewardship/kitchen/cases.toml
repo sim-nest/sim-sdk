@@ -1,0 +1,42 @@
+schema = "sim.stewardship-kitchen-cases/v1"
+
+[[case]]
+id = "fresh-eggs-reduce"
+need = "4 egg"
+claim_kind = "confirmed-egg-availability"
+claim_truth = "confirmed"
+claim_fresh = true
+available = "6 egg"
+expected_lines = 0
+expected_questions = 0
+
+[[case]]
+id = "stale-flour-asks"
+need = "500 g"
+claim_kind = "pantry-observation"
+claim_truth = "stale"
+claim_fresh = false
+available = "1000 g"
+expected_lines = 1
+expected_questions = 1
+
+[[case]]
+id = "unknown-salt-asks"
+need = "1 pinch"
+claim_kind = "pantry-observation"
+claim_truth = "unknown"
+claim_fresh = false
+available = "0 pinch"
+expected_lines = 1
+expected_questions = 1
+
+[[case]]
+id = "copied-harvest-reduces"
+need = "2 zucchini"
+claim_kind = "confirmed-harvest-availability"
+claim_truth = "confirmed"
+claim_fresh = true
+available = "2 zucchini"
+expected_lines = 0
+expected_questions = 0
+

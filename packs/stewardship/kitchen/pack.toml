@@ -1,0 +1,32 @@
+schema = "sim.stewardship-pack/v1"
+id = "kitchen-taste-led"
+title = "Taste-led kitchen"
+shapes = "shapes.toml"
+expression = "shopping-draft.lisp"
+recipe = "../../../recipes/stewardship/taste-led-kitchen"
+capabilities = ["data-read", "claim-read", "exact-rational", "ledger-reference-read"]
+effects = ["prepare-options", "ask-questions", "draft-shopping"]
+forbidden_effects = ["choose-meal", "purchase", "checkout", "payment"]
+optional_lanes = ["cost-evidence"]
+absent_lanes = ["garden", "flock", "finance", "model", "network"]
+
+[quantity]
+unit_semantics = "uninterpreted-label"
+conversion = "explicit-reviewed-rational-rule-only"
+
+[availability]
+reduction_claim = "fresh-confirmed"
+unknown = "question"
+stale = "question"
+absent = "explicit-claim-only"
+
+[copied_claims]
+accepted_kinds = ["confirmed-harvest-availability", "confirmed-egg-availability"]
+required_fields = ["claim", "source", "observed-at", "fresh-until", "quantity"]
+forbidden_fields = ["garden-handle", "flock-handle"]
+
+[cost]
+kind = "optional-ledger-evidence-reference"
+exposes = ["content-key"]
+forbidden = ["finance-lane", "account", "transaction", "payment-method"]
+
