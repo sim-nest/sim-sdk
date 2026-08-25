@@ -1,0 +1,19 @@
+schema = "sim.synthetic-continuity-product/v1"
+id = "quiet-stewardship-cards"
+policy = "bounded-low-disclosure-cards"
+root = "phone"
+network = "denied"
+card_count = "0..3"
+acknowledgement = "optional-one"
+phone_fields = ["title", "summary", "private-note", "finance"]
+worn_fields = ["title", "summary"]
+audible_fields = ["title"]
+refused_on_worn_or_audible = ["private-note", "finance"]
+
+[minimal_boot]
+packages = ["continuity-organ", "android-capsule", "phone-surface"]
+artifacts = ["journal", "turn", "phone-scene"]
+
+[deleted_before_boot]
+packages = ["audio-role", "watch-role", "halo-role", "speech-role", "model-role"]
+artifacts = ["audio-scene", "watch-scene", "halo-scene", "speech-cache", "model-cache"]

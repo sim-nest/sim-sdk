@@ -1,4 +1,4 @@
 title = "Continuity plans"
 summary = "Versioned, provider-neutral continuity plan data composed through the SDK."
 order = 70
-recipes = ["plans"]
+recipes = ["plans", "expedition-thought", "quiet-stewardship-cards"]
