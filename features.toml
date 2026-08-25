@@ -785,3 +785,23 @@ steps = [
   { specimen = "recipe/sim-sdk/stewardship/quiet-cadence", why = "Replay a deterministic week containing bursts, silence, stale facts, refusals, unavailable placements, lock and revoke, paper operation, and pack removal." },
   { specimen = "spec-test/sim-sdk/tests/validate_cadence_pack", why = "Prove daily interaction budgets, explicit finance detail, isolated source handles, and channel disclosure ceilings." },
 ]
+
+[[feature]]
+id = "feature/sim-sdk/stewardship-adoption-subtraction"
+title = "Atomic stewardship adoption and complete subtraction"
+summary = "Compose existing workshop and stewardship contracts into reviewable adoption, ephemeral-state-independent rebuild, and tombstone-dominant retirement."
+owner = "repo/sim-sdk"
+audiences = ["user", "framework"]
+guidance = "Begin with a human-reviewed BRIDGE brief, preview every authority and lifecycle lane, then adopt only existing pack roots and pure expressions atomically. Rebuild from durable receipts and content after deleting conversational and workshop state. Retire fields and packs by removing them from closure, projections, grants, and recipe roots and recording tombstones that dominate replay."
+claims_specimens = ["spec-test/sim-sdk/tests/validate_adopt_subtract_composition", "recipe/sim-sdk/stewardship/adopt-subtract-composition"]
+presents = ["feature/sim-agent-net/reproducible-instrument-adoption"]
+
+[[route]]
+id = "route/adopt-and-subtract-stewardship-composition"
+task = "Review, adopt, rebuild, and make a stewardship composition smaller"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/stewardship-adoption-subtraction", why = "Use the generic transaction and subtraction discipline without embedding household choices in public fixtures." },
+  { specimen = "recipe/sim-sdk/stewardship/adopt-subtract-composition", why = "Inspect the data-only composition, complete preview, rebuild inputs, tombstones, and declined mutual-porch outcome." },
+  { specimen = "spec-test/sim-sdk/tests/validate_adopt_subtract_composition", why = "Prove ephemeral-state-independent rebuild and absence of retired parts from every surface and replay." },
+]
