@@ -28,7 +28,7 @@ owner = "crate/sim-nest"
 audiences = ["code", "framework"]
 guidance = "Enable hotload and import sim::hotload. Compose the sandbox, storage, loader, and journal providers at the host boundary; pass only the facade-visible requests, candidates, reports, generations, and receipts through application code."
 claims_anchors = ["anchor/rustdoc/sim-nest/hotload"]
-claims_specimens = ["spec-test/sim-sdk/tests/hotload_generation", "recipe/sim-sdk/hotload/public-generation-loop"]
+claims_specimens = ["spec-test/sim-sdk/tests/hotload_generation", "recipe/sim-sdk/hotload/public-generation-loop", "spec-test/sim-sdk/tests/conversational_instrument_adoption", "recipe/sim-sdk/hotload/conversational-instrument-adoption"]
 presents = ["feature/sim-run/native-hotload-construction", "feature/sim-run/hotload-operation-surface"]
 
 [[route]]
@@ -39,6 +39,15 @@ steps = [
   { feature = "feature/sim-sdk/hotload-facade", why = "Use the focused facade records while keeping concrete host providers outside application code." },
   { specimen = "spec-test/sim-sdk/tests/hotload_generation", why = "Run the deterministic build, admission, activation, refusal, reclamation, and replay proof." },
   { specimen = "recipe/sim-sdk/hotload/public-generation-loop", why = "Reuse the two tiny sealed source generations from the cookbook surface." },
+]
+
+[[route]]
+id = "route/sdk-conversational-instrument-adoption"
+task = "Rebuild and atomically adopt a conversationally proposed instrument"
+audiences = ["code", "framework"]
+steps = [
+  { feature = "feature/sim-agent-net/reproducible-instrument-adoption", why = "Use the canonical BRIDGE, ChangeCapsule, pack, rebuild, adoption, and rollback transaction." },
+  { specimen = "recipe/sim-sdk/hotload/conversational-instrument-adoption", why = "Follow the checked conversation-free SDK recipe." },
 ]
 
 [[feature]]

@@ -1,0 +1,8 @@
+id = "conversational-instrument-adoption"
+title = "Adopt a conversationally proposed instrument reproducibly"
+codec = "rust"
+setup = "setup.rs"
+purpose = "purpose.md"
+order = 20
+tags = ["agent", "bridge", "change-capsule", "pack", "hotload", "offline", "reproducible"]
+requires = ["agent", "hotload"]
