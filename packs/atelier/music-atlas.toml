@@ -15,3 +15,14 @@ refusal_claims = ["algorithm-unavailable"]
 forbidden = ["implement-algorithm", "alter-source"]
 stations = ["exact-transform", "harmonization", "counterpoint-stretto", "synthesis-render"]
 
+[continuity]
+roles = ["phone-scene"]
+semantic_inputs = ["keyboard", "touch"]
+body_prompt = false
+focus = "visible-expedition"
+authority_intersection = ["mission", "passport", "route-lease", "endpoint-grant"]
+sensitive_refusals = ["secret", "private-note", "unreviewed-model-output", "undeclared-sensitive-field"]
+sensitive_roles = ["glance", "audible", "notification", "lock-screen"]
+stop_outcome = "normal-pack-outcome"
+continuation = "phone-keyboard-identical"
+forbidden_inputs = ["coordinates", "raw-sensor-frame"]

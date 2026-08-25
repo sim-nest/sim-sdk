@@ -12,6 +12,7 @@ REQUIRED = {
     "version", "content", "title", "input_shape", "output_shape", "route",
     "capabilities", "surface", "ceiling", "degradation", "fallback",
     "specimen", "success_claims", "refusal_claims", "forbidden",
+    "continuity",
 }
 CONTENT_ID = re.compile(r"sha256:[0-9a-f]{64}\Z")
 
@@ -39,6 +40,24 @@ def load_packs():
         assert pack["success_claims"] and pack["refusal_claims"], path
         assert pack["degradation"].strip() and pack["fallback"].strip(), path
         assert pack["forbidden"], path
+        continuity = pack["continuity"]
+        assert continuity["roles"] == ["phone-scene"], path
+        assert continuity["semantic_inputs"] == ["keyboard", "touch"], path
+        assert continuity["body_prompt"] is False, path
+        assert continuity["focus"] == "visible-expedition", path
+        assert continuity["authority_intersection"] == [
+            "mission", "passport", "route-lease", "endpoint-grant",
+        ], path
+        assert continuity["sensitive_refusals"] == [
+            "secret", "private-note", "unreviewed-model-output",
+            "undeclared-sensitive-field",
+        ], path
+        assert continuity["sensitive_roles"] == [
+            "glance", "audible", "notification", "lock-screen",
+        ], path
+        assert continuity["stop_outcome"] == "normal-pack-outcome", path
+        assert continuity["continuation"] == "phone-keyboard-identical", path
+        assert continuity["forbidden_inputs"] == ["coordinates", "raw-sensor-frame"], path
         packs[pack["title"]] = pack
     return packs
 
