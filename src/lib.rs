@@ -74,6 +74,23 @@
 #![allow(deprecated)]
 extern crate self as sim;
 
+/// Public, data-oriented hot-generation contracts.
+///
+/// Host provider implementations remain outside the facade: applications
+/// compose storage, sandbox, loader, and journal ports and pass only these
+/// stable requests, candidates, compatibility reports, and receipts across
+/// their public boundary.
+#[cfg(feature = "hotload")]
+pub mod hotload {
+    pub use sim_lib_hotload::{
+        AchievedLimits, ActivationAudit, ActivationFailure, ActivationReceipt, ActivationRequest,
+        ActivationService, ActivationStatus, AdmissionFailure, AdmissionReceipt, AdmissionRequest,
+        AdmissionService, ArtifactCandidate, BuildFailure, BuildMounts, CandidateTestResult,
+        CompatibilityPolicy, CompatibilityReport, FailureKind, HotloadGeneration,
+        NativeBuildRequest, NativeBuilder, PreflightLimits, ToolchainIdentity,
+    };
+}
+
 /// Portable estate vocabulary, exposure compiler, organ, projection, and calls.
 /// Concrete controller bindings are intentionally absent; providers are opt-in.
 #[cfg(feature = "estate")]

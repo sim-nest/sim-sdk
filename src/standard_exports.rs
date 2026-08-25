@@ -29,7 +29,7 @@ pub use sim_codec_mcp as codec_mcp;
 pub use sim_codec_python as codec_python;
 #[cfg(feature = "codec-typescript")]
 pub use sim_codec_typescript as codec_typescript;
-#[cfg(feature = "core")]
+#[cfg(any(feature = "core", feature = "hotload"))]
 pub use sim_kernel as kernel;
 #[cfg(feature = "standard-binding")]
 pub use sim_lib_binding as lib_binding;
