@@ -1,0 +1,9 @@
+id = "chosen-media-traces"
+title = "Keep only chosen media traces"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 50
+tags = ["sdk", "stewardship", "media", "offline", "privacy"]
+requires = ["core", "codec/lisp"]
+network = false

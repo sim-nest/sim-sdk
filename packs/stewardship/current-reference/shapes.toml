@@ -1,0 +1,21 @@
+schema = "sim.current-reference-shapes/v1"
+namespace = "stewardship/current-reference"
+
+[[shape]]
+id = "current-reference"
+required = ["id", "domain", "source", "jurisdiction", "edition", "checked-at", "expires-at", "claim"]
+optional = ["replacement"]
+domains = ["garden", "flock", "food", "product"]
+
+[[shape]]
+id = "replacement-reference"
+required = ["prior-reference", "current-reference", "chosen-by", "chosen-at"]
+constraint = "explicit-reviewed-replacement"
+
+[[shape]]
+id = "broken-reference"
+required = ["reference", "reason", "observed-at"]
+
+[[shape]]
+id = "policy-tombstone"
+required = ["reference", "policy", "removed-at"]

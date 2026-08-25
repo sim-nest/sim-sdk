@@ -1,0 +1,47 @@
+schema = "sim.media-memory-shapes/v1"
+namespace = "stewardship/media-memory"
+
+[[shape]]
+id = "source-ref"
+required = ["id", "kind", "locator", "title", "source", "selected-by", "selected-at"]
+constraint = "locator-is-user-supplied-or-selected-export-entry"
+
+[[shape]]
+id = "import-receipt"
+required = ["id", "source-ref", "export-digest", "imported-at", "selected-items"]
+constraint = "selected-items-only"
+
+[[shape]]
+id = "episode-position"
+required = ["source-ref", "episode", "offset", "recorded-at"]
+predicate = "positioned"
+
+[[shape]]
+id = "book-position"
+required = ["source-ref", "edition", "position", "recorded-at"]
+predicate = "positioned"
+
+[[shape]]
+id = "saved-item"
+required = ["id", "source-ref", "saved-at"]
+predicate = "saved"
+
+[[shape]]
+id = "authored-note"
+required = ["id", "source-ref", "author", "body", "authored-at"]
+predicate = "noted"
+authority = "mia"
+
+[[shape]]
+id = "citation-link"
+required = ["id", "source-ref", "target", "relation", "created-at"]
+
+[[shape]]
+id = "removal"
+required = ["id", "target", "removed-at", "mode"]
+modes = ["delete-trace", "policy-tombstone"]
+
+[[shape]]
+id = "replacement"
+required = ["id", "removed-target", "replacement-target", "chosen-by", "chosen-at"]
+constraint = "explicit-choice-never-silent-substitution"

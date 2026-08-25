@@ -1,0 +1,41 @@
+schema = "sim.current-reference-cases/v1"
+
+[[reference]]
+id = "garden-seed-2026"
+domain = "garden"
+source = "source:local-extension-sheet"
+jurisdiction = "SE-AB"
+edition = "2026-02"
+checked_at = "2026-03-01T08:00:00Z"
+expires_at = "2026-09-01T08:00:00Z"
+replacement = "none"
+
+[[reference]]
+id = "food-storage-2025"
+domain = "food"
+source = "source:municipal-guidance"
+jurisdiction = "SE-AB"
+edition = "2025-04"
+checked_at = "2025-04-20T08:00:00Z"
+expires_at = "2026-04-20T08:00:00Z"
+replacement = "food-storage-2026"
+
+[[reference]]
+id = "flock-care-2026"
+domain = "flock"
+source = "source:reviewed-care-sheet"
+jurisdiction = "SE"
+edition = "2026-01"
+checked_at = "2026-01-10T08:00:00Z"
+expires_at = "2027-01-10T08:00:00Z"
+replacement = "none"
+
+[[reference]]
+id = "product-manual-r2"
+domain = "product"
+source = "source:manufacturer-manual"
+jurisdiction = "EU"
+edition = "revision-2"
+checked_at = "2026-06-01T08:00:00Z"
+expires_at = "2027-06-01T08:00:00Z"
+replacement = "none"

@@ -743,3 +743,24 @@ steps = [
   { specimen = "recipe/sim-sdk/stewardship/calm-flock-care", why = "Exercise a single calm flock-level capture for eight synthetic birds with an isolated kitchen claim." },
   { specimen = "spec-test/sim-sdk/tests/validate_flock_pack", why = "Prove the twenty-second budget, unknown-on-missing rule, factual handoff boundary, and absence of scoring, culling, diagnosis, treatment, and automated care." },
 ]
+
+[[feature]]
+id = "feature/sim-sdk/chosen-media-current-reference-packs"
+title = "Chosen media traces and current references"
+summary = "Compose explicitly selected media traces, Mia-authored meanings, current jurisdictional citations, local rebuildable search, and honest removal without remote scraping or taste inference."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/media-memory/pack.toml and packs/stewardship/current-reference/pack.toml. Import only selected local export entries or supplied references, keep every media predicate distinct, and let Mia author understood, endorsed, and finished meanings. Remove traces from local search and leave a broken reference or policy tombstone unless Mia explicitly chooses a replacement."
+claims_anchors = ["anchor/crate/sim-nest"]
+claims_specimens = ["spec-test/sim-sdk/tests/validate_media_reference_packs", "recipe/sim-sdk/stewardship/chosen-media-traces"]
+supports = ["feature/sim-sdk/cited-seasonal-garden-pack", "feature/sim-sdk/calm-flock-care-pack", "feature/sim-sdk/taste-led-kitchen-pack", "feature/sim-sdk/reversible-atelier-product"]
+
+[[route]]
+id = "route/compose-chosen-media-current-references"
+task = "Keep only chosen media traces and current cited references"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/chosen-media-current-reference-packs", why = "Compose selected imports, authored meanings, local search, citation currency, and explicit removal as bounded data." },
+  { specimen = "recipe/sim-sdk/stewardship/chosen-media-traces", why = "Import and remove one selected synthetic trace with every remote and inference lane absent." },
+  { specimen = "spec-test/sim-sdk/tests/validate_media_reference_packs", why = "Prove source-policy excerpts, predicate separation, guidance metadata, removal semantics, and networkless operation." },
+]
