@@ -1,0 +1,16 @@
+version = 1
+content = "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+title = "Mutual porch"
+input_shape = "shape/synthetic-minimum-projection-offer"
+output_shape = "shape/independent-porch-disposition"
+route = "route/share-mutual-projection"
+capabilities = ["projection-offer", "independent-acceptance"]
+surface = "mutual-minimum"
+ceiling = ["projection-offer", "independent-acceptance"]
+degradation = "Retain independent originals and disclose no additional fields."
+fallback = "Record a declined disposition as a successful completed exchange."
+specimen = "specimen/mutual-porch-declined"
+success_claims = ["minimum-projection-shared", "independent-dispositions", "decline-succeeded"]
+refusal_claims = ["projection-exceeds-minimum"]
+forbidden = ["mount-peer-archive", "require-acceptance", "copy-private-original"]
+

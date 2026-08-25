@@ -1,0 +1,16 @@
+version = 1
+content = "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+title = "Physics-edge lens"
+input_shape = "shape/content-identified-problem-finding"
+output_shape = "shape/applicability-bounded-study"
+route = "route/run-modeled-physics-study"
+capabilities = ["problem-read", "audited-operation-invoke"]
+surface = "read-only-study"
+ceiling = ["problem-read", "audited-operation-invoke"]
+degradation = "State that the selected method cannot test the finding."
+fallback = "Return the cited closure protocol and method-cannot-close as success."
+specimen = "specimen/physics-edge-synthetic"
+success_claims = ["problem-identity-preserved", "operation-audited", "applicability-stated", "method-cannot-close"]
+refusal_claims = ["operation-not-delivered", "finding-outside-method"]
+forbidden = ["edit-external-problem", "close-external-problem", "edit-external-finding", "reinterpret-external-problem"]
+

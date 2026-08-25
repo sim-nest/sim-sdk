@@ -1,0 +1,16 @@
+version = 1
+content = "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+title = "Toy color room"
+input_shape = "shape/color-name"
+output_shape = "shape/color-name"
+route = "route/identity-expression"
+capabilities = ["data-read"]
+surface = "public-synthetic"
+ceiling = ["data-read"]
+degradation = "Return the input color name unchanged."
+fallback = "Read the synthetic color name aloud."
+specimen = "specimen/toy-color-identity"
+success_claims = ["color-preserved"]
+refusal_claims = ["not-a-color-name"]
+forbidden = ["external-effect"]
+

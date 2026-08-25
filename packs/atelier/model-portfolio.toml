@@ -1,0 +1,16 @@
+version = 1
+content = "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+title = "Model portfolio"
+input_shape = "shape/frozen-model-pick-evidence"
+output_shape = "shape/model-study-observation"
+route = "route/run-genai-locally"
+capabilities = ["model-pick-read", "fixed-study-read"]
+surface = "private-study"
+ceiling = ["model-pick-read", "fixed-study-read"]
+degradation = "Record the frozen evidence without invoking the replaceable placement."
+fallback = "Ask the operator to supply a current frozen ModelPick; do not select one."
+specimen = "specimen/model-portfolio-synthetic"
+success_claims = ["model-pick-frozen", "study-evidence-fixed", "placement-replaceable", "observation-recorded"]
+refusal_claims = ["model-pick-expired", "study-evidence-mutable"]
+forbidden = ["judge-answer", "rank-model", "select-model", "mutate-model-pick"]
+

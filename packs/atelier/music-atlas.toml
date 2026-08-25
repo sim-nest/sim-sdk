@@ -1,0 +1,17 @@
+version = 1
+content = "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+title = "Music atlas"
+input_shape = "shape/music-source-question"
+output_shape = "shape/music-preservation-receipt"
+route = "route/explore-serial-music"
+capabilities = ["music-read", "music-audition"]
+surface = "private-study"
+ceiling = ["music-read", "music-audition"]
+degradation = "Return notation and an explicit loss record when audition is unavailable."
+fallback = "Follow the Index route to a readable score and preserve the source identity."
+specimen = "specimen/music-atlas-synthetic"
+success_claims = ["source-preserved", "question-answered", "transform-described", "loss-stated"]
+refusal_claims = ["algorithm-unavailable"]
+forbidden = ["implement-algorithm", "alter-source"]
+stations = ["exact-transform", "harmonization", "counterpoint-stretto", "synthesis-render"]
+

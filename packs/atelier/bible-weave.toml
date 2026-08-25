@@ -1,0 +1,16 @@
+version = 1
+content = "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+title = "Bible weave"
+input_shape = "shape/cited-passage-reading"
+output_shape = "shape/separated-reading-layers"
+route = "route/read-cited-sources"
+capabilities = ["cited-source-read", "reader-layer-write"]
+surface = "private-reflection"
+ceiling = ["cited-source-read", "reader-layer-write"]
+degradation = "Keep the available witness visible and mark absent context explicitly."
+fallback = "Read the lawfully available source beside the witness without synthesizing doctrine."
+specimen = "specimen/bible-weave-synthetic"
+success_claims = ["source-text", "textual-witness", "context", "interpretation", "reflection", "response"]
+refusal_claims = ["source-unavailable", "licence-unverified"]
+forbidden = ["produce-doctrine", "merge-reading-layers", "exceed-model-proposal"]
+
