@@ -1,0 +1,10 @@
+id = "calm-flock-care"
+title = "Record calm flock care"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 30
+tags = ["sdk", "stewardship", "flock", "offline", "attention"]
+requires = ["core", "codec/lisp", "claims"]
+network = false
+

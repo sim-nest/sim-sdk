@@ -1,0 +1,67 @@
+schema = "sim.stewardship-flock-cases/v1"
+
+[[bird]]
+id = "bird-ada"
+name = "Ada"
+[[bird]]
+id = "bird-birch"
+name = "Birch"
+[[bird]]
+id = "bird-clover"
+name = "Clover"
+[[bird]]
+id = "bird-dove"
+name = "Dove"
+[[bird]]
+id = "bird-ember"
+name = "Ember"
+[[bird]]
+id = "bird-fern"
+name = "Fern"
+[[bird]]
+id = "bird-goldie"
+name = "Goldie"
+[[bird]]
+id = "bird-hazel"
+name = "Hazel"
+
+[[capture_case]]
+id = "common-normal"
+step_seconds = [6, 7, 5]
+observation_scope = "flock"
+observation_truth = "normal"
+expected_forms = 1
+expected_state = "normal"
+
+[[capture_case]]
+id = "missing-is-unknown"
+step_seconds = []
+observation_scope = "flock"
+observation_truth = "missing"
+expected_forms = 0
+expected_state = "unknown"
+
+[[deviation_case]]
+id = "hazel-limping"
+bird = "bird-hazel"
+observed_facts = ["favours-left-foot", "remained-near-water"]
+observed_at = "2026-08-25T07:10:00Z"
+current_care = ["fresh-water", "morning-feed", "secure-run"]
+current_supplies = ["water:present", "feed:present"]
+source_refs = ["capture:2026-08-25-am", "observation:hazel-0710"]
+expected_attention = "human-review-required"
+expected_diagnoses = 0
+expected_treatments = 0
+
+[[egg_claim_case]]
+id = "confirmed-eggs-copy-once"
+truth = "confirmed"
+fresh = true
+expected_kitchen_claims = 1
+
+[[egg_claim_case]]
+id = "unknown-eggs-do-not-copy"
+truth = "unknown"
+fresh = false
+expected_kitchen_claims = 0
+

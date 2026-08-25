@@ -702,3 +702,24 @@ steps = [
   { specimen = "recipe/sim-sdk/stewardship/cited-seasonal-garden", why = "Rebuild a season and add a bed and crop entirely through data while all optional provider lanes remain absent." },
   { specimen = "spec-test/sim-sdk/tests/validate_garden_pack", why = "Prove independent Shapes, predicate separation, expiry behavior, calendar non-authority, the harvest claim boundary, and networkless operation." },
 ]
+
+[[feature]]
+id = "feature/sim-sdk/calm-flock-care-pack"
+title = "Calm flock care continuity"
+summary = "Compose a twenty-second common-care capture, flock-level normal observation, factual deviation handoff, attention, and one copied egg claim without measuring an animal's worth."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/flock/pack.toml for eight identified birds. Record common care and one flock-level normal observation; missing capture remains unknown. Deviations produce attention and an exact factual handoff for human or professional review, never diagnosis or treatment. Only one fresh confirmed egg-availability claim may copy to kitchen."
+claims_anchors = ["anchor/crate/sim-nest"]
+claims_specimens = ["spec-test/sim-sdk/tests/validate_flock_pack", "recipe/sim-sdk/stewardship/calm-flock-care"]
+supports = ["feature/sim-sdk/taste-led-kitchen-pack"]
+
+[[route]]
+id = "route/compose-calm-flock-care-pack"
+task = "Care for a flock without measuring its worth"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/calm-flock-care-pack", why = "Compose flock identities, common care, observation, supply, attention, factual handoff, and copied claims as bounded data." },
+  { specimen = "recipe/sim-sdk/stewardship/calm-flock-care", why = "Exercise a single calm flock-level capture for eight synthetic birds with an isolated kitchen claim." },
+  { specimen = "spec-test/sim-sdk/tests/validate_flock_pack", why = "Prove the twenty-second budget, unknown-on-missing rule, factual handoff boundary, and absence of scoring, culling, diagnosis, treatment, and automated care." },
+]

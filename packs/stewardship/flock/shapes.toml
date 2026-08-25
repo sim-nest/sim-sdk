@@ -1,0 +1,49 @@
+schema = "sim.stewardship-shapes/v1"
+namespace = "stewardship/flock"
+
+[[shape]]
+id = "flock"
+required = ["id", "label", "birds"]
+constraint = "birds-are-eight-distinct-identities"
+
+[[shape]]
+id = "bird-identity"
+required = ["id", "name"]
+forbidden = ["productivity", "rank", "cull-status", "animal-value"]
+
+[[shape]]
+id = "common-care-check"
+required = ["flock", "care-items", "checked-at", "checked-by"]
+scope = "flock"
+
+[[shape]]
+id = "observation"
+required = ["scope", "truth", "observed-at", "facts"]
+optional = ["bird"]
+truth = ["normal", "deviation", "unknown"]
+
+[[shape]]
+id = "supply"
+required = ["item", "status", "observed-at"]
+status = ["present", "low", "unknown"]
+
+[[shape]]
+id = "deviation"
+required = ["bird", "observed-facts", "observed-at", "source-refs"]
+constraint = "facts-only"
+
+[[shape]]
+id = "factual-handoff"
+required = ["bird", "observed-facts", "observed-at", "current-care", "current-supplies", "source-refs", "attention"]
+forbidden = ["diagnosis", "treatment", "prognosis"]
+
+[[shape]]
+id = "attention"
+required = ["kind", "subject", "reason", "created-at"]
+kinds = ["human-review-required", "professional-review-suggested"]
+
+[[shape]]
+id = "confirmed-egg-availability"
+required = ["claim", "source", "observed-at", "fresh-until", "quantity", "truth"]
+truth = ["confirmed"]
+
