@@ -641,3 +641,23 @@ steps = [
   { feature = "feature/sim-sdk/atelier-room-packs", why = "Select a data profile whose own route and authority ceiling compose the existing domain owner through the canonical pack graph." },
   { specimen = "spec-test/sim-sdk/tests/validate_atelier_packs", why = "The offline specimen validates all six closures and their room-specific forbidden operations, including declined porch success and the data-only toy extension." },
 ]
+
+[[feature]]
+id = "feature/sim-sdk/reversible-atelier-product"
+title = "Reversible Atelier product composition"
+summary = "A networkless conformance pilot composes all five current memo families through the disposable web worktable with fake model and device placements."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Use the reversible-product recipe to prove generic composition, refusals, unsupported states, manual routes, clean projection rebuild, and neutral value evidence. Keep personal root selection in the private control plane and use the existing generic bootloader dispatch."
+claims_anchors = ["anchor/crate/sim-nest"]
+claims_specimens = ["recipe/sim-sdk/atelier/reversible-product", "spec-test/sim-sdk/tests/reversible_product"]
+supports = ["feature/sim-sdk/atelier-room-packs", "feature/sim-web/reversible-worktable"]
+
+[[route]]
+id = "route/compose-reversible-atelier-product"
+task = "Compose and replay an offline Atelier product"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/reversible-atelier-product", why = "Compose the delivered layers and private root-set input without adding facade or bootloader behavior." },
+  { specimen = "recipe/sim-sdk/atelier/reversible-product", why = "The deterministic pilot covers all current memos and rebuilds after deleting the derived worktable." },
+]

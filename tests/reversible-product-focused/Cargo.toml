@@ -1,0 +1,14 @@
+[package]
+name = "sim-sdk-reversible-product-focused"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+sim-lib-view-worktable = { path = "../../../sim-web/crates/sim-lib-view-worktable" }
+
+[[test]]
+name = "reversible_product"
+path = "../reversible_product.rs"

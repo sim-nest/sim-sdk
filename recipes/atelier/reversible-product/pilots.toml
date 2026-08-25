@@ -1,0 +1,19 @@
+schema = "sim.atelier-pilots/v1"
+network = "forbidden"
+placements = ["fake-model", "fake-device"]
+
+[[pilot]]
+memo = "standard"
+outcomes = ["manual", "unsupported"]
+[[pilot]]
+memo = "ai"
+outcomes = ["refusal", "manual"]
+[[pilot]]
+memo = "support-crew"
+outcomes = ["refusal", "manual"]
+[[pilot]]
+memo = "vibe"
+outcomes = ["refusal", "unsupported"]
+[[pilot]]
+memo = "devices-revision-4"
+outcomes = ["unsupported", "manual"]
