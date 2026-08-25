@@ -1,0 +1,61 @@
+schema = "sim.stewardship-garden-cases/v1"
+
+[[case]]
+id = "fresh-guidance-recommends"
+guidance_checked_at = "2026-03-01T08:00:00Z"
+guidance_expires_at = "2026-03-15T08:00:00Z"
+as_of = "2026-03-10T08:00:00Z"
+forecast = "present-fresh"
+expected_recommendations = 1
+expected_instructions = 0
+expected_questions = 0
+
+[[case]]
+id = "expired-guidance-asks"
+guidance_checked_at = "2025-03-01T08:00:00Z"
+guidance_expires_at = "2025-03-15T08:00:00Z"
+as_of = "2026-03-10T08:00:00Z"
+forecast = "present-fresh"
+expected_recommendations = 0
+expected_instructions = 0
+expected_questions = 1
+
+[[case]]
+id = "missing-forecast-asks"
+guidance_checked_at = "2026-03-01T08:00:00Z"
+guidance_expires_at = "2026-03-15T08:00:00Z"
+as_of = "2026-03-10T08:00:00Z"
+forecast = "missing"
+expected_recommendations = 0
+expected_instructions = 0
+expected_questions = 1
+
+[[harvest_case]]
+id = "confirmed-harvest-copies"
+truth = "confirmed"
+fresh = true
+expected_kitchen_claims = 1
+
+[[harvest_case]]
+id = "planned-harvest-does-not-copy"
+truth = "plan"
+fresh = true
+expected_kitchen_claims = 0
+
+[[harvest_case]]
+id = "stale-harvest-does-not-copy"
+truth = "confirmed"
+fresh = false
+expected_kitchen_claims = 0
+
+[[season_fixture]]
+id = "spring-2026"
+beds = ["south-bed"]
+crops = ["pea"]
+events = ["sow-pea", "observe-pea", "harvest-pea"]
+
+[[season_fixture]]
+id = "spring-2026-extended"
+beds = ["south-bed", "herb-bed"]
+crops = ["pea", "dill"]
+events = ["sow-pea", "observe-pea", "sow-dill", "harvest-pea"]

@@ -1,0 +1,39 @@
+schema = "sim.stewardship-pack/v1"
+id = "garden-seasonal-memory"
+title = "Cited seasonal garden memory"
+shapes = "shapes.toml"
+expression = "season-memory.lisp"
+recipe = "../../../recipes/stewardship/cited-seasonal-garden"
+capabilities = ["data-read", "claim-write", "exact-rational", "calendar-project"]
+effects = ["remember-season", "ask-questions", "project-calendar", "copy-confirmed-harvest"]
+forbidden_effects = ["predict-weather", "command-work", "choose-action", "mutate-calendar"]
+optional_lanes = ["weather-reference", "calendar"]
+absent_lanes = ["kitchen", "calendar", "model", "network"]
+
+[predicates]
+distinct = ["plan", "observation", "forecast", "recommendation", "completed-work"]
+no_promotion = "predicate-kind-never-implies-another-kind"
+
+[guidance]
+required_fields = ["source", "jurisdiction", "checked-at", "expires-at"]
+fresh = "recommendation-only"
+expired = "next-question"
+never = ["instruction", "completed-work", "forecast"]
+
+[calendar]
+input = "chosen-action"
+output = "projection"
+authority = "none"
+missing = "retain-chosen-action-without-projection"
+
+[kitchen_claim]
+kind = "confirmed-harvest-availability"
+input_predicate = "observation"
+required_truth = "confirmed"
+required_fields = ["claim", "source", "observed-at", "fresh-until", "quantity"]
+copied = true
+forbidden_fields = ["garden-handle", "plan", "forecast", "recommendation"]
+
+[extensibility]
+season_rebuild = "ordered-input-data"
+bed_crop_addition = "data-only"

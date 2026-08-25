@@ -681,3 +681,24 @@ steps = [
   { specimen = "recipe/sim-sdk/stewardship/taste-led-kitchen", why = "Exercise copied egg evidence, stale-stock questioning, exact unit labels, and an opaque optional cost reference with every provider lane absent." },
   { specimen = "spec-test/sim-sdk/tests/validate_kitchen_pack", why = "Prove the Shapes, freshness lattice, source-room isolation, effect ceiling, and networkless fixture." },
 ]
+
+[[feature]]
+id = "feature/sim-sdk/cited-seasonal-garden-pack"
+title = "Cited seasonal garden memory"
+summary = "Compose independent garden Shapes, dated jurisdictional guidance, optional weather evidence, calendar projections, exact harvest quantities, and copied claims without turning uncertain evidence into instructions."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/garden/pack.toml and rebuild seasons from ordered input data. Keep plans, observations, forecasts, recommendations, and completed work distinct. Expired guidance or missing weather creates a next question; calendars only project already chosen actions; only fresh confirmed harvest observations copy to kitchen."
+claims_anchors = ["anchor/crate/sim-nest"]
+claims_specimens = ["spec-test/sim-sdk/tests/validate_garden_pack", "recipe/sim-sdk/stewardship/cited-seasonal-garden"]
+supports = ["feature/sim-sdk/taste-led-kitchen-pack"]
+
+[[route]]
+id = "route/compose-cited-seasonal-garden-pack"
+task = "Rebuild a garden season without predicting or commanding work"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/cited-seasonal-garden-pack", why = "Compose source-bounded recommendations, optional projections, exact observations, and questions as data while Mia retains authority." },
+  { specimen = "recipe/sim-sdk/stewardship/cited-seasonal-garden", why = "Rebuild a season and add a bed and crop entirely through data while all optional provider lanes remain absent." },
+  { specimen = "spec-test/sim-sdk/tests/validate_garden_pack", why = "Prove independent Shapes, predicate separation, expiry behavior, calendar non-authority, the harvest claim boundary, and networkless operation." },
+]

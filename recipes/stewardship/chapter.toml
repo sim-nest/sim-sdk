@@ -1,5 +1,4 @@
 title = "Stewardship packs"
 summary = "Independent, data-only household projections that preserve human authority."
 order = 80
-recipes = ["taste-led-kitchen"]
-
+recipes = ["taste-led-kitchen", "cited-seasonal-garden"]
