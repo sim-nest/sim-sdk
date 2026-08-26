@@ -277,6 +277,25 @@ mod tests {
     }
 
     #[test]
+    fn conduct_recipes_name_runtime_libs_not_rust_crates() {
+        let recipes = sim_cookbook::recipes_from_embedded(crate::lib_agent::RECIPES)
+            .expect("agent recipes parse");
+        let conducts = recipes
+            .iter()
+            .filter(|recipe| recipe.id.contains("/conduct-"))
+            .collect::<Vec<_>>();
+        assert_eq!(conducts.len(), 9, "complete conduct recipe family");
+        for recipe in conducts {
+            assert_eq!(
+                recipe.requires,
+                ["agent", "codec/lisp"],
+                "{} runtime requirements",
+                recipe.id,
+            );
+        }
+    }
+
+    #[test]
     fn cookbook_all_feature_matches_directory_features() {
         let cargo_toml = include_str!("../../Cargo.toml");
         let cookbook_features = parse_feature(cargo_toml, "cookbook-all");
