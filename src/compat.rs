@@ -355,7 +355,11 @@ mod tests {
             runtime::install_core_runtime,
         };
 
-        let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+        let mut cx = sim_kernel::Cx::new(
+            Arc::new(EagerPolicy),
+            Arc::new(DefaultFactory),
+            sim_kernel::HandleSeed::new(0x05e0_cdc9_662c_52ac),
+        );
         install_core_runtime(&mut cx);
         let expr_shape = cx
             .registry()

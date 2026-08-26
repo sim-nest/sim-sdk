@@ -131,7 +131,11 @@ fn browse_accepts_content_ref_identity_expressions() {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x9efa_3c33_3a97_7f23),
+    );
     install_core_runtime(&mut cx);
     cx
 }

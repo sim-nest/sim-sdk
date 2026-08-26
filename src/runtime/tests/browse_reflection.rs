@@ -214,7 +214,11 @@ fn schema_shapes_accept_complete_values_and_reject_malformed_tables() {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x6ce8_1ad1_d227_b6d0),
+    );
     install_core_runtime(&mut cx);
     cx
 }

@@ -342,3 +342,4 @@ fn eval_request(expr: Expr) -> EvalRequest {
         trace: false,
     }
 }
+// conformance: interference specimens prove public solve, evidence, and placement behavior.

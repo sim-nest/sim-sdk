@@ -8,3 +8,4 @@ fn checked_recipe_uses_the_public_adoption_surface() {
     let function = recipe::adopt_reproduced_instrument;
     let _ = function;
 }
+// conformance: instrument adoption rebuilds from frozen inputs and rolls back atomically.

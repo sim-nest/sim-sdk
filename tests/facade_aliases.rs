@@ -32,7 +32,11 @@ fn readme_default_quickstart_compiles_and_installs_core_runtime() {
     use sim::kernel::{Cx, DefaultFactory, EagerPolicy, Symbol};
     use sim::runtime::install_core_runtime;
 
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x61e2_597c_18a0_e66b),
+    );
     install_core_runtime(&mut cx);
 
     cx.resolve_shape(&Symbol::qualified("core", "Expr"))

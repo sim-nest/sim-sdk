@@ -8,7 +8,11 @@ use crate::runtime::install_core_runtime;
 
 #[test]
 fn shape_runtime_helpers_use_kernel_shape_protocol() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xd9d8_c50b_6463_21a9),
+    );
     install_core_runtime(&mut cx);
     let any = cx.resolve_shape(&Symbol::qualified("core", "Any")).unwrap();
     assert!(any.object().as_shape().is_some());
@@ -57,7 +61,11 @@ fn shape_runtime_helpers_use_kernel_shape_protocol() {
 
 #[test]
 fn shape_subshape_helpers_cover_any_exact_one_of_and_class_ancestry() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xef74_f74d_c350_e8eb),
+    );
     install_core_runtime(&mut cx);
     let any = cx.resolve_shape(&Symbol::qualified("core", "Any")).unwrap();
     let number = cx
@@ -131,7 +139,11 @@ fn shape_subshape_helpers_cover_any_exact_one_of_and_class_ancestry() {
 
 #[test]
 fn shape_constructor_values_encode_without_opaque_display_text() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x86e0_8e55_24f9_1506),
+    );
     install_core_runtime(&mut cx);
     let shape = cx
         .call_class(
@@ -159,7 +171,11 @@ fn shape_read_construct_decodes_to_callable_shape_value() {
     use sim_codec_lisp::LispCodecLib;
     use sim_kernel::{CapabilitySet, ReadPolicy, TrustLevel, read_construct_capability};
 
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x9e1e_b993_2529_422a),
+    );
     install_core_runtime(&mut cx);
     cx.grant(macro_expand_eval_capability());
     cx.grant(read_construct_capability());

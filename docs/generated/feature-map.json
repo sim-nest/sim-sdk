@@ -18,6 +18,22 @@
         },
         {
           "edges": [
+            "dep:sim-lib-agent-conduct",
+            "agent-conduct-core"
+          ],
+          "name": "agent-conduct",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-conduct-core",
+            "core"
+          ],
+          "name": "agent-conduct-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "agent",
             "sim-lib-agent/agent-net"
           ],
@@ -327,6 +343,14 @@
             "numbers-float"
           ],
           "name": "compute-wgpu",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-continuity",
+            "core"
+          ],
+          "name": "continuity",
           "workspace_edges": []
         },
         {
@@ -980,6 +1004,14 @@
         },
         {
           "edges": [
+            "dep:sim-lib-hotload",
+            "dep:sim-kernel"
+          ],
+          "name": "hotload",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-intent",
             "core",
             "shape"
@@ -1308,6 +1340,15 @@
         },
         {
           "edges": [
+            "dep:sim-lib-model-test",
+            "study",
+            "provider"
+          ],
+          "name": "model-test",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "music-core",
             "music-combinators",
             "music-analysis",
@@ -1474,6 +1515,14 @@
             "core"
           ],
           "name": "music-transform",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "music-core",
+            "stream-host"
+          ],
+          "name": "music-vertical",
           "workspace_edges": []
         },
         {
@@ -1661,6 +1710,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-numbers-method"
+          ],
+          "name": "numbers-method",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-numbers-numeric",
             "numbers-f64",
             "numbers-func",
@@ -1712,6 +1768,13 @@
             "core"
           ],
           "name": "numbers-quad",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-quantity"
+          ],
+          "name": "numbers-quantity",
           "workspace_edges": []
         },
         {
@@ -1837,6 +1900,112 @@
             "sim-lib-openai-server/http"
           ],
           "name": "openai-server-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-core",
+            "dep:sim-lib-physics-adapter"
+          ],
+          "name": "physics-adapter",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-adapter",
+            "femm-physics"
+          ],
+          "name": "physics-adapter-femm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-adapter",
+            "interference-core"
+          ],
+          "name": "physics-adapter-interference",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-power",
+            "numbers-method",
+            "dep:sim-lib-physics-audit",
+            "sim-lib-physics-runtime/audit"
+          ],
+          "name": "physics-audit",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-physics-core",
+            "dep:sim-lib-physics-runtime",
+            "sim-lib-physics-runtime/core",
+            "numbers-quantity",
+            "core"
+          ],
+          "name": "physics-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-study",
+            "dep:sim-lib-physics-findings",
+            "sim-lib-physics-runtime/findings"
+          ],
+          "name": "physics-findings",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-proof",
+            "physics-findings"
+          ],
+          "name": "physics-full",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-core",
+            "dep:sim-lib-physics-influence",
+            "sim-lib-physics-runtime/influence"
+          ],
+          "name": "physics-influence",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-core",
+            "dep:sim-lib-physics-power",
+            "sim-lib-physics-runtime/power"
+          ],
+          "name": "physics-power",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-audit",
+            "dep:sim-lib-physics-proof",
+            "sim-lib-physics-runtime/proof"
+          ],
+          "name": "physics-proof",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-proof",
+            "sim-lib-physics-proof/extended-precision"
+          ],
+          "name": "physics-proof-extended",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-influence",
+            "dep:sim-lib-physics-study",
+            "sim-lib-physics-runtime/study"
+          ],
+          "name": "physics-study",
           "workspace_edges": []
         },
         {
@@ -2104,6 +2273,31 @@
             "sim-lib-rank/rank-scatter"
           ],
           "name": "rank-scatter",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-relation-core",
+            "dep:sim-relation-schema",
+            "dep:sim-relation-plan",
+            "dep:sim-relation-migrate",
+            "dep:sim-relation-site",
+            "dep:sim-relation-shape",
+            "dep:sim-table-core",
+            "dep:sim-table-relation",
+            "dep:sim-table-mount",
+            "shape",
+            "core"
+          ],
+          "name": "relation",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "relation",
+            "dep:sim-platform-sqlite"
+          ],
+          "name": "relation-sqlite",
           "workspace_edges": []
         },
         {
@@ -2833,6 +3027,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-study"
+          ],
+          "name": "study",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-table-db",
             "core"
           ],
@@ -3108,6 +3309,21 @@
             "view"
           ],
           "name": "web-layout",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-net-http",
+            "dep:sim-lib-web-core",
+            "dep:sim-lib-search-core",
+            "dep:sim-lib-web-fetch",
+            "dep:sim-lib-search-http",
+            "dep:sim-lib-search",
+            "dep:sim-lib-doc-web",
+            "dep:sim-lib-view-search",
+            "rank"
+          ],
+          "name": "web-search",
           "workspace_edges": []
         },
         {

@@ -119,6 +119,11 @@ fn r21_swarm_proving_over_ring_and_mesh_records_multi_turn_results() {
         vec![
             keyword("name"),
             Expr::Symbol(Symbol::new("proof-swarm")),
+            keyword("agents"),
+            quoted(Expr::List(vec![
+                Expr::Symbol(Symbol::qualified("test", "ring-a")),
+                Expr::Symbol(Symbol::qualified("test", "ring-b")),
+            ])),
             keyword("max-turns"),
             number_expr(2),
         ],
@@ -135,7 +140,23 @@ fn r21_swarm_proving_over_ring_and_mesh_records_multi_turn_results() {
         .object()
         .as_expr(&mut cx)
         .unwrap();
-    assert!(flatten_text(&launched).contains("transcript"));
+    let launched_text = flatten_text(&launched);
+    assert!(launched_text.contains("alpha"));
+    assert!(launched_text.contains("beta"));
+
+    let transcript = cx
+        .call_function(
+            &Symbol::qualified("swarm", "explain"),
+            Args::new(vec![swarm]),
+        )
+        .unwrap()
+        .object()
+        .as_expr(&mut cx)
+        .unwrap();
+    let transcript_text = flatten_text(&transcript);
+    assert!(transcript_text.contains("turn"));
+    assert!(transcript_text.contains("alpha"));
+    assert!(transcript_text.contains("beta"));
 }
 
 #[test]

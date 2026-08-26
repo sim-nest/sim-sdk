@@ -1,25 +1,10 @@
 use std::collections::{BTreeMap, BTreeSet};
 
-const MATRIX: &str = include_str!(concat!(
-    env!("CARGO_MANIFEST_DIR"),
-    "/../../recipes/stewardship/memo-acceptance/matrix.tsv"
-));
-const SCENARIO: &str = include_str!(concat!(
-    env!("CARGO_MANIFEST_DIR"),
-    "/../../recipes/stewardship/memo-acceptance/scenario.tsv"
-));
-const STATEMENT: &str = include_str!(concat!(
-    env!("CARGO_MANIFEST_DIR"),
-    "/../../recipes/stewardship/memo-acceptance/statement.csv"
-));
-const ODB: &str = include_str!(concat!(
-    env!("CARGO_MANIFEST_DIR"),
-    "/../../recipes/stewardship/memo-acceptance/odb.script"
-));
-const README: &str = include_str!(concat!(
-    env!("CARGO_MANIFEST_DIR"),
-    "/../../recipes/stewardship/memo-acceptance/README.md"
-));
+const MATRIX: &str = include_str!("../recipes/stewardship/memo-acceptance/matrix.tsv");
+const SCENARIO: &str = include_str!("../recipes/stewardship/memo-acceptance/scenario.tsv");
+const STATEMENT: &str = include_str!("../recipes/stewardship/memo-acceptance/statement.csv");
+const ODB: &str = include_str!("../recipes/stewardship/memo-acceptance/odb.script");
+const README: &str = include_str!("../recipes/stewardship/memo-acceptance/README.md");
 
 fn rows(input: &str, columns: usize) -> Vec<Vec<&str>> {
     input
@@ -189,3 +174,4 @@ fn public_evidence_is_synthetic_and_destruction_claims_are_bounded() {
     assert!(README.contains("tracked\nciphertext generations and backups"));
     assert!(MATRIX.contains("claim is limited to managed copies"));
 }
+// conformance: memo acceptance proves deterministic multi-format evidence review.

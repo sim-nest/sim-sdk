@@ -29,7 +29,7 @@ audiences = ["code", "framework"]
 guidance = "Enable hotload and import sim::hotload. Compose the sandbox, storage, loader, and journal providers at the host boundary; pass only the facade-visible requests, candidates, reports, generations, and receipts through application code."
 claims_anchors = ["anchor/rustdoc/sim-nest/hotload"]
 claims_specimens = ["spec-test/sim-sdk/tests/hotload_generation", "recipe/sim-sdk/hotload/public-generation-loop", "spec-test/sim-sdk/tests/conversational_instrument_adoption", "recipe/sim-sdk/hotload/conversational-instrument-adoption"]
-presents = ["feature/sim-run/native-hotload-construction", "feature/sim-run/hotload-operation-surface"]
+presents = ["feature/sim-run/immutable-native-build", "feature/sim-run/loadable-hot-generation"]
 
 [[route]]
 id = "route/sdk-public-hotload-generation-loop"
@@ -73,7 +73,7 @@ summary = "Expose the owning music route plan and exact stream-host effect adapt
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
 guidance = "Enable music-vertical and use sim::music_vertical; this facade composes the existing owner contracts and adds no generic command API or automation authority."
-claims_anchors = ["anchor/rustdoc/sim-nest/music-vertical"]
+claims_anchors = ["anchor/rustdoc/sim-nest/music_vertical"]
 presents = ["feature/sim-music/media-edge-vertical", "feature/sim-stream-host/named-music-effects"]
 
 [[feature]]

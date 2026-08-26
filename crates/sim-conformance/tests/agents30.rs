@@ -457,7 +457,11 @@ fn assert_deterministic_fixture_run(cx: &mut Cx, path: &Path, doc: &RecipeDoc) {
 }
 
 fn build_decode_cx() -> Cx {
-    let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let (mut cx, seat) = Cx::new_seated(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim::kernel::HandleSeed::new(0x843f_49eb_700c_e336),
+    );
     conformance_support::seat_cookbook_capabilities(&seat, &mut cx);
     sim::runtime::install_core_runtime(&mut cx);
     sim::numbers_prelude::NumbersPreludeLib::new()

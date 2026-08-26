@@ -18,7 +18,11 @@ use sim::codec::{
 use sim::kernel::{Cx, DefaultFactory, EagerPolicy, EncodeOptions, Expr, ReadPolicy, Symbol};
 
 fn boot() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xd6eb_74a7_33da_f70c),
+    );
     sim::runtime::install_core_runtime(&mut cx);
     sim::numbers_prelude::NumbersPreludeLib::new()
         .install_all(&mut cx)

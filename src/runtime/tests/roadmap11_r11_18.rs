@@ -8,7 +8,11 @@ use super::support::table_value;
 
 #[test]
 fn roadmap11_browse_lists_builtin_plugins_and_help_shows_shape_columns() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x0a5a_7b2f_c7ba_b808),
+    );
     install_core_runtime(&mut cx);
 
     let lib = cx

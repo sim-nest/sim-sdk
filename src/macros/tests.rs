@@ -16,7 +16,11 @@ use crate::{
 };
 
 fn eager_cx() -> sim_kernel::Cx {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xa3db_98ba_9f95_864a),
+    );
     install_core_runtime(&mut cx);
     cx.grant(macro_expand_capability());
     cx.grant(macro_expand_compile_capability());
@@ -26,13 +30,21 @@ fn eager_cx() -> sim_kernel::Cx {
 }
 
 fn ungranted_eager_cx() -> sim_kernel::Cx {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x1e4d_3a1e_6f93_8f6d),
+    );
     install_core_runtime(&mut cx);
     cx
 }
 
 fn noop_cx() -> sim_kernel::Cx {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x067c_757f_b08a_fa83),
+    );
     install_core_runtime(&mut cx);
     cx.grant(macro_expand_capability());
     cx

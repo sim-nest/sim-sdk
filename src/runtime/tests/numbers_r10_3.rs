@@ -13,7 +13,11 @@ use super::support::table_value;
 #[cfg(all(feature = "numbers-bool", feature = "numbers-fixed"))]
 #[test]
 fn bool_domain_browse_exposes_value_shape() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x3670_7aee_dd9d_c71c),
+    );
     install_core_runtime(&mut cx);
     let domain = cx
         .resolve_number_domain(&Symbol::qualified("numbers", "bool"))
@@ -33,7 +37,11 @@ fn bool_domain_browse_exposes_value_shape() {
 #[cfg(all(feature = "numbers-bool", feature = "numbers-fixed"))]
 #[test]
 fn bool_arithmetic_and_promotion_dispatches() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x5b60_0eff_f2b2_4b18),
+    );
     install_core_runtime(&mut cx);
     let bool_sum = cx
         .call_function(
@@ -86,7 +94,11 @@ fn bool_arithmetic_and_promotion_dispatches() {
 #[cfg(all(feature = "numbers-i64", not(feature = "numbers-rational")))]
 #[test]
 fn i64_division_stays_integer_without_rational() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xe221_670b_e4e2_024e),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -113,7 +125,11 @@ fn i64_division_stays_integer_without_rational() {
 #[cfg(all(feature = "numbers-i64", feature = "numbers-rational"))]
 #[test]
 fn i64_division_prefers_rational_when_installed() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x51cb_23f6_1c86_3621),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -140,7 +156,11 @@ fn i64_division_prefers_rational_when_installed() {
 #[cfg(all(feature = "numbers-bigint", feature = "numbers-i64"))]
 #[test]
 fn overflowing_i64_multiplication_yields_bigint() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x8b23_1033_0034_a566),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -173,7 +193,11 @@ fn overflowing_i64_multiplication_yields_bigint() {
 #[cfg(all(feature = "numbers-bigint", feature = "numbers-i64"))]
 #[test]
 fn i64_pow_overflow_promotes_to_bigint() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x4363_2802_8e54_23a6),
+    );
     install_core_runtime(&mut cx);
     let power = cx
         .call_function(

@@ -11,7 +11,7 @@ use sim::shape::AnyShape;
 use sim::source_authority::SourceAuthority;
 
 pub fn capability_scoped_python() -> Result<(), Box<dyn std::error::Error>> {
-    let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory), sim_kernel::HandleSeed::new(0xfe8e_3376_3f77_a533));
     sim::runtime::install_core_runtime(&mut cx);
     let python_codec_id = cx.registry_mut().fresh_codec_id();
     cx.load_lib(&sim::codec_python::PythonCodecLib::new(python_codec_id))?;

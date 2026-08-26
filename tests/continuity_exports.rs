@@ -257,3 +257,4 @@ fn continuity_production_has_no_product_or_person_policy_branch() {
         );
     }
 }
+// conformance: SDK continuity exports preserve the intended facade boundary.

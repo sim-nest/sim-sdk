@@ -6,7 +6,11 @@
 fn sdk_exports_caller_selected_jvm_execution() {
     use sim::kernel::{Cx, DefaultFactory, NoopEvalPolicy};
     use std::sync::Arc;
-    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xeb0e_7cc2_fd7b_f38d),
+    );
     cx.grant(sim::lib_lang_jvm::class_load_capability());
     cx.grant(sim::lib_lang_jvm::jvm_invoke_capability());
     let request = sim::lib_lang_jvm::JvmExecutionRequest {

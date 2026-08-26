@@ -204,7 +204,7 @@ fn rkf45_solves_exp_growth_close_to_e() {
                 f64_number("1.0"),
                 Expr::Symbol(Symbol::new(":method")),
                 quoted("rkf45"),
-                Expr::Symbol(Symbol::new(":tol")),
+                Expr::Symbol(Symbol::new(":rtol")),
                 f64_number("1e-8"),
             ],
         })

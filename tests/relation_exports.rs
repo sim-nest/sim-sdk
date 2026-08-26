@@ -6,6 +6,8 @@ use sim::{
 };
 use std::sync::{Arc, Mutex};
 
+use site::Driver as _;
+
 #[derive(Default)]
 struct RecordingDriver(Arc<Mutex<Vec<String>>>);
 
@@ -172,3 +174,4 @@ fn sdk_surface_keeps_seals_and_provider_artifacts_at_their_owners() {
     let _mounted_type = std::any::TypeId::of::<sim::relation::mount::MountedDir>();
     let _relation_dir_type = std::any::TypeId::of::<sim::relation::table_relation::RelationDir>();
 }
+// conformance: SDK relation exports preserve the intended facade boundary.

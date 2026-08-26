@@ -32,7 +32,11 @@ pub(super) fn eval_cx() -> Cx {
 }
 
 pub(super) fn eval_cx_with_policy(policy: EvalPolicyRef) -> Cx {
-    let mut cx = Cx::new(policy, Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        policy,
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x0ddf_cd33_445c_ae15),
+    );
     install_core_runtime(&mut cx);
     cx.grant(macro_expand_eval_capability());
     cx

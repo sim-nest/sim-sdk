@@ -198,7 +198,7 @@ fn runtime_cx(writable: bool) -> Cx {
         ]);
     }
     grant_capabilities(&seat, &mut cx, capabilities);
-    install_expr_tree_lib(&mut cx).unwrap();
+    install_expr_tree_lib(&mut cx, sim::kernel::HandleSeed::new(0x5344_4b03)).unwrap();
     cx
 }
 
@@ -341,3 +341,4 @@ fn error_code(expr: &Expr) -> Option<String> {
         _ => None,
     })
 }
+// conformance: expression-tree specimens prove the public framework composition.

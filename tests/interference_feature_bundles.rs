@@ -109,6 +109,7 @@ fn standard_install_loads_interference_runtime_before_optional_compute() {
     let mut cx = sim::kernel::Cx::new(
         Arc::new(sim::kernel::EagerPolicy),
         Arc::new(sim::kernel::DefaultFactory),
+        sim::kernel::HandleSeed::new(0x5344_4b15),
     );
     sim::runtime::install_core_runtime(&mut cx);
 

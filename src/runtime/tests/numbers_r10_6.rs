@@ -40,7 +40,11 @@ use crate::runtime::install_core_runtime;
     feature = "numbers-i64"
 ))]
 fn runtime() -> sim_kernel::Cx {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x0ade_84a9_a29f_90b1),
+    );
     install_core_runtime(&mut cx);
     cx.grant(macro_expand_eval_capability());
     let lisp = LispCodecLib::new(cx.registry_mut().fresh_codec_id()).unwrap();

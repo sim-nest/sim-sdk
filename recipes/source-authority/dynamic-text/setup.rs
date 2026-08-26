@@ -8,7 +8,7 @@ use sim::shape::AnyShape;
 use sim::source_authority::{DynamicSourcePolicy, RequestOrigin, SourceAuthority};
 
 pub fn dynamic_text_source_authority() -> Result<(), Box<dyn std::error::Error>> {
-    let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory), sim_kernel::HandleSeed::new(0x0afe_dfec_e818_84d4));
     sim::runtime::install_core_runtime(&mut cx);
     let codec_id = cx.registry_mut().fresh_codec_id();
     cx.load_lib(&sim::codec_lisp::LispCodecLib::new(codec_id))?;

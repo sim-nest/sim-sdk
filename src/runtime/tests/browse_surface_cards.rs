@@ -362,7 +362,11 @@ fn root_graph_reaches_unified_stream_data_contracts() {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x01e0_4bd2_c3d8_a7ec),
+    );
     install_core_runtime(&mut cx);
     cx
 }

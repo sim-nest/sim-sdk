@@ -1,5 +1,5 @@
 {
-  "card_count": 278,
+  "card_count": 303,
   "cards": [
     {
       "id": "agent/effects",
@@ -488,6 +488,72 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/agent/ConductContract",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/Event",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/JournalHead",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/JournalRecord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/Outcome",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/RunFrame",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/RunState",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/StepCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/Stop",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/Usage",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/UsageBudget",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/audio-dsp/Config",
       "kind": "citizen-class",
       "owner": "sim-lib-audio-dsp",
@@ -509,6 +575,48 @@
       "id": "citizen/audio-synth/Preset",
       "kind": "citizen-class",
       "owner": "sim-lib-music-synth",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/Event",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/Intent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/Plan",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/Refusal",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/RoleDemand",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/RouteLease",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/Turn",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
       "summary": "citizen class constructor surface"
     },
     {
@@ -1037,6 +1145,48 @@
       "id": "citizen/plugin-core/PluginDescriptor",
       "kind": "citizen-class",
       "owner": "sim-lib-plugin-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/EndpointCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/HarnessCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/PrincipalCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/ProviderFamilyCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/ProviderSeatCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/ProviderSeatId",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/ProviderSeatLimits",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
       "summary": "citizen class constructor surface"
     },
     {
@@ -1670,7 +1820,7 @@
       "summary": "core"
     }
   ],
-  "citizen_count": 223,
+  "citizen_count": 248,
   "citizens": [
     {
       "arity": 1,
@@ -1709,6 +1859,72 @@
       "version": 1
     },
     {
+      "arity": 4,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/ConductContract",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/Event",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/JournalHead",
+      "version": 1
+    },
+    {
+      "arity": 10,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/JournalRecord",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/Outcome",
+      "version": 1
+    },
+    {
+      "arity": 7,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/RunFrame",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/RunState",
+      "version": 1
+    },
+    {
+      "arity": 11,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/StepCard",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/Stop",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/Usage",
+      "version": 1
+    },
+    {
+      "arity": 1,
+      "crate": "sim-lib-agent-conduct-core",
+      "symbol": "agent/UsageBudget",
+      "version": 1
+    },
+    {
       "arity": 1,
       "crate": "sim-lib-audio-dsp",
       "symbol": "audio-dsp/Config",
@@ -1730,6 +1946,48 @@
       "arity": 1,
       "crate": "sim-lib-music-synth",
       "symbol": "audio-synth/Preset",
+      "version": 1
+    },
+    {
+      "arity": 8,
+      "crate": "sim-lib-continuity",
+      "symbol": "continuity/Event",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-continuity",
+      "symbol": "continuity/Intent",
+      "version": 1
+    },
+    {
+      "arity": 9,
+      "crate": "sim-lib-continuity",
+      "symbol": "continuity/Plan",
+      "version": 1
+    },
+    {
+      "arity": 2,
+      "crate": "sim-lib-continuity",
+      "symbol": "continuity/Refusal",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-continuity",
+      "symbol": "continuity/RoleDemand",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-continuity",
+      "symbol": "continuity/RouteLease",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-continuity",
+      "symbol": "continuity/Turn",
       "version": 1
     },
     {
@@ -2258,6 +2516,48 @@
       "arity": 1,
       "crate": "sim-lib-plugin-core",
       "symbol": "plugin-core/PluginDescriptor",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-provider",
+      "symbol": "provider/EndpointCard",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-provider",
+      "symbol": "provider/HarnessCard",
+      "version": 1
+    },
+    {
+      "arity": 5,
+      "crate": "sim-lib-provider",
+      "symbol": "provider/PrincipalCard",
+      "version": 1
+    },
+    {
+      "arity": 8,
+      "crate": "sim-lib-provider",
+      "symbol": "provider/ProviderFamilyCard",
+      "version": 1
+    },
+    {
+      "arity": 9,
+      "crate": "sim-lib-provider",
+      "symbol": "provider/ProviderSeatCard",
+      "version": 1
+    },
+    {
+      "arity": 3,
+      "crate": "sim-lib-provider",
+      "symbol": "provider/ProviderSeatId",
+      "version": 1
+    },
+    {
+      "arity": 4,
+      "crate": "sim-lib-provider",
+      "symbol": "provider/ProviderSeatLimits",
       "version": 1
     },
     {
@@ -3160,6 +3460,16 @@
           ],
           "name": "spec",
           "src": "crates/sim-conformance/tests/spec.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "web_search_offline",
+          "src": "crates/sim-conformance/tests/web_search_offline.rs"
         }
       ]
     },
@@ -3174,6 +3484,22 @@
             "server"
           ],
           "name": "agent",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-conduct",
+            "agent-conduct-core"
+          ],
+          "name": "agent-conduct",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-agent-conduct-core",
+            "core"
+          ],
+          "name": "agent-conduct-core",
           "workspace_edges": []
         },
         {
@@ -3487,6 +3813,14 @@
             "numbers-float"
           ],
           "name": "compute-wgpu",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-continuity",
+            "core"
+          ],
+          "name": "continuity",
           "workspace_edges": []
         },
         {
@@ -4140,6 +4474,14 @@
         },
         {
           "edges": [
+            "dep:sim-lib-hotload",
+            "dep:sim-kernel"
+          ],
+          "name": "hotload",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-intent",
             "core",
             "shape"
@@ -4468,6 +4810,15 @@
         },
         {
           "edges": [
+            "dep:sim-lib-model-test",
+            "study",
+            "provider"
+          ],
+          "name": "model-test",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "music-core",
             "music-combinators",
             "music-analysis",
@@ -4634,6 +4985,14 @@
             "core"
           ],
           "name": "music-transform",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "music-core",
+            "stream-host"
+          ],
+          "name": "music-vertical",
           "workspace_edges": []
         },
         {
@@ -4821,6 +5180,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-numbers-method"
+          ],
+          "name": "numbers-method",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-lib-numbers-numeric",
             "numbers-f64",
             "numbers-func",
@@ -4872,6 +5238,13 @@
             "core"
           ],
           "name": "numbers-quad",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-numbers-quantity"
+          ],
+          "name": "numbers-quantity",
           "workspace_edges": []
         },
         {
@@ -4997,6 +5370,112 @@
             "sim-lib-openai-server/http"
           ],
           "name": "openai-server-http",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-core",
+            "dep:sim-lib-physics-adapter"
+          ],
+          "name": "physics-adapter",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-adapter",
+            "femm-physics"
+          ],
+          "name": "physics-adapter-femm",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-adapter",
+            "interference-core"
+          ],
+          "name": "physics-adapter-interference",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-power",
+            "numbers-method",
+            "dep:sim-lib-physics-audit",
+            "sim-lib-physics-runtime/audit"
+          ],
+          "name": "physics-audit",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-physics-core",
+            "dep:sim-lib-physics-runtime",
+            "sim-lib-physics-runtime/core",
+            "numbers-quantity",
+            "core"
+          ],
+          "name": "physics-core",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-study",
+            "dep:sim-lib-physics-findings",
+            "sim-lib-physics-runtime/findings"
+          ],
+          "name": "physics-findings",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-proof",
+            "physics-findings"
+          ],
+          "name": "physics-full",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-core",
+            "dep:sim-lib-physics-influence",
+            "sim-lib-physics-runtime/influence"
+          ],
+          "name": "physics-influence",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-core",
+            "dep:sim-lib-physics-power",
+            "sim-lib-physics-runtime/power"
+          ],
+          "name": "physics-power",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-audit",
+            "dep:sim-lib-physics-proof",
+            "sim-lib-physics-runtime/proof"
+          ],
+          "name": "physics-proof",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-proof",
+            "sim-lib-physics-proof/extended-precision"
+          ],
+          "name": "physics-proof-extended",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "physics-influence",
+            "dep:sim-lib-physics-study",
+            "sim-lib-physics-runtime/study"
+          ],
+          "name": "physics-study",
           "workspace_edges": []
         },
         {
@@ -5264,6 +5743,31 @@
             "sim-lib-rank/rank-scatter"
           ],
           "name": "rank-scatter",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-relation-core",
+            "dep:sim-relation-schema",
+            "dep:sim-relation-plan",
+            "dep:sim-relation-migrate",
+            "dep:sim-relation-site",
+            "dep:sim-relation-shape",
+            "dep:sim-table-core",
+            "dep:sim-table-relation",
+            "dep:sim-table-mount",
+            "shape",
+            "core"
+          ],
+          "name": "relation",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "relation",
+            "dep:sim-platform-sqlite"
+          ],
+          "name": "relation-sqlite",
           "workspace_edges": []
         },
         {
@@ -5993,6 +6497,13 @@
         },
         {
           "edges": [
+            "dep:sim-lib-study"
+          ],
+          "name": "study",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "dep:sim-table-db",
             "core"
           ],
@@ -6272,6 +6783,21 @@
         },
         {
           "edges": [
+            "dep:sim-lib-net-http",
+            "dep:sim-lib-web-core",
+            "dep:sim-lib-search-core",
+            "dep:sim-lib-web-fetch",
+            "dep:sim-lib-search-http",
+            "dep:sim-lib-search",
+            "dep:sim-lib-doc-web",
+            "dep:sim-lib-view-search",
+            "rank"
+          ],
+          "name": "web-search",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
             "web",
             "dep:sim-lib-view-wasm-frame",
             "wasm"
@@ -6350,6 +6876,16 @@
           "kind": [
             "test"
           ],
+          "name": "agent_conduct_exports",
+          "src": "tests/agent_conduct_exports.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "characterization",
           "src": "tests/characterization.rs"
         },
@@ -6380,6 +6916,26 @@
           "kind": [
             "test"
           ],
+          "name": "continuity_exports",
+          "src": "tests/continuity_exports.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "conversational_instrument_adoption",
+          "src": "tests/conversational_instrument_adoption.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "cookbook",
           "src": "tests/cookbook.rs"
         },
@@ -6402,6 +6958,16 @@
           ],
           "name": "direct_surfaces",
           "src": "tests/direct_surfaces.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "expedition_first_light",
+          "src": "tests/expedition_first_light.rs"
         },
         {
           "crate_types": [
@@ -6450,6 +7016,16 @@
           "kind": [
             "test"
           ],
+          "name": "hotload_generation",
+          "src": "tests/hotload_generation.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "interference_feature_bundles",
           "src": "tests/interference_feature_bundles.rs"
         },
@@ -6472,6 +7048,16 @@
           ],
           "name": "jvm_exports",
           "src": "tests/jvm_exports.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "memo_acceptance",
+          "src": "tests/memo_acceptance.rs"
         },
         {
           "crate_types": [
@@ -6670,6 +7256,26 @@
           "kind": [
             "test"
           ],
+          "name": "relation_exports",
+          "src": "tests/relation_exports.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "reversible_product",
+          "src": "tests/reversible_product.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "server_agent_e2e",
           "src": "tests/server_agent_e2e.rs"
         },
@@ -6702,6 +7308,86 @@
           ],
           "name": "typescript_notation",
           "src": "tests/typescript_notation.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "validate_adopt_subtract_composition",
+          "src": "tests/validate_adopt_subtract_composition.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "validate_atelier_packs",
+          "src": "tests/validate_atelier_packs.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "validate_cadence_pack",
+          "src": "tests/validate_cadence_pack.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "validate_flock_pack",
+          "src": "tests/validate_flock_pack.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "validate_garden_pack",
+          "src": "tests/validate_garden_pack.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "validate_kitchen_pack",
+          "src": "tests/validate_kitchen_pack.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "validate_media_reference_packs",
+          "src": "tests/validate_media_reference_packs.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "validate_private_observation_pack",
+          "src": "tests/validate_private_observation_pack.rs"
         }
       ]
     },
@@ -6738,10 +7424,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "12aec14f13a2f81210cda98d43b72442139d60e7",
+    "git_commit": "f39d2cb0db4243c98afd170dcf3f528df19fdb3a",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "12aec14f13a2f81210cda98d43b72442139d60e7",
+    "source_commit": "f39d2cb0db4243c98afd170dcf3f528df19fdb3a",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -6754,9 +7440,9 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "1c13ecfc2b9bcfed",
+    "workspace_hash": "9ece6c1d031b4c39",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 254,
+    "workspace_hash_input_count": 286,
     "workspace_hash_inputs": [
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
@@ -6790,11 +7476,18 @@
       "crates/sim-conformance/tests/spec/support.rs",
       "crates/sim-conformance/tests/spec/surface_protocol.rs",
       "crates/sim-conformance/tests/spec.rs",
+      "crates/sim-conformance/tests/web_search_offline.rs",
       "docs/generated/citizens.md",
       "features.toml",
       "recipes/01-basics/boot-runtime/recipe.toml",
+      "recipes/atelier/expedition-first-light/recipe.toml",
+      "recipes/atelier/reversible-product/recipe.toml",
       "recipes/book.toml",
+      "recipes/continuity/expedition-thought/recipe.toml",
+      "recipes/continuity/plans/recipe.toml",
+      "recipes/continuity/quiet-stewardship-cards/recipe.toml",
       "recipes/device/consent/recipe.toml",
+      "recipes/device/revision-4-constellation/recipe.toml",
       "recipes/device/route-swap/recipe.toml",
       "recipes/device/two-rate/recipe.toml",
       "recipes/glasses/book.toml",
@@ -6804,23 +7497,44 @@
       "recipes/glasses/viture-two-rate/recipe.toml",
       "recipes/glasses/voice-site/recipe.toml",
       "recipes/gpu-math/modeled-matrix-ode-femm/recipe.toml",
+      "recipes/hotload/conversational-instrument-adoption/recipe.toml",
+      "recipes/hotload/public-generation-loop/generation-a/Cargo.toml",
+      "recipes/hotload/public-generation-loop/generation-b/Cargo.toml",
+      "recipes/hotload/public-generation-loop/recipe.toml",
       "recipes/interference/modeled-study/recipe.toml",
       "recipes/javascript/bounded-module/recipe.toml",
       "recipes/jvm/lambda-interop/recipe.toml",
       "recipes/jvm/product-surface/recipe.toml",
       "recipes/music-algorithms/foundry-plan/recipe.toml",
+      "recipes/physics/switched-audit/recipe.toml",
       "recipes/python/capability-scoped/recipe.toml",
+      "recipes/relation/additive-migration/recipe.toml",
+      "recipes/relation/bounded-refusal/recipe.toml",
+      "recipes/relation/correlated-query/recipe.toml",
+      "recipes/relation/custom-domain-crud/recipe.toml",
+      "recipes/relation/exact-old-file-adoption/recipe.toml",
+      "recipes/relation/mounted-directory/recipe.toml",
+      "recipes/relation/multi-source-aggregate/recipe.toml",
       "recipes/serial-music/index-discovery/recipe.toml",
       "recipes/serial-music/modal-realization/recipe.toml",
       "recipes/serial-music/reversible-completion/recipe.toml",
       "recipes/serial-music/row-matrix-analysis/recipe.toml",
       "recipes/source-authority/dynamic-text/recipe.toml",
+      "recipes/stewardship/adopt-subtract-composition/recipe.toml",
+      "recipes/stewardship/calm-flock-care/recipe.toml",
+      "recipes/stewardship/chosen-media-traces/recipe.toml",
+      "recipes/stewardship/cited-seasonal-garden/recipe.toml",
+      "recipes/stewardship/memo-acceptance/recipe.toml",
+      "recipes/stewardship/private-observation/recipe.toml",
+      "recipes/stewardship/quiet-cadence/recipe.toml",
+      "recipes/stewardship/taste-led-kitchen/recipe.toml",
       "recipes/typescript-notation/admitted-notation/recipe.toml",
       "recipes/watch/book.toml",
       "recipes/watch/dual-quorum/recipe.toml",
       "recipes/watch/glance-pager/recipe.toml",
       "recipes/watch/hold-last/recipe.toml",
       "recipes/watch/privacy-reaper/recipe.toml",
+      "recipes/web-search/configured-searxng/recipe.toml",
       "src/bin/sim.rs",
       "src/classes/lib_support.rs",
       "src/classes/model.rs",
@@ -6869,6 +7583,7 @@
       "src/music_algorithm_exports.rs",
       "src/music_stack.rs",
       "src/music_stack_tests.rs",
+      "src/music_vertical.rs",
       "src/numbers_exports.rs",
       "src/roadmap11_exports.rs",
       "src/runtime/browse/coverage.rs",
@@ -7007,10 +7722,13 @@
       "src/shapes.rs",
       "src/skill_tests.rs",
       "src/standard_exports.rs",
+      "tests/first-light-focused/Cargo.toml",
+      "tests/memo-acceptance-focused/Cargo.toml",
       "tests/native-abi-ui/borrow-to-destroy/Cargo.toml",
       "tests/native-plugin/Cargo.toml",
       "tests/proc-macro-ui/invalid-shape/Cargo.toml",
       "tests/proc-macro-ui/missing-constructor/Cargo.toml",
+      "tests/reversible-product-focused/Cargo.toml",
       "xtask/Cargo.toml"
     ]
   },
@@ -7042,7 +7760,7 @@
       "card_id": "cookbook/sim-sdk",
       "group": "workspace",
       "package": "sim-nest",
-      "recipe_count": 26,
+      "recipe_count": 51,
       "recipes": [
         {
           "card_id": "sim-sdk/01-basics/boot-runtime",
@@ -7053,12 +7771,60 @@
           "title": "Boot the facade runtime"
         },
         {
+          "card_id": "sim-sdk/atelier/expedition-first-light",
+          "codec": "",
+          "id": "expedition-first-light",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/atelier/expedition-first-light/recipe.toml",
+          "title": "First light after deleting every convenience"
+        },
+        {
+          "card_id": "sim-sdk/atelier/reversible-product",
+          "codec": "",
+          "id": "reversible-product",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/atelier/reversible-product/recipe.toml",
+          "title": ""
+        },
+        {
+          "card_id": "sim-sdk/continuity/expedition-thought",
+          "codec": "",
+          "id": "expedition-thought",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/continuity/expedition-thought/recipe.toml",
+          "title": "Carry a thought by content identity"
+        },
+        {
+          "card_id": "sim-sdk/continuity/plans",
+          "codec": "",
+          "id": "plans",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/continuity/plans/recipe.toml",
+          "title": "Compose continuity plans as data"
+        },
+        {
+          "card_id": "sim-sdk/continuity/quiet-stewardship-cards",
+          "codec": "",
+          "id": "quiet-stewardship-cards",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/continuity/quiet-stewardship-cards/recipe.toml",
+          "title": "Project quiet stewardship cards"
+        },
+        {
           "card_id": "sim-sdk/device/consent",
           "codec": "lisp",
           "id": "consent",
           "package": "sim-nest",
           "recipe_toml": "recipes/device/consent/recipe.toml",
           "title": "Check modeled device consent"
+        },
+        {
+          "card_id": "sim-sdk/device/revision-4-constellation",
+          "codec": "toml",
+          "id": "revision-4-constellation",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/device/revision-4-constellation/recipe.toml",
+          "title": "Load a modeled revision-4 device constellation"
         },
         {
           "card_id": "sim-sdk/device/route-swap",
@@ -7125,6 +7891,22 @@
           "title": "Compose modeled matrix, ODE, and FEMM math"
         },
         {
+          "card_id": "sim-sdk/hotload/conversational-instrument-adoption",
+          "codec": "rust",
+          "id": "conversational-instrument-adoption",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/hotload/conversational-instrument-adoption/recipe.toml",
+          "title": "Adopt a conversationally proposed instrument reproducibly"
+        },
+        {
+          "card_id": "sim-sdk/hotload/public-hotload-generation-loop",
+          "codec": "rust",
+          "id": "public-hotload-generation-loop",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/hotload/public-generation-loop/recipe.toml",
+          "title": "Replace a native generation without invalidating captured values"
+        },
+        {
           "card_id": "sim-sdk/interference/modeled-study",
           "codec": "lisp",
           "id": "modeled-study",
@@ -7165,12 +7947,76 @@
           "title": "Load and compose the modular music algorithm foundry"
         },
         {
+          "card_id": "sim-sdk/physics/switched-audit",
+          "codec": "lisp",
+          "id": "switched-audit",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/physics/switched-audit/recipe.toml",
+          "title": "Audit a switched boundary and browse its finding"
+        },
+        {
           "card_id": "sim-sdk/python/capability-scoped-python",
           "codec": "rust",
           "id": "capability-scoped-python",
           "package": "sim-nest",
           "recipe_toml": "recipes/python/capability-scoped/recipe.toml",
           "title": "Evaluate capability-scoped embedded Python"
+        },
+        {
+          "card_id": "sim-sdk/relation/additive-migration",
+          "codec": "",
+          "id": "additive-migration",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/relation/additive-migration/recipe.toml",
+          "title": "Admit an additive relational migration"
+        },
+        {
+          "card_id": "sim-sdk/relation/bounded-refusal",
+          "codec": "",
+          "id": "bounded-refusal",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/relation/bounded-refusal/recipe.toml",
+          "title": "Observe a bounded relational refusal"
+        },
+        {
+          "card_id": "sim-sdk/relation/correlated-query",
+          "codec": "",
+          "id": "correlated-query",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/relation/correlated-query/recipe.toml",
+          "title": "Admit a correlated relational query"
+        },
+        {
+          "card_id": "sim-sdk/relation/custom-domain-crud",
+          "codec": "",
+          "id": "custom-domain-crud",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/relation/custom-domain-crud/recipe.toml",
+          "title": "Admit custom-domain CRUD through the relational SDK"
+        },
+        {
+          "card_id": "sim-sdk/relation/exact-old-file-adoption",
+          "codec": "",
+          "id": "exact-old-file-adoption",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/relation/exact-old-file-adoption/recipe.toml",
+          "title": "Adopt an exact pre-existing SQLite file"
+        },
+        {
+          "card_id": "sim-sdk/relation/mounted-directory",
+          "codec": "",
+          "id": "mounted-directory",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/relation/mounted-directory/recipe.toml",
+          "title": "Mount a relation-backed Table and Dir"
+        },
+        {
+          "card_id": "sim-sdk/relation/multi-source-aggregate",
+          "codec": "",
+          "id": "multi-source-aggregate",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/relation/multi-source-aggregate/recipe.toml",
+          "title": "Admit a multi-source relational aggregate"
         },
         {
           "card_id": "sim-sdk/serial-music/index-discovery",
@@ -7213,6 +8059,70 @@
           "title": "Admit dynamic text with shared source authority"
         },
         {
+          "card_id": "sim-sdk/stewardship/adopt-subtract-composition",
+          "codec": "lisp",
+          "id": "adopt-subtract-composition",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/stewardship/adopt-subtract-composition/recipe.toml",
+          "title": "Adopt and subtract a stewardship composition"
+        },
+        {
+          "card_id": "sim-sdk/stewardship/calm-flock-care",
+          "codec": "lisp",
+          "id": "calm-flock-care",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/stewardship/calm-flock-care/recipe.toml",
+          "title": "Record calm flock care"
+        },
+        {
+          "card_id": "sim-sdk/stewardship/chosen-media-traces",
+          "codec": "lisp",
+          "id": "chosen-media-traces",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/stewardship/chosen-media-traces/recipe.toml",
+          "title": "Keep only chosen media traces"
+        },
+        {
+          "card_id": "sim-sdk/stewardship/cited-seasonal-garden",
+          "codec": "lisp",
+          "id": "cited-seasonal-garden",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/stewardship/cited-seasonal-garden/recipe.toml",
+          "title": "Rebuild a cited garden season"
+        },
+        {
+          "card_id": "sim-sdk/stewardship/memo-acceptance",
+          "codec": "text",
+          "id": "memo-acceptance",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/stewardship/memo-acceptance/recipe.toml",
+          "title": "Execute the stewardship memo acceptance matrix"
+        },
+        {
+          "card_id": "sim-sdk/stewardship/private-observation",
+          "codec": "lisp",
+          "id": "private-observation",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/stewardship/private-observation/recipe.toml",
+          "title": "Keep and erase a private observation"
+        },
+        {
+          "card_id": "sim-sdk/stewardship/quiet-cadence",
+          "codec": "toml",
+          "id": "quiet-cadence",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/stewardship/quiet-cadence/recipe.toml",
+          "title": "Compose a quiet week from copied claims"
+        },
+        {
+          "card_id": "sim-sdk/stewardship/taste-led-kitchen",
+          "codec": "lisp",
+          "id": "taste-led-kitchen",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/stewardship/taste-led-kitchen/recipe.toml",
+          "title": "Prepare a taste-led shopping draft"
+        },
+        {
           "card_id": "sim-sdk/typescript-notation/admitted-notation",
           "codec": "rust",
           "id": "admitted-notation",
@@ -7251,6 +8161,14 @@
           "package": "sim-nest",
           "recipe_toml": "recipes/watch/privacy-reaper/recipe.toml",
           "title": "Reap private watch samples"
+        },
+        {
+          "card_id": "sim-sdk/web-search/configured-searxng",
+          "codec": "rust",
+          "id": "configured-searxng",
+          "package": "sim-nest",
+          "recipe_toml": "recipes/web-search/configured-searxng/recipe.toml",
+          "title": "Configured SearXNG diagnostic"
         }
       ],
       "summary": "Small recipes for booting and checking the umbrella SIM facade.",

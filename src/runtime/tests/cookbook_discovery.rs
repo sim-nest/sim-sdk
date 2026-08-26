@@ -79,7 +79,11 @@ fn cookbook_browse_tree_includes_book_chapter_and_recipe_nodes() {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xca90_cea7_6554_17ca),
+    );
     install_core_runtime(&mut cx);
     cx
 }

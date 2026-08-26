@@ -68,3 +68,4 @@ fn composition_deletes_and_rebuilds_without_effect_authority() {
     };
     assert_eq!(evidence.conclusion(), ValueConclusion::InsufficientEvidence);
 }
+// conformance: reversible products prove replay, undo, and explicit effect arming.

@@ -17,7 +17,7 @@ use crate::{
 };
 
 pub fn cx() -> sim_kernel::Cx {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory), sim_kernel::HandleSeed::new(0xc286_f342_c962_2c36));
     install_core_runtime(&mut cx);
     cx.grant(macro_expand_eval_capability());
     #[cfg(feature = "numbers-f64")]

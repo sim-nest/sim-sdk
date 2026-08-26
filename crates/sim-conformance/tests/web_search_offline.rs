@@ -8,7 +8,7 @@ fn query_fixture() -> SearchQuery {
 }
 
 fn representation(text: &str) -> WebRepresentation {
-    let raw = sim::Datum::Bytes(text.as_bytes().to_vec())
+    let raw = sim::kernel::Datum::Bytes(text.as_bytes().to_vec())
         .content_id()
         .unwrap();
     WebRepresentation::checked(
@@ -112,7 +112,7 @@ fn attack_boundaries_fail_closed_at_the_public_facade() {
         max_text_bytes: 2,
         ..DecodeLimits::default()
     };
-    let raw = sim::Datum::Bytes(vec![1]).content_id().unwrap();
+    let raw = sim::kernel::Datum::Bytes(vec![1]).content_id().unwrap();
     assert!(
         WebRepresentation::checked(
             raw,
@@ -162,3 +162,4 @@ fn facade_has_neutral_hosts_receipts_office_and_audit_view() {
     let _ = std::any::type_name::<office::EvidenceAnchor>();
     assert_eq!(audit_view::SEARCH_AUDIT_SURFACE_ID, "view:search-audit");
 }
+// conformance: web-search specimens prove offline capture and provenance behavior.

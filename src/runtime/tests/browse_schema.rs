@@ -131,7 +131,11 @@ fn browse_schema_shapes_are_registered() {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xc367_b210_e4e2_6d71),
+    );
     install_core_runtime(&mut cx);
     cx
 }

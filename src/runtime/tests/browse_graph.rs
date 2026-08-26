@@ -135,7 +135,11 @@ fn zero_arg_browse_neighbors_starts_at_root_catalog() {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x64bf_6c15_b453_bd09),
+    );
     install_core_runtime(&mut cx);
     cx
 }

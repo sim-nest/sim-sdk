@@ -85,6 +85,8 @@ pub use sim_lib_mcp_http as lib_mcp_http;
 pub use sim_lib_mcp_legacy as lib_mcp_legacy;
 #[cfg(feature = "mcp-stdio")]
 pub use sim_lib_mcp_stdio as lib_mcp_stdio;
+/// MCP OAuth building blocks, grouped by their protocol, HTTP, and JOSE
+/// responsibilities.
 #[cfg(feature = "mcp-oauth")]
 pub mod mcp_oauth {
     pub use sim_lib_oauth_core as core;

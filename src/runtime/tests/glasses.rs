@@ -109,7 +109,11 @@ fn glasses_recipes_run_from_the_cookbook_directory() {
         "co-use",
         "review-in-space",
     ];
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x0633_24e0_2f47_bab5),
+    );
     cx.grant(read_eval_capability());
     cx.grant(read_construct_capability());
     cx.grant(macro_expand_eval_capability());

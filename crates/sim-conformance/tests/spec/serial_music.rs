@@ -244,3 +244,4 @@ fn note(voice_id: &str, event: &str, pitch: u8, onset: Time, duration: Time) -> 
         .expect("note"),
     }
 }
+// conformance: serial-music specimens prove strict and modal workflow contracts.

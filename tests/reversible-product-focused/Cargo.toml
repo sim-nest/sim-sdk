@@ -7,7 +7,7 @@ publish = false
 [workspace]
 
 [dependencies]
-sim-lib-view-worktable = { path = "../../../sim-web/crates/sim-lib-view-worktable" }
+sim-lib-view-worktable = { version = "0.1.0" }
 
 [[test]]
 name = "reversible_product"

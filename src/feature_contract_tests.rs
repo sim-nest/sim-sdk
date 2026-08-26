@@ -27,16 +27,42 @@ const PUBLIC_FACADE_ALIASES: &[(&str, &str)] = &[
     ("web-wasm-frame", "lib_view_wasm_frame"),
 ];
 
+// Public feature closures that intentionally compose dependencies without
+// adding a separate facade module or cfg gate of their own.
+const COMPOSITION_ONLY_FEATURES: &[&str] = &[
+    "numbers-method",
+    "numbers-quantity",
+    "physics-adapter-femm",
+    "physics-adapter-interference",
+    "physics-full",
+    "physics-proof-extended",
+];
+
 #[test]
 fn declared_features_match_cfg_usage() {
     let root = repo_root();
     let cargo_toml = include_str!("../Cargo.toml");
     let declared = collect_declared_features(cargo_toml);
-    let used = collect_cfg_features(&root);
+    let mut used = collect_cfg_features(&root);
+    used.extend(
+        COMPOSITION_ONLY_FEATURES
+            .iter()
+            .map(|feature| (*feature).to_owned()),
+    );
     assert_eq!(
         declared, used,
-        "declared features must match cfg(feature = ...) usage in src/ and tests/"
+        "declared features must be cfg gates or documented dependency-only compositions"
     );
+
+    let dependencies = collect_feature_dependencies(cargo_toml);
+    for feature in COMPOSITION_ONLY_FEATURES {
+        assert!(
+            dependencies
+                .get(*feature)
+                .is_some_and(|edges| !edges.is_empty()),
+            "composition-only feature {feature} must retain a non-empty dependency closure"
+        );
+    }
 }
 
 #[test]
@@ -71,7 +97,9 @@ fn python_features_preserve_the_one_way_distribution_boundary() {
     assert_feature_includes(&features, "python", &["standard-python"]);
     assert_feature_includes(&features, "standard", &["standard-python"]);
 
-    let bootloader = include_str!("bin/sim.rs");
+    let process_adapter = include_str!("bin/sim.rs");
+    let bootloader = include_str!("facade_cli.rs");
+    assert!(process_adapter.contains("facade_cli::process_main()"));
     assert!(bootloader.contains("Bootloader::standard()"));
     assert!(!bootloader.contains("PythonRuntime"));
     assert!(!repo_root().join("src/bin/python.rs").exists());
@@ -92,7 +120,9 @@ fn javascript_features_preserve_the_one_way_distribution_boundary() {
     );
     assert_feature_includes(&features, "javascript", &["standard-javascript"]);
     assert_feature_includes(&features, "standard", &["standard-javascript"]);
-    let bootloader = include_str!("bin/sim.rs");
+    let process_adapter = include_str!("bin/sim.rs");
+    let bootloader = include_str!("facade_cli.rs");
+    assert!(process_adapter.contains("facade_cli::process_main()"));
     assert!(bootloader.contains("Bootloader::standard()"));
     assert!(!repo_root().join("src/bin/javascript.rs").exists());
     assert!(!repo_root().join("src/bin/node.rs").exists());
@@ -119,7 +149,9 @@ fn typescript_notation_features_preserve_the_one_way_distribution_boundary() {
     assert_feature_includes(&features, "typescript", &["standard-typescript"]);
     assert_feature_includes(&features, "standard", &["standard-typescript"]);
 
-    let bootloader = include_str!("bin/sim.rs");
+    let process_adapter = include_str!("bin/sim.rs");
+    let bootloader = include_str!("facade_cli.rs");
+    assert!(process_adapter.contains("facade_cli::process_main()"));
     assert!(bootloader.contains("TypeScript notation; does not type-check"));
     assert!(bootloader.contains("language/typescript-notation"));
     for executable in ["typescript", "tsc", "tsserver"] {

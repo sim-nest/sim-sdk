@@ -3,7 +3,7 @@ use std::sync::Arc;
 use sim::{kernel::{Cx, DefaultFactory, NoopEvalPolicy}, lib_lang_jvm};
 
 fn main() {
-    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory), sim_kernel::HandleSeed::new(0x8fcb_7415_da5a_c3c9));
     cx.grant(lib_lang_jvm::class_load_capability());
     cx.grant(lib_lang_jvm::jvm_invoke_capability());
     let outcome = lib_lang_jvm::JvmSurface::new(1 << 20).execute_i32(

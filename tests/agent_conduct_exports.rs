@@ -1,14 +1,17 @@
 #![cfg(all(feature = "agent-conduct", feature = "agent-conduct-core"))]
 
-use sim::{agent_conduct, agent_conduct_core};
+use sim::{
+    agent_conduct, agent_conduct_core,
+    kernel::{CapabilityName, Expr, Symbol},
+};
 
 #[test]
 fn conduct_contracts_are_directly_reachable_from_the_facade() {
     let frame = agent_conduct_core::AgentRunFrame::standard(
-        sim::Symbol::new("sdk-run"),
-        sim::Expr::String("hello".into()),
+        Symbol::new("sdk-run"),
+        Expr::String("hello".into()),
     );
-    assert_eq!(frame.run_id, sim::Symbol::new("sdk-run"));
+    assert_eq!(frame.run_id, Symbol::new("sdk-run"));
 
     let ids: Vec<_> = agent_conduct::agent_conduct_catalog_sources()
         .iter()
@@ -23,7 +26,7 @@ fn conduct_contracts_are_directly_reachable_from_the_facade() {
 #[cfg(all(feature = "agent", feature = "topology-core"))]
 #[test]
 fn one_manifest_swaps_four_conduct_packages_without_changing_authority() {
-    let manifest_authority = [sim::CapabilityName::new("model")]
+    let manifest_authority = [CapabilityName::new("model")]
         .into_iter()
         .collect::<std::collections::BTreeSet<_>>();
     let cards = sim::lib_agent::standard_step_cards();
@@ -56,3 +59,4 @@ fn one_manifest_swaps_four_conduct_packages_without_changing_authority() {
             .all(|(_, authority)| authority == &manifest_authority)
     );
 }
+// conformance: SDK agent-conduct exports preserve the intended facade boundary.

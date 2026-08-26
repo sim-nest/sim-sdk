@@ -11,17 +11,11 @@ default = ["continuity"]
 continuity = []
 
 [dependencies]
-sim-citizen = { path = "../../../sim-citizen/crates/sim-citizen" }
-sim-kernel = { path = "../../../sim-kernel" }
-sim-lib-capability-pack = { path = "../../../sim-agent-net/crates/sim-lib-capability-pack" }
-sim-lib-continuity = { path = "../../../sim-agent-net/crates/sim-lib-continuity" }
-sim-lib-expedition-book = { path = "../../../sim-expr-tree/crates/sim-lib-expedition-book" }
-
-[patch.crates-io]
-sim-citizen = { path = "../../../sim-citizen/crates/sim-citizen" }
-sim-citizen-derive = { path = "../../../sim-citizen/crates/sim-citizen-derive" }
-sim-kernel = { path = "../../../sim-kernel" }
-
+sim-citizen = { version = "0.2.0" }
+sim-kernel = { version = "0.2.1" }
+sim-lib-capability-pack = { version = "0.1.0" }
+sim-lib-continuity = { version = "0.1.0" }
+sim-lib-expedition-book = { version = "0.1.0" }
 [[test]]
 name = "expedition_first_light"
 path = "../expedition_first_light.rs"

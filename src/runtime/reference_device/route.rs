@@ -46,7 +46,7 @@ pub fn prove_route_swap() -> Result<RouteSwapProof> {
     let ledger = session.ledger.clone();
     let events_before = session.events.len_for_run(&ledger);
 
-    let mut hub = sim_lib_web_bridge::SurfaceHub::new();
+    let mut hub = sim_lib_web_bridge::SurfaceHub::new(sim_kernel::HandleSeed::new(0x5344_4b02));
     let peer =
         sim_lib_web_bridge::register_device_peer(&mut hub, &edge, &reference_glance_profile());
 

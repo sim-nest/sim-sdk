@@ -15,7 +15,11 @@ use super::number_dispatch_support::*;
 #[cfg(feature = "numbers-rational")]
 #[test]
 fn numeric_dispatch_reports_ambiguous_promotion_routes() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x1ca5_9c9e_42c9_d676),
+    );
     install_core_runtime(&mut cx);
     install_test_domain(&mut cx, Symbol::qualified("numbers", "decimal-test"));
     cx.registry_mut().register_promotion_rule(PromotionRule {
@@ -58,7 +62,11 @@ fn numeric_dispatch_reports_ambiguous_promotion_routes() {
 #[cfg(feature = "numbers-i64")]
 #[test]
 fn numeric_dispatch_finds_multi_hop_promotion_paths() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x135e_e36d_f738_2f5b),
+    );
     install_core_runtime(&mut cx);
     install_test_domain(&mut cx, Symbol::qualified("numbers", "decimal-test"));
     cx.registry_mut().register_promotion_rule(PromotionRule {
@@ -102,7 +110,11 @@ fn numeric_dispatch_finds_multi_hop_promotion_paths() {
 #[cfg(feature = "numbers-i64")]
 #[test]
 fn opaque_number_value_participates_in_math_add() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x2477_c73b_6cd7_1435),
+    );
     install_core_runtime(&mut cx);
     install_test_domain(&mut cx, Symbol::qualified("numbers", "opaque-start-test"));
     install_test_domain(&mut cx, Symbol::qualified("numbers", "opaque-middle-test"));
@@ -150,7 +162,11 @@ fn opaque_number_value_participates_in_math_add() {
 #[cfg(feature = "numbers-i64")]
 #[test]
 fn value_level_promotion_ambiguity_reports_both_best_domain_pairs() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x4f7d_c552_dcc8_e2b6),
+    );
     install_core_runtime(&mut cx);
     install_test_domain(&mut cx, Symbol::qualified("numbers", "opaque-start-test"));
     install_test_domain(&mut cx, Symbol::qualified("numbers", "opaque-middle-test"));
@@ -225,7 +241,11 @@ fn value_level_promotion_ambiguity_reports_both_best_domain_pairs() {
 #[cfg(feature = "numbers-i64")]
 #[test]
 fn core_number_shape_accepts_opaque_number_values() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x416f_643c_2804_a40b),
+    );
     install_core_runtime(&mut cx);
     install_test_domain(&mut cx, Symbol::qualified("numbers", "opaque-start-test"));
     let shape = cx
@@ -246,7 +266,11 @@ fn core_number_shape_accepts_opaque_number_values() {
 #[cfg(feature = "numbers-i64")]
 #[test]
 fn non_number_value_passed_to_math_add_reports_error() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x7278_30e1_d3c8_122c),
+    );
     install_core_runtime(&mut cx);
     let error = cx
         .call_function(

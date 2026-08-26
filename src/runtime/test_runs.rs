@@ -26,6 +26,7 @@ where
     let mut requires = vec![browse_run_tests_capability()];
     requires.extend(capabilities.iter().cloned());
     let mut effect = Effect::new(
+        cx.fresh_handle(),
         test_run_effect_kind(),
         Ref::Symbol(name.clone()),
         input,

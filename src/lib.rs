@@ -63,7 +63,11 @@
 //! use sim::kernel::{Cx, DefaultFactory, EagerPolicy};
 //! use sim::runtime::install_core_runtime;
 //!
-//! let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+//! let mut cx = Cx::new(
+//!     Arc::new(EagerPolicy),
+//!     Arc::new(DefaultFactory),
+//!     sim::kernel::HandleSeed::new(0xeea6_94db_eb56_c485),
+//! );
 //! install_core_runtime(&mut cx);
 //! ```
 //!
@@ -339,8 +343,8 @@ pub mod web_search {
     /// Office evidence anchors derived only from checked web representations.
     pub mod office {
         pub use sim_lib_doc_web::{
-            AnchorInput, AnchorKind, CitationFormat, EvidenceAnchor, WebEvidenceError, anchor_doc,
-            load_anchor, load_representation, save_anchor, save_capture, save_representation,
+            AnchorInput, AnchorKind, CitationFormat, EvidenceAnchor, WebEvidenceError, load_anchor,
+            project_document, save_anchor, save_capture, save_representation,
         };
     }
     /// Inert, offline audit view over canonical records.

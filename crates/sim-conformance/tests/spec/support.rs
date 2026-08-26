@@ -49,7 +49,11 @@ pub(crate) fn cx() -> Cx {
 }
 
 pub(crate) fn seated_cx() -> (Cx, GrantSeat) {
-    let (mut cx, seat) = Cx::new_seated(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let (mut cx, seat) = Cx::new_seated(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim::kernel::HandleSeed::new(0x3264_e3bb_2fa5_2594),
+    );
     seat_cookbook_capabilities(&seat, &mut cx);
     sim::runtime::install_core_runtime(&mut cx);
     sim::numbers_prelude::NumbersPreludeLib::new()

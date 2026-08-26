@@ -111,7 +111,11 @@ mod geometry_conflict {
 }
 
 fn cx() -> sim::kernel::Cx {
-    let mut cx = sim::kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim::kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim::kernel::HandleSeed::new(0x5344_4b14),
+    );
     install_core_runtime(&mut cx);
     cx
 }

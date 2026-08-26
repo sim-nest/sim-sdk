@@ -26,7 +26,11 @@ use sim::{
 
 /// A bare runtime context: the surface codec needs no installed libraries.
 fn surface_cx() -> Cx {
-    Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory))
+    Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim::kernel::HandleSeed::new(0x314f_7ff7_aaf9_5541),
+    )
 }
 
 /// The universal default surface codec under test.
@@ -251,3 +255,4 @@ fn golden_watch_nil() -> Expr {
         ],
     )
 }
+// conformance: surface specimens prove reversible device protocol behavior.
