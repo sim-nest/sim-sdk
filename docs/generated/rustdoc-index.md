@@ -4,6 +4,6 @@
 
 | Package | Group | Summary |
 | --- | --- | --- |
-| `sim-conformance` | `workspace` | Executable conformance tests for SIM architecture claims. |
+| `sim-conformance` | `workspace` | One typed truth source for bidirectional MCP conformance runners. |
 | `sim-nest` | `workspace` | The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features. |
 | `xtask` | `workspace` | SIM workspace package for xtask. |
