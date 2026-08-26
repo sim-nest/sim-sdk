@@ -19,11 +19,11 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | --- | --- | ---: | --- |
 | `feature/sim-sdk/hotload-facade` | `crate/sim-nest` | 4 | Expose immutable native build, admission, compatibility, atomic activation, and durable receipt records without exposing host provider implementations. |
 | `feature/sim-sdk/layered-physics-facade` | `crate/sim-nest` | 1 | Curates one-way feature closures from quantities and physics core through audit, proof, studies, findings, and explicit adapters. |
-| `feature/sim-sdk/media-edge-music-vertical` | `crate/sim-nest` | 0 | Expose the owning music route plan and exact stream-host effect adapters behind one opt-in vertical feature. |
+| `feature/sim-sdk/media-edge-music-vertical` | `crate/sim-nest` | 1 | Expose the owning music route plan and exact stream-host effect adapters behind one opt-in vertical feature. |
 | `feature/sim-sdk/generated-docs` | `crate/xtask` | 0 | Publish generated package, card, recipe, and index facts for the SDK facade and conformance crate. |
 | `feature/sim-sdk/web-search-facade` | `crate/sim-nest` | 2 | Expose neutral HTTP, web, search, fetch, rank, office-evidence, and audit-view contracts behind one opt-in SDK feature, with a caller-owned fake-world proof. |
-| `feature/sim-sdk/study-facade` | `crate/sim-nest` | 0 | Expose the canonical study lifecycle, staged design, report graph, selection, and command contracts behind one granular feature. |
-| `feature/sim-sdk/model-test-facade` | `crate/sim-nest` | 0 | Expose the canonical model-test domain and loadable product behind one granular non-default SDK feature. |
+| `feature/sim-sdk/study-facade` | `crate/sim-nest` | 1 | Expose the canonical study lifecycle, staged design, report graph, selection, and command contracts behind one granular feature. |
+| `feature/sim-sdk/model-test-facade` | `crate/sim-nest` | 1 | Expose the canonical model-test domain and loadable product behind one granular non-default SDK feature. |
 | `feature/sim-sdk/source-authority-facade` | `crate/sim-nest` | 1 | Build diminished source requests through the canonical runtime authority, broker, and dynamic policy without guest-specific admission envelopes. |
 | `feature/sim-sdk/characterization-facade` | `crate/sim-nest` | 1 | Capture public behavioral contracts before a refactor and compare canonical observations afterward through SDK-visible types. |
 | `feature/sim-sdk/standard-gc-policy` | `crate/sim-nest` | 1 | Select bounded tracing reclamation for standard builds while keeping hard-capped cycle retention explicit and test-only. |
@@ -45,8 +45,8 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | `feature/sim-sdk/raised-exception-composition` | `crate/sim-nest` | 1 | Expose the one non-recursive envelope, bounded class matcher, and managed relation adapter for every guest runtime. |
 | `feature/sim-sdk/conformance-contract` | `crate/sim-conformance` | 2 | Run one typed MCP vector authority bidirectionally across direct, compatibility, real transport, product, and runtime projections. |
 | `feature/sim-sdk/jvm-composition` | `crate/sim-nest` | 3 | Expose the classfile decoder, bounded JVM profile, source authority, invocation library, bidirectional lambda adapters, recipes, and product specimens through public SDK names. |
-| `feature/sim-sdk/platform-composition` | `crate/sim-nest` | 0 | Re-export platform records, requirement builders, provider-author contracts, and the portable LoaderPort facade behind non-default features. |
-| `feature/sim-sdk/estate-facade` | `crate/sim-nest` | 0 | Opt-in features re-export estate core, authoring, organ, projection, provider, and Surface crates without enabling private controller bindings by default. |
+| `feature/sim-sdk/platform-composition` | `crate/sim-nest` | 1 | Re-export platform records, requirement builders, provider-author contracts, and the portable LoaderPort facade behind non-default features. |
+| `feature/sim-sdk/estate-facade` | `crate/sim-nest` | 1 | Opt-in features re-export estate core, authoring, organ, projection, provider, and Surface crates without enabling private controller bindings by default. |
 | `feature/sim-sdk/agent-conduct-composition` | `crate/sim-nest` | 1 | Opt into pure conduct records or certified topology-backed conduct packages through direct canonical re-exports. |
 | `feature/sim-sdk/atelier-room-packs` | `crate/sim-nest` | 1 | Six data-authored intellectual rooms compose existing music, physics, model, cited-reading, mutual-projection, and identity routes through the canonical capability-pack graph. |
 | `feature/sim-sdk/reversible-atelier-product` | `crate/sim-nest` | 2 | A networkless conformance pilot composes all five current memo families through the disposable web worktable with fake model and device placements. |
@@ -951,6 +951,52 @@ requires = ["physics/core", "physics/power", "physics/audit", "physics/proof", "
 assert_tags = ["physics", "audit", "finding"]
 ```
 
+### `feature/sim-sdk/media-edge-music-vertical`
+
+Specimen `spec-test/sim-sdk/src/music_vertical` is checked by `cargo test`.
+
+Source `src/music_vertical.rs`:
+
+```rust
+//! Curated SDK composition for the media-edge-host music vertical.
+// conformance: the SDK vertical exposes only reviewed effects and resilient routes.
+
+pub use sim_lib_music_core::{
+    MediaEdgeMusicPlan, MusicRouteEndpoint, MusicRouteRole, RouteEvidence,
+};
+pub use sim_lib_stream_host::{FakeEffectSession, MusicEffect, music_effect_registry};
+
+/// Builds the standard stable-identity vertical plan.
+pub fn media_edge_music_plan(session: sim_kernel::Symbol) -> MediaEdgeMusicPlan {
+    MediaEdgeMusicPlan::standard(session)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn sdk_vertical_composes_only_reviewed_effects_and_resilient_routes() {
+        let plan =
+            media_edge_music_plan(sim_kernel::Symbol::qualified("music/session", "sdk-recipe"));
+        assert!(plan.survives(&[sim_kernel::Symbol::qualified("music/route", "oasys-audio")]));
+        let registry = music_effect_registry().unwrap();
+        assert!(
+            registry
+                .get(&MusicEffect::MidiSend.descriptor().id)
+                .is_some()
+        );
+        assert!(
+            registry
+                .get(&sim_kernel::Symbol::qualified(
+                    "device/effect",
+                    "vehicle-start"
+                ))
+                .is_none()
+        );
+    }
+}
+```
+
 ### `feature/sim-sdk/web-search-facade`
 
 Specimen `spec-test/sim-sdk/crates/sim-conformance/tests/web_search_offline` is checked by `cargo test`.
@@ -1138,6 +1184,44 @@ purpose = "purpose.md"
 order = 10
 tags = ["web-search", "searxng", "operator-diagnostic", "opt-in", "network"]
 requires = ["web-search", "SIM_SEARXNG_ENDPOINT", "SIM_SEARXNG_SITE_CONFIG"]
+```
+
+### `feature/sim-sdk/study-facade`
+
+Specimen `spec-test/sim-sdk/src/study_facade_tests` is checked by `cargo test`.
+
+Source `src/study_facade_tests.rs`:
+
+```rust
+// conformance: the SDK study feature re-exports the canonical bounded command vocabulary.
+
+#[test]
+fn study_facade_preserves_execution_and_write_boundaries() {
+    use crate::study::StudyVerb;
+
+    assert_eq!(StudyVerb::parse("run"), Some(StudyVerb::Run));
+    assert!(StudyVerb::Run.may_execute());
+    assert!(!StudyVerb::Report.may_execute());
+    assert!(!StudyVerb::Plan.may_write(false));
+}
+```
+
+### `feature/sim-sdk/model-test-facade`
+
+Specimen `spec-test/sim-sdk/src/model_test_facade_tests` is checked by `cargo test`.
+
+Source `src/model_test_facade_tests.rs`:
+
+```rust
+// conformance: the SDK model-test feature exposes the canonical loadable entrypoint unchanged.
+
+#[test]
+fn model_test_facade_preserves_the_product_entrypoint() {
+    assert_eq!(
+        crate::model_test::model_test_entrypoint_symbol(),
+        sim_kernel::Symbol::qualified("cli", "main/model-test")
+    );
+}
 ```
 
 ### `feature/sim-sdk/source-authority-facade`
@@ -4778,6 +4862,8 @@ pub mod estate {
     #[cfg(feature = "estate-provider-model")]
     pub use sim_site_estate_model as provider_model;
 }
+#[cfg(all(test, feature = "estate"))]
+mod estate_facade_tests;
 
 #[cfg(feature = "platform")]
 /// Provider-neutral platform records and authoring contracts.
@@ -4905,6 +4991,9 @@ pub mod study {
     pub use sim_lib_study::*;
 }
 
+#[cfg(all(test, feature = "study"))]
+mod study_facade_tests;
+
 /// Independently selectable physics contracts and loadable composition.
 ///
 /// Each module is a direct re-export from its owning crate. Enabling
@@ -4957,6 +5046,8 @@ pub mod music_vertical;
 pub mod model_test {
     pub use sim_lib_model_test::*;
 }
+#[cfg(all(test, feature = "model-test"))]
+mod model_test_facade_tests;
 /// Provider-neutral web research composition.
 ///
 /// This facade intentionally exposes stable plans, receipts, records, and host
@@ -6056,6 +6147,399 @@ fn sdk_exports_caller_selected_jvm_execution() {
     assert!(!drive.work.is_empty());
     assert!(drive.cleaned_up);
     assert_eq!(surface.live_frame_leases(), 0);
+}
+```
+
+### `feature/sim-sdk/platform-composition`
+
+Specimen `spec-test/sim-sdk/src/loaders/tests/registry` is checked by `cargo test`.
+
+Source `src/loaders/tests/registry.rs`:
+
+```rust
+// conformance: the SDK registry routes exact artifacts only through the installed platform port.
+
+use std::path::PathBuf;
+use std::sync::Arc;
+#[cfg(all(feature = "codec-binary", feature = "codec-lisp", feature = "shape"))]
+use std::sync::atomic::{AtomicUsize, Ordering};
+
+#[cfg(all(feature = "codec-binary", feature = "codec-lisp", feature = "shape"))]
+use sim_kernel::{Args, Export, LibTarget};
+use sim_kernel::{ClassId, ExportState, LibSource, Symbol, Version};
+
+use super::support::{
+    BrokenResolvedExportLib, CapabilityLib, DeclaredOnlyLib, FailingLib, ResolvingLib, StubLib,
+    VersionedStubLib, cx,
+};
+#[cfg(all(feature = "codec-binary", feature = "codec-lisp", feature = "shape"))]
+use super::support::{TickCallable, cx_with_lisp_codec};
+
+struct ModelPort(sim_run_loaders::StaticRegistry);
+
+impl sim_run_loaders::LoaderPort for ModelPort {
+    fn loader_kinds(&self) -> Vec<sim_run_loaders::LoaderKind> {
+        vec![sim_run_loaders::LoaderKind::new(Symbol::qualified(
+            "loader",
+            "static-v1",
+        ))]
+    }
+
+    fn realize(
+        &self,
+        _: &mut sim_kernel::Cx,
+        request: sim_run_loaders::LoadRequest,
+    ) -> sim_kernel::Result<sim_run_loaders::LoadOutcome> {
+        let artifact = sim_run_loaders::static_artifact(&request.source)?
+            .ok_or_else(|| sim_kernel::Error::HostError("expected modeled static source".into()))?;
+        self.0.realize(&artifact)
+    }
+
+    fn inspect(
+        &self,
+        _: &mut sim_kernel::Cx,
+        request: &sim_run_loaders::LoadRequest,
+    ) -> sim_kernel::Result<Option<sim_kernel::LibManifest>> {
+        let artifact = sim_run_loaders::static_artifact(&request.source)?
+            .ok_or_else(|| sim_kernel::Error::HostError("expected modeled static source".into()))?;
+        Ok(Some(self.0.realize(&artifact)?.manifest))
+    }
+}
+
+#[test]
+fn platform_registry_routes_exact_artifacts_through_loader_port() {
+    let registry = sim_run_loaders::StaticRegistry::default();
+    let artifact = Symbol::qualified("artifact", "portable-sdk-test");
+    registry.register(artifact.clone(), || {
+        Box::new(StubLib {
+            symbol: Symbol::qualified("lib", "portable-sdk-test"),
+        })
+    });
+    let mut cx = cx();
+    let loaded = crate::loaders::platform_loader_registry(Arc::new(ModelPort(registry)))
+        .load_lib(&mut cx, sim_run_loaders::static_source(artifact))
+        .expect("platform port realizes exact static artifact");
+    assert_eq!(
+        loaded.manifest().id,
+        Symbol::qualified("lib", "portable-sdk-test")
+    );
+}
+
+#[test]
+fn host_loader_accepts_host_source() {
+    let mut cx = cx();
+    let registry = crate::loaders::standard_loader_registry();
+    let lib = registry
+        .load_lib(
+            &mut cx,
+            LibSource::Host(Box::new(StubLib {
+                symbol: Symbol::new("host-lib"),
+            })),
+        )
+        .unwrap();
+    assert_eq!(lib.manifest().id, Symbol::new("host-lib"));
+}
+
+#[test]
+fn load_and_register_uses_atomic_runtime_load() {
+    let mut cx = cx();
+    let registry = crate::loaders::standard_loader_registry();
+    registry
+        .load_and_register(
+            &mut cx,
+            LibSource::Host(Box::new(StubLib {
+                symbol: Symbol::new("host-lib"),
+            })),
+        )
+        .unwrap();
+    assert!(cx.registry().functions().contains_key(&Symbol::new("stub")));
+    assert!(cx.registry().lib(&Symbol::new("host-lib")).is_some());
+}
+
+#[test]
+fn registry_reports_when_no_loader_accepts_source() {
+    let mut cx = cx();
+    let registry = crate::loaders::standard_loader_registry();
+    let err = registry
+        .load_lib(
+            &mut cx,
+            sim_run_loaders::path_source(PathBuf::from("x.wasm")),
+        )
+        .err()
+        .unwrap();
+    assert!(matches!(err, sim_kernel::Error::HostError(_)));
+}
+
+#[cfg(all(feature = "codec-binary", feature = "codec-lisp", feature = "shape"))]
+#[test]
+fn registry_can_resolve_symbol_sources_from_catalog() {
+    let mut cx = cx_with_lisp_codec();
+    let counter = Arc::new(AtomicUsize::new(0));
+    let tick = cx
+        .factory()
+        .opaque(Arc::new(TickCallable {
+            counter: counter.clone(),
+        }))
+        .unwrap();
+    cx.registry_mut()
+        .register_function_value(Symbol::new("tick"), tick)
+        .unwrap();
+
+    let pack = crate::loaders::BinaryLibPack {
+        manifest: sim_kernel::LibManifest {
+            id: Symbol::qualified("loader", "catalog-demo"),
+            version: sim_kernel::Version("0.4.0".to_owned()),
+            abi: sim_kernel::AbiVersion { major: 0, minor: 1 },
+            target: LibTarget::DataOnly,
+            requires: Vec::new(),
+            capabilities: Vec::new(),
+            exports: vec![Export::Function {
+                symbol: Symbol::qualified("loader", "tick-catalog"),
+                function_id: None,
+            }],
+        },
+        exports: vec![crate::loaders::ReexportSpec::new(
+            crate::loaders::ReexportKind::Function,
+            Symbol::qualified("loader", "tick-catalog"),
+            Symbol::new("tick"),
+        )],
+    };
+    let bytes = crate::loaders::encode_binary_lib_pack(&pack).unwrap();
+
+    let registry = crate::loaders::standard_loader_registry_with_sources([(
+        Symbol::qualified("loader", "catalog-demo"),
+        sim_run_loaders::catalog_bytes_source(bytes),
+    )]);
+
+    registry
+        .load_and_register(
+            &mut cx,
+            LibSource::Symbol(Symbol::qualified("loader", "catalog-demo")),
+        )
+        .unwrap();
+
+    let value = cx
+        .call_function(
+            &Symbol::qualified("loader", "tick-catalog"),
+            Args::new(Vec::new()),
+        )
+        .unwrap();
+    assert_eq!(counter.load(Ordering::SeqCst), 1);
+    assert_eq!(
+        value.object().as_expr(&mut cx).unwrap(),
+        sim_kernel::Expr::Number(sim_kernel::NumberLiteral {
+            domain: Symbol::qualified("numbers", "f64"),
+            canonical: "1".to_owned(),
+        })
+    );
+}
+
+#[test]
+fn registry_reports_unknown_symbol_source() {
+    let mut cx = cx();
+    let registry = crate::loaders::standard_loader_registry();
+    let err = registry
+        .load_lib(
+            &mut cx,
+            LibSource::Symbol(Symbol::qualified("missing", "lib")),
+        )
+        .err()
+        .unwrap();
+    match err {
+        sim_kernel::Error::HostError(message) => {
+            assert!(message.contains("missing/lib"));
+        }
+        other => panic!("expected host error, found {other:?}"),
+    }
+}
+
+#[test]
+fn failed_load_does_not_partially_mutate_registry() {
+    let mut cx = cx();
+    let registry = crate::loaders::standard_loader_registry();
+    let err = registry
+        .load_and_register(&mut cx, LibSource::Host(Box::new(FailingLib)))
+        .err()
+        .unwrap();
+    assert!(matches!(err, sim_kernel::Error::HostError(_)));
+    assert!(
+        cx.resolve_function(&Symbol::new("half-registered"))
+            .is_err()
+    );
+    assert!(cx.registry().lib(&Symbol::new("failing-lib")).is_none());
+}
+
+#[test]
+fn commit_rejects_resolved_export_without_value() {
+    let mut cx = cx();
+    let registry = crate::loaders::standard_loader_registry();
+    let error = registry
+        .load_and_register(&mut cx, LibSource::Host(Box::new(BrokenResolvedExportLib)))
+        .unwrap_err();
+    assert!(
+        matches!(error, sim_kernel::Error::Lib(message) if message.contains("function export broken has no value"))
+    );
+    assert!(cx.registry().lib(&Symbol::new("broken-lib")).is_none());
+    assert!(cx.resolve_function(&Symbol::new("broken")).is_err());
+}
+
+#[test]
+fn declared_export_is_visible_as_declared_not_resolved() {
+    let mut cx = cx();
+    let registry = crate::loaders::standard_loader_registry();
+    registry
+        .load_and_register(&mut cx, LibSource::Host(Box::new(DeclaredOnlyLib)))
+        .unwrap();
+    let loaded = cx.registry().lib(&Symbol::new("declared-lib")).unwrap();
+    let export = loaded
+        .exports
+        .iter()
+        .find(|export| export.symbol == Symbol::new("declared-only"))
+        .unwrap();
+    assert!(matches!(export.state, ExportState::Declared));
+    assert!(cx.resolve_function(&Symbol::new("declared-only")).is_err());
+}
+
+#[test]
+fn load_cx_can_resolve_existing_symbols_during_load() {
+    let mut cx = cx();
+    let class = cx
+        .factory()
+        .class_stub(ClassId(33), Symbol::new("already-there"))
+        .unwrap();
+    cx.registry_mut()
+        .register_class_value(Symbol::new("already-there"), class)
+        .unwrap();
+
+    let registry = crate::loaders::standard_loader_registry();
+    registry
+        .load_and_register(&mut cx, LibSource::Host(Box::new(ResolvingLib)))
+        .unwrap();
+
+    assert!(
+        cx.resolve_function(&Symbol::new("resolved-during-load"))
+            .is_ok()
+    );
+}
+
+#[test]
+fn load_and_register_requires_manifest_declared_capabilities() {
+    let mut cx = cx();
+    let registry = crate::loaders::standard_loader_registry();
+
+    let error = registry
+        .load_and_register(&mut cx, LibSource::Host(Box::new(CapabilityLib)))
+        .unwrap_err();
+
+    assert!(matches!(
+        error,
+        sim_kernel::Error::CapabilityDenied { capability }
+            if capability == sim_kernel::read_eval_capability()
+    ));
+
+    cx.grant(sim_kernel::read_eval_capability());
+    registry
+        .load_and_register(&mut cx, LibSource::Host(Box::new(CapabilityLib)))
+        .unwrap();
+    assert!(cx.registry().lib(&Symbol::new("cap-lib")).is_some());
+}
+
+#[test]
+fn load_and_register_rejects_loaded_dependency_below_minimum_version() {
+    let mut cx = cx();
+    let registry = crate::loaders::standard_loader_registry();
+    registry
+        .load_and_register(
+            &mut cx,
+            LibSource::Host(Box::new(VersionedStubLib {
+                symbol: Symbol::new("dep"),
+                version: "1.5.0",
+                requires: Vec::new(),
+            })),
+        )
+        .unwrap();
+
+    let err = registry
+        .load_and_register(
+            &mut cx,
+            LibSource::Host(Box::new(VersionedStubLib {
+                symbol: Symbol::new("user"),
+                version: "0.1.0",
+                requires: vec![sim_kernel::Dependency {
+                    id: Symbol::new("dep"),
+                    minimum_version: Some(Version("2.0.0".to_owned())),
+                }],
+            })),
+        )
+        .unwrap_err();
+
+    assert!(matches!(
+        err,
+        sim_kernel::Error::DependencyVersionMismatch {
+            lib,
+            dependency,
+            required,
+            loaded
+        } if lib == Symbol::new("user")
+            && dependency == Symbol::new("dep")
+            && required == Version("2.0.0".to_owned())
+            && loaded == Version("1.5.0".to_owned())
+    ));
+}
+
+#[test]
+fn load_libs_rejects_dependency_below_minimum_version() {
+    let mut cx = cx();
+    let dep = VersionedStubLib {
+        symbol: Symbol::new("dep"),
+        version: "1.5.0",
+        requires: Vec::new(),
+    };
+    let user = VersionedStubLib {
+        symbol: Symbol::new("user"),
+        version: "0.1.0",
+        requires: vec![sim_kernel::Dependency {
+            id: Symbol::new("dep"),
+            minimum_version: Some(Version("2.0.0".to_owned())),
+        }],
+    };
+
+    let err = cx.load_libs(&[&user, &dep]).unwrap_err();
+    assert!(matches!(
+        err,
+        sim_kernel::Error::DependencyVersionMismatch { .. }
+    ));
+}
+
+#[test]
+fn standard_registry_includes_host_loader() {
+    let mut cx = cx();
+    let lib = crate::loaders::standard_loader_registry()
+        .load_lib(
+            &mut cx,
+            LibSource::Host(Box::new(StubLib {
+                symbol: Symbol::new("host-lib"),
+            })),
+        )
+        .unwrap();
+    assert_eq!(lib.manifest().id, Symbol::new("host-lib"));
+}
+```
+
+### `feature/sim-sdk/estate-facade`
+
+Specimen `spec-test/sim-sdk/src/estate_facade_tests` is checked by `cargo test`.
+
+Source `src/estate_facade_tests.rs`:
+
+```rust
+// conformance: the estate facade exposes portable identities without selecting a provider.
+
+#[test]
+fn estate_facade_preserves_portable_project_identity() {
+    let first = crate::estate::core::ProjectFingerprint::of(b"portable-estate");
+    let second = crate::estate::core::ProjectFingerprint::of(b"portable-estate");
+    assert_eq!(first, second);
 }
 ```
 
