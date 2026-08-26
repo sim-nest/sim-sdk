@@ -1,3 +1,5 @@
+// conformance: the SDK registry routes exact artifacts only through the installed platform port.
+
 use std::path::PathBuf;
 use std::sync::Arc;
 #[cfg(all(feature = "codec-binary", feature = "codec-lisp", feature = "shape"))]

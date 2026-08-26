@@ -108,6 +108,8 @@ pub mod estate {
     #[cfg(feature = "estate-provider-model")]
     pub use sim_site_estate_model as provider_model;
 }
+#[cfg(all(test, feature = "estate"))]
+mod estate_facade_tests;
 
 #[cfg(feature = "platform")]
 /// Provider-neutral platform records and authoring contracts.
@@ -235,6 +237,9 @@ pub mod study {
     pub use sim_lib_study::*;
 }
 
+#[cfg(all(test, feature = "study"))]
+mod study_facade_tests;
+
 /// Independently selectable physics contracts and loadable composition.
 ///
 /// Each module is a direct re-export from its owning crate. Enabling
@@ -287,6 +292,8 @@ pub mod music_vertical;
 pub mod model_test {
     pub use sim_lib_model_test::*;
 }
+#[cfg(all(test, feature = "model-test"))]
+mod model_test_facade_tests;
 /// Provider-neutral web research composition.
 ///
 /// This facade intentionally exposes stable plans, receipts, records, and host

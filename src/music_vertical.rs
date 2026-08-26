@@ -1,4 +1,5 @@
 //! Curated SDK composition for the media-edge-host music vertical.
+// conformance: the SDK vertical exposes only reviewed effects and resilient routes.
 
 pub use sim_lib_music_core::{
     MediaEdgeMusicPlan, MusicRouteEndpoint, MusicRouteRole, RouteEvidence,
