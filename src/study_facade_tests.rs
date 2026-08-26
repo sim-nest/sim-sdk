@@ -2,7 +2,7 @@
 
 #[test]
 fn study_facade_preserves_execution_and_write_boundaries() {
-    use crate::study::StudyVerb;
+    use crate::study::product::StudyVerb;
 
     assert_eq!(StudyVerb::parse("run"), Some(StudyVerb::Run));
     assert!(StudyVerb::Run.may_execute());

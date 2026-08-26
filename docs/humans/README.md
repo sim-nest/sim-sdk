@@ -1197,7 +1197,7 @@ Source `src/study_facade_tests.rs`:
 
 #[test]
 fn study_facade_preserves_execution_and_write_boundaries() {
-    use crate::study::StudyVerb;
+    use crate::study::product::StudyVerb;
 
     assert_eq!(StudyVerb::parse("run"), Some(StudyVerb::Run));
     assert!(StudyVerb::Run.may_execute());
@@ -1218,7 +1218,7 @@ Source `src/model_test_facade_tests.rs`:
 #[test]
 fn model_test_facade_preserves_the_product_entrypoint() {
     assert_eq!(
-        crate::model_test::model_test_entrypoint_symbol(),
+        crate::model_test::product::model_test_entrypoint_symbol(),
         sim_kernel::Symbol::qualified("cli", "main/model-test")
     );
 }

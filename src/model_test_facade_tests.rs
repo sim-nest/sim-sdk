@@ -3,7 +3,7 @@
 #[test]
 fn model_test_facade_preserves_the_product_entrypoint() {
     assert_eq!(
-        crate::model_test::model_test_entrypoint_symbol(),
+        crate::model_test::product::model_test_entrypoint_symbol(),
         sim_kernel::Symbol::qualified("cli", "main/model-test")
     );
 }
