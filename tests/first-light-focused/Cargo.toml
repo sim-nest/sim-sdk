@@ -11,8 +11,8 @@ default = ["continuity"]
 continuity = []
 
 [dependencies]
-sim-citizen = { version = "0.2.0" }
-sim-kernel = { version = "0.2.1" }
+sim-citizen = { version = "0.3.0" }
+sim-kernel = { version = "0.3.0" }
 sim-lib-capability-pack = { version = "0.1.0" }
 sim-lib-continuity = { version = "0.1.0" }
 sim-lib-expedition-book = { version = "0.1.0" }
