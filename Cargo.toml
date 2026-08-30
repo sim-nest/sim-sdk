@@ -73,8 +73,8 @@ sim-codec-bridge = { optional = true, version = "0.2.0" }
 sim-codec-chat = { optional = true, version = "0.3.0" }
 sim-codec-classfile = { optional = true, version = "0.1.1" }
 sim-codec-json = { optional = true, version = "0.3.0" }
-sim-codec-javascript = { optional = true, version = "0.1.0" }
-sim-codec-typescript = { optional = true, version = "0.1.0" }
+sim-codec-javascript = { optional = true, version = "0.1.1" }
+sim-codec-typescript = { optional = true, version = "0.1.1" }
 sim-codec-lisp = { optional = true, version = "0.3.0" }
 sim-codec-mcp = { optional = true, version = "0.2.0" }
 sim-codec-python = { optional = true, version = "0.1.1" }
