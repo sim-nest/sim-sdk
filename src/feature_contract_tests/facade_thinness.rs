@@ -3,22 +3,36 @@ use std::{fs, path::Path};
 use super::support::repo_root;
 
 const REEXPORT_AND_WIRING: &[&str] = &[
+    "src/agent_conduct.rs",
+    "src/agent_conduct_core.rs",
     "src/bin/sim.rs",
+    "src/characterization.rs",
     "src/compute_exports.rs",
+    "src/continuity.rs",
+    "src/estate.rs",
+    "src/exceptions.rs",
     "src/expr_tree_exports.rs",
     "src/facade_cli.rs",
     "src/femm_exports.rs",
+    "src/hotload.rs",
     "src/interference_exports.rs",
     "src/lib.rs",
     "src/loaders.rs",
     "src/loaders/registry.rs",
+    "src/model_test.rs",
     "src/music_vertical.rs",
     "src/music_algorithm_exports.rs",
     "src/numbers_exports.rs",
+    "src/physics.rs",
+    "src/provider.rs",
+    "src/relation.rs",
     "src/roadmap11_exports.rs",
     "src/runtime.rs",
     "src/serial_music.rs",
+    "src/source_authority.rs",
     "src/standard_exports.rs",
+    "src/study.rs",
+    "src/web_search.rs",
 ];
 
 const AUTHORING_HELPERS: &[&str] = &[
@@ -34,6 +48,7 @@ const AUTHORING_HELPERS: &[&str] = &[
 
 const RUNTIME_BEHAVIOR_ALLOWLIST: &[&str] = &[
     "src/gc.rs",
+    "src/platform.rs",
     "src/runtime/browse.rs",
     "src/runtime/browse/",
     "src/runtime/capabilities.rs",

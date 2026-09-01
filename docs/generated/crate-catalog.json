@@ -26,6 +26,7 @@
       "readme": "crates/sim-conformance/README.md",
       "root": "crates/sim-conformance",
       "target_kinds": [
+        "lib",
         "test"
       ]
     },
