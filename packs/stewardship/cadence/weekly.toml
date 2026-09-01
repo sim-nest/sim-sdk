@@ -1,0 +1,7 @@
+schema = "sim.stewardship-cadence-projection/v1"
+id = "weekly"
+period = "week"
+source_truth = "none"
+reads = ["copied-claim", "attention", "reconciliation-status", "completed-pack"]
+output = "reviewable-summary"
+empty = "silence"

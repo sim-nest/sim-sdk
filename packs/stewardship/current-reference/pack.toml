@@ -1,0 +1,24 @@
+schema = "sim.stewardship-pack/v1"
+id = "current-cited-reference"
+title = "Current cited references"
+shapes = "shapes.toml"
+capabilities = ["data-read", "local-store", "local-search"]
+effects = ["retain-citation", "expire-reference", "record-replacement", "rebuild-search"]
+forbidden_effects = ["remote-scrape", "remote-fetch", "silent-replace", "infer-guidance"]
+absent_lanes = ["model", "network"]
+
+[reference]
+domains = ["garden", "flock", "food", "product"]
+required_fields = ["source", "jurisdiction", "edition", "checked-at", "expires-at"]
+expired = "not-current"
+replacement = "explicit-reviewed-reference"
+
+[search]
+scope = "local-current-references"
+rebuild = "from-retained-pack-data"
+remote = false
+
+[removal]
+default = "honest-broken-reference"
+when_history_restricted = "policy-tombstone"
+silent_substitution = false

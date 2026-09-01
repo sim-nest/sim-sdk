@@ -6,7 +6,11 @@ use sim::kernel::{Args, DefaultFactory, EagerPolicy, Expr, Symbol};
 
 #[test]
 fn seeded_cookbook_is_visible_in_runtime() {
-    let mut cx = sim::kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim::kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim::kernel::HandleSeed::new(0x5344_4b10),
+    );
     sim::runtime::install_core_runtime(&mut cx);
     sim_lib_cookbook::install_seeded_cookbook_lib(&mut cx).unwrap();
 
@@ -40,7 +44,11 @@ fn seeded_cookbook_is_visible_in_runtime() {
 ))]
 #[test]
 fn cookbook_recipe_gate_runs_every_seeded_sdk_recipe() {
-    let mut cx = sim::kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim::kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim::kernel::HandleSeed::new(0x5344_4b11),
+    );
     sim::runtime::install_core_runtime(&mut cx);
     let lisp = sim::codec_lisp::LispCodecLib::new(cx.registry_mut().fresh_codec_id()).unwrap();
     cx.load_lib(&lisp).unwrap();

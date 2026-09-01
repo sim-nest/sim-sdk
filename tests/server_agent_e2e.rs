@@ -8,14 +8,16 @@ use std::any::Any;
 use std::sync::{Arc, Mutex};
 
 use sim::codec::{Input, decode_with_codec};
-use sim::kernel::{Args, Callable, ClassRef, Expr, Object, ReadPolicy, Result, Symbol, Value};
-use sim::lib_server::{Connection, FrameKind, Server, ServerAddress, ServerFrame};
+use sim::kernel::{
+    Args, Callable, ClassRef, Error, Expr, Object, ReadPolicy, Result, Symbol, Value,
+};
+use sim::lib_server::{Connection, FrameKind, Server, ServerFrame};
 
 use support::{
-    RecordingPersonaSite, TransformSite, call_exprs, cx, flatten_text, in_process_address,
-    is_socket_permission_error, keyword, lower_repl_like, make_connection,
-    normalize_server_reflect, now_ms, number_expr, quoted, register_connection, register_value,
-    start_server_with_site, tcp_address_expr, try_call_exprs, unique_id,
+    RecordingPersonaSite, TransformSite, call_exprs, cx, flatten_text, in_process_address, keyword,
+    lower_repl_like, make_connection, normalize_server_reflect, now_ms, quoted,
+    register_connection, register_value, start_server_with_site, tcp_address_expr, try_call_exprs,
+    unique_id,
 };
 
 #[test]
@@ -343,61 +345,25 @@ fn r21_open_claw_dispatch_flows_through_every_stage() {
 }
 
 #[test]
-fn r21_cross_process_realize_round_trips_over_real_tcp() {
-    for _ in 0..5 {
-        let mut cx = cx();
-        let server = match try_call_exprs(
-            &mut cx,
-            Symbol::qualified("server", "start"),
-            vec![
-                keyword("name"),
-                Expr::Symbol(Symbol::new("tcp-r21")),
-                keyword("address"),
-                tcp_address_expr(0),
-                keyword("codec"),
-                Expr::Symbol(Symbol::qualified("codec", "lisp")),
-            ],
-        ) {
-            Ok(server) => server,
-            Err(error) => {
-                if is_socket_permission_error(&error) {
-                    return;
-                }
-                std::thread::sleep(std::time::Duration::from_millis(25));
-                continue;
-            }
-        };
-        let server_ref = server.object().downcast_ref::<Server>().unwrap();
-        let ServerAddress::Tcp { port, .. } = server_ref.address() else {
-            panic!("expected tcp server address");
-        };
-
-        let result = try_call_exprs(
-            &mut cx,
-            Symbol::qualified("server", "realize"),
-            vec![
-                Expr::Call {
-                    operator: Box::new(Expr::Symbol(Symbol::qualified("math", "add"))),
-                    args: vec![number_expr(40), number_expr(2)],
-                },
-                keyword("on"),
-                quoted(tcp_address_expr(*port)),
-            ],
-        );
-        match result {
-            Ok(realized) => {
-                assert_eq!(realized.object().as_expr(&mut cx).unwrap(), number_expr(42));
-                return;
-            }
-            Err(error) => {
-                if is_socket_permission_error(&error) {
-                    return;
-                }
-                std::thread::sleep(std::time::Duration::from_millis(25));
-            }
-        }
-    }
-    panic!("real tcp realize did not succeed after retries");
+fn r21_tcp_server_refuses_without_an_explicit_platform_transport() {
+    let mut cx = cx();
+    let result = try_call_exprs(
+        &mut cx,
+        Symbol::qualified("server", "start"),
+        vec![
+            keyword("name"),
+            Expr::Symbol(Symbol::new("tcp-r21")),
+            keyword("address"),
+            tcp_address_expr(0),
+            keyword("codec"),
+            Expr::Symbol(Symbol::qualified("codec", "lisp")),
+        ],
+    );
+    assert!(matches!(
+        result,
+        Err(Error::HostError(message))
+            if message.contains("no platform transport services are bound")
+    ));
 }
 
 struct MailDecodeFn;

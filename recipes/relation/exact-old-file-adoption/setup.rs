@@ -1,0 +1,2 @@
+use sim::relation::{migrate::{AdoptionManifest, SchemaAttestation}, site::{StorageAccess, StorageLocator}, sqlite::{PreopenedStores, SqliteDriver}};
+fn main() { let _ = (std::any::TypeId::of::<AdoptionManifest>(), std::any::TypeId::of::<SchemaAttestation>(), std::any::TypeId::of::<StorageAccess>(), std::any::TypeId::of::<StorageLocator>(), std::any::TypeId::of::<PreopenedStores>(), std::any::TypeId::of::<SqliteDriver>()); }

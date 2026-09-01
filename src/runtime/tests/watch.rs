@@ -80,7 +80,11 @@ fn watch_recipes_run_from_the_cookbook_directory() {
 
     let cards = recipes_from_embedded(crate::runtime::watch::RECIPES).expect("recipes parse");
     let recipe_ids = ["glance-pager", "hold-last", "privacy-reaper", "dual-quorum"];
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xd248_e233_ad60_8e32),
+    );
     cx.grant(read_eval_capability());
     cx.grant(read_construct_capability());
     cx.grant(macro_expand_eval_capability());

@@ -11,7 +11,11 @@ use super::support::table_value;
 #[cfg(feature = "numbers-f64")]
 #[test]
 fn number_domain_lib_exports_literal_class_and_shape_surfaces() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xd113_dfca_31f9_6a73),
+    );
     install_core_runtime(&mut cx);
     let domain = cx
         .resolve_number_domain(&Symbol::qualified("numbers", "f64"))
@@ -37,7 +41,11 @@ fn number_domain_lib_exports_literal_class_and_shape_surfaces() {
 #[cfg(all(feature = "numbers-arith", feature = "numbers-f64"))]
 #[test]
 fn f64_domain_browse_table_includes_value_shape() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x4af3_ef49_0c65_15ef),
+    );
     install_core_runtime(&mut cx);
     let domain = cx
         .resolve_number_domain(&Symbol::qualified("numbers", "f64"))
@@ -56,7 +64,11 @@ fn f64_domain_browse_table_includes_value_shape() {
 #[cfg(all(feature = "numbers-arith", feature = "numbers-i64"))]
 #[test]
 fn i64_domain_browse_table_includes_value_shape() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xfbb8_82f6_600a_9bea),
+    );
     install_core_runtime(&mut cx);
     let domain = cx
         .resolve_number_domain(&Symbol::qualified("numbers", "i64"))
@@ -75,7 +87,11 @@ fn i64_domain_browse_table_includes_value_shape() {
 #[cfg(all(feature = "numbers-arith", feature = "numbers-rational"))]
 #[test]
 fn rational_domain_browse_table_includes_value_shape() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x1096_c471_498e_b14c),
+    );
     install_core_runtime(&mut cx);
     let domain = cx
         .resolve_number_domain(&Symbol::qualified("numbers", "rational"))
@@ -94,7 +110,11 @@ fn rational_domain_browse_table_includes_value_shape() {
 #[cfg(all(feature = "numbers-arith", feature = "numbers-complex"))]
 #[test]
 fn complex_domain_browse_table_includes_value_shape() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xd847_491d_20b4_b93b),
+    );
     install_core_runtime(&mut cx);
     let domain = cx
         .resolve_number_domain(&Symbol::qualified("numbers", "complex"))
@@ -113,7 +133,11 @@ fn complex_domain_browse_table_includes_value_shape() {
 #[cfg(all(feature = "numbers-arith", feature = "numbers-f64"))]
 #[test]
 fn f64_literal_and_value_dispatch_match() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x5cbc_5d3f_562b_fb44),
+    );
     install_core_runtime(&mut cx);
     let left = cx
         .factory()
@@ -148,7 +172,11 @@ fn f64_literal_and_value_dispatch_match() {
 #[cfg(all(feature = "numbers-arith", feature = "numbers-i64"))]
 #[test]
 fn i64_literal_and_value_dispatch_match() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x8fea_a77f_a05f_72d3),
+    );
     install_core_runtime(&mut cx);
     let left = cx
         .factory()
@@ -183,7 +211,11 @@ fn i64_literal_and_value_dispatch_match() {
 #[cfg(all(feature = "numbers-arith", feature = "numbers-rational"))]
 #[test]
 fn rational_literal_and_value_dispatch_match() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x9c17_5660_aa0f_b472),
+    );
     install_core_runtime(&mut cx);
     let left = cx
         .factory()
@@ -218,7 +250,11 @@ fn rational_literal_and_value_dispatch_match() {
 #[cfg(all(feature = "numbers-arith", feature = "numbers-complex"))]
 #[test]
 fn complex_literal_and_value_dispatch_match() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x09f8_67c7_56b2_1330),
+    );
     install_core_runtime(&mut cx);
     let left = cx
         .factory()
@@ -253,7 +289,11 @@ fn complex_literal_and_value_dispatch_match() {
 #[cfg(all(feature = "numbers-f64", feature = "numbers-complex"))]
 #[test]
 fn mixed_f64_and_complex_addition_promotes_to_complex() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x9346_0447_7845_68db),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -280,7 +320,11 @@ fn mixed_f64_and_complex_addition_promotes_to_complex() {
 #[cfg(feature = "numbers-complex")]
 #[test]
 fn complex_reduction_product_is_registered() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xd321_2fa0_a384_0d10),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(

@@ -7,7 +7,11 @@ use sim_kernel::{
 use crate::runtime::install_core_runtime;
 
 fn cx() -> sim_kernel::Cx {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xdee8_f548_a421_7dd8),
+    );
     install_core_runtime(&mut cx);
     cx.grant(macro_expand_eval_capability());
     cx

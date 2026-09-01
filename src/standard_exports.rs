@@ -29,7 +29,7 @@ pub use sim_codec_mcp as codec_mcp;
 pub use sim_codec_python as codec_python;
 #[cfg(feature = "codec-typescript")]
 pub use sim_codec_typescript as codec_typescript;
-#[cfg(feature = "core")]
+#[cfg(any(feature = "core", feature = "hotload"))]
 pub use sim_kernel as kernel;
 #[cfg(feature = "standard-binding")]
 pub use sim_lib_binding as lib_binding;
@@ -75,6 +75,26 @@ pub use sim_lib_lang_typescript as lib_lang_typescript;
 pub use sim_lib_logic as lib_logic;
 #[cfg(feature = "mcp")]
 pub use sim_lib_mcp::{self as lib_mcp, install_mcp_lib};
+#[cfg(feature = "mcp-client")]
+pub use sim_lib_mcp_client as lib_mcp_client;
+/// Stable MCP transport, compatibility, client, OAuth, and state lanes retain
+/// their owning crate boundaries instead of being flattened into `lib_mcp`.
+#[cfg(feature = "mcp-http")]
+pub use sim_lib_mcp_http as lib_mcp_http;
+#[cfg(feature = "mcp-legacy")]
+pub use sim_lib_mcp_legacy as lib_mcp_legacy;
+#[cfg(feature = "mcp-stdio")]
+pub use sim_lib_mcp_stdio as lib_mcp_stdio;
+/// MCP OAuth building blocks, grouped by their protocol, HTTP, and JOSE
+/// responsibilities.
+#[cfg(feature = "mcp-oauth")]
+pub mod mcp_oauth {
+    pub use sim_lib_oauth_core as core;
+    pub use sim_lib_oauth_http as http;
+    pub use sim_lib_oauth_jose as jose;
+}
+#[cfg(feature = "mcp-cancellation")]
+pub use sim_cancel as cancellation;
 #[cfg(feature = "standard-mutation")]
 pub use sim_lib_mutation as lib_mutation;
 #[cfg(feature = "standard-namespace")]
@@ -85,6 +105,8 @@ pub use sim_lib_numbers_stats as lib_numbers_stats;
 pub use sim_lib_openai_server as lib_openai_server;
 #[cfg(feature = "standard-pattern")]
 pub use sim_lib_pattern as lib_pattern;
+#[cfg(feature = "mcp-protected-state")]
+pub use sim_lib_protected_state as lib_protected_state;
 #[cfg(feature = "rank")]
 pub use sim_lib_rank as lib_rank;
 #[cfg(feature = "standard-sequence")]

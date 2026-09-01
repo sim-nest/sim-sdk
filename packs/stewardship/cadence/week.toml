@@ -1,0 +1,83 @@
+schema = "sim.stewardship-cadence-week/v1"
+
+[[day]]
+id = "monday-burst"
+cards = ["flock-care", "kitchen-question", "garden-attention"]
+seconds = 103
+flock_seconds = 18
+inputs = ["flock:copied", "kitchen:copied", "garden:copied"]
+channel = "workstation-kitchen"
+fields = ["title", "summary", "question", "kitchen-claim", "garden-claim", "flock-common-care"]
+outcome = "cards"
+
+[[day]]
+id = "tuesday-stale"
+cards = ["garden-stale-question"]
+seconds = 31
+flock_seconds = 0
+inputs = ["garden:stale"]
+channel = "telegram"
+fields = ["title", "summary", "question"]
+outcome = "stale-source"
+
+[[day]]
+id = "wednesday-refusal"
+cards = []
+seconds = 9
+flock_seconds = 0
+inputs = ["private:copied", "finance:detail-closed"]
+channel = "worn"
+fields = []
+outcome = "refused"
+
+[[day]]
+id = "thursday-no-input"
+cards = []
+seconds = 0
+flock_seconds = 0
+inputs = []
+channel = "workstation-kitchen"
+fields = []
+outcome = "silence"
+
+[[day]]
+id = "friday-lock-revoke"
+cards = []
+seconds = 14
+flock_seconds = 0
+inputs = ["private:locked", "finance:revoked"]
+channel = "export"
+fields = []
+outcome = "lane-locked"
+
+[[day]]
+id = "saturday-unavailable"
+cards = ["paper-flock-check"]
+seconds = 20
+flock_seconds = 20
+inputs = ["flock:copied", "model:unavailable", "device:unavailable"]
+channel = "workstation-kitchen"
+fields = ["title", "summary", "flock-common-care"]
+outcome = "paper-path"
+
+[[day]]
+id = "sunday-removed-pack"
+cards = []
+seconds = 0
+flock_seconds = 0
+inputs = ["media:removed"]
+channel = "telegram"
+fields = []
+outcome = "pack-removed"
+
+[[reconciliation_case]]
+id = "closed"
+session = "closed"
+requested = "finance-detail"
+expected = "refused"
+
+[[reconciliation_case]]
+id = "explicit-open"
+session = "explicit-open"
+requested = "finance-detail"
+expected = "shown-in-session-only"

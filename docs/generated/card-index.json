@@ -1,5 +1,5 @@
 {
-  "card_count": 278,
+  "card_count": 303,
   "cards": [
     {
       "id": "agent/effects",
@@ -488,6 +488,72 @@
       "summary": "citizen class constructor surface"
     },
     {
+      "id": "citizen/agent/ConductContract",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/Event",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/JournalHead",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/JournalRecord",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/Outcome",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/RunFrame",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/RunState",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/StepCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/Stop",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/Usage",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/agent/UsageBudget",
+      "kind": "citizen-class",
+      "owner": "sim-lib-agent-conduct-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
       "id": "citizen/audio-dsp/Config",
       "kind": "citizen-class",
       "owner": "sim-lib-audio-dsp",
@@ -509,6 +575,48 @@
       "id": "citizen/audio-synth/Preset",
       "kind": "citizen-class",
       "owner": "sim-lib-music-synth",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/Event",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/Intent",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/Plan",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/Refusal",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/RoleDemand",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/RouteLease",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/continuity/Turn",
+      "kind": "citizen-class",
+      "owner": "sim-lib-continuity",
       "summary": "citizen class constructor surface"
     },
     {
@@ -1037,6 +1145,48 @@
       "id": "citizen/plugin-core/PluginDescriptor",
       "kind": "citizen-class",
       "owner": "sim-lib-plugin-core",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/EndpointCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/HarnessCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/PrincipalCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/ProviderFamilyCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/ProviderSeatCard",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/ProviderSeatId",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
+      "summary": "citizen class constructor surface"
+    },
+    {
+      "id": "citizen/provider/ProviderSeatLimits",
+      "kind": "citizen-class",
+      "owner": "sim-lib-provider",
       "summary": "citizen class constructor surface"
     },
     {

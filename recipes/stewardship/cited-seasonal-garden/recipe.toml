@@ -1,0 +1,9 @@
+id = "cited-seasonal-garden"
+title = "Rebuild a cited garden season"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 20
+tags = ["sdk", "stewardship", "garden", "offline", "seasonal"]
+requires = ["core", "codec/lisp", "numbers/rational", "claims"]
+network = false

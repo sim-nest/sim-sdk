@@ -9,7 +9,11 @@ use std::sync::Arc;
 
 #[cfg(feature = "numbers-exotic")]
 fn runtime() -> sim_kernel::Cx {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xb7cc_903d_1acf_2d08),
+    );
     install_core_runtime(&mut cx);
     cx
 }

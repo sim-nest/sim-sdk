@@ -65,3 +65,4 @@ fn frozen_music_candidate_graph_composes_through_the_sdk() {
         );
     }
 }
+// conformance: music-algorithm specimens prove public deterministic composition.

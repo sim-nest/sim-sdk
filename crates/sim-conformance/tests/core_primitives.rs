@@ -19,7 +19,10 @@ use std::{
 
 use sim::{
     kernel::{CapabilityName, Error, Expr, Symbol, Table},
-    lib_exec::{ExecOptions, exec, exec_capability},
+    lib_exec::{
+        ExecOptions, ProcResult, ProcessAttempt, ProcessCancellation, ProcessPort, ProcessReceipt,
+        ProcessRequest, ProgramRef, ProjectRootRef, exec, exec_capability,
+    },
     table_fs::{
         FsDir, table_fs_edit_capability, table_fs_find_capability, table_fs_read_capability,
         table_fs_write_capability,
@@ -97,12 +100,20 @@ fn find_refuses_paths_that_escape_the_directory_root() {
 }
 
 #[test]
-fn exec_denial_and_output_bounds_are_public_primitives() {
+fn exec_denial_and_sealed_dispatch_are_public_primitives() {
     let (mut cx, seat) = support::seated_cx();
+    let cancellation = ProcessCancellation::default();
     let denied = exec(
         &mut cx,
-        &argv(&["sim-conformance-missing-command"]),
-        &ExecOptions::new(1_000, 1_024),
+        &PanicProcessPort,
+        &[],
+        &ExecOptions::new(
+            ProgramRef::new("sim-conformance-missing-command").unwrap(),
+            ProjectRootRef::new("conformance-fixture").unwrap(),
+            1_000,
+            1_024,
+        ),
+        &cancellation,
     )
     .unwrap_err();
     assert!(matches!(
@@ -113,8 +124,15 @@ fn exec_denial_and_output_bounds_are_public_primitives() {
     support::grant_capability(&seat, &mut cx, exec_capability());
     let result = exec(
         &mut cx,
-        &argv(&["env", "printf", "1234567890"]),
-        &ExecOptions::new(1_000, 4),
+        &BoundedFixturePort,
+        &argv(&["1234567890"]),
+        &ExecOptions::new(
+            ProgramRef::new("printf").unwrap(),
+            ProjectRootRef::new("conformance-fixture").unwrap(),
+            1_000,
+            4,
+        ),
+        &cancellation,
     )
     .unwrap();
 
@@ -195,6 +213,40 @@ fn grant(
 
 fn argv(items: &[&str]) -> Vec<String> {
     items.iter().map(|item| (*item).to_owned()).collect()
+}
+
+struct PanicProcessPort;
+
+impl ProcessPort for PanicProcessPort {
+    fn run(&self, _: &ProcessRequest, _: &ProcessCancellation) -> ProcessAttempt {
+        panic!("capability denial must precede process dispatch")
+    }
+}
+
+struct BoundedFixturePort;
+
+impl ProcessPort for BoundedFixturePort {
+    fn run(&self, request: &ProcessRequest, cancellation: &ProcessCancellation) -> ProcessAttempt {
+        assert_eq!(request.program.as_str(), "printf");
+        assert_eq!(request.root.as_str(), "conformance-fixture");
+        assert_eq!(request.budget.timeout_ms, 1_000);
+        assert_eq!(request.budget.max_output_bytes, 4);
+        assert!(!cancellation.is_cancelled());
+        let source = request.argv[0].as_str();
+        let stdout = source[..request.budget.max_output_bytes].to_owned();
+        ProcessAttempt::Completed {
+            receipt: ProcessReceipt {
+                provider: "conformance-fixture".to_owned(),
+                elapsed_mono_ns: 1,
+                result: ProcResult {
+                    stdout,
+                    stderr: String::new(),
+                    exit_code: 0,
+                    truncated: source.len() > request.budget.max_output_bytes,
+                },
+            },
+        }
+    }
 }
 
 fn http_dir(base_url: String) -> HttpDir {

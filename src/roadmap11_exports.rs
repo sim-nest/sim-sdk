@@ -124,8 +124,6 @@ pub use sim_lib_stream_jack as lib_stream_jack;
 pub use sim_lib_stream_pipewire as lib_stream_pipewire;
 #[cfg(feature = "stream-portaudio")]
 pub use sim_lib_stream_portaudio as lib_stream_portaudio;
-#[cfg(feature = "topology-core")]
-pub use sim_lib_topology as lib_topology;
 #[cfg(feature = "view")]
 pub use sim_lib_view as lib_view;
 #[cfg(feature = "view-agent")]

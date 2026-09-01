@@ -120,7 +120,11 @@ fn root_graph_reaches_core_schema_codec_shape_and_test_subjects() {
 }
 
 fn conformance_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xf019_0674_b733_f745),
+    );
     install_core_runtime(&mut cx);
     cx.grant(macro_expand_eval_capability());
     install_enabled_codecs(&mut cx);

@@ -15,7 +15,11 @@ use crate::{
 };
 
 fn cx() -> sim_kernel::Cx {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x9167_b59b_d33b_ba6b),
+    );
     install_core_runtime(&mut cx);
     cx
 }

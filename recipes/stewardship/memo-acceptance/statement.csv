@@ -1,0 +1,4 @@
+booking_date;value_date;transaction_id;text;amount;currency
+2026-04-02;2026-04-02;bank-001;Synthetic market;-437.20;SEK
+2026-04-08;2026-04-08;bank-002;Synthetic transfer;-1200.00;SEK
+2026-04-29;2026-04-29;bank-003;Synthetic interest;12.35;SEK

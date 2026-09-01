@@ -1,0 +1,5 @@
+title = "Project quiet stewardship cards"
+kind = "rust"
+entry = "setup.rs"
+required_features = ["continuity"]
+book = "sim-sdk"

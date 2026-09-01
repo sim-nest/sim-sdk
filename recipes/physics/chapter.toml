@@ -1,0 +1,5 @@
+id = "physics"
+title = "Physics"
+summary = "Load and compose independently selectable scientific layers."
+order = 75
+recipes = ["switched-audit"]

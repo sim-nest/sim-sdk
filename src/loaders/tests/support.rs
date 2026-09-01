@@ -300,7 +300,11 @@ impl Callable for TickCallable {
 }
 
 pub(super) fn cx() -> sim_kernel::Cx {
-    sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory))
+    sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x59b4_f7c6_d1bc_ce51),
+    )
 }
 
 #[cfg(all(feature = "codec-lisp", feature = "shape"))]

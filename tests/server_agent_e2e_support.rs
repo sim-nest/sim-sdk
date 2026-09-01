@@ -23,7 +23,11 @@ use sim::numbers_f64::F64NumbersLib;
 use std::sync::OnceLock;
 
 pub fn cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x7e16_160a_7d9e_e0c1),
+    );
     let lisp = LispCodecLib::new(cx.registry_mut().fresh_codec_id()).unwrap();
     let binary = BinaryCodecLib::new(cx.registry_mut().fresh_codec_id());
     cx.load_lib(&lisp).unwrap();
@@ -42,6 +46,7 @@ pub fn cx() -> Cx {
     cx.grant(CapabilityName::new("mail-write"));
     cx.grant(CapabilityName::new("telegram-bot"));
     cx.grant(CapabilityName::new("network"));
+    cx.grant(CapabilityName::new("topology-run"));
     register_math_add(&mut cx);
     cx
 }

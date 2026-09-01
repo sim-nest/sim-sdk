@@ -1,0 +1,27 @@
+version = 1
+content = "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+title = "Mutual porch"
+input_shape = "shape/synthetic-minimum-projection-offer"
+output_shape = "shape/independent-porch-disposition"
+route = "route/share-mutual-projection"
+capabilities = ["projection-offer", "independent-acceptance"]
+surface = "mutual-minimum"
+ceiling = ["projection-offer", "independent-acceptance"]
+degradation = "Retain independent originals and disclose no additional fields."
+fallback = "Record a declined disposition as a successful completed exchange."
+specimen = "specimen/mutual-porch-declined"
+success_claims = ["minimum-projection-shared", "independent-dispositions", "decline-succeeded"]
+refusal_claims = ["projection-exceeds-minimum"]
+forbidden = ["mount-peer-archive", "require-acceptance", "copy-private-original"]
+
+[continuity]
+roles = ["phone-scene"]
+semantic_inputs = ["keyboard", "touch"]
+body_prompt = false
+focus = "visible-expedition"
+authority_intersection = ["mission", "passport", "route-lease", "endpoint-grant"]
+sensitive_refusals = ["secret", "private-note", "unreviewed-model-output", "undeclared-sensitive-field"]
+sensitive_roles = ["glance", "audible", "notification", "lock-screen"]
+stop_outcome = "normal-pack-outcome"
+continuation = "phone-keyboard-identical"
+forbidden_inputs = ["coordinates", "raw-sensor-frame"]

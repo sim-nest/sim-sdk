@@ -1,0 +1,5 @@
+id = "hotload"
+title = "Safe hot generation"
+summary = "Build, admit, atomically activate, and replay immutable native generations."
+order = 15
+recipes = ["public-generation-loop", "conversational-instrument-adoption"]

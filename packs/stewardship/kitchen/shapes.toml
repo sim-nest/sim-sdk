@@ -1,0 +1,56 @@
+schema = "sim.stewardship-shapes/v1"
+namespace = "stewardship/kitchen"
+
+[[shape]]
+id = "meal-intention"
+required = ["occasion", "people", "taste", "effort", "time"]
+optional = ["cost-evidence"]
+
+[[shape]]
+id = "occasion"
+required = ["label"]
+
+[[shape]]
+id = "people"
+required = ["count"]
+constraint = "positive-integer"
+
+[[shape]]
+id = "taste"
+required = ["words"]
+constraint = "human-authored-nonempty-list"
+
+[[shape]]
+id = "effort"
+required = ["ceiling"]
+
+[[shape]]
+id = "time"
+required = ["serve-at", "available-minutes"]
+
+[[shape]]
+id = "pantry-observation"
+required = ["item", "quantity", "truth", "observed-at", "fresh-until", "claim"]
+truth = ["confirmed", "unknown", "stale", "absent"]
+
+[[shape]]
+id = "exact-quantity"
+required = ["numerator", "denominator", "unit"]
+constraint = "nonzero-positive-denominator"
+unit_semantics = "uninterpreted-label"
+
+[[shape]]
+id = "preparation-option"
+required = ["title", "ingredients", "operations", "source-intention"]
+
+[[shape]]
+id = "question"
+required = ["item", "reason", "source-need"]
+reasons = ["unknown-availability", "stale-observation", "unit-conversion-required"]
+
+[[shape]]
+id = "shopping-draft"
+required = ["intention", "lines", "questions"]
+optional = ["cost-evidence"]
+effect = "data-only"
+

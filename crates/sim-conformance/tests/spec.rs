@@ -252,7 +252,11 @@ fn read_eval_is_capability_and_trust_gated_separately_from_read_construct() {
 
 #[test]
 fn eval_policies_named_by_runtime_exist() {
-    let mut cx = Cx::new(Arc::new(NeedPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(NeedPolicy),
+        Arc::new(DefaultFactory),
+        sim::kernel::HandleSeed::new(0xcd88_0318_659d_feea),
+    );
     sim::runtime::install_core_runtime(&mut cx);
     let policies = cx
         .call_function(&q("core", "eval-policies"), Args::new(Vec::new()))
@@ -697,3 +701,4 @@ fn pcm_item(value: f32) -> sim::lib_stream_core::StreamItem {
         sim::lib_stream_core::PcmPacket::f32(1, 1, vec![value]).unwrap(),
     ))
 }
+// conformance: constellation specimens enforce the public cross-repository contract.

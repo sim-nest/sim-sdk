@@ -300,7 +300,11 @@ fn install_lisp_codec(cx: &mut Cx) {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x3b3b_1019_4e3a_346c),
+    );
     install_core_runtime(&mut cx);
     cx.grant(macro_expand_eval_capability());
     cx

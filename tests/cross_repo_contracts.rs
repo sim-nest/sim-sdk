@@ -41,7 +41,11 @@ use sim::lib_intent::{Origin, intent};
 use sim::lib_view::{LensRegistry, UNIVERSAL_EDITOR_ID, register_universal_default};
 
 fn cx_with_public_runtime() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x371c_2027_6720_a44c),
+    );
     sim::runtime::install_core_runtime(&mut cx);
     cx.grant(eval_fabric_capability());
     cx.grant(macro_expand_eval_capability());

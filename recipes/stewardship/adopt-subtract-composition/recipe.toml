@@ -1,0 +1,9 @@
+id = "adopt-subtract-composition"
+title = "Adopt and subtract a stewardship composition"
+codec = "lisp"
+setup = "input.lisp"
+purpose = "README.md"
+order = 70
+tags = ["sdk", "stewardship", "workshop", "adoption", "subtraction", "offline"]
+requires = ["atelier", "continuity", "claims"]
+network = false

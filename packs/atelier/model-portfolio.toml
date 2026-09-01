@@ -1,0 +1,27 @@
+version = 1
+content = "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+title = "Model portfolio"
+input_shape = "shape/frozen-model-pick-evidence"
+output_shape = "shape/model-study-observation"
+route = "route/run-genai-locally"
+capabilities = ["model-pick-read", "fixed-study-read"]
+surface = "private-study"
+ceiling = ["model-pick-read", "fixed-study-read"]
+degradation = "Record the frozen evidence without invoking the replaceable placement."
+fallback = "Ask the operator to supply a current frozen ModelPick; do not select one."
+specimen = "specimen/model-portfolio-synthetic"
+success_claims = ["model-pick-frozen", "study-evidence-fixed", "placement-replaceable", "observation-recorded"]
+refusal_claims = ["model-pick-expired", "study-evidence-mutable"]
+forbidden = ["judge-answer", "rank-model", "select-model", "mutate-model-pick"]
+
+[continuity]
+roles = ["phone-scene"]
+semantic_inputs = ["keyboard", "touch"]
+body_prompt = false
+focus = "visible-expedition"
+authority_intersection = ["mission", "passport", "route-lease", "endpoint-grant"]
+sensitive_refusals = ["secret", "private-note", "unreviewed-model-output", "undeclared-sensitive-field"]
+sensitive_roles = ["glance", "audible", "notification", "lock-screen"]
+stop_outcome = "normal-pack-outcome"
+continuation = "phone-keyboard-identical"
+forbidden_inputs = ["coordinates", "raw-sensor-frame"]

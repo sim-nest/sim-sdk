@@ -1,0 +1,67 @@
+schema = "sim.stewardship-shapes/v1"
+namespace = "stewardship/garden"
+
+[[shape]]
+id = "bed"
+required = ["id", "label", "location"]
+
+[[shape]]
+id = "crop"
+required = ["id", "name", "variety"]
+
+[[shape]]
+id = "sowing"
+required = ["bed", "crop", "quantity", "planned-for"]
+predicate = "plan"
+
+[[shape]]
+id = "planting"
+required = ["bed", "crop", "quantity", "planned-for"]
+predicate = "plan"
+
+[[shape]]
+id = "care-action"
+required = ["id", "bed", "crop", "kind", "chosen-by", "chosen-at"]
+optional = ["calendar-projection", "guidance"]
+predicate = "plan"
+
+[[shape]]
+id = "observation"
+required = ["id", "bed", "crop", "observed-at", "truth", "detail"]
+predicate = "observation"
+
+[[shape]]
+id = "weather-reference"
+required = ["source", "jurisdiction", "checked-at", "expires-at", "forecast-for", "detail"]
+predicate = "forecast"
+
+[[shape]]
+id = "harvest"
+required = ["claim", "bed", "crop", "quantity", "truth", "observed-at", "fresh-until", "source"]
+predicate = "observation"
+
+[[shape]]
+id = "season"
+required = ["id", "label", "starts-on", "ends-on", "events"]
+constraint = "events-are-ordered-input-data"
+
+[[shape]]
+id = "next-question"
+required = ["id", "reason", "about", "created-at"]
+reasons = ["expired-guidance", "missing-forecast", "stale-forecast", "missing-calendar"]
+
+[[shape]]
+id = "cited-guidance"
+required = ["id", "source", "jurisdiction", "checked-at", "expires-at", "recommendation"]
+predicate = "recommendation"
+
+[[shape]]
+id = "calendar-projection"
+required = ["chosen-action", "projected-for", "calendar-reference"]
+authority = "none"
+
+[[shape]]
+id = "exact-quantity"
+required = ["numerator", "denominator", "unit"]
+constraint = "nonzero-positive-denominator"
+unit_semantics = "uninterpreted-label"

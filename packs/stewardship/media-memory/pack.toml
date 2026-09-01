@@ -1,0 +1,37 @@
+schema = "sim.stewardship-pack/v1"
+id = "chosen-media-memory"
+title = "Chosen media traces"
+shapes = "shapes.toml"
+expression = "chosen-traces.lisp"
+recipe = "../../../recipes/stewardship/chosen-media-traces"
+capabilities = ["data-read", "local-store", "local-search"]
+effects = ["import-selection", "record-position", "save-item", "author-note", "remove-trace", "rebuild-search"]
+forbidden_effects = ["remote-scrape", "remote-fetch", "infer-taste", "auto-endorse", "silent-replace"]
+absent_lanes = ["spotify", "podcast-republic", "model", "network"]
+
+[import]
+authority = "explicit-selection"
+accepted = ["selected-export-entry", "user-supplied-reference"]
+refused = ["unselected-export-entry", "unauthorized-work", "hidden-remote-scrape"]
+receipt = "required"
+
+[predicates]
+distinct = ["imported", "queued", "played", "positioned", "saved", "noted", "understood", "endorsed", "finished"]
+mia_authored = ["understood", "endorsed", "finished"]
+no_inference = "one-predicate-never-implies-another"
+
+[search]
+scope = "local-chosen-traces"
+rebuild = "from-retained-pack-data"
+remote = false
+removed_items = "excluded"
+
+[removal]
+delete = "chosen-trace-and-derived-local-index-entries"
+dangling_citation = "honest-broken-reference"
+restricted_history = "policy-tombstone"
+replacement = "explicit-mia-authored-link-only"
+
+[privacy]
+profile = "none"
+inferred_taste = false

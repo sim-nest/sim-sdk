@@ -8,7 +8,11 @@ use super::support::{UnsupportedExportLib, call_expr, eval_cx, table_value};
 
 #[test]
 fn installs_core_runtime_objects() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xaf68_4d16_3d9f_b5ae),
+    );
     install_core_runtime(&mut cx);
     assert!(
         cx.registry()
@@ -104,7 +108,11 @@ fn installs_core_runtime_objects() {
 
 #[test]
 fn loaded_lib_manifests_are_browseable_as_data() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(sim_kernel::EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(sim_kernel::EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x023a_de81_f28f_73af),
+    );
     install_core_runtime(&mut cx);
     let libs = cx
         .call_function(&Symbol::qualified("core", "libs"), Args::new(Vec::new()))
@@ -122,7 +130,11 @@ fn loaded_lib_manifests_are_browseable_as_data() {
 
 #[test]
 fn core_runtime_loads_as_a_browseable_lib() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(sim_kernel::EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(sim_kernel::EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xb0a3_2200_d63a_5fce),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -139,7 +151,11 @@ fn core_runtime_loads_as_a_browseable_lib() {
 
 #[test]
 fn export_browse_surfaces_return_stable_tables() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(sim_kernel::EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(sim_kernel::EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x8ee0_5293_9dd6_e9e5),
+    );
     install_core_runtime(&mut cx);
     let export = cx
         .call_function(
@@ -164,7 +180,11 @@ fn export_browse_surfaces_return_stable_tables() {
 
 #[test]
 fn loaded_lib_browse_surface_can_report_unsupported_exports() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(sim_kernel::EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(sim_kernel::EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x03fc_ebe4_5a7a_7c5e),
+    );
     install_core_runtime(&mut cx);
     cx.load_lib(&UnsupportedExportLib).unwrap();
     let value = cx
@@ -266,7 +286,11 @@ fn lambda_class_destructuring_binds_object_fields() {
 
 #[test]
 fn help_surface_describes_function_calls() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x5da3_9d4f_cc8d_428d),
+    );
     install_core_runtime(&mut cx);
     let help = cx
         .call_function(
@@ -288,7 +312,11 @@ fn help_surface_describes_function_calls() {
 
 #[test]
 fn registered_tests_are_browseable_and_runnable() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x46be_d3da_94b6_1e05),
+    );
     install_core_runtime(&mut cx);
     let test = SimTest::new(
         Symbol::qualified("test", "truthy"),

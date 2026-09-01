@@ -121,7 +121,11 @@ fn test_expr_and_expected_codec_ids_survive_codec_roundtrips() {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x2c41_177e_76f1_a747),
+    );
     install_core_runtime(&mut cx);
     cx
 }

@@ -1,0 +1,57 @@
+schema = "sim.media-memory-cases/v1"
+
+[[import_case]]
+id = "selected-export-entry"
+origin = "local-export"
+selected = true
+authorized = true
+expected = "imported"
+
+[[import_case]]
+id = "unselected-export-entry"
+origin = "local-export"
+selected = false
+authorized = true
+expected = "refused"
+
+[[import_case]]
+id = "unauthorized-work"
+origin = "user-reference"
+selected = true
+authorized = false
+expected = "refused"
+
+[[import_case]]
+id = "hidden-remote"
+origin = "remote-scrape"
+selected = true
+authorized = true
+expected = "refused"
+
+[[trace]]
+id = "episode-7"
+excerpt = "A short user-selected excerpt."
+source_policy = "quotation-permitted"
+predicates = ["imported", "played", "positioned", "saved"]
+
+[[trace]]
+id = "book-3"
+excerpt = ""
+source_policy = "citation-only"
+predicates = ["imported", "queued"]
+
+[[removal_case]]
+id = "delete-episode"
+target = "episode-7"
+mode = "delete-trace"
+expected_search_ids = ["book-3"]
+expected_citation = "broken-reference"
+expected_replacement = "none"
+
+[[removal_case]]
+id = "restricted-audit"
+target = "book-3"
+mode = "policy-tombstone"
+expected_search_ids = ["episode-7"]
+expected_citation = "policy-tombstone"
+expected_replacement = "none"

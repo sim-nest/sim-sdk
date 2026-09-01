@@ -110,7 +110,11 @@ fn shape_extension_helpers_are_browseable_with_authored_help() {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x21cb_25f1_4ac1_5545),
+    );
     install_core_runtime(&mut cx);
     cx
 }

@@ -95,7 +95,11 @@ fn facet_shape_accepts_complete_facets_and_rejects_missing_fields() {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xbb09_7e0c_e531_a06f),
+    );
     install_core_runtime(&mut cx);
     cx
 }

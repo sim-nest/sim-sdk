@@ -1,5 +1,4 @@
 use sim_kernel::{CatalogSource, LoaderRegistry, Symbol};
-#[cfg(feature = "wasm")]
 use std::sync::Arc;
 
 use sim_kernel::{Cx, Lib, LibLoader, LibSource, Result};
@@ -12,6 +11,38 @@ use super::LispSourceLoader;
 use super::NativeDylibLoader;
 #[cfg(feature = "wasm")]
 use super::WasmLoader;
+
+/// Builds the portable SDK registry over an installed platform loader service.
+///
+/// The SDK knows only canonical loader kinds and source shapes. Concrete native,
+/// wasm, source, and package mechanisms remain behind [`super::LoaderPort`] in
+/// the selected platform capsule.
+pub fn platform_loader_registry(port: Arc<dyn super::LoaderPort>) -> LoaderRegistry {
+    let mut registry = LoaderRegistry::new().with_loader(HostLoader);
+    for kind in port.loader_kinds() {
+        let accepts: Option<fn(&LibSource) -> bool> = if kind.symbol()
+            == &Symbol::qualified("loader", "native-v1")
+        {
+            Some(sim_run_loaders::is_path_source)
+        } else if kind.symbol() == &Symbol::qualified("loader", "wasm-v1") {
+            Some(|source| {
+                sim_run_loaders::is_path_source(source) || sim_run_loaders::is_bytes_source(source)
+            })
+        } else if kind.symbol() == &Symbol::qualified("loader", "source-v1") {
+            Some(|source| {
+                sim_run_loaders::is_path_source(source) || sim_run_loaders::is_bytes_source(source)
+            })
+        } else if kind.symbol() == &Symbol::qualified("loader", "static-v1") {
+            Some(sim_run_loaders::is_static_source)
+        } else {
+            None
+        };
+        if let Some(accepts) = accepts {
+            registry.add_loader(super::PortLoader::new(port.clone(), kind, accepts));
+        }
+    }
+    registry
+}
 
 /// Builds a loader registry with the standard loaders for the enabled features.
 pub fn standard_loader_registry() -> LoaderRegistry {

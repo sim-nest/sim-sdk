@@ -11,7 +11,11 @@ use super::support::table_value;
 
 #[test]
 fn core_runtime_registers_card_class() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x709d_7539_a034_1fcf),
+    );
     install_core_runtime(&mut cx);
     let card = Symbol::qualified("core", "Card");
     assert!(cx.registry().class_by_symbol(&card).is_some());
@@ -19,7 +23,11 @@ fn core_runtime_registers_card_class() {
 
 #[test]
 fn registry_browse_surfaces_return_cards_for_functions() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xddcb_80e8_2ffb_709b),
+    );
     install_core_runtime(&mut cx);
     let functions = cx
         .call_function(
@@ -63,7 +71,11 @@ fn registry_browse_surfaces_return_cards_for_functions() {
 
 #[test]
 fn registry_browse_list_surfaces_return_card_objects() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x43fb_6f2c_05b9_651f),
+    );
     install_core_runtime(&mut cx);
 
     for surface in [
@@ -87,7 +99,11 @@ fn object_card_hook_is_absent_from_rust_sources() {
 
 #[test]
 fn loaded_exports_publish_registry_claims() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x49c1_f46b_4d18_e089),
+    );
     install_core_runtime(&mut cx);
     let subject = Symbol::qualified("core", "help");
 
@@ -146,7 +162,11 @@ fn loaded_exports_publish_registry_claims() {
 
 #[test]
 fn registry_browse_surfaces_fall_back_to_map_entries_without_claims() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xa387_f585_829f_8b14),
+    );
     install_core_runtime(&mut cx);
     let symbol = Symbol::qualified("test", "map-only");
     let value = cx
@@ -184,7 +204,11 @@ fn registry_browse_surfaces_fall_back_to_map_entries_without_claims() {
 
 #[test]
 fn registry_browse_surfaces_return_cards_for_shapes_and_codecs() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x67fe_25ea_6035_714a),
+    );
     install_core_runtime(&mut cx);
     let shapes = cx
         .call_function(&Symbol::qualified("core", "shapes"), Args::new(Vec::new()))
@@ -225,7 +249,11 @@ fn registry_browse_surfaces_return_cards_for_shapes_and_codecs() {
 #[cfg(feature = "codec-lisp")]
 #[test]
 fn loaded_codec_exports_publish_registry_claims() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x2e7e_3c3e_4650_cdf2),
+    );
     install_core_runtime(&mut cx);
     let codec_id = cx.registry_mut().fresh_codec_id();
     let lib = crate::codec_lisp::LispCodecLib::new(codec_id).unwrap();
@@ -248,7 +276,11 @@ fn loaded_codec_exports_publish_registry_claims() {
 
 #[test]
 fn help_projection_publishes_authored_help_claims() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xd7f8_f51a_4be8_a12a),
+    );
     install_core_runtime(&mut cx);
     cx.call_function(
         &Symbol::qualified("core", "help"),
@@ -273,7 +305,11 @@ fn help_projection_publishes_authored_help_claims() {
 
 #[test]
 fn roundtrip_tests_are_card_visible_with_codec_ids() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x0cc6_420e_5baa_d519),
+    );
     install_core_runtime(&mut cx);
     let test = SimTest::new(
         Symbol::qualified("test", "roundtrip"),
@@ -317,7 +353,11 @@ fn roundtrip_tests_are_card_visible_with_codec_ids() {
 
 #[test]
 fn card_v2_provenance_contains_shape_report_evidence() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xa8f7_b949_2feb_4109),
+    );
     install_core_runtime(&mut cx);
     let shape = cx.resolve_shape(&Symbol::qualified("core", "Any")).unwrap();
     let target = cx

@@ -122,7 +122,11 @@ fn skill_card_expr_round_trips_through_installed_codecs() {
 }
 
 fn test_cx() -> Cx {
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x1fab_57c9_69a4_ccd0),
+    );
     install_core_runtime(&mut cx);
     cx
 }

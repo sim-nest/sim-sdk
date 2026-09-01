@@ -1,0 +1,40 @@
+schema = "sim.stewardship-pack/v1"
+id = "flock-calm-care"
+title = "Calm flock care continuity"
+shapes = "shapes.toml"
+expression = "daily-care.lisp"
+recipe = "../../../recipes/stewardship/calm-flock-care"
+capabilities = ["data-read", "claim-write", "attention-write", "calendar-project"]
+effects = ["record-common-care", "record-observation", "record-supply", "raise-attention", "prepare-factual-handoff", "copy-confirmed-eggs"]
+forbidden_effects = ["diagnose", "select-treatment", "automate-care", "score-bird", "rank-bird", "value-animal", "recommend-culling"]
+optional_lanes = ["calendar"]
+absent_lanes = ["kitchen", "professional", "model", "network"]
+
+[daily_capture]
+scope = "flock"
+normal_mode = "one-flock-observation"
+budget_seconds = 20
+steps = ["confirm-common-care", "record-normal-or-deviation", "confirm-supplies"]
+missing = "unknown"
+never_expand_normal_to_per_bird = true
+
+[deviation]
+output = "factual-handoff"
+required_fields = ["bird", "observed-facts", "observed-at", "current-care", "current-supplies", "source-refs"]
+attention = "human-review-required"
+authority = "human-or-professional"
+forbidden = ["diagnosis", "treatment", "prognosis", "automated-care"]
+
+[kitchen_claim]
+kind = "confirmed-egg-availability"
+input_predicate = "observation"
+required_truth = "confirmed"
+required_fields = ["claim", "source", "observed-at", "fresh-until", "quantity"]
+copied = true
+maximum_per_capture = 1
+forbidden_fields = ["flock-handle", "bird", "productivity", "ranking", "animal-value"]
+
+[authority]
+forbidden_operations = ["productivity", "ranking", "culling", "animal-value", "automated-care", "diagnosis", "select-treatment"]
+missing_capture = "unknown"
+

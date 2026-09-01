@@ -1,0 +1,4 @@
+title = "Adopt an exact pre-existing SQLite file"
+kind = "rust"
+entry = "setup.rs"
+required_features = ["relation-sqlite"]

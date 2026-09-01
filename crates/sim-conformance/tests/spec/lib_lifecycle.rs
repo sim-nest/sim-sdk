@@ -211,7 +211,11 @@ fn boot_receipts_encode_decode_and_replay_registry_surface() {
 }
 
 fn conformance_cx() -> Cx {
-    Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory))
+    Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim::kernel::HandleSeed::new(0x8ae3_d915_0ec4_45d7),
+    )
 }
 
 fn fixture_lib(name: &str) -> FixtureValueLib {

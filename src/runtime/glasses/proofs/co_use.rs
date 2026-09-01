@@ -44,8 +44,13 @@ pub fn prove_co_use() -> Result<CoUseProof> {
         edge.clone(),
         7,
     );
-    let mut session =
-        GlassesCoUseSession::new(edge, receipt, build::keyword("workspace"), workspace())?;
+    let mut session = GlassesCoUseSession::new(
+        edge,
+        receipt,
+        build::keyword("workspace"),
+        workspace(),
+        sim_kernel::HandleSeed::new(0x5344_4b01),
+    )?;
     session.attach_viture(
         SurfaceCaps::from_preset("glasses-luma-ultra", "sdk.co-use.viture")
             .ok_or_else(|| Error::HostError("Viture surface preset missing".to_owned()))?,

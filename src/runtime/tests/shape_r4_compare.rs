@@ -5,7 +5,11 @@ use sim_kernel::{Args, DefaultFactory, EagerPolicy, Expr, NumberLiteral, Symbol,
 use crate::runtime::install_core_runtime;
 
 fn cx() -> sim_kernel::Cx {
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x2cda_8d2f_6bd8_e527),
+    );
     install_core_runtime(&mut cx);
     cx
 }

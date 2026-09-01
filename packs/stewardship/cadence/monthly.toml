@@ -1,0 +1,8 @@
+schema = "sim.stewardship-cadence-projection/v1"
+id = "monthly"
+period = "month"
+source_truth = "none"
+reads = ["copied-claim", "reconciliation-status", "completed-pack"]
+finance = "status-unless-reconciliation-open"
+output = "reviewable-summary"
+empty = "silence"

@@ -49,7 +49,7 @@
 
 use std::{collections::BTreeMap, fs};
 
-use sim::kernel::{Cx, DefaultFactory, NoopEvalPolicy};
+use sim::kernel::{Cx, DefaultFactory, HandleSeed, NoopEvalPolicy};
 
 #[test]
 fn workspace_citizen_conformance_covers_existing_families() {
@@ -451,5 +451,6 @@ fn cx() -> Cx {
     Cx::new(
         std::sync::Arc::new(NoopEvalPolicy),
         std::sync::Arc::new(DefaultFactory),
+        HandleSeed::new(0x5344_4b15),
     )
 }

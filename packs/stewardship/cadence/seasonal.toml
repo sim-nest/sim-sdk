@@ -1,0 +1,7 @@
+schema = "sim.stewardship-cadence-projection/v1"
+id = "seasonal"
+period = "season"
+source_truth = "none"
+reads = ["copied-claim", "attention", "completed-pack"]
+output = "reviewable-summary"
+empty = "silence"

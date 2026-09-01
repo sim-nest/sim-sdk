@@ -87,7 +87,11 @@ const NATIVE_STANDARD_CORE_PATCHES: &[(&str, &str, &str)] = &[
 ];
 
 fn cx() -> sim::kernel::Cx {
-    let mut cx = sim::kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim::kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim::kernel::HandleSeed::new(0x5344_4b12),
+    );
     install_core_runtime(&mut cx);
     cx
 }
@@ -436,7 +440,11 @@ fn native_loader_can_load_f64_number_domain_dylib() {
         .and_then(Path::parent)
         .expect("plugin dylib should live in target/<profile>");
 
-    let mut cx = sim::kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim::kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim::kernel::HandleSeed::new(0x5344_4b13),
+    );
     cx.grant(native_dynamic_load_capability());
     cx.load_lib(&sim::numbers_arith::NumbersArithmeticLib::new())
         .unwrap();

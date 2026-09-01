@@ -1,0 +1,5 @@
+chapter = "web-search"
+title = "Web search"
+summary = "Deterministic and operator-only web research compositions."
+order = 95
+recipes = ["configured-searxng"]

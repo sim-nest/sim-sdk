@@ -1,0 +1,4 @@
+name = "reversible-product"
+description = "Replay all generic memo pilots through one disposable worktable"
+entry = "../../../tests/reversible_product.rs"
+command = "cargo test --manifest-path tests/reversible-product-focused/Cargo.toml"

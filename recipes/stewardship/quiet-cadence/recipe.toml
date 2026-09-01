@@ -1,0 +1,9 @@
+id = "quiet-cadence"
+title = "Compose a quiet week from copied claims"
+codec = "toml"
+setup = "week.toml"
+purpose = "README.md"
+order = 60
+tags = ["sdk", "stewardship", "cadence", "offline", "privacy"]
+requires = ["continuity", "attention", "mission"]
+network = false

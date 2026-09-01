@@ -21,6 +21,63 @@ major_entrypoints = "advisory"
 frameworks = "advisory"
 
 [[feature]]
+id = "feature/sim-sdk/hotload-facade"
+title = "Safe hot-generation SDK facade"
+summary = "Expose immutable native build, admission, compatibility, atomic activation, and durable receipt records without exposing host provider implementations."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable hotload and import sim::hotload. Compose the sandbox, storage, loader, and journal providers at the host boundary; pass only the facade-visible requests, candidates, reports, generations, and receipts through application code."
+claims_anchors = ["anchor/rustdoc/sim-nest/hotload"]
+claims_specimens = ["spec-test/sim-sdk/tests/hotload_generation", "recipe/sim-sdk/hotload/public-generation-loop", "spec-test/sim-sdk/tests/conversational_instrument_adoption", "recipe/sim-sdk/hotload/conversational-instrument-adoption"]
+presents = ["feature/sim-run/immutable-native-build", "feature/sim-run/loadable-hot-generation"]
+
+[[route]]
+id = "route/sdk-public-hotload-generation-loop"
+task = "Build and safely replace a native library generation through the public SDK"
+audiences = ["code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/hotload-facade", why = "Use the focused facade records while keeping concrete host providers outside application code." },
+  { specimen = "spec-test/sim-sdk/tests/hotload_generation", why = "Run the deterministic build, admission, activation, refusal, reclamation, and replay proof." },
+  { specimen = "recipe/sim-sdk/hotload/public-generation-loop", why = "Reuse the two tiny sealed source generations from the cookbook surface." },
+]
+
+[[route]]
+id = "route/sdk-conversational-instrument-adoption"
+task = "Rebuild and atomically adopt a conversationally proposed instrument"
+audiences = ["code", "framework"]
+steps = [
+  { feature = "feature/sim-agent-net/reproducible-instrument-adoption", why = "Use the canonical BRIDGE, ChangeCapsule, pack, rebuild, adoption, and rollback transaction." },
+  { specimen = "recipe/sim-sdk/hotload/conversational-instrument-adoption", why = "Follow the checked conversation-free SDK recipe." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/layered-physics-facade"
+title = "Layered physics SDK composition"
+summary = "Curates one-way feature closures from quantities and physics core through audit, proof, studies, findings, and explicit adapters."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Start with numbers-quantity or physics-core and add only the required layer. Extended precision, FEMM, interference, and placement providers are independent opt-ins."
+claims_anchors = ["anchor/rustdoc/sim-nest/physics"]
+claims_specimens = ["recipe/sim-sdk/physics/switched-audit"]
+presents = ["feature/sim-physics/loadable-runtime-composition"]
+
+[[route]]
+id = "route/sdk-switched-physics-audit"
+task = "Compose a switched-boundary physics solve, audit, verdict, and finding projection"
+steps = [{ feature = "feature/sim-sdk/layered-physics-facade", why = "Select the audit and findings closures without pulling adapter or provider stacks." }, { specimen = "recipe/sim-sdk/physics/switched-audit", why = "Inspect the complete composition and unresolved/certified verdict boundary." }]
+
+[[feature]]
+id = "feature/sim-sdk/media-edge-music-vertical"
+title = "Media-edge music SDK composition"
+summary = "Expose the owning music route plan and exact stream-host effect adapters behind one opt-in vertical feature."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable music-vertical and use sim::music_vertical; this facade composes the existing owner contracts and adds no generic command API or automation authority."
+claims_anchors = ["anchor/rustdoc/sim-nest/music_vertical"]
+claims_specimens = ["spec-test/sim-sdk/src/music_vertical"]
+presents = ["feature/sim-music/media-edge-vertical", "feature/sim-stream-host/named-music-effects"]
+
+[[feature]]
 id = "feature/sim-sdk/generated-docs"
 title = "Repository documentation surface"
 summary = "Publish generated package, card, recipe, and index facts for the SDK facade and conformance crate."
@@ -38,6 +95,59 @@ claims_surfaces = [
   "cli/sim",
   "cli/xtask",
   "docs/sim-sdk/generated",
+]
+
+[[feature]]
+id = "feature/sim-sdk/web-search-facade"
+title = "Network-free web research facade and conformance"
+summary = "Expose neutral HTTP, web, search, fetch, rank, office-evidence, and audit-view contracts behind one opt-in SDK feature, with a caller-owned fake-world proof."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable web-search and compose the reexported stable records and host traits. Provider-specific DTOs remain private to their codec; the default conformance fixture owns every input byte and opens no socket."
+claims_anchors = ["anchor/rustdoc/sim-nest/web_search"]
+claims_specimens = ["spec-test/sim-sdk/crates/sim-conformance/tests/web_search_offline", "recipe/sim-sdk/web-search/configured-searxng"]
+presents = ["feature/sim-agent-net/reproducible-federated-research", "feature/sim-web/search-audit-surface"]
+
+[[route]]
+id = "route/sdk-search-research-audit"
+task = "Run sim search research through deterministic conformance to the audit view"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-run/search-command", why = "The bootloader selects the canonical search product." },
+  { feature = "feature/sim-sdk/web-search-facade", why = "The SDK composes the stable public contracts and checked fake-world fixture." },
+  { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/web_search_offline", why = "The fixture proves network-free query-to-citation replay and attack boundaries." },
+  { feature = "feature/sim-web/search-audit-surface", why = "The inert view exposes ranking, capture, selector, office, and policy evidence." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/study-facade"
+title = "Opt-in generic study facade"
+summary = "Expose the canonical study lifecycle, staged design, report graph, selection, and command contracts behind one granular feature."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable study and import sim::study. This is a direct facade over sim-lib-study; it adds no journal, statistics, executor, model, or selection policy."
+claims_anchors = ["anchor/rustdoc/sim-nest/study"]
+claims_specimens = ["spec-test/sim-sdk/src/study_facade_tests"]
+presents = ["feature/sim-runtime/domain-free-study-lifecycle"]
+
+[[feature]]
+id = "feature/sim-sdk/model-test-facade"
+title = "Opt-in model observatory facade"
+summary = "Expose the canonical model-test domain and loadable product behind one granular non-default SDK feature."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable model-test and import sim::model_test. The feature composes the canonical study and provider contracts but adds no provider authority, credentials, runner, scheduler, statistics, or model inventory, and it is absent from the minimal facade."
+claims_anchors = ["anchor/rustdoc/sim-nest/model_test"]
+claims_specimens = ["spec-test/sim-sdk/src/model_test_facade_tests"]
+presents = ["feature/sim-agent-net/model-test-product"]
+
+[[route]]
+id = "route/compose-model-observatory-from-sdk"
+task = "Compose the provider-neutral model observatory from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/model-test-facade", why = "The granular feature exposes the canonical observatory without changing the minimal facade." },
+  { feature = "feature/sim-agent-net/model-test-product", why = "The owning product supplies command semantics, offline projections, and deterministic evidence export." },
 ]
 
 [[feature]]
@@ -97,7 +207,7 @@ title = "Facade runtime entry point"
 summary = "Boot the public SIM facade and expose its command plus reversible view surface."
 owner = "crate/sim-nest"
 audiences = ["user", "code"]
-guidance = "Use this row when starting from the SDK facade instead of an implementation crate."
+guidance = "Enable platform and pass the same platform-composed PureBootEnvelope used by sim-run to platform::sdk_load_plan. The facade directly exposes the canonical plan and adds no SDK loader, target registration, provider selection, or fallback policy."
 claims_anchors = [
   "anchor/card/citizen/view/lens-descriptor",
   "anchor/cli/sim-nest",
@@ -199,8 +309,6 @@ audiences = ["code", "framework"]
 guidance = "Use `genai` for fake and cassette composition, `genai-local` before route/run-genai-locally, and `genai-provider` before route/run-genai-with-provider."
 claims_anchors = [
   "anchor/export/sim-nest/agent/01-basics/genai-assembly",
-  "anchor/rustdoc/sim-nest/cookbook_directory",
-  "anchor/rustdoc/sim-nest/default_loadable_libs",
 ]
 claims_specimens = [
   "spec-test/sim-sdk/src/feature_contract_tests",
@@ -307,16 +415,52 @@ title = "Device and wearable recipes"
 summary = "Exercise modeled device, watch, and glasses workflows through SDK-level recipe entry points."
 owner = "crate/sim-nest"
 audiences = ["user", "code"]
-guidance = "Use this row when following wearable and device workflows from the public facade."
+guidance = "Use this row when following device workflows from the public facade. The revision-4 constellation recipe composes generic stream-host packs and adds modeled instances through manifest and cassette data only. Atelier packs request only the default phone Scene and keyboard/touch semantic lane with no body prompt; expedition projection intersects mission, passport, route lease, and endpoint grant and fails closed for sensitive reduced-role disclosure."
 claims_anchors = [
   "anchor/runtime-lib/sim-nest/glasses-stack-lib",
   "anchor/runtime-lib/sim-nest/watch-stack-lib",
 ]
 claims_specimens = [
   "spec-test/sim-sdk/crates/sim-conformance/tests/spec/surface_protocol",
+  "spec-test/sim-sdk/tests/continuity_exports",
+  "recipe/sim-sdk/continuity/plans",
+  "recipe/sim-sdk/continuity/expedition-thought",
+  "recipe/sim-sdk/continuity/quiet-stewardship-cards",
+  "recipe/sim-sdk/atelier/expedition-first-light",
+  "recipe/sim-sdk/device/revision-4-constellation",
 ]
 supports = [
   "feature/sim-sdk/facade-runtime",
+  "feature/sim-agent-net/pure-continuity",
+]
+
+[[feature]]
+id = "feature/sim-sdk/relation-composition"
+title = "Direct relational SDK composition"
+summary = "Expose the canonical relational model, admission, migration, Shape, bounded site, SQLite capsule, and Table/Dir assembly without a parallel facade model."
+owner = "crate/sim-nest"
+audiences = ["user", "code", "framework"]
+guidance = "Enable `relation` for provider-neutral plans and effects, then add `relation-sqlite` only when that capsule is selected. Build raw plans through sim::relation::plan, admit them once, and pass the opaque checked view unchanged to a selected sim::relation::site. SQL preparation remains capsule-private."
+claims_anchors = ["anchor/rustdoc/sim-nest/relation"]
+claims_specimens = [
+  "spec-test/sim-sdk/tests/relation_exports",
+  "recipe/sim-sdk/relation/custom-domain-crud",
+  "recipe/sim-sdk/relation/exact-old-file-adoption",
+  "recipe/sim-sdk/relation/additive-migration",
+  "recipe/sim-sdk/relation/correlated-query",
+  "recipe/sim-sdk/relation/multi-source-aggregate",
+  "recipe/sim-sdk/relation/bounded-refusal",
+  "recipe/sim-sdk/relation/mounted-directory",
+]
+
+[[route]]
+id = "route/compose-relations-from-sdk"
+task = "Compose a replaceable relational lifecycle from the SDK"
+audiences = ["user", "code", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/relation-composition", why = "The SDK exposes each canonical owner behind one provider-neutral feature boundary." },
+  { specimen = "spec-test/sim-sdk/tests/relation_exports", why = "One admitted logical request runs unchanged through a recording site and SQLite." },
+  { specimen = "recipe/sim-sdk/relation/custom-domain-crud", why = "The recipe starts the complete custom-domain lifecycle using SDK paths only." },
 ]
 
 [[feature]]
@@ -339,15 +483,16 @@ presents = [
 [[feature]]
 id = "feature/sim-sdk/conformance-contract"
 title = "Conformance contract"
-summary = "Run the SDK conformance contract as a checked operational recipe."
+summary = "Run one typed MCP vector authority bidirectionally across direct, compatibility, real transport, product, and runtime projections."
 owner = "crate/sim-conformance"
 audiences = ["code", "framework"]
-guidance = "Use this row when verifying that a facade-facing runtime satisfies the public contract."
+guidance = "Define MCP expectations only as ConformanceVector values, then adapt each applicable codec, service, legacy, stdio, HTTP JSON/SSE, OAuth, protected-state, cache, cancellation, product, and runtime surface to VectorRunner. Keep exhaustive dimensions small and use deterministic fake time/network for metamorphic permutations and hostile budgets."
 claims_anchors = [
   "anchor/crate/sim-conformance",
 ]
 claims_specimens = [
   "spec-test/sim-sdk/crates/sim-conformance/tests/spec",
+  "spec-test/sim-sdk/crates/sim-conformance/tests/mcp_vectors",
 ]
 
 [[route]]
@@ -357,6 +502,8 @@ audiences = ["user", "code"]
 steps = [
   { feature = "feature/sim-sdk/facade-runtime", why = "The facade row owns the public command and reversible view surface." },
   { feature = "feature/sim-sdk/device-recipes", why = "The device row gives wearable workflows through facade-level recipes." },
+  { specimen = "recipe/sim-sdk/continuity/expedition-thought", why = "The networkless walk carries a synthetic thought by immutable content identity through route loss and process death." },
+  { specimen = "recipe/sim-sdk/continuity/quiet-stewardship-cards", why = "A second synthetic policy uses identical continuity mechanics while bounding and filtering low-disclosure cards." },
   { specimen = "recipe/sim-sdk/01-basics/boot-runtime", why = "The boot-runtime recipe checks the smallest facade path." },
 ]
 
@@ -366,7 +513,7 @@ title = "JVM SDK composition"
 summary = "Expose the classfile decoder, bounded JVM profile, source authority, invocation library, bidirectional lambda adapters, recipes, and product specimens through public SDK names."
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
-guidance = "Enable standard-jvm and use sim::codec_classfile, sim::lib_lang_jvm, and sim::source_authority. Java lambdas and method references link from caller-supplied classfile bytes into loader-local managed metadata; SIM callables enter Java only with jvm.functional-adapter. The facade re-exports the canonical owners directly and adds no JVM, decoder, authority, loader, host closure, overload ranker, generated classfile, function organ, cache, or execution policy."
+guidance = "Enable standard-jvm and construct sim::lib_lang_jvm::JvmExecutionRequest with authority-resolved classfile bytes, exact class, member, descriptor, and integer arguments. JvmSurface::execute_i32 returns distinct value, Java throwable, and refusal lanes. Java lambdas and method references link from caller-supplied classfile bytes into loader-local managed metadata; SIM callables enter Java only with jvm.functional-adapter. The facade re-exports the canonical owners directly and adds no JVM, decoder, authority, loader, host closure, overload ranker, generated classfile, function organ, cache, or execution policy."
 claims_anchors = ["anchor/rustdoc/sim-nest/lib_lang_jvm"]
 claims_specimens = [
   "recipe/sim-sdk/jvm/product-surface",
@@ -394,6 +541,16 @@ steps = [
   { feature = "feature/sim-runtime/organs", why = "The runtime organ owns Raised, bounded class matching, and ManagedException stable relation edges." },
   { feature = "feature/sim-sdk/raised-exception-composition", why = "The SDK row exposes those canonical contracts together under sim::exceptions." },
 ]
+
+[[feature]]
+id = "feature/sim-sdk/platform-composition"
+title = "Provider-neutral platform SDK"
+summary = "Re-export platform records, requirement builders, provider-author contracts, and the portable LoaderPort facade behind non-default features."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable platform to author requirements or providers through canonical sim-platform types. With core enabled, construct loaders::platform_loader_registry from the LoaderPort installed by the selected platform capsule; source and package realization then stays behind that port. Concrete capsules remain distribution choices and are intentionally absent from the facade and its default closure. The optional sim facade binary is a bootstrap target, while xtask and native packaging acceptance are host-tool surfaces rather than SDK library behavior."
+claims_specimens = ["spec-test/sim-sdk/src/loaders/tests/registry"]
+presents = ["feature/sim-platform/product-membrane"]
 
 [[route]]
 id = "route/compose-gpu-math-from-sdk"
@@ -444,4 +601,221 @@ steps = [
   { specimen = "recipe/sim-sdk/serial-music/reversible-completion", why = "The completion recipe proves additive serial completion is reversible through the facade." },
   { specimen = "recipe/sim-sdk/serial-music/index-discovery", why = "The index recipe proves the generated feature and route ids are discoverable from the SDK repo surface." },
   { specimen = "spec-test/sim-sdk/crates/sim-conformance/tests/spec/serial_music", why = "The public-facade conformance specimen checks reversibility, recipe parity, fail-closed behavior, and the feature claim." },
+]
+[[feature]]
+id = "feature/sim-sdk/estate-facade"
+title = "Portable estate SDK facade"
+summary = "Opt-in features re-export estate core, authoring, organ, projection, provider, and Surface crates without enabling private controller bindings by default."
+owner = "crate/sim-nest"
+audiences = ["framework"]
+guidance = "Enable estate for the portable core and organ, estate-view for Surface composition, and estate-provider-model only for host-free provider tests."
+claims_specimens = ["spec-test/sim-sdk/src/estate_facade_tests"]
+
+[[route]]
+id = "route/embed-estate-through-sdk"
+task = "Embed portable estate behavior"
+audiences = ["code"]
+steps = [{ feature = "feature/sim-sdk/estate-facade", why = "Select only the portable facade features required by the embedding application." }]
+[[feature]]
+id = "feature/sim-sdk/agent-conduct-composition"
+title = "Agent conduct composition facade"
+summary = "Opt into pure conduct records or certified topology-backed conduct packages through direct canonical re-exports."
+owner = "crate/sim-nest"
+audiences = ["code", "framework"]
+guidance = "Enable agent-conduct-core for durable records and lifecycle contracts, or agent-conduct for the certified topology catalog. The facade adds no wrapper; combine agent and topology-core for standard Cards and package parsing."
+claims_specimens = ["spec-test/sim-sdk/tests/agent_conduct_exports"]
+
+[[feature]]
+id = "feature/sim-sdk/atelier-room-packs"
+title = "Independent Atelier room packs"
+summary = "Six data-authored intellectual rooms compose existing music, physics, model, cited-reading, mutual-projection, and identity routes through the canonical capability-pack graph."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load one TOML profile from packs/atelier through sim-lib-capability-pack. Treat its route, Shapes, ceiling, claims, degradation, fallback, and specimen as an independent closure. The profiles add no room enum, umbrella crate, algorithm, solver, judge, doctrine engine, archive mount, kernel behavior, or bootloader behavior."
+claims_specimens = ["spec-test/sim-sdk/tests/validate_atelier_packs"]
+
+[[route]]
+id = "route/compose-independent-atelier-room"
+task = "Compose one independent intellectual room"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/atelier-room-packs", why = "Select a data profile whose own route and authority ceiling compose the existing domain owner through the canonical pack graph." },
+  { specimen = "spec-test/sim-sdk/tests/validate_atelier_packs", why = "The offline specimen validates all six closures and their room-specific forbidden operations, including declined porch success and the data-only toy extension." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/reversible-atelier-product"
+title = "Reversible Atelier product composition"
+summary = "A networkless conformance pilot composes all five current memo families through the disposable web worktable with fake model and device placements."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Use the reversible-product recipe to prove generic composition, refusals, unsupported states, manual routes, clean projection rebuild, and neutral value evidence. Keep personal root selection in the private control plane and use the existing generic bootloader dispatch."
+claims_specimens = ["recipe/sim-sdk/atelier/reversible-product", "spec-test/sim-sdk/tests/reversible_product"]
+supports = ["feature/sim-sdk/atelier-room-packs", "feature/sim-web/reversible-worktable"]
+
+[[route]]
+id = "route/compose-reversible-atelier-product"
+task = "Compose and replay an offline Atelier product"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/reversible-atelier-product", why = "Compose the delivered layers and private root-set input without adding facade or bootloader behavior." },
+  { specimen = "recipe/sim-sdk/atelier/reversible-product", why = "The deterministic pilot covers all current memos and rebuilds after deleting the derived worktable." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/taste-led-kitchen-pack"
+title = "Taste-led independent kitchen pack"
+summary = "Compose exact quantities, freshness-bounded claims, questions, preparation options, and shopping drafts as pure data while meal choice and commerce remain impossible effects."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/kitchen/pack.toml and supply a human-authored meal intention. Preserve unit labels unless an explicit reviewed exact-rational conversion is present; only fresh confirmed claims reduce needs. Copied harvest and egg claims need no source-room handle, and cost evidence remains an optional opaque ledger reference."
+claims_specimens = ["spec-test/sim-sdk/tests/validate_kitchen_pack", "recipe/sim-sdk/stewardship/taste-led-kitchen"]
+
+[[route]]
+id = "route/compose-taste-led-kitchen-pack"
+task = "Prepare kitchen options and a shopping draft without choosing or buying"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/taste-led-kitchen-pack", why = "Compose the closed data contract and pure projection while Mia retains meal authority." },
+  { specimen = "recipe/sim-sdk/stewardship/taste-led-kitchen", why = "Exercise copied egg evidence, stale-stock questioning, exact unit labels, and an opaque optional cost reference with every provider lane absent." },
+  { specimen = "spec-test/sim-sdk/tests/validate_kitchen_pack", why = "Prove the Shapes, freshness lattice, source-room isolation, effect ceiling, and networkless fixture." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/cited-seasonal-garden-pack"
+title = "Cited seasonal garden memory"
+summary = "Compose independent garden Shapes, dated jurisdictional guidance, optional weather evidence, calendar projections, exact harvest quantities, and copied claims without turning uncertain evidence into instructions."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/garden/pack.toml and rebuild seasons from ordered input data. Keep plans, observations, forecasts, recommendations, and completed work distinct. Expired guidance or missing weather creates a next question; calendars only project already chosen actions; only fresh confirmed harvest observations copy to kitchen."
+claims_specimens = ["spec-test/sim-sdk/tests/validate_garden_pack", "recipe/sim-sdk/stewardship/cited-seasonal-garden"]
+supports = ["feature/sim-sdk/taste-led-kitchen-pack"]
+
+[[route]]
+id = "route/compose-cited-seasonal-garden-pack"
+task = "Rebuild a garden season without predicting or commanding work"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/cited-seasonal-garden-pack", why = "Compose source-bounded recommendations, optional projections, exact observations, and questions as data while Mia retains authority." },
+  { specimen = "recipe/sim-sdk/stewardship/cited-seasonal-garden", why = "Rebuild a season and add a bed and crop entirely through data while all optional provider lanes remain absent." },
+  { specimen = "spec-test/sim-sdk/tests/validate_garden_pack", why = "Prove independent Shapes, predicate separation, expiry behavior, calendar non-authority, the harvest claim boundary, and networkless operation." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/calm-flock-care-pack"
+title = "Calm flock care continuity"
+summary = "Compose a twenty-second common-care capture, flock-level normal observation, factual deviation handoff, attention, and one copied egg claim without measuring an animal's worth."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/flock/pack.toml for eight identified birds. Record common care and one flock-level normal observation; missing capture remains unknown. Deviations produce attention and an exact factual handoff for human or professional review, never diagnosis or treatment. Only one fresh confirmed egg-availability claim may copy to kitchen."
+claims_specimens = ["spec-test/sim-sdk/tests/validate_flock_pack", "recipe/sim-sdk/stewardship/calm-flock-care"]
+supports = ["feature/sim-sdk/taste-led-kitchen-pack"]
+
+[[feature]]
+id = "feature/sim-sdk/private-observation-pack"
+title = "Voluntary erasable private observation"
+summary = "Compose opt-in exact observations, explicit missingness and concurrency, sealed private storage, and reviewable export without medical inference or advice."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/private-observation/pack.toml only after explicit activation and opt into each field separately. Sum only entered exact events under reviewed unit rules. Keep missing and concurrent changes visible. Lock, revoke, or destroy the managed sealed generation to remove plaintext access; export only after preview and confirmation."
+claims_specimens = ["spec-test/sim-sdk/tests/validate_private_observation_pack", "recipe/sim-sdk/stewardship/private-observation"]
+
+[[route]]
+id = "route/compose-private-observation-pack"
+task = "Keep, review, export, or erase voluntary private observations"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/private-observation-pack", why = "Use the closed voluntary data contract and sealed lane while leaving every field absent unless Mia opts in." },
+  { specimen = "recipe/sim-sdk/stewardship/private-observation", why = "Inspect a networkless exact entry and locally encrypted export preview." },
+  { specimen = "spec-test/sim-sdk/tests/validate_private_observation_pack", why = "Prove closed operations, missingness, concurrency, sealed erasure semantics, and explicit export acknowledgement." },
+]
+
+[[route]]
+id = "route/compose-calm-flock-care-pack"
+task = "Care for a flock without measuring its worth"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/calm-flock-care-pack", why = "Compose flock identities, common care, observation, supply, attention, factual handoff, and copied claims as bounded data." },
+  { specimen = "recipe/sim-sdk/stewardship/calm-flock-care", why = "Exercise a single calm flock-level capture for eight synthetic birds with an isolated kitchen claim." },
+  { specimen = "spec-test/sim-sdk/tests/validate_flock_pack", why = "Prove the twenty-second budget, unknown-on-missing rule, factual handoff boundary, and absence of scoring, culling, diagnosis, treatment, and automated care." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/chosen-media-current-reference-packs"
+title = "Chosen media traces and current references"
+summary = "Compose explicitly selected media traces, Mia-authored meanings, current jurisdictional citations, local rebuildable search, and honest removal without remote scraping or taste inference."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/media-memory/pack.toml and packs/stewardship/current-reference/pack.toml. Import only selected local export entries or supplied references, keep every media predicate distinct, and let Mia author understood, endorsed, and finished meanings. Remove traces from local search and leave a broken reference or policy tombstone unless Mia explicitly chooses a replacement."
+claims_specimens = ["spec-test/sim-sdk/tests/validate_media_reference_packs", "recipe/sim-sdk/stewardship/chosen-media-traces"]
+supports = ["feature/sim-sdk/cited-seasonal-garden-pack", "feature/sim-sdk/calm-flock-care-pack", "feature/sim-sdk/taste-led-kitchen-pack", "feature/sim-sdk/reversible-atelier-product"]
+
+[[route]]
+id = "route/compose-chosen-media-current-references"
+task = "Keep only chosen media traces and current cited references"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/chosen-media-current-reference-packs", why = "Compose selected imports, authored meanings, local search, citation currency, and explicit removal as bounded data." },
+  { specimen = "recipe/sim-sdk/stewardship/chosen-media-traces", why = "Import and remove one selected synthetic trace with every remote and inference lane absent." },
+  { specimen = "spec-test/sim-sdk/tests/validate_media_reference_packs", why = "Prove source-policy excerpts, predicate separation, guidance metadata, removal semantics, and networkless operation." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/quiet-stewardship-cadence"
+title = "Quiet stewardship cadence"
+summary = "Compose separate daily, weekly, monthly, and seasonal projections from minimum copied claims under strict time, card, reconciliation, and channel-disclosure ceilings."
+owner = "crate/sim-nest"
+audiences = ["user", "framework"]
+guidance = "Load packs/stewardship/cadence/pack.toml after selecting replaceable finance, kitchen, garden, flock, private, and media roles. Pass only declared copied claims, attention, reconciliation status, and completed-pack status. Silence, refusal, stale evidence, locked or destroyed lanes, unavailable placements, paper paths, and removed packs are successful bounded outcomes; the cadence owns no source truth, source handle, conductor, or always-on agent."
+claims_specimens = ["spec-test/sim-sdk/tests/validate_cadence_pack", "recipe/sim-sdk/stewardship/quiet-cadence"]
+supports = ["feature/sim-sdk/taste-led-kitchen-pack", "feature/sim-sdk/cited-seasonal-garden-pack", "feature/sim-sdk/calm-flock-care-pack", "feature/sim-sdk/private-observation-pack", "feature/sim-sdk/chosen-media-current-reference-packs"]
+
+[[route]]
+id = "route/compose-quiet-stewardship-cadence"
+task = "Compose a quiet cadence from minimum copied claims"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/quiet-stewardship-cadence", why = "Compose replaceable stewardship roles behind a calm, source-blind projection policy." },
+  { specimen = "recipe/sim-sdk/stewardship/quiet-cadence", why = "Replay a deterministic week containing bursts, silence, stale facts, refusals, unavailable placements, lock and revoke, paper operation, and pack removal." },
+  { specimen = "spec-test/sim-sdk/tests/validate_cadence_pack", why = "Prove daily interaction budgets, explicit finance detail, isolated source handles, and channel disclosure ceilings." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/stewardship-adoption-subtraction"
+title = "Atomic stewardship adoption and complete subtraction"
+summary = "Compose existing workshop and stewardship contracts into reviewable adoption, ephemeral-state-independent rebuild, and tombstone-dominant retirement."
+owner = "repo/sim-sdk"
+audiences = ["user", "framework"]
+guidance = "Begin with a human-reviewed BRIDGE brief, preview every authority and lifecycle lane, then adopt only existing pack roots and pure expressions atomically. Rebuild from durable receipts and content after deleting conversational and workshop state. Retire fields and packs by removing them from closure, projections, grants, and recipe roots and recording tombstones that dominate replay."
+claims_specimens = ["spec-test/sim-sdk/tests/validate_adopt_subtract_composition", "recipe/sim-sdk/stewardship/adopt-subtract-composition"]
+presents = ["feature/sim-agent-net/reproducible-instrument-adoption"]
+
+[[route]]
+id = "route/adopt-and-subtract-stewardship-composition"
+task = "Review, adopt, rebuild, and make a stewardship composition smaller"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/stewardship-adoption-subtraction", why = "Use the generic transaction and subtraction discipline without embedding household choices in public fixtures." },
+  { specimen = "recipe/sim-sdk/stewardship/adopt-subtract-composition", why = "Inspect the data-only composition, complete preview, rebuild inputs, tombstones, and declined mutual-porch outcome." },
+  { specimen = "spec-test/sim-sdk/tests/validate_adopt_subtract_composition", why = "Prove ephemeral-state-independent rebuild and absence of retired parts from every surface and replay." },
+]
+
+[[feature]]
+id = "feature/sim-sdk/stewardship-memo-acceptance"
+title = "Executable stewardship memo acceptance"
+summary = "Classify the four stewardship memo families and replay their complete synthetic product, human-authority, prepare-only crew, reversible lifecycle, privacy, and bounded-erasure evidence offline."
+owner = "repo/sim-sdk"
+audiences = ["user", "framework"]
+guidance = "Use the public stable promise ids as the acceptance contract; keep private memo prose and values outside fixtures. Every promise must resolve to a two-sided specimen, exact unsupported state, or manual path. Run the focused manifest to prove synthetic source formats, human decisions, refusals, lifecycle boundaries, and privacy language without loading product behavior into the SDK."
+claims_specimens = ["spec-test/sim-sdk/tests/memo_acceptance", "recipe/sim-sdk/stewardship/memo-acceptance"]
+supports = ["feature/sim-sdk/quiet-stewardship-cadence", "feature/sim-sdk/stewardship-adoption-subtraction"]
+
+[[route]]
+id = "route/execute-stewardship-memo-acceptance"
+task = "Turn stewardship memo promises into checked synthetic evidence"
+audiences = ["user", "framework"]
+steps = [
+  { feature = "feature/sim-sdk/stewardship-memo-acceptance", why = "Classify every promise before claiming that the composed product satisfies it." },
+  { specimen = "recipe/sim-sdk/stewardship/memo-acceptance", why = "Inspect the synthetic month, week, season, flock, dialogue, crew, and lifecycle trace plus every explicit unsupported and manual state." },
+  { specimen = "spec-test/sim-sdk/tests/memo_acceptance", why = "Prove matrix completeness, exact source arithmetic, human authority, prepare-only crew behavior, privacy hygiene, and bounded managed-erasure claims." },
 ]

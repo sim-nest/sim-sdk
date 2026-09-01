@@ -1,0 +1,26 @@
+schema = "sim.synthetic-continuity-product/v1"
+id = "expedition-thought"
+policy = "capture-review-resolve-or-pend"
+root = "phone"
+network = "denied"
+content_id = "content:sha256:8f7d-synthetic-thought"
+continuation = "by-content-id"
+disclosure = "private-on-phone"
+
+[minimal_boot]
+packages = ["continuity-organ", "android-capsule", "phone-surface"]
+artifacts = ["journal", "turn", "phone-scene"]
+
+[deleted_before_boot]
+packages = ["audio-role", "watch-role", "halo-role", "speech-role", "model-role"]
+artifacts = ["audio-scene", "watch-scene", "halo-scene", "speech-cache", "model-cache"]
+
+[[step]]
+event = "capture"
+result = "review-locally"
+[[step]]
+event = "review"
+result = "pending-honestly"
+[[step]]
+event = "stronger-site-available"
+result = "continue-by-content-id"

@@ -16,7 +16,11 @@ use super::support::table_value;
 
 #[test]
 fn help_projection_publishes_content_addressed_browse_help_doc_claim() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xe8d8_2edb_8d78_a7a9),
+    );
     install_core_runtime(&mut cx);
     call_help_for_core_help(&mut cx);
 
@@ -53,7 +57,11 @@ fn help_projection_publishes_content_addressed_browse_help_doc_claim() {
 
 #[test]
 fn card_v2_uses_help_doc_as_fixed_help_table() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xaf02_4da6_4429_3a18),
+    );
     install_core_runtime(&mut cx);
     call_help_for_core_help(&mut cx);
 

@@ -6,11 +6,13 @@ const REEXPORT_AND_WIRING: &[&str] = &[
     "src/bin/sim.rs",
     "src/compute_exports.rs",
     "src/expr_tree_exports.rs",
+    "src/facade_cli.rs",
     "src/femm_exports.rs",
     "src/interference_exports.rs",
     "src/lib.rs",
     "src/loaders.rs",
     "src/loaders/registry.rs",
+    "src/music_vertical.rs",
     "src/music_algorithm_exports.rs",
     "src/numbers_exports.rs",
     "src/roadmap11_exports.rs",
@@ -127,6 +129,40 @@ fn loader_behavior_stays_out_of_facade() {
         loader_files.is_empty(),
         "facade loader modules are limited to registry wiring: {loader_files:?}"
     );
+}
+
+#[test]
+fn process_adapter_is_binary_only_and_host_tool_is_classified() {
+    let root = repo_root();
+    let library = fs::read_to_string(root.join("src/lib.rs")).expect("read SDK library root");
+    assert!(
+        !library.contains("mod facade_cli"),
+        "the process adapter must not enter the SDK library module graph"
+    );
+    let binary = fs::read_to_string(root.join("src/bin/sim.rs")).expect("read facade binary");
+    assert!(binary.contains("mod facade_cli"));
+
+    let xtask = fs::read_to_string(root.join("xtask/Cargo.toml")).expect("read xtask manifest");
+    assert!(
+        xtask.contains("[package.metadata.sim]") && xtask.contains("role = \"host-tool\""),
+        "workspace automation must be explicitly classified as a host tool"
+    );
+
+    let manifest = fs::read_to_string(root.join("Cargo.toml")).expect("read SDK manifest");
+    for target in ["native_dynamic", "proc_macro_compile_fail"] {
+        let declaration = format!("name = \"{target}\"");
+        let offset = manifest
+            .find(&declaration)
+            .expect("host test target is declared");
+        let target_block = &manifest[offset
+            ..manifest[offset..]
+                .find("\n\n")
+                .map_or(manifest.len(), |end| offset + end)];
+        assert!(
+            target_block.contains("required-features"),
+            "host test {target} must be excluded from the default package closure"
+        );
+    }
 }
 
 fn collect_rust_files(dir: &Path) -> Vec<std::path::PathBuf> {

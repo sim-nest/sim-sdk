@@ -1,0 +1,9 @@
+schema = "sim.stewardship-cadence-projection/v1"
+id = "daily"
+period = "day"
+source_truth = "none"
+reads = ["copied-claim", "attention", "reconciliation-status", "completed-pack"]
+maximum_cards = 3
+normal_seconds_max = 120
+ordering = ["attention", "question", "completion"]
+empty = "silence"

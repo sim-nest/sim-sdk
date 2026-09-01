@@ -12,7 +12,11 @@ fn mixed_bigint_rational_values_reduce_after_arithmetic() {
 
     use crate::runtime::install_core_runtime;
 
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xe507_c311_8f77_23d5),
+    );
     install_core_runtime(&mut cx);
     let rational_class = cx
         .resolve_class(&Symbol::qualified("numbers", "Rational"))
@@ -73,7 +77,11 @@ fn noncompact_rational_values_encode_as_read_constructs() {
 
     use crate::runtime::install_core_runtime;
 
-    let mut cx = sim_kernel::Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xd785_18c9_ea0b_e5b3),
+    );
     install_core_runtime(&mut cx);
     let codec_id = cx.registry_mut().fresh_codec_id();
     cx.load_lib(&LispCodecLib::new(codec_id).unwrap()).unwrap();

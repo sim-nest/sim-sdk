@@ -1,0 +1,45 @@
+schema = "sim.stewardship-pack/v1"
+id = "private-observation-voluntary"
+title = "Voluntary private observation"
+shapes = "shapes.toml"
+expression = "timeline.lisp"
+recipe = "../../../recipes/stewardship/private-observation"
+capabilities = ["sealed-lane-read", "sealed-lane-write", "exact-rational", "local-export"]
+effects = ["enter", "amend", "project-timeline", "sum-entered-exact", "preview-export", "confirm-export", "lock", "revoke", "destroy"]
+forbidden_effects = ["diagnosis", "cause", "treatment", "prescribe", "recommend", "adherence", "risk", "target", "restrictive-diet"]
+default = "absent"
+activation = "explicit-pack-opt-in"
+network = false
+
+[consent]
+granularity = "per-field"
+present_field_rule = "explicit-opt-in-required"
+withdrawal = "lock-revoke-or-destroy"
+
+[quantity]
+included_events = "human-entered-exact-only"
+missing = "missing"
+unit_semantics = "exact-label-match"
+conversion = "explicit-reviewed-rational-rule-only"
+mixed_units = "separate-totals"
+concurrent_changes = "retain-both-until-human-review"
+
+[storage]
+lane = "private-observation"
+payload_scope = "all-source-and-derived-payloads"
+generation = "managed-sealed-generation"
+lock = "remove-plaintext-from-derived-views-and-pack-access"
+revoke = "remove-plaintext-from-derived-views-and-pack-access"
+destroy = "destroy-generation-key-and-remove-plaintext-from-derived-views-and-pack-access"
+deletion_claim = "managed-generation-unreadable-not-physical-media-erasure"
+other_packs = "unaffected"
+
+[export]
+destination = "professional-review"
+selection = "explicit-fields-and-events"
+preview = "required"
+confirmation = "required"
+default_encoding = "locally-encrypted"
+plaintext = "requires-mia-acknowledged-warning"
+plaintext_warning = "This deliberately plaintext export can be read by anyone who obtains it."
+forbidden = ["automatic-send", "network-upload", "background-export"]

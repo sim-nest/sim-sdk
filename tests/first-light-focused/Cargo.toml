@@ -1,0 +1,21 @@
+[package]
+name = "sim-sdk-first-light-focused"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[features]
+default = ["continuity"]
+continuity = []
+
+[dependencies]
+sim-citizen = { version = "0.3.0" }
+sim-kernel = { version = "0.3.0" }
+sim-lib-capability-pack = { version = "0.1.0" }
+sim-lib-continuity = { version = "0.1.0" }
+sim-lib-expedition-book = { version = "0.1.0" }
+[[test]]
+name = "expedition_first_light"
+path = "../expedition_first_light.rs"

@@ -9,7 +9,11 @@ use super::support::table_value;
 #[cfg(feature = "numbers-f64")]
 #[test]
 fn installs_f64_domain_owned_math_functions() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x72f0_3435_0d9e_073c),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -36,7 +40,11 @@ fn installs_f64_domain_owned_math_functions() {
 #[cfg(all(feature = "numbers-f64", not(feature = "numbers-rational")))]
 #[test]
 fn f64_math_functions_reject_other_number_domains() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x86c7_c941_06f8_cc51),
+    );
     install_core_runtime(&mut cx);
     let error = cx
         .call_function(
@@ -59,7 +67,11 @@ fn f64_math_functions_reject_other_number_domains() {
 #[cfg(all(feature = "numbers-f64", feature = "numbers-rational"))]
 #[test]
 fn mixed_f64_and_rational_addition_promotes_to_rational() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x5cce_75d3_df67_a5ac),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -90,7 +102,11 @@ fn mixed_f64_and_rational_addition_promotes_to_rational() {
 ))]
 #[test]
 fn n_ary_addition_folds_through_numeric_dispatch() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xbb72_40a2_0d77_e4f0),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -124,7 +140,11 @@ fn n_ary_addition_folds_through_numeric_dispatch() {
 ))]
 #[test]
 fn n_ary_subtraction_folds_through_numeric_dispatch() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x33d3_d022_012d_65cd),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -158,7 +178,11 @@ fn n_ary_subtraction_folds_through_numeric_dispatch() {
 ))]
 #[test]
 fn n_ary_multiplication_folds_through_numeric_dispatch() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x18d9_8c5f_8ae2_a041),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -192,7 +216,11 @@ fn n_ary_multiplication_folds_through_numeric_dispatch() {
 ))]
 #[test]
 fn n_ary_division_folds_through_numeric_dispatch() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x83fe_4061_d68a_ff0b),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -222,7 +250,11 @@ fn n_ary_division_folds_through_numeric_dispatch() {
 #[cfg(feature = "numbers-i64")]
 #[test]
 fn unary_negation_dispatches_through_registered_number_rules() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x20dd_8d75_1bf1_86a8),
+    );
     install_core_runtime(&mut cx);
     let value = cx
         .call_function(
@@ -250,7 +282,11 @@ fn unary_negation_dispatches_through_registered_number_rules() {
 ))]
 #[test]
 fn reduction_ops_dispatch_through_registered_number_rules() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x0f07_903d_09af_c5be),
+    );
     install_core_runtime(&mut cx);
     let sum = cx
         .call_function(
@@ -303,7 +339,11 @@ fn reduction_ops_dispatch_through_registered_number_rules() {
 #[cfg(all(feature = "numbers-arith", feature = "numbers-f64"))]
 #[test]
 fn numeric_metadata_is_browseable() {
-    let mut cx = sim_kernel::Cx::new(Arc::new(NoopEvalPolicy), Arc::new(DefaultFactory));
+    let mut cx = sim_kernel::Cx::new(
+        Arc::new(NoopEvalPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0x5762_9c6f_c074_264f),
+    );
     install_core_runtime(&mut cx);
     let domain_table = cx
         .resolve_number_domain(&Symbol::qualified("numbers", "f64"))

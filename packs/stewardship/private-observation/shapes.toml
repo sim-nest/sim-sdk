@@ -1,0 +1,60 @@
+schema = "sim.stewardship-shapes/v1"
+namespace = "stewardship/private-observation"
+
+[[shape]]
+id = "observation"
+required = ["id", "observed-at", "opted-fields"]
+optional = ["declared-product", "ingredient", "dose-event", "meal-note"]
+constraint = "every-present-optional-field-listed-in-opted-fields"
+
+[[shape]]
+id = "declared-product"
+required = ["label", "declaration-source"]
+optional = ["maker", "lot"]
+authority = "human-declared-label-only"
+
+[[shape]]
+id = "ingredient"
+required = ["declared-product", "label"]
+optional = ["declared-amount"]
+authority = "copied-declaration-only"
+
+[[shape]]
+id = "dose-event"
+required = ["event-id", "declared-product", "entered-at", "exact-quantity"]
+optional = ["ingredient"]
+constraint = "human-entered-event-only"
+
+[[shape]]
+id = "meal-note"
+required = ["event-id", "entered-at", "text"]
+constraint = "human-authored-text"
+
+[[shape]]
+id = "missingness"
+required = ["field", "state"]
+states = ["not-opted-in", "not-entered", "unknown"]
+constraint = "never-impute"
+
+[[shape]]
+id = "concurrent-change"
+required = ["field", "base-generation", "left", "right"]
+constraint = "retain-both-until-human-review"
+
+[[shape]]
+id = "timeline"
+required = ["events", "missing", "concurrent-changes"]
+ordering = "entered-at-then-event-id"
+effect = "pure-derived-view"
+
+[[shape]]
+id = "professional-review-export"
+required = ["selected-fields", "selected-events", "preview", "acknowledgement", "encoding"]
+encoding = ["locally-encrypted", "acknowledged-plaintext"]
+constraint = "explicit-preview-and-confirmation"
+
+[[shape]]
+id = "exact-quantity"
+required = ["numerator", "denominator", "unit"]
+constraint = "nonzero-positive-denominator"
+unit_semantics = "exact-match-or-explicit-reviewed-rational-conversion"

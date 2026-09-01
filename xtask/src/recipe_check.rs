@@ -6,7 +6,7 @@ pub fn run(args: &[String]) -> Result<(), String> {
         return Err(format!("usage: {program} check-recipes"));
     }
 
-    let status = Command::new("cargo")
+    let cookbook_status = Command::new("cargo")
         .args([
             "test",
             "--test",
@@ -17,10 +17,29 @@ pub fn run(args: &[String]) -> Result<(), String> {
         ])
         .status()
         .map_err(|err| format!("run cookbook recipe gate: {err}"))?;
-    if status.success() {
-        println!("check-recipes: OK (seeded cookbook recipe gate passed)");
-        Ok(())
-    } else {
-        Err(format!("check-recipes failed with status {status}"))
+    if !cookbook_status.success() {
+        return Err(format!(
+            "check-recipes cookbook gate failed with status {cookbook_status}"
+        ));
     }
+
+    let hotload_status = Command::new("cargo")
+        .args([
+            "test",
+            "--test",
+            "hotload_generation",
+            "--no-default-features",
+            "--features",
+            "hotload",
+        ])
+        .status()
+        .map_err(|err| format!("run public hotload recipe: {err}"))?;
+    if !hotload_status.success() {
+        return Err(format!(
+            "check-recipes hotload gate failed with status {hotload_status}"
+        ));
+    }
+
+    println!("check-recipes: OK (seeded cookbook and public hotload recipe gates passed)");
+    Ok(())
 }

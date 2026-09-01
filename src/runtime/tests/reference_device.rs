@@ -157,7 +157,11 @@ fn device_reference_recipes_run_from_the_cookbook_directory() {
     let cards =
         recipes_from_embedded(crate::runtime::reference_device::RECIPES).expect("recipes parse");
     let recipe_ids = ["two-rate", "consent", "route-swap"];
-    let mut cx = Cx::new(Arc::new(EagerPolicy), Arc::new(DefaultFactory));
+    let mut cx = Cx::new(
+        Arc::new(EagerPolicy),
+        Arc::new(DefaultFactory),
+        sim_kernel::HandleSeed::new(0xd4b1_5f6e_4581_c6fe),
+    );
     cx.grant(read_eval_capability());
     cx.grant(read_construct_capability());
     cx.grant(macro_expand_eval_capability());
