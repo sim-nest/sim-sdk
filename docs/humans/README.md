@@ -4313,10 +4313,7 @@ fn synthetic_products_share_mechanics_and_keep_policy_separate() {
 
 #[test]
 fn continuity_production_has_no_product_or_person_policy_branch() {
-    let facade = include_str!("../src/lib.rs");
-    let start = facade.find("pub mod continuity").unwrap();
-    let end = start + facade[start..].find("\n}\n").unwrap() + 3;
-    let production = facade[start..end].to_ascii_lowercase();
+    let production = include_str!("../src/continuity.rs").to_ascii_lowercase();
     let tokens = production
         .split(|character: char| !character.is_ascii_alphanumeric())
         .collect::<Vec<_>>();
