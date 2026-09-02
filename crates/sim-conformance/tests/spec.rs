@@ -27,6 +27,8 @@ mod forge_author;
 mod forge_eval;
 #[path = "spec/gpu_math.rs"]
 mod gpu_math;
+#[path = "spec/helpers.rs"]
+mod helpers;
 #[path = "spec/instrument_streams.rs"]
 mod instrument_streams;
 #[path = "spec/interference.rs"]
@@ -43,6 +45,7 @@ mod stream_matrix;
 mod support;
 #[path = "spec/surface_protocol.rs"]
 mod surface_protocol;
+use helpers::*;
 
 use support::*;
 
@@ -673,32 +676,4 @@ fn stream_security_capabilities_limits_and_redaction_are_conformant() {
     );
 }
 
-fn conformance_metadata(
-    id: &str,
-    media: sim::lib_stream_core::StreamMedia,
-    clock: sim::lib_stream_core::ClockDomain,
-) -> sim::lib_stream_core::StreamMetadata {
-    sim::lib_stream_core::StreamMetadata::new(
-        Symbol::new(id),
-        media,
-        sim::lib_stream_core::StreamDirection::Source,
-        clock.symbol(),
-        sim::lib_stream_core::BufferPolicy::bounded(8).unwrap(),
-    )
-}
-
-fn midi_item(ticks: i64) -> sim::lib_stream_core::StreamItem {
-    sim::lib_stream_core::StreamItem::new(sim::lib_stream_core::StreamPacket::Midi(
-        sim::lib_stream_core::MidiPacket::new(vec![
-            sim::lib_stream_core::MidiPacketEvent::new(ticks, 480, vec![0x90, 60, 100]).unwrap(),
-        ])
-        .unwrap(),
-    ))
-}
-
-fn pcm_item(value: f32) -> sim::lib_stream_core::StreamItem {
-    sim::lib_stream_core::StreamItem::new(sim::lib_stream_core::StreamPacket::Pcm(
-        sim::lib_stream_core::PcmPacket::f32(1, 1, vec![value]).unwrap(),
-    ))
-}
 // conformance: constellation specimens enforce the public cross-repository contract.

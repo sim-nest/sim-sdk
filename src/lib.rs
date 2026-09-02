@@ -1,5 +1,4 @@
 //! # sim-nest -- the SIM umbrella crate (imported as `sim`)
-//!
 //! Published on crates.io as **`sim-nest`** (the bare name `sim` is taken), while
 //! its library import identifier is `sim`. Depend on `sim-nest` and write
 //! `use sim::...`; `use sim_nest::...` does not resolve. The `#[sim::sim_lib]`
@@ -85,75 +84,18 @@ extern crate self as sim;
 /// stable requests, candidates, compatibility reports, and receipts across
 /// their public boundary.
 #[cfg(feature = "hotload")]
-pub mod hotload {
-    pub use sim_lib_hotload::{
-        AchievedLimits, ActivationAudit, ActivationFailure, ActivationReceipt, ActivationRequest,
-        ActivationService, ActivationStatus, AdmissionFailure, AdmissionReceipt, AdmissionRequest,
-        AdmissionService, ArtifactCandidate, BuildFailure, BuildMounts, CandidateTestResult,
-        CompatibilityPolicy, CompatibilityReport, FailureKind, HotloadGeneration,
-        NativeBuildRequest, NativeBuilder, PreflightLimits, ToolchainIdentity,
-    };
-}
+pub mod hotload;
 
 /// Portable estate vocabulary, exposure compiler, organ, projection, and calls.
 /// Concrete controller bindings are intentionally absent; providers are opt-in.
 #[cfg(feature = "estate")]
-pub mod estate {
-    pub use sim_estate_core as core;
-    pub use sim_estate_project as project;
-    pub use sim_lib_estate as organ;
-    pub use sim_lib_estate_serve as serve;
-    #[cfg(feature = "estate-view")]
-    pub use sim_lib_view_estate as view;
-    #[cfg(feature = "estate-provider-model")]
-    pub use sim_site_estate_model as provider_model;
-}
+pub mod estate;
 #[cfg(all(test, feature = "estate"))]
 mod estate_facade_tests;
 
 #[cfg(feature = "platform")]
 /// Provider-neutral platform records and authoring contracts.
-pub mod platform {
-    pub use sim_lib_platform::{
-        Activation, BoundServices, BundleComposition, BundleContent, BundleManifest, BundleRefusal,
-        CapsuleArtifact, CapsuleAttestation, CapsuleManifest, ComposedBundle, ContractProvenance,
-        ExecutionEvidence, FactPort, LibraryLoadPlan, Lifecycle, OpenSymbol, PlatformCard,
-        PlatformProviderAuthor, PlatformRecordError, PlatformRequest, PlatformSupportRow,
-        PureBootEnvelope, RefusalKind, Requirement, RequirementBuilder, ResolutionReceipt,
-        ResolutionRefusal, ServiceBinding, ServiceOffer, compose_bundle, platform_require,
-        platform_support_matrix,
-    };
-
-    /// SDK entry paths consume the same pure load plan as the bootloader.
-    #[must_use]
-    pub fn sdk_load_plan(envelope: &PureBootEnvelope) -> &LibraryLoadPlan {
-        &envelope.load_plan
-    }
-
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn sdk_preserves_the_canonical_boot_load_plan() {
-            let application = BundleContent {
-                id: OpenSymbol("application/portable".into()),
-                content_digest: "sha256:portable".into(),
-                capabilities: vec![],
-            };
-            let envelope = PureBootEnvelope {
-                schema: OpenSymbol("boot/envelope/v1".into()),
-                capsule: OpenSymbol("platform/site/model".into()),
-                bootstrap: OpenSymbol("bootstrap/sim-native-abi-v1".into()),
-                load_plan: LibraryLoadPlan {
-                    application: application.clone(),
-                    libraries: vec![],
-                },
-            };
-            assert_eq!(sdk_load_plan(&envelope).application, application);
-        }
-    }
-}
+pub mod platform;
 
 /// Direct, provider-replaceable relational assembly surface.
 ///
@@ -162,30 +104,7 @@ pub mod platform {
 /// artifacts are deliberately not re-exported. Enable `relation-sqlite` only
 /// when the SQLite capsule is part of the application.
 #[cfg(feature = "relation")]
-pub mod relation {
-    /// Open domains, typed cells, rows, and relational identities.
-    pub use sim_relation_core as core;
-    /// Checked adoption and migration programs.
-    pub use sim_relation_migrate as migrate;
-    /// Raw relational algebra, admission, and read-only checked-plan views.
-    pub use sim_relation_plan as plan;
-    /// Logical and normalized physical schemas plus their raw builders.
-    pub use sim_relation_schema as schema;
-    /// Runtime Shapes for cells, rows, and relational records.
-    pub use sim_relation_shape as shapes;
-    /// Provider-neutral placement, sessions, bounded effects, and receipts.
-    pub use sim_relation_site as site;
-    /// Standard Table/Dir paths and operation protocol.
-    pub use sim_table_core as table;
-    /// Mounted Table/Dir namespace composition.
-    pub use sim_table_mount as mount;
-    /// Relation-backed Table and Dir adapters.
-    pub use sim_table_relation as table_relation;
-
-    /// The sole SQL provider capsule; its prepared SQL remains private to it.
-    #[cfg(feature = "relation-sqlite")]
-    pub use sim_platform_sqlite as sqlite;
-}
+pub mod relation;
 
 #[rustfmt::skip]
 #[cfg(any(feature = "femm-assembly", feature = "femm-codec", feature = "femm-core", feature = "femm-fixtures", feature = "femm-field", feature = "femm-flow", feature = "femm-function", feature = "femm-geometry", feature = "femm-material", feature = "femm-mesh", feature = "femm-ode", feature = "femm-physics", feature = "femm-post", feature = "femm-prelude", feature = "femm-sensitiv", feature = "femm-solve", feature = "femm-space", feature = "femm-tape"))]
@@ -207,35 +126,21 @@ pub use interference_exports::*;
 pub use expr_tree_exports::*;
 #[cfg(feature = "agent")]
 pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
-/// Pure, codec-stable agent conduct records and durable lifecycle contracts.
-#[cfg(feature = "agent-conduct-core")]
-pub mod agent_conduct_core {
-    pub use sim_lib_agent_conduct_core::*;
-}
 /// Certified topology-backed agent conducts and the shipped conduct catalog.
 #[cfg(feature = "agent-conduct")]
-pub mod agent_conduct {
-    pub use sim_lib_agent_conduct::*;
-}
+pub mod agent_conduct;
+/// Pure, codec-stable agent conduct records and durable lifecycle contracts.
+#[cfg(feature = "agent-conduct-core")]
+pub mod agent_conduct_core;
 #[cfg(feature = "topology-core")]
 pub use sim_lib_topology as lib_topology;
 /// Stable opt-in provider control facade. This is intentionally excluded from
 /// the minimal/default SDK feature set.
 #[cfg(feature = "provider")]
-pub mod provider {
-    pub use sim_lib_provider::{
-        AuthMetadata, AuthMethod, AuthOwner, CensusEvidence, CensusRow, CensusState,
-        CredentialSource, Fanout, FanoutMode, FanoutReport, FanoutRow, FanoutSeat, FanoutStatus,
-        ProviderFamilyCard, ProviderInventory, ProviderRegistry, ProviderSeatCard,
-        ProviderSeatConfig, ProviderSeatId, SessionStatus, TermsAcknowledgement, discover,
-        families, open, seats, show_family, show_seat,
-    };
-}
+pub mod provider;
 /// Domain-neutral durable study lifecycle, design, decision, and command product.
 #[cfg(feature = "study")]
-pub mod study {
-    pub use sim_lib_study::*;
-}
+pub mod study;
 
 #[cfg(all(test, feature = "study"))]
 mod study_facade_tests;
@@ -246,52 +151,28 @@ mod study_facade_tests;
 /// `physics-core` does not select proof methods, extended precision, FEMM,
 /// interference, or placement providers.
 #[cfg(feature = "physics-core")]
-pub mod physics {
-    #[cfg(feature = "physics-adapter")]
-    /// Domain-neutral adapter conformance contracts.
-    pub use sim_lib_physics_adapter as adapter;
-    #[cfg(feature = "physics-audit")]
-    /// Stored-energy audit contracts.
-    pub use sim_lib_physics_audit as audit;
-    /// Boundary and event topology contracts.
-    pub use sim_lib_physics_core as core;
-    #[cfg(feature = "physics-findings")]
-    /// Immutable finding histories and projections.
-    pub use sim_lib_physics_findings as findings;
-    #[cfg(feature = "physics-influence")]
-    /// No-energy-selection influence contracts.
-    pub use sim_lib_physics_influence as influence;
-    #[cfg(feature = "physics-power")]
-    /// Conjugate-port power and work contracts.
-    pub use sim_lib_physics_power as power;
-    #[cfg(feature = "physics-proof")]
-    /// Refinement and certified-verdict contracts.
-    pub use sim_lib_physics_proof as proof;
-    /// Loadable layer-card composition.
-    pub use sim_lib_physics_runtime as runtime;
-    #[cfg(feature = "physics-study")]
-    /// Placement-transparent study contracts.
-    pub use sim_lib_physics_study as study;
-}
+pub mod physics;
 
 /// Canonical, pure continuity planning, replay, and journal contracts.
 ///
 /// This module is a direct re-export: policy validation and reduction remain
 /// owned by `sim-lib-continuity`; the SDK adds no wrapper model or behavior.
 #[cfg(feature = "continuity")]
-pub mod continuity {
-    pub use sim_lib_continuity::*;
-}
+pub mod continuity;
 
 /// Resilient music routing composed from the owning music and stream-host contracts.
 #[cfg(feature = "music-vertical")]
 pub mod music_vertical;
 
+#[cfg(feature = "standard-core")]
+pub mod characterization;
+/// Native class authoring helpers: a `Class` implementation plus the lib
+/// wrapper that registers a host-defined class, its constructor, and members.
+#[cfg(all(feature = "core", feature = "shape"))]
+pub mod classes;
 /// Model observatory types and its loadable product command.
 #[cfg(feature = "model-test")]
-pub mod model_test {
-    pub use sim_lib_model_test::*;
-}
+pub mod model_test;
 #[cfg(all(test, feature = "model-test"))]
 mod model_test_facade_tests;
 /// Provider-neutral web research composition.
@@ -299,90 +180,7 @@ mod model_test_facade_tests;
 /// This facade intentionally exposes stable plans, receipts, records, and host
 /// boundaries. Provider-specific wire DTOs remain in their codec crates.
 #[cfg(feature = "web-search")]
-pub mod web_search {
-    /// Neutral HTTP request policy and injectable connector contracts.
-    pub mod http {
-        pub use sim_lib_net_http::{
-            Cancellation, Client, Connector, Error, Header, Method, Policy, ProxyPolicy,
-            RedirectPolicy, Request, RequestBody, Response, TlsRoots, Url,
-        };
-    }
-    /// Immutable raw and normalized web evidence records.
-    pub mod web {
-        pub use sim_lib_web_core::{
-            DecodeLimits, EvidenceSelector, PolicyDecision, PolicyKind, PolicyReceipt,
-            PolicyVerdict, RepresentationMetadata, WebCapture, WebExchange, WebRepresentation,
-        };
-    }
-    /// Provider-neutral query, observation, citation, and wire contracts.
-    pub mod records {
-        pub use sim_lib_search_core::{
-            AliasEvidence, Citation, ProviderClaim, RankContribution, ResearchBundle, SearchNotice,
-            SearchObservation, SearchPage, SearchQuery, SearchRun, SearchSite, SearchWireCodec,
-        };
-    }
-    /// Bounded provider transport host contracts and receipts.
-    pub mod search_host {
-        pub use sim_lib_search_http::{
-            CallMode, HttpRequest, HttpResponse, HttpSearchTransport, PrincipalRef,
-            RawResponseCapture, SearchHttpClient, SearchHttpError, SearchHttpNotice,
-            SearchHttpReceipt, SearchSiteConfig, SecretResolver, SiteLimits,
-        };
-    }
-    /// Independently authorized fetch host, plans, and receipts.
-    pub mod fetch_host {
-        pub use sim_lib_web_fetch::{
-            CaptureDir, EgressPolicy, ExchangeReceipt, FetchError, FetchMode, FetchPlan,
-            FetchReceipt, HttpExecutor, MemoryCaptureDir, PolicyReceipt, PublicWebEgress,
-            RepresentationOutcome, RobotsReceipt, StoredCapture, StoredRobots, WebFetcher,
-        };
-    }
-    /// Deterministic federation, ranking, inspection, and replay records.
-    pub mod research {
-        pub use sim_lib_search::{
-            AliasCluster, AliasRule, CapturedPage, Judge, JudgeReceipt, JudgeRequest, PageCapturer,
-            PlanLimits, PlanOmission, PlanReceipt, PlannedSite, ResearchBundle, RetrieverSite,
-            SearchCancellation, SearchFailure, SearchPlan, SearchRun, SiteOutcome, TypedOmission,
-            call_judge, cluster_aliases, dispatch, fenced_capture, fenced_claim, fuse, inspect,
-            local_corpus_page, plan_search, query, research,
-        };
-    }
-    /// Office evidence anchors derived only from checked web representations.
-    pub mod office {
-        pub use sim_lib_doc_web::{
-            AnchorInput, AnchorKind, CitationFormat, EvidenceAnchor, WebEvidenceError, load_anchor,
-            project_document, save_anchor, save_capture, save_representation,
-        };
-    }
-    /// Inert, offline audit view over canonical records.
-    pub mod audit_view {
-        pub use sim_lib_view_search::{
-            AuditError, AuditRecords, CaptureEvidence, Layout, SEARCH_AUDIT_SURFACE_ID,
-            SearchAction, ViewState, apply_action, render,
-        };
-    }
-}
-/// Native class authoring helpers: a `Class` implementation plus the lib
-/// wrapper that registers a host-defined class, its constructor, and members.
-#[cfg(all(feature = "core", feature = "shape"))]
-pub mod classes;
-/// Stable SDK surface for capturing behavior before a refactor and comparing it afterward.
-///
-/// Enable the `standard-core` feature, declare a bounded [`ScenarioSpec`], and
-/// record only canonical observations. Publish captures when a content-addressed
-/// evidence identity is required; use [`compare_characterization_captures`] for
-/// a strict comparison whose differences retain stable field paths and both
-/// canonical values.
-#[cfg(feature = "standard-core")]
-pub mod characterization {
-    pub use sim_lib_standard_core::{
-        BoundedLane, CanonicalFailure, CanonicalObservation, CanonicalOutcome, CaptureComparison,
-        CaptureComparisonProjection, CaptureDifference, CharacterizationCapture, FailureLocation,
-        ScenarioInput, ScenarioLimits, ScenarioObservationLane, ScenarioSpec,
-        characterization_capture_kind, characterization_capture_predicate,
-        compare_characterization_captures, publish_characterization_capture,
-    };
-}
+pub mod web_search;
 #[rustfmt::skip]
 #[cfg(all(test, feature = "shape", feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-algol", feature = "codec-bridge", feature = "bridge"))]
 mod codec_matrix_tests;
@@ -391,37 +189,11 @@ mod codec_matrix_tests;
 #[cfg(feature = "core")]
 pub mod compat;
 mod compute_exports;
+#[cfg(feature = "control")]
+pub mod exceptions;
 #[cfg(feature = "expr-tree")]
 mod expr_tree_exports;
 mod femm_exports;
-/// Shared raised-exception contract for guest runtimes.
-///
-/// A guest obtains a class from its declared class descriptor, constructs
-/// [`Raised`], selects handlers through [`match_raised_class`], and stores
-/// recursive guest relations as stable edges in [`ManagedException`].
-// conformance: the facade exports the canonical raised envelope, matcher, and
-// managed relation adapter without defining a second exception carrier.
-#[cfg(feature = "control")]
-pub mod exceptions {
-    pub use sim_lib_control::{
-        BoundedSubclassOutcome, ClassMatchBudget, ClassMatchEvidence, ClassMatchOutcome,
-        ExceptionGraphBudget, ExceptionGraphEdge, ExceptionGraphView, ManagedException, Raised,
-        RaisedBrowseBudget, RaisedBrowseProjection, RaisedShape, match_raised_class,
-    };
-
-    #[cfg(test)]
-    mod tests {
-        #[allow(unused_imports)]
-        use super::match_raised_class;
-        use super::{ManagedException, Raised};
-
-        #[test]
-        fn exports_envelope_matcher_and_managed_adapter() {
-            let _ = std::any::type_name::<Raised>();
-            let _ = std::any::type_name::<ManagedException<(), ()>>();
-        }
-    }
-}
 /// Function authoring helpers built on the shared `Shape` engine: overload
 /// cases, native function objects, and member-table construction.
 #[cfg(all(feature = "core", feature = "shape"))]
@@ -451,38 +223,14 @@ mod roadmap11_exports;
 /// shapes, functions, and the default number domains into a `Cx`.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod runtime;
-/// Canonical host-built source admission contracts.
-///
-/// This module presents the shared runtime owner directly. Build one
-/// [`source_authority::SourceAuthority`] in trusted host code, then pass it to
-/// [`source_authority::ReadEvalRequest::new`] or a
-/// [`source_authority::DynamicSourcePolicy`] evaluation method.
-/// Guest-language crates own syntax and semantics, not authority envelopes.
-#[cfg(feature = "core")]
-pub mod source_authority {
-    pub use sim_lib_core::{
-        DynamicSourcePolicy, ReadEvalAdmission, ReadEvalBroker, ReadEvalDecision, ReadEvalOutcome,
-        ReadEvalRequest, ReadEvalSource, RequestOrigin, SourceAuthority,
-    };
-
-    #[cfg(test)]
-    mod tests {
-        use super::{DynamicSourcePolicy, ReadEvalRequest, SourceAuthority};
-
-        #[test]
-        fn exposes_canonical_request_builders_without_a_facade_envelope() {
-            let _ = std::any::type_name::<SourceAuthority>();
-            let _ = std::any::type_name::<ReadEvalRequest>();
-            let _ = std::any::type_name::<DynamicSourcePolicy>();
-        }
-    }
-}
 #[cfg(feature = "serial-music")]
 pub mod serial_music;
 /// Shape authoring helpers: documented and value-backed shape wrappers plus
 /// shape registration and checking utilities.
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod shapes;
+#[cfg(feature = "core")]
+pub mod source_authority;
 mod standard_exports;
 #[cfg(feature = "proc-macros")]
 pub use sim_macros::*;

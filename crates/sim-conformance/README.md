@@ -8,8 +8,8 @@ Executable conformance tests for SIM architecture claims.
 
 - Manifest: `crates/sim-conformance/Cargo.toml`
 - Publish: `false`
-- Targets: `test`
+- Targets: `lib, test`
 
 ## Crate Documentation
 
-SIM workspace package for sim conformance.
+One typed truth source for bidirectional MCP conformance runners.

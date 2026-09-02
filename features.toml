@@ -474,7 +474,7 @@ claims_anchors = [
   "anchor/rustdoc/sim-nest/exceptions",
 ]
 claims_specimens = [
-  "spec-test/sim-sdk/src/lib",
+  "spec-test/sim-sdk/tests/exceptions_facade",
 ]
 presents = [
   "feature/sim-runtime/organs",
