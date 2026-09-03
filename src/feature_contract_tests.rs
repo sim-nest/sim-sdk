@@ -29,14 +29,26 @@ const PUBLIC_FACADE_ALIASES: &[(&str, &str)] = &[
 
 // Public feature closures that intentionally compose dependencies without
 // adding a separate facade module or cfg gate of their own.
-const COMPOSITION_ONLY_FEATURES: &[&str] = &[
-    "numbers-method",
-    "numbers-quantity",
-    "physics-adapter-femm",
-    "physics-adapter-interference",
-    "physics-full",
-    "physics-proof-extended",
-];
+const COMPOSITION_ONLY_FEATURES: &[&str] = &[];
+
+const CRATES_IO_MAX_FEATURES: usize = 300;
+
+#[test]
+fn sim_nest_stays_below_the_registry_budget_and_preserves_published_features() {
+    let declared = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert!(
+        declared.len() < CRATES_IO_MAX_FEATURES,
+        "sim-nest declares {} features; its domain bundles must stay below the crates.io ceiling of {CRATES_IO_MAX_FEATURES}",
+        declared.len()
+    );
+
+    for published in include_str!("feature_contract_tests/sim_nest_0_2_2_features.txt").lines() {
+        assert!(
+            declared.contains_key(published),
+            "published sim-nest 0.2.2 feature {published:?} was removed"
+        );
+    }
+}
 
 #[test]
 fn declared_features_match_cfg_usage() {
@@ -338,14 +350,25 @@ fn r12_logic_feature_implications_stay_wired() {
 }
 
 #[rustfmt::skip] const MCP_STREAM_DEPS: &[&str] = &["mcp", "stream-core", "stream-fabric", "stream-combinators", "sim-lib-mcp/stream", "sim-lib-mcp/progress"];
-#[rustfmt::skip] const MCP_HTTP_DEPS: &[&str] = &["mcp-stream", "server", "server-net-http", "dep:sim-lib-mcp-http"];
+#[rustfmt::skip] const MCP_HTTP_DEPS: &[&str] = &["mcp-stream", "server", "server-net-http", "dep:sim-lib-mcp-http", "dep:sim-lib-oauth-core", "dep:sim-lib-oauth-http", "dep:sim-lib-oauth-jose"];
 const MCP_SAMPLING_DEPS: &[&str] = &["mcp", "agent-runner-core", "sim-lib-mcp/sampling"];
 
 #[test]
 fn g6_mcp_feature_implications_stay_wired() {
     let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
     let cases: &[(&str, &[&str])] = &[
-        ("mcp", &["dep:sim-lib-mcp", "codec-mcp", "core", "shape"]),
+        (
+            "mcp",
+            &[
+                "dep:sim-lib-mcp",
+                "dep:sim-cancel",
+                "dep:sim-lib-mcp-legacy",
+                "dep:sim-lib-protected-state",
+                "codec-mcp",
+                "core",
+                "shape",
+            ],
+        ),
         ("mcp-skill", &["mcp", "skill", "sim-lib-mcp/skill"]),
         (
             "mcp-stdio",
@@ -353,21 +376,6 @@ fn g6_mcp_feature_implications_stay_wired() {
         ),
         ("mcp-stream", MCP_STREAM_DEPS),
         ("mcp-http", MCP_HTTP_DEPS),
-        ("mcp-legacy", &["mcp", "dep:sim-lib-mcp-legacy"]),
-        (
-            "mcp-oauth",
-            &[
-                "mcp-http",
-                "dep:sim-lib-oauth-core",
-                "dep:sim-lib-oauth-http",
-                "dep:sim-lib-oauth-jose",
-            ],
-        ),
-        (
-            "mcp-protected-state",
-            &["mcp", "dep:sim-lib-protected-state"],
-        ),
-        ("mcp-cancellation", &["mcp", "dep:sim-cancel"]),
         (
             "mcp-client",
             &["mcp-skill", "sim-lib-mcp/client", "dep:sim-lib-mcp-client"],

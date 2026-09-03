@@ -18,5 +18,4 @@ pub use sim_table_mount as mount;
 pub use sim_table_relation as table_relation;
 
 /// The sole SQL provider capsule; its prepared SQL remains private to it.
-#[cfg(feature = "relation-sqlite")]
 pub use sim_platform_sqlite as sqlite;

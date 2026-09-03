@@ -1,4 +1,4 @@
-#![cfg(feature = "relation-sqlite")]
+#![cfg(feature = "relation")]
 
 use sim::{
     kernel::{Datum, Symbol},

@@ -1,4 +1,4 @@
-#![cfg(feature = "continuity")]
+#![cfg(feature = "agent")]
 
 use sim::{
     continuity::{

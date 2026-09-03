@@ -1,5 +1,5 @@
 title = "Compose continuity plans as data"
 kind = "rust"
 entry = "setup.rs"
-required_features = ["continuity"]
+required_features = ["agent"]
 book = "sim-sdk"

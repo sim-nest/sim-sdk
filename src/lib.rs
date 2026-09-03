@@ -93,7 +93,7 @@ pub mod estate;
 #[cfg(all(test, feature = "estate"))]
 mod estate_facade_tests;
 
-#[cfg(feature = "platform")]
+#[cfg(feature = "device")]
 /// Provider-neutral platform records and authoring contracts.
 pub mod platform;
 
@@ -101,8 +101,8 @@ pub mod platform;
 ///
 /// Raw logical plans are admitted by [`plan`] before reaching [`site`]. The
 /// checked plan and migration types remain opaque, and provider preparation
-/// artifacts are deliberately not re-exported. Enable `relation-sqlite` only
-/// when the SQLite capsule is part of the application.
+/// artifacts are deliberately not re-exported. The `relation` domain bundle
+/// includes its sole SQLite capsule without exposing prepared SQL.
 #[cfg(feature = "relation")]
 pub mod relation;
 
@@ -127,16 +127,16 @@ pub use expr_tree_exports::*;
 #[cfg(feature = "agent")]
 pub use sim_lib_agent::{self as lib_agent, install_agent_lib};
 /// Certified topology-backed agent conducts and the shipped conduct catalog.
-#[cfg(feature = "agent-conduct")]
+#[cfg(feature = "agent")]
 pub mod agent_conduct;
 /// Pure, codec-stable agent conduct records and durable lifecycle contracts.
-#[cfg(feature = "agent-conduct-core")]
+#[cfg(feature = "agent")]
 pub mod agent_conduct_core;
 #[cfg(feature = "topology-core")]
 pub use sim_lib_topology as lib_topology;
 /// Stable opt-in provider control facade. This is intentionally excluded from
 /// the minimal/default SDK feature set.
-#[cfg(feature = "provider")]
+#[cfg(any(feature = "agent", feature = "study"))]
 pub mod provider;
 /// Domain-neutral durable study lifecycle, design, decision, and command product.
 #[cfg(feature = "study")]
@@ -145,23 +145,22 @@ pub mod study;
 #[cfg(all(test, feature = "study"))]
 mod study_facade_tests;
 
-/// Independently selectable physics contracts and loadable composition.
+/// Complete physics contracts and loadable composition.
 ///
-/// Each module is a direct re-export from its owning crate. Enabling
-/// `physics-core` does not select proof methods, extended precision, FEMM,
-/// interference, or placement providers.
-#[cfg(feature = "physics-core")]
+/// The `physics` domain bundle keeps the layers in their owning crates while
+/// exposing the coherent audit, proof, study, findings, and adapter surface.
+#[cfg(feature = "physics")]
 pub mod physics;
 
 /// Canonical, pure continuity planning, replay, and journal contracts.
 ///
 /// This module is a direct re-export: policy validation and reduction remain
 /// owned by `sim-lib-continuity`; the SDK adds no wrapper model or behavior.
-#[cfg(feature = "continuity")]
+#[cfg(feature = "agent")]
 pub mod continuity;
 
 /// Resilient music routing composed from the owning music and stream-host contracts.
-#[cfg(feature = "music-vertical")]
+#[cfg(feature = "music-core")]
 pub mod music_vertical;
 
 #[cfg(feature = "standard-core")]
@@ -171,15 +170,15 @@ pub mod characterization;
 #[cfg(all(feature = "core", feature = "shape"))]
 pub mod classes;
 /// Model observatory types and its loadable product command.
-#[cfg(feature = "model-test")]
+#[cfg(feature = "study")]
 pub mod model_test;
-#[cfg(all(test, feature = "model-test"))]
+#[cfg(all(test, feature = "study"))]
 mod model_test_facade_tests;
 /// Provider-neutral web research composition.
 ///
 /// This facade intentionally exposes stable plans, receipts, records, and host
 /// boundaries. Provider-specific wire DTOs remain in their codec crates.
-#[cfg(feature = "web-search")]
+#[cfg(feature = "web-full")]
 pub mod web_search;
 #[rustfmt::skip]
 #[cfg(all(test, feature = "shape", feature = "codec-lisp", feature = "codec-json", feature = "codec-binary", feature = "codec-binary-base64", feature = "codec-algol", feature = "codec-bridge", feature = "bridge"))]

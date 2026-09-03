@@ -53,10 +53,10 @@ steps = [
 [[feature]]
 id = "feature/sim-sdk/layered-physics-facade"
 title = "Layered physics SDK composition"
-summary = "Curates one-way feature closures from quantities and physics core through audit, proof, studies, findings, and explicit adapters."
+summary = "Curates quantities, physics core, audit, proof, studies, findings, and explicit adapters as one coherent domain bundle."
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
-guidance = "Start with numbers-quantity or physics-core and add only the required layer. Extended precision, FEMM, interference, and placement providers are independent opt-ins."
+guidance = "Enable physics to install the complete coherent domain while the layered contracts remain owned by their focused crates. Extended precision and the FEMM and interference adapters are included so applications do not reconstruct a fragile leaf-feature closure."
 claims_anchors = ["anchor/rustdoc/sim-nest/physics"]
 claims_specimens = ["recipe/sim-sdk/physics/switched-audit"]
 presents = ["feature/sim-physics/loadable-runtime-composition"]
@@ -64,7 +64,7 @@ presents = ["feature/sim-physics/loadable-runtime-composition"]
 [[route]]
 id = "route/sdk-switched-physics-audit"
 task = "Compose a switched-boundary physics solve, audit, verdict, and finding projection"
-steps = [{ feature = "feature/sim-sdk/layered-physics-facade", why = "Select the audit and findings closures without pulling adapter or provider stacks." }, { specimen = "recipe/sim-sdk/physics/switched-audit", why = "Inspect the complete composition and unresolved/certified verdict boundary." }]
+steps = [{ feature = "feature/sim-sdk/layered-physics-facade", why = "Select the complete physics domain bundle, including audit, findings, and adapter contracts." }, { specimen = "recipe/sim-sdk/physics/switched-audit", why = "Inspect the complete composition and unresolved/certified verdict boundary." }]
 
 [[feature]]
 id = "feature/sim-sdk/media-edge-music-vertical"
@@ -72,7 +72,7 @@ title = "Media-edge music SDK composition"
 summary = "Expose the owning music route plan and exact stream-host effect adapters behind one opt-in vertical feature."
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
-guidance = "Enable music-vertical and use sim::music_vertical; this facade composes the existing owner contracts and adds no generic command API or automation authority."
+guidance = "Enable music-core and use sim::music_vertical; the music domain bundle composes the existing owner contracts and exact stream-host adapters without adding a generic command API or automation authority."
 claims_anchors = ["anchor/rustdoc/sim-nest/music_vertical"]
 claims_specimens = ["spec-test/sim-sdk/src/music_vertical"]
 presents = ["feature/sim-music/media-edge-vertical", "feature/sim-stream-host/named-music-effects"]
@@ -103,7 +103,7 @@ title = "Network-free web research facade and conformance"
 summary = "Expose neutral HTTP, web, search, fetch, rank, office-evidence, and audit-view contracts behind one opt-in SDK feature, with a caller-owned fake-world proof."
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
-guidance = "Enable web-search and compose the reexported stable records and host traits. Provider-specific DTOs remain private to their codec; the default conformance fixture owns every input byte and opens no socket."
+guidance = "Enable web-full and compose the reexported stable records and host traits. Provider-specific DTOs remain private to their codec; the default conformance fixture owns every input byte and opens no socket."
 claims_anchors = ["anchor/rustdoc/sim-nest/web_search"]
 claims_specimens = ["spec-test/sim-sdk/crates/sim-conformance/tests/web_search_offline", "recipe/sim-sdk/web-search/configured-searxng"]
 presents = ["feature/sim-agent-net/reproducible-federated-research", "feature/sim-web/search-audit-surface"]
@@ -125,7 +125,7 @@ title = "Opt-in generic study facade"
 summary = "Expose the canonical study lifecycle, staged design, report graph, selection, and command contracts behind one granular feature."
 owner = "crate/sim-nest"
 audiences = ["code", "framework"]
-guidance = "Enable study and import sim::study. This is a direct facade over sim-lib-study; it adds no journal, statistics, executor, model, or selection policy."
+guidance = "Enable study and import sim::study or sim::model_test. The bundle composes the direct study lifecycle, model observatory, and provider-neutral inventory facades; it adds no journal, statistics, executor, model, or selection policy."
 claims_anchors = ["anchor/rustdoc/sim-nest/study"]
 claims_specimens = ["spec-test/sim-sdk/src/study_facade_tests"]
 presents = ["feature/sim-runtime/domain-free-study-lifecycle"]
@@ -133,10 +133,10 @@ presents = ["feature/sim-runtime/domain-free-study-lifecycle"]
 [[feature]]
 id = "feature/sim-sdk/model-test-facade"
 title = "Opt-in model observatory facade"
-summary = "Expose the canonical model-test domain and loadable product behind one granular non-default SDK feature."
+summary = "Expose the canonical model-test domain and loadable product through the non-default study domain bundle."
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
-guidance = "Enable model-test and import sim::model_test. The feature composes the canonical study and provider contracts but adds no provider authority, credentials, runner, scheduler, statistics, or model inventory, and it is absent from the minimal facade."
+guidance = "Enable study and import sim::model_test. The domain bundle composes the canonical study and provider contracts but adds no provider authority, credentials, runner, scheduler, statistics, or model inventory, and it is absent from the minimal facade."
 claims_anchors = ["anchor/rustdoc/sim-nest/model_test"]
 claims_specimens = ["spec-test/sim-sdk/src/model_test_facade_tests"]
 presents = ["feature/sim-agent-net/model-test-product"]
@@ -207,7 +207,7 @@ title = "Facade runtime entry point"
 summary = "Boot the public SIM facade and expose its command plus reversible view surface."
 owner = "crate/sim-nest"
 audiences = ["user", "code"]
-guidance = "Enable platform and pass the same platform-composed PureBootEnvelope used by sim-run to platform::sdk_load_plan. The facade directly exposes the canonical plan and adds no SDK loader, target registration, provider selection, or fallback policy."
+guidance = "Enable device and pass the same platform-composed PureBootEnvelope used by sim-run to platform::sdk_load_plan. The domain bundle directly exposes the canonical plan and adds no SDK loader, target registration, provider selection, or fallback policy."
 claims_anchors = [
   "anchor/card/citizen/view/lens-descriptor",
   "anchor/cli/sim-nest",
@@ -440,7 +440,7 @@ title = "Direct relational SDK composition"
 summary = "Expose the canonical relational model, admission, migration, Shape, bounded site, SQLite capsule, and Table/Dir assembly without a parallel facade model."
 owner = "crate/sim-nest"
 audiences = ["user", "code", "framework"]
-guidance = "Enable `relation` for provider-neutral plans and effects, then add `relation-sqlite` only when that capsule is selected. Build raw plans through sim::relation::plan, admit them once, and pass the opaque checked view unchanged to a selected sim::relation::site. SQL preparation remains capsule-private."
+guidance = "Enable relation for the provider-neutral plans, effects, and sole SQLite capsule. Build raw plans through sim::relation::plan, admit them once, and pass the opaque checked view unchanged to a selected sim::relation::site. SQL preparation remains capsule-private."
 claims_anchors = ["anchor/rustdoc/sim-nest/relation"]
 claims_specimens = [
   "spec-test/sim-sdk/tests/relation_exports",
@@ -548,7 +548,7 @@ title = "Provider-neutral platform SDK"
 summary = "Re-export platform records, requirement builders, provider-author contracts, and the portable LoaderPort facade behind non-default features."
 owner = "crate/sim-nest"
 audiences = ["code", "framework"]
-guidance = "Enable platform to author requirements or providers through canonical sim-platform types. With core enabled, construct loaders::platform_loader_registry from the LoaderPort installed by the selected platform capsule; source and package realization then stays behind that port. Concrete capsules remain distribution choices and are intentionally absent from the facade and its default closure. The optional sim facade binary is a bootstrap target, while xtask and native packaging acceptance are host-tool surfaces rather than SDK library behavior."
+guidance = "Enable device to author requirements or providers through canonical sim-platform types. With core enabled, construct loaders::platform_loader_registry from the LoaderPort installed by the selected platform capsule; source and package realization then stays behind that port. Concrete capsules remain distribution choices and are intentionally absent from the facade and its default closure. The optional sim facade binary is a bootstrap target, while xtask and native packaging acceptance are host-tool surfaces rather than SDK library behavior."
 claims_specimens = ["spec-test/sim-sdk/src/loaders/tests/registry"]
 presents = ["feature/sim-platform/product-membrane"]
 
@@ -605,10 +605,10 @@ steps = [
 [[feature]]
 id = "feature/sim-sdk/estate-facade"
 title = "Portable estate SDK facade"
-summary = "Opt-in features re-export estate core, authoring, organ, projection, provider, and Surface crates without enabling private controller bindings by default."
+summary = "One opt-in domain bundle re-exports estate core, authoring, organ, projection, provider, and Surface crates without enabling private controller bindings by default."
 owner = "crate/sim-nest"
 audiences = ["framework"]
-guidance = "Enable estate for the portable core and organ, estate-view for Surface composition, and estate-provider-model only for host-free provider tests."
+guidance = "Enable estate for the portable core, organ, Surface composition, and host-free deterministic provider. The complete bundle still excludes private bindings and controller capsules."
 claims_specimens = ["spec-test/sim-sdk/src/estate_facade_tests"]
 
 [[route]]
@@ -619,10 +619,10 @@ steps = [{ feature = "feature/sim-sdk/estate-facade", why = "Select only the por
 [[feature]]
 id = "feature/sim-sdk/agent-conduct-composition"
 title = "Agent conduct composition facade"
-summary = "Opt into pure conduct records or certified topology-backed conduct packages through direct canonical re-exports."
+summary = "Expose pure conduct records and certified topology-backed conduct packages through the existing agent domain bundle."
 owner = "crate/sim-nest"
 audiences = ["code", "framework"]
-guidance = "Enable agent-conduct-core for durable records and lifecycle contracts, or agent-conduct for the certified topology catalog. The facade adds no wrapper; combine agent and topology-core for standard Cards and package parsing."
+guidance = "Enable agent for durable records, lifecycle contracts, continuity, provider inventory, and the certified topology catalog. The facade adds no wrapper; combine agent and topology-core for standard Cards and package parsing."
 claims_specimens = ["spec-test/sim-sdk/tests/agent_conduct_exports"]
 
 [[feature]]

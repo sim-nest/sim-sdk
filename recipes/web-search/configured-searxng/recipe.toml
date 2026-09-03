@@ -5,4 +5,4 @@ setup = "setup.rs"
 purpose = "purpose.md"
 order = 10
 tags = ["web-search", "searxng", "operator-diagnostic", "opt-in", "network"]
-requires = ["web-search", "SIM_SEARXNG_ENDPOINT", "SIM_SEARXNG_SITE_CONFIG"]
+requires = ["web-full", "SIM_SEARXNG_ENDPOINT", "SIM_SEARXNG_SITE_CONFIG"]
