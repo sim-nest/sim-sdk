@@ -1,4 +1,4 @@
-#![cfg(feature = "provider")]
+#![cfg(feature = "study")]
 
 use sim::provider::{ProviderInventory, ProviderSeatId};
 

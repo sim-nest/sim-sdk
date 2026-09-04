@@ -196,5 +196,5 @@ const _: &str = "view-daw";
 #[cfg(feature = "web-full")]
 const _: &str = "web-full";
 #[rustfmt::skip]
-#[cfg(any(feature = "skill-mcp", feature = "skill-serve", feature = "skill-agent", feature = "skill-openai", feature = "skill-runner", feature = "skill-http", feature = "skill-process", feature = "skill-cache", feature = "skill-cassette", feature = "mcp", feature = "mcp-skill", feature = "mcp-stdio", feature = "mcp-stream", feature = "mcp-http", feature = "mcp-client", feature = "mcp-legacy", feature = "mcp-oauth", feature = "mcp-protected-state", feature = "mcp-cancellation", feature = "mcp-sampling", feature = "mcp-cassette", feature = "mcp-binary"))]
+#[cfg(any(feature = "skill-mcp", feature = "skill-serve", feature = "skill-agent", feature = "skill-openai", feature = "skill-runner", feature = "skill-http", feature = "skill-process", feature = "skill-cache", feature = "skill-cassette", feature = "mcp", feature = "mcp-skill", feature = "mcp-stdio", feature = "mcp-stream", feature = "mcp-http", feature = "mcp-client", feature = "mcp-sampling", feature = "mcp-cassette", feature = "mcp-binary"))]
 const _: &str = "mcp-features";

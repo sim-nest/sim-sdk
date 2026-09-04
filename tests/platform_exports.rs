@@ -1,4 +1,4 @@
-#![cfg(feature = "platform")]
+#![cfg(feature = "device")]
 
 use sim::platform::{PlatformProviderAuthor, RequirementBuilder};
 
@@ -15,7 +15,7 @@ fn exports_requirement_builder_and_provider_contract_without_capsules() {
             .lines()
             .find(|line| line.starts_with("default ="))
             .unwrap()
-            .contains("platform")
+            .contains("device")
     );
 }
 

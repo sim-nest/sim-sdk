@@ -18,12 +18,12 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | Feature | Subject | Specimens | Summary |
 | --- | --- | ---: | --- |
 | `feature/sim-sdk/hotload-facade` | `crate/sim-nest` | 4 | Expose immutable native build, admission, compatibility, atomic activation, and durable receipt records without exposing host provider implementations. |
-| `feature/sim-sdk/layered-physics-facade` | `crate/sim-nest` | 1 | Curates one-way feature closures from quantities and physics core through audit, proof, studies, findings, and explicit adapters. |
+| `feature/sim-sdk/layered-physics-facade` | `crate/sim-nest` | 1 | Curates quantities, physics core, audit, proof, studies, findings, and explicit adapters as one coherent domain bundle. |
 | `feature/sim-sdk/media-edge-music-vertical` | `crate/sim-nest` | 1 | Expose the owning music route plan and exact stream-host effect adapters behind one opt-in vertical feature. |
 | `feature/sim-sdk/generated-docs` | `crate/xtask` | 0 | Publish generated package, card, recipe, and index facts for the SDK facade and conformance crate. |
 | `feature/sim-sdk/web-search-facade` | `crate/sim-nest` | 2 | Expose neutral HTTP, web, search, fetch, rank, office-evidence, and audit-view contracts behind one opt-in SDK feature, with a caller-owned fake-world proof. |
 | `feature/sim-sdk/study-facade` | `crate/sim-nest` | 1 | Expose the canonical study lifecycle, staged design, report graph, selection, and command contracts behind one granular feature. |
-| `feature/sim-sdk/model-test-facade` | `crate/sim-nest` | 1 | Expose the canonical model-test domain and loadable product behind one granular non-default SDK feature. |
+| `feature/sim-sdk/model-test-facade` | `crate/sim-nest` | 1 | Expose the canonical model-test domain and loadable product through the non-default study domain bundle. |
 | `feature/sim-sdk/source-authority-facade` | `crate/sim-nest` | 1 | Build diminished source requests through the canonical runtime authority, broker, and dynamic policy without guest-specific admission envelopes. |
 | `feature/sim-sdk/characterization-facade` | `crate/sim-nest` | 1 | Capture public behavioral contracts before a refactor and compare canonical observations afterward through SDK-visible types. |
 | `feature/sim-sdk/standard-gc-policy` | `crate/sim-nest` | 1 | Select bounded tracing reclamation for standard builds while keeping hard-capped cycle retention explicit and test-only. |
@@ -46,8 +46,8 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 | `feature/sim-sdk/conformance-contract` | `crate/sim-conformance` | 2 | Run one typed MCP vector authority bidirectionally across direct, compatibility, real transport, product, and runtime projections. |
 | `feature/sim-sdk/jvm-composition` | `crate/sim-nest` | 3 | Expose the classfile decoder, bounded JVM profile, source authority, invocation library, bidirectional lambda adapters, recipes, and product specimens through public SDK names. |
 | `feature/sim-sdk/platform-composition` | `crate/sim-nest` | 1 | Re-export platform records, requirement builders, provider-author contracts, and the portable LoaderPort facade behind non-default features. |
-| `feature/sim-sdk/estate-facade` | `crate/sim-nest` | 1 | Opt-in features re-export estate core, authoring, organ, projection, provider, and Surface crates without enabling private controller bindings by default. |
-| `feature/sim-sdk/agent-conduct-composition` | `crate/sim-nest` | 1 | Opt into pure conduct records or certified topology-backed conduct packages through direct canonical re-exports. |
+| `feature/sim-sdk/estate-facade` | `crate/sim-nest` | 1 | One opt-in domain bundle re-exports estate core, authoring, organ, projection, provider, and Surface crates without enabling private controller bindings by default. |
+| `feature/sim-sdk/agent-conduct-composition` | `crate/sim-nest` | 1 | Expose pure conduct records and certified topology-backed conduct packages through the existing agent domain bundle. |
 | `feature/sim-sdk/atelier-room-packs` | `crate/sim-nest` | 1 | Six data-authored intellectual rooms compose existing music, physics, model, cited-reading, mutual-projection, and identity routes through the canonical capability-pack graph. |
 | `feature/sim-sdk/reversible-atelier-product` | `crate/sim-nest` | 2 | A networkless conformance pilot composes all five current memo families through the disposable web worktable with fake model and device placements. |
 | `feature/sim-sdk/taste-led-kitchen-pack` | `crate/sim-nest` | 2 | Compose exact quantities, freshness-bounded claims, questions, preparation options, and shopping drafts as pure data while meal choice and commerce remain impossible effects. |
@@ -1183,7 +1183,7 @@ setup = "setup.rs"
 purpose = "purpose.md"
 order = 10
 tags = ["web-search", "searxng", "operator-diagnostic", "opt-in", "network"]
-requires = ["web-search", "SIM_SEARXNG_ENDPOINT", "SIM_SEARXNG_SITE_CONFIG"]
+requires = ["web-full", "SIM_SEARXNG_ENDPOINT", "SIM_SEARXNG_SITE_CONFIG"]
 ```
 
 ### `feature/sim-sdk/study-facade`
@@ -1652,14 +1652,26 @@ const PUBLIC_FACADE_ALIASES: &[(&str, &str)] = &[
 
 // Public feature closures that intentionally compose dependencies without
 // adding a separate facade module or cfg gate of their own.
-const COMPOSITION_ONLY_FEATURES: &[&str] = &[
-    "numbers-method",
-    "numbers-quantity",
-    "physics-adapter-femm",
-    "physics-adapter-interference",
-    "physics-full",
-    "physics-proof-extended",
-];
+const COMPOSITION_ONLY_FEATURES: &[&str] = &[];
+
+const CRATES_IO_MAX_FEATURES: usize = 300;
+
+#[test]
+fn sim_nest_stays_below_the_registry_budget_and_preserves_published_features() {
+    let declared = collect_feature_dependencies(include_str!("../Cargo.toml"));
+    assert!(
+        declared.len() < CRATES_IO_MAX_FEATURES,
+        "sim-nest declares {} features; its domain bundles must stay below the crates.io ceiling of {CRATES_IO_MAX_FEATURES}",
+        declared.len()
+    );
+
+    for published in include_str!("feature_contract_tests/sim_nest_0_2_2_features.txt").lines() {
+        assert!(
+            declared.contains_key(published),
+            "published sim-nest 0.2.2 feature {published:?} was removed"
+        );
+    }
+}
 
 #[test]
 fn declared_features_match_cfg_usage() {
@@ -1961,14 +1973,25 @@ fn r12_logic_feature_implications_stay_wired() {
 }
 
 #[rustfmt::skip] const MCP_STREAM_DEPS: &[&str] = &["mcp", "stream-core", "stream-fabric", "stream-combinators", "sim-lib-mcp/stream", "sim-lib-mcp/progress"];
-#[rustfmt::skip] const MCP_HTTP_DEPS: &[&str] = &["mcp-stream", "server", "server-net-http", "dep:sim-lib-mcp-http"];
+#[rustfmt::skip] const MCP_HTTP_DEPS: &[&str] = &["mcp-stream", "server", "server-net-http", "dep:sim-lib-mcp-http", "dep:sim-lib-oauth-core", "dep:sim-lib-oauth-http", "dep:sim-lib-oauth-jose"];
 const MCP_SAMPLING_DEPS: &[&str] = &["mcp", "agent-runner-core", "sim-lib-mcp/sampling"];
 
 #[test]
 fn g6_mcp_feature_implications_stay_wired() {
     let features = collect_feature_dependencies(include_str!("../Cargo.toml"));
     let cases: &[(&str, &[&str])] = &[
-        ("mcp", &["dep:sim-lib-mcp", "codec-mcp", "core", "shape"]),
+        (
+            "mcp",
+            &[
+                "dep:sim-lib-mcp",
+                "dep:sim-cancel",
+                "dep:sim-lib-mcp-legacy",
+                "dep:sim-lib-protected-state",
+                "codec-mcp",
+                "core",
+                "shape",
+            ],
+        ),
         ("mcp-skill", &["mcp", "skill", "sim-lib-mcp/skill"]),
         (
             "mcp-stdio",
@@ -1976,21 +1999,6 @@ fn g6_mcp_feature_implications_stay_wired() {
         ),
         ("mcp-stream", MCP_STREAM_DEPS),
         ("mcp-http", MCP_HTTP_DEPS),
-        ("mcp-legacy", &["mcp", "dep:sim-lib-mcp-legacy"]),
-        (
-            "mcp-oauth",
-            &[
-                "mcp-http",
-                "dep:sim-lib-oauth-core",
-                "dep:sim-lib-oauth-http",
-                "dep:sim-lib-oauth-jose",
-            ],
-        ),
-        (
-            "mcp-protected-state",
-            &["mcp", "dep:sim-lib-protected-state"],
-        ),
-        ("mcp-cancellation", &["mcp", "dep:sim-cancel"]),
         (
             "mcp-client",
             &["mcp-skill", "sim-lib-mcp/client", "dep:sim-lib-mcp-client"],
@@ -4076,7 +4084,7 @@ Specimen `spec-test/sim-sdk/tests/continuity_exports` is checked by `cargo test`
 Source `tests/continuity_exports.rs`:
 
 ```rust
-#![cfg(feature = "continuity")]
+#![cfg(feature = "agent")]
 
 use sim::{
     continuity::{
@@ -4343,7 +4351,7 @@ Source `recipes/continuity/plans/recipe.toml`:
 title = "Compose continuity plans as data"
 kind = "rust"
 entry = "setup.rs"
-required_features = ["continuity"]
+required_features = ["agent"]
 book = "sim-sdk"
 ```
 
@@ -4355,7 +4363,7 @@ Source `recipes/continuity/expedition-thought/recipe.toml`:
 title = "Carry a thought by content identity"
 kind = "rust"
 entry = "setup.rs"
-required_features = ["continuity"]
+required_features = ["agent"]
 book = "sim-sdk"
 ```
 
@@ -4367,7 +4375,7 @@ Source `recipes/continuity/quiet-stewardship-cards/recipe.toml`:
 title = "Project quiet stewardship cards"
 kind = "rust"
 entry = "setup.rs"
-required_features = ["continuity"]
+required_features = ["agent"]
 book = "sim-sdk"
 ```
 
@@ -4379,7 +4387,7 @@ Source `recipes/atelier/expedition-first-light/recipe.toml`:
 title = "First light after deleting every convenience"
 kind = "rust"
 entry = "../../../tests/expedition_first_light.rs"
-required_features = ["continuity"]
+required_features = ["agent"]
 book = "sim-sdk"
 ```
 
@@ -4410,7 +4418,7 @@ Specimen `spec-test/sim-sdk/tests/relation_exports` is checked by `cargo test`.
 Source `tests/relation_exports.rs`:
 
 ```rust
-#![cfg(feature = "relation-sqlite")]
+#![cfg(feature = "relation")]
 
 use sim::{
     kernel::{Datum, Symbol},
@@ -4608,7 +4616,7 @@ Source `recipes/relation/exact-old-file-adoption/recipe.toml`:
 title = "Adopt an exact pre-existing SQLite file"
 kind = "rust"
 entry = "setup.rs"
-required_features = ["relation-sqlite"]
+required_features = ["relation"]
 ```
 
 Specimen `recipe/sim-sdk/relation/additive-migration` is checked by `xtask check-recipes`.
@@ -5957,7 +5965,7 @@ Specimen `spec-test/sim-sdk/tests/agent_conduct_exports` is checked by `cargo te
 Source `tests/agent_conduct_exports.rs`:
 
 ```rust
-#![cfg(all(feature = "agent-conduct", feature = "agent-conduct-core"))]
+#![cfg(feature = "agent")]
 
 use sim::{
     agent_conduct, agent_conduct_core,

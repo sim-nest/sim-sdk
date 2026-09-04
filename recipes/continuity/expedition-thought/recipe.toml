@@ -1,5 +1,5 @@
 title = "Carry a thought by content identity"
 kind = "rust"
 entry = "setup.rs"
-required_features = ["continuity"]
+required_features = ["agent"]
 book = "sim-sdk"

@@ -60,23 +60,32 @@ fn default_and_interference_bundles_are_hardware_independent() {
 }
 
 #[test]
-fn interference_dependencies_use_the_frozen_versions_without_paths() {
+fn interference_dependencies_use_release_versions_without_paths() {
     let cargo_toml = include_str!("../Cargo.toml");
-    for (package, version) in [
-        ("sim-lib-interference-core", "0.2.0"),
-        ("sim-lib-interference-solve", "0.2.0"),
-        ("sim-lib-interference-runtime", "0.2.0"),
-        ("sim-lib-interference-compute", "0.1.1"),
-        ("sim-lib-view-interference", "0.1.1"),
+    for package in [
+        "sim-lib-interference-core",
+        "sim-lib-interference-solve",
+        "sim-lib-interference-runtime",
+        "sim-lib-interference-compute",
+        "sim-lib-view-interference",
     ] {
         let prefix = format!("{package} = ");
         let declaration = cargo_toml
             .lines()
             .find(|line| line.starts_with(&prefix))
             .unwrap_or_else(|| panic!("missing {package} dependency"));
+        let version = declaration
+            .split_once("version = \"")
+            .and_then(|(_, tail)| tail.split_once('"'))
+            .map(|(version, _)| version)
+            .unwrap_or_else(|| panic!("{package} must carry a version: {declaration}"));
+        let components = version.split('.').collect::<Vec<_>>();
         assert!(
-            declaration.contains(&format!("version = \"{version}\"")),
-            "{package} must use the frozen {version} candidate: {declaration}"
+            components.len() == 3
+                && components
+                    .iter()
+                    .all(|component| component.parse::<u64>().is_ok()),
+            "{package} must use a three-component release version: {declaration}"
         );
         assert!(
             !declaration.contains("path ="),

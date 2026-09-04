@@ -1,4 +1,4 @@
-#![cfg(all(feature = "agent-conduct", feature = "agent-conduct-core"))]
+#![cfg(feature = "agent")]
 
 use sim::{
     agent_conduct, agent_conduct_core,

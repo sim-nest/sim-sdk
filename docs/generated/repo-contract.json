@@ -3481,25 +3481,13 @@
         {
           "edges": [
             "dep:sim-lib-agent",
+            "dep:sim-lib-agent-conduct",
+            "dep:sim-lib-agent-conduct-core",
+            "dep:sim-lib-continuity",
+            "dep:sim-lib-provider",
             "server"
           ],
           "name": "agent",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "dep:sim-lib-agent-conduct",
-            "agent-conduct-core"
-          ],
-          "name": "agent-conduct",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "dep:sim-lib-agent-conduct-core",
-            "core"
-          ],
-          "name": "agent-conduct-core",
           "workspace_edges": []
         },
         {
@@ -3817,14 +3805,6 @@
         },
         {
           "edges": [
-            "dep:sim-lib-continuity",
-            "core"
-          ],
-          "name": "continuity",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
             "dep:sim-lib-control",
             "core"
           ],
@@ -4002,7 +3982,8 @@
         {
           "edges": [
             "device-reference",
-            "cookbook"
+            "cookbook",
+            "dep:sim-lib-platform"
           ],
           "name": "device",
           "workspace_edges": []
@@ -4114,26 +4095,12 @@
             "dep:sim-estate-core",
             "dep:sim-estate-project",
             "dep:sim-lib-estate",
-            "dep:sim-lib-estate-serve"
+            "dep:sim-lib-estate-serve",
+            "dep:sim-site-estate-model",
+            "dep:sim-lib-view-estate",
+            "view"
           ],
           "name": "estate",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "estate",
-            "dep:sim-site-estate-model"
-          ],
-          "name": "estate-provider-model",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "estate",
-            "view",
-            "dep:sim-lib-view-estate"
-          ],
-          "name": "estate-view",
           "workspace_edges": []
         },
         {
@@ -4607,6 +4574,9 @@
         {
           "edges": [
             "dep:sim-lib-mcp",
+            "dep:sim-cancel",
+            "dep:sim-lib-mcp-legacy",
+            "dep:sim-lib-protected-state",
             "codec-mcp",
             "core",
             "shape"
@@ -4619,14 +4589,6 @@
             "mcp-stdio"
           ],
           "name": "mcp-binary",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "mcp",
-            "dep:sim-cancel"
-          ],
-          "name": "mcp-cancellation",
           "workspace_edges": []
         },
         {
@@ -4651,35 +4613,12 @@
             "mcp-stream",
             "server",
             "server-net-http",
-            "dep:sim-lib-mcp-http"
-          ],
-          "name": "mcp-http",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "mcp",
-            "dep:sim-lib-mcp-legacy"
-          ],
-          "name": "mcp-legacy",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "mcp-http",
+            "dep:sim-lib-mcp-http",
             "dep:sim-lib-oauth-core",
             "dep:sim-lib-oauth-http",
             "dep:sim-lib-oauth-jose"
           ],
-          "name": "mcp-oauth",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "mcp",
-            "dep:sim-lib-protected-state"
-          ],
-          "name": "mcp-protected-state",
+          "name": "mcp-http",
           "workspace_edges": []
         },
         {
@@ -4810,15 +4749,6 @@
         },
         {
           "edges": [
-            "dep:sim-lib-model-test",
-            "study",
-            "provider"
-          ],
-          "name": "model-test",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
             "music-core",
             "music-combinators",
             "music-analysis",
@@ -4874,6 +4804,7 @@
             "pitch-core",
             "midi-core",
             "numbers-rational",
+            "stream-host",
             "core"
           ],
           "name": "music-core",
@@ -4985,14 +4916,6 @@
             "core"
           ],
           "name": "music-transform",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "music-core",
-            "stream-host"
-          ],
-          "name": "music-vertical",
           "workspace_edges": []
         },
         {
@@ -5180,13 +5103,6 @@
         },
         {
           "edges": [
-            "dep:sim-lib-numbers-method"
-          ],
-          "name": "numbers-method",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
             "dep:sim-lib-numbers-numeric",
             "numbers-f64",
             "numbers-func",
@@ -5238,13 +5154,6 @@
             "core"
           ],
           "name": "numbers-quad",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "dep:sim-lib-numbers-quantity"
-          ],
-          "name": "numbers-quantity",
           "workspace_edges": []
         },
         {
@@ -5374,108 +5283,30 @@
         },
         {
           "edges": [
-            "physics-core",
-            "dep:sim-lib-physics-adapter"
-          ],
-          "name": "physics-adapter",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "physics-adapter",
-            "femm-physics"
-          ],
-          "name": "physics-adapter-femm",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "physics-adapter",
-            "interference-core"
-          ],
-          "name": "physics-adapter-interference",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "physics-power",
-            "numbers-method",
+            "dep:sim-lib-numbers-method",
+            "dep:sim-lib-numbers-quantity",
+            "dep:sim-lib-physics-adapter",
             "dep:sim-lib-physics-audit",
-            "sim-lib-physics-runtime/audit"
-          ],
-          "name": "physics-audit",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
             "dep:sim-lib-physics-core",
+            "dep:sim-lib-physics-findings",
+            "dep:sim-lib-physics-influence",
+            "dep:sim-lib-physics-power",
+            "dep:sim-lib-physics-proof",
             "dep:sim-lib-physics-runtime",
+            "dep:sim-lib-physics-study",
+            "sim-lib-physics-proof/extended-precision",
+            "sim-lib-physics-runtime/audit",
             "sim-lib-physics-runtime/core",
-            "numbers-quantity",
+            "sim-lib-physics-runtime/findings",
+            "sim-lib-physics-runtime/influence",
+            "sim-lib-physics-runtime/power",
+            "sim-lib-physics-runtime/proof",
+            "sim-lib-physics-runtime/study",
+            "femm-physics",
+            "interference-core",
             "core"
           ],
-          "name": "physics-core",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "physics-study",
-            "dep:sim-lib-physics-findings",
-            "sim-lib-physics-runtime/findings"
-          ],
-          "name": "physics-findings",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "physics-proof",
-            "physics-findings"
-          ],
-          "name": "physics-full",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "physics-core",
-            "dep:sim-lib-physics-influence",
-            "sim-lib-physics-runtime/influence"
-          ],
-          "name": "physics-influence",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "physics-core",
-            "dep:sim-lib-physics-power",
-            "sim-lib-physics-runtime/power"
-          ],
-          "name": "physics-power",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "physics-audit",
-            "dep:sim-lib-physics-proof",
-            "sim-lib-physics-runtime/proof"
-          ],
-          "name": "physics-proof",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "physics-proof",
-            "sim-lib-physics-proof/extended-precision"
-          ],
-          "name": "physics-proof-extended",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "physics-influence",
-            "dep:sim-lib-physics-study",
-            "sim-lib-physics-runtime/study"
-          ],
-          "name": "physics-study",
+          "name": "physics",
           "workspace_edges": []
         },
         {
@@ -5632,13 +5463,6 @@
         },
         {
           "edges": [
-            "dep:sim-lib-platform"
-          ],
-          "name": "platform",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
             "dep:sim-lib-plugin-clap",
             "plugin-core",
             "audio-dsp"
@@ -5680,13 +5504,6 @@
             "codec-binary"
           ],
           "name": "proc-macros",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "dep:sim-lib-provider"
-          ],
-          "name": "provider",
           "workspace_edges": []
         },
         {
@@ -5756,18 +5573,11 @@
             "dep:sim-table-core",
             "dep:sim-table-relation",
             "dep:sim-table-mount",
+            "dep:sim-platform-sqlite",
             "shape",
             "core"
           ],
           "name": "relation",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "relation",
-            "dep:sim-platform-sqlite"
-          ],
-          "name": "relation-sqlite",
           "workspace_edges": []
         },
         {
@@ -6497,7 +6307,9 @@
         },
         {
           "edges": [
-            "dep:sim-lib-study"
+            "dep:sim-lib-study",
+            "dep:sim-lib-model-test",
+            "dep:sim-lib-provider"
           ],
           "name": "study",
           "workspace_edges": []
@@ -6768,21 +6580,7 @@
             "view-doc",
             "view-math",
             "view-codec",
-            "view-daw"
-          ],
-          "name": "web-full",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
-            "dep:sim-lib-web-layout",
-            "view"
-          ],
-          "name": "web-layout",
-          "workspace_edges": []
-        },
-        {
-          "edges": [
+            "view-daw",
             "dep:sim-lib-net-http",
             "dep:sim-lib-web-core",
             "dep:sim-lib-search-core",
@@ -6793,7 +6591,15 @@
             "dep:sim-lib-view-search",
             "rank"
           ],
-          "name": "web-search",
+          "name": "web-full",
+          "workspace_edges": []
+        },
+        {
+          "edges": [
+            "dep:sim-lib-web-layout",
+            "view"
+          ],
+          "name": "web-layout",
           "workspace_edges": []
         },
         {
@@ -7434,10 +7240,10 @@
     "generated_by": "cargo run -p xtask -- simdoc",
     "generation_timestamp": "2026-07-19T07:28:29+02:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "45db0abb6df87b5e4a8eb803f778e57012abf6fb",
+    "git_commit": "e24e69d3480bc28382214817956d0a1a6efbd2cd",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "45db0abb6df87b5e4a8eb803f778e57012abf6fb",
+    "source_commit": "e24e69d3480bc28382214817956d0a1a6efbd2cd",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo fmt --all --check",
@@ -7450,7 +7256,7 @@
       "cargo run -p xtask -- validation-matrix --check --repo .",
       "cargo run -p xtask -- crate-catalog --check --repo ."
     ],
-    "workspace_hash": "b5d136ada24df805",
+    "workspace_hash": "2ea6c1e4772b2531",
     "workspace_hash_algorithm": "fnv1a64",
     "workspace_hash_input_count": 306,
     "workspace_hash_inputs": [

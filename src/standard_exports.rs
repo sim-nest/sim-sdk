@@ -81,19 +81,19 @@ pub use sim_lib_mcp_client as lib_mcp_client;
 /// their owning crate boundaries instead of being flattened into `lib_mcp`.
 #[cfg(feature = "mcp-http")]
 pub use sim_lib_mcp_http as lib_mcp_http;
-#[cfg(feature = "mcp-legacy")]
+#[cfg(feature = "mcp")]
 pub use sim_lib_mcp_legacy as lib_mcp_legacy;
 #[cfg(feature = "mcp-stdio")]
 pub use sim_lib_mcp_stdio as lib_mcp_stdio;
 /// MCP OAuth building blocks, grouped by their protocol, HTTP, and JOSE
 /// responsibilities.
-#[cfg(feature = "mcp-oauth")]
+#[cfg(feature = "mcp-http")]
 pub mod mcp_oauth {
     pub use sim_lib_oauth_core as core;
     pub use sim_lib_oauth_http as http;
     pub use sim_lib_oauth_jose as jose;
 }
-#[cfg(feature = "mcp-cancellation")]
+#[cfg(feature = "mcp")]
 pub use sim_cancel as cancellation;
 #[cfg(feature = "standard-mutation")]
 pub use sim_lib_mutation as lib_mutation;
@@ -105,7 +105,7 @@ pub use sim_lib_numbers_stats as lib_numbers_stats;
 pub use sim_lib_openai_server as lib_openai_server;
 #[cfg(feature = "standard-pattern")]
 pub use sim_lib_pattern as lib_pattern;
-#[cfg(feature = "mcp-protected-state")]
+#[cfg(feature = "mcp")]
 pub use sim_lib_protected_state as lib_protected_state;
 #[cfg(feature = "rank")]
 pub use sim_lib_rank as lib_rank;
