@@ -27,7 +27,10 @@ summary = "Expose all 21 checker entrypoints with pure bootstrap scenarios, cano
 owner = "crate/sim-conformance-packs"
 audiences = ["code", "framework"]
 guidance = "Materialize evidence through an authorized adapter, derive the typed runtime binding from PackSpec's immutable activation record, and instantiate the exact subject and scope before calling the public pack. Reuse the foreign-implementation seams for facet and packet laws. Only a passing result may enter a verified CheckerReceipt; unavailable and refused results never satisfy a gate."
-claims_anchors = ["anchor/crate/sim-conformance-packs"]
+claims_anchors = [
+  "anchor/crate/sim-conformance-packs",
+  "anchor/export/sim-conformance-packs/shape/proposal",
+]
 claims_specimens = ["spec-test/sim-sdk/crates/sim-conformance-packs/tests/bootstrap_packs"]
 supports = [
   "feature/sim-foundation/conformance-core",
