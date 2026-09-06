@@ -7,7 +7,10 @@ scope remains `UnimplementedPack` until the phase that funds its scenarios.
 The library is pure. Callers materialize evidence through their own authorized
 ports, then pass an immutable `PackSubject`. Only `PackVerdict::Pass` carries a
 canonical checker-result identity that the separate `sim-conformance-core`
-harness may bind into a receipt. A pack neither stores evidence nor performs
+harness may bind into a receipt. `PackSpec::checker_binding` derives the typed
+runtime binding from the immutable activation record, so an authorized adapter
+can instantiate one exact subject and scope before it issues and verifies the
+receipt. A pack neither stores evidence nor performs
 filesystem, process, Git, network, release, or approval effects.
 
 The bootstrap release implements retirement, identity register/vector,
