@@ -1,6 +1,6 @@
 {
   "generator": "xtask crate-catalog v1",
-  "package_count": 3,
+  "package_count": 4,
   "packages": [
     {
       "description": "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features.",
@@ -13,6 +13,19 @@
       "target_kinds": [
         "bin",
         "example",
+        "lib",
+        "test"
+      ]
+    },
+    {
+      "description": "Public neutral conformance packs and bootstrap checkers for SIM.",
+      "generated_readme": false,
+      "manifest": "crates/sim-conformance-packs/Cargo.toml",
+      "name": "sim-conformance-packs",
+      "publish": "true",
+      "readme": "crates/sim-conformance-packs/README.md",
+      "root": "crates/sim-conformance-packs",
+      "target_kinds": [
         "lib",
         "test"
       ]
