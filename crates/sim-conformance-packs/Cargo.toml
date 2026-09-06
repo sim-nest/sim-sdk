@@ -1,0 +1,23 @@
+[package]
+name = "sim-conformance-packs"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+description = "Public neutral conformance packs and bootstrap checkers for SIM."
+readme = "README.md"
+publish = true
+repository.workspace = true
+homepage.workspace = true
+
+[package.metadata.sim-recipes]
+policy = "descriptor"
+reason = "The recipe describes a pure injected-evidence checker contract."
+
+[dependencies]
+sim-artifact-facet = "0.1.0"
+sim-conformance-core = "0.1.0"
+sim-kernel = "0.4.0"
+sim-work-core = "0.1.0"
+
+[lints]
+workspace = true

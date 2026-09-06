@@ -1,6 +1,11 @@
 {
   "schema": "sim.card-index.v1",
   "cards": [
+    "crates/sim-conformance-packs/recipes/01-basics/bootstrap-pack/purpose.md",
+    "crates/sim-conformance-packs/recipes/01-basics/bootstrap-pack/recipe.toml",
+    "crates/sim-conformance-packs/recipes/01-basics/bootstrap-pack/setup.siml",
+    "crates/sim-conformance-packs/recipes/01-basics/chapter.toml",
+    "crates/sim-conformance-packs/recipes/book.toml",
     "crates/sim-conformance/recipes/01-basics/chapter.toml",
     "crates/sim-conformance/recipes/01-basics/run-contract/README.md",
     "crates/sim-conformance/recipes/01-basics/run-contract/input.sh",

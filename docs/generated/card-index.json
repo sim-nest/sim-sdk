@@ -1,5 +1,5 @@
 {
-  "card_count": 303,
+  "card_count": 304,
   "cards": [
     {
       "id": "agent/effects",
@@ -1608,6 +1608,12 @@
       "kind": "cookbook-recipe",
       "owner": "sim-conformance",
       "summary": "Recipes that show how the executable architecture contract is run."
+    },
+    {
+      "id": "cookbook/sim-conformance-packs",
+      "kind": "cookbook-recipe",
+      "owner": "sim-conformance-packs",
+      "summary": ""
     },
     {
       "id": "cookbook/sim-sdk",
