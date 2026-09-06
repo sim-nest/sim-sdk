@@ -1,0 +1,17 @@
+# sim-conformance-packs
+
+`sim-conformance-packs` owns SIM's public, project-neutral checker entrypoints.
+It exposes all 21 statically bound packs from the first release. Each declared
+scope remains `UnimplementedPack` until the phase that funds its scenarios.
+
+The library is pure. Callers materialize evidence through their own authorized
+ports, then pass an immutable `PackSubject`. Only `PackVerdict::Pass` carries a
+canonical checker-result identity that the separate `sim-conformance-core`
+harness may bind into a receipt. A pack neither stores evidence nor performs
+filesystem, process, Git, network, release, or approval effects.
+
+The bootstrap release implements retirement, identity register/vector,
+activation ownership, boundary inventory, pure work-packet, pure artifact-facet,
+and NV12.01 release scopes. The facet and work packs expose public implementation
+traits so independently authored foreign implementations can be judged with the
+same scenario suite.

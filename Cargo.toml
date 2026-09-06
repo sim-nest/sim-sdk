@@ -30,6 +30,7 @@ resolver = "3"
 members = [
   ".",
   "crates/sim-conformance",
+  "crates/sim-conformance-packs",
   "xtask",
 ]
 

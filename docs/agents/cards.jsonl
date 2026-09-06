@@ -1,3 +1,8 @@
+{"kind":"recipe","path":"crates/sim-conformance-packs/recipes/01-basics/bootstrap-pack/purpose.md"}
+{"kind":"recipe","path":"crates/sim-conformance-packs/recipes/01-basics/bootstrap-pack/recipe.toml"}
+{"kind":"recipe","path":"crates/sim-conformance-packs/recipes/01-basics/bootstrap-pack/setup.siml"}
+{"kind":"recipe","path":"crates/sim-conformance-packs/recipes/01-basics/chapter.toml"}
+{"kind":"recipe","path":"crates/sim-conformance-packs/recipes/book.toml"}
 {"kind":"recipe","path":"crates/sim-conformance/recipes/01-basics/chapter.toml"}
 {"kind":"recipe","path":"crates/sim-conformance/recipes/01-basics/run-contract/README.md"}
 {"kind":"recipe","path":"crates/sim-conformance/recipes/01-basics/run-contract/input.sh"}

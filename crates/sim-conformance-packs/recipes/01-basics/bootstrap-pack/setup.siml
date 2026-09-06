@@ -1,0 +1,5 @@
+; Descriptor-only: the host supplies an immutable subject projection.
+(pack/request
+  :checker checker/c-id
+  :scope identity/vectors
+  :effects [])

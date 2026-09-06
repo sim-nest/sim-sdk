@@ -1,0 +1,5 @@
+title = "Check a bootstrap scope"
+description = "Build an exact PackRequest and accept only a passing verdict."
+purpose = "purpose.md"
+setup = "setup.siml"
+run = false

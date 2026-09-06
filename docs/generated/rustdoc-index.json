@@ -9,6 +9,13 @@
       "summary": "One typed truth source for bidirectional MCP conformance runners."
     },
     {
+      "crate_name": "sim_conformance_packs",
+      "group": "workspace",
+      "manifest": "crates/sim-conformance-packs/Cargo.toml",
+      "package": "sim-conformance-packs",
+      "summary": "Public, project-neutral conformance packs."
+    },
+    {
       "crate_name": "sim",
       "group": "workspace",
       "manifest": "Cargo.toml",

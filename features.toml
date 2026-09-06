@@ -21,6 +21,21 @@ major_entrypoints = "advisory"
 frameworks = "advisory"
 
 [[feature]]
+id = "feature/sim-sdk/neutral-conformance-packs"
+title = "Scope-exact neutral conformance packs"
+summary = "Expose all 21 checker entrypoints with pure bootstrap scenarios, canonical results, and typed unavailable outcomes for scopes whose funded phase has not shipped."
+owner = "crate/sim-conformance-packs"
+audiences = ["code", "framework"]
+guidance = "Materialize evidence through an authorized adapter, then call the public pack for its exact bound scope. Reuse the foreign-implementation seams for facet and packet laws. Only a passing result may enter the separate receipt harness; unavailable and refused results never satisfy a gate."
+claims_anchors = ["anchor/crate/sim-conformance-packs"]
+claims_specimens = ["spec-test/sim-sdk/crates/sim-conformance-packs/tests/bootstrap_packs"]
+supports = [
+  "feature/sim-foundation/conformance-core",
+  "feature/sim-foundation/bounded-work-core",
+  "feature/sim-storage/artifact-facet-law",
+]
+
+[[feature]]
 id = "feature/sim-sdk/hotload-facade"
 title = "Safe hot-generation SDK facade"
 summary = "Expose immutable native build, admission, compatibility, atomic activation, and durable receipt records without exposing host provider implementations."
