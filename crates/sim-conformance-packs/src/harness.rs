@@ -127,6 +127,9 @@ pub(crate) fn check_registered(
     let Some(spec) = find_pack(expected_checker) else {
         return refused("unknown-checker", expected_checker);
     };
+    if request.binding != spec.binding {
+        return refused("wrong-binding", request.binding);
+    }
     if !spec.allowed_scopes.contains(&request.scope) {
         return refused("wrong-scope", request.scope);
     }

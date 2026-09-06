@@ -104,7 +104,7 @@ fn deterministic_and_planned(law: &dyn PacketLaw) -> Result<(), PackFailure> {
         )
         .map_err(work_failure)?;
     if first.id() != second.id()
-        || first.funded_targets != [SurfaceKey::new("api/projection").map_err(core_failure)?]
+        || first.funded_targets() != [SurfaceKey::new("api/projection").map_err(core_failure)?]
     {
         return Err(PackFailure {
             code: "nondeterministic-packet",
@@ -398,12 +398,7 @@ fn budget() -> InputBudget {
 }
 
 fn command(value: &str) -> Result<OwnerCommand, PackFailure> {
-    Ok(OwnerCommand {
-        id: sid(value)?,
-        cwd: "repo".into(),
-        argv: vec![value.into()],
-        environment: "sealed".into(),
-    })
+    OwnerCommand::new("repo".into(), vec![value.into()], "sealed".into()).map_err(core_failure)
 }
 
 fn sid<K: IdKind>(value: &str) -> Result<SemanticId<K>, PackFailure> {

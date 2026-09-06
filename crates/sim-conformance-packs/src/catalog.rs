@@ -5,6 +5,8 @@
 pub struct PackSpec {
     /// Stable checker id.
     pub checker: &'static str,
+    /// Exact activated static checker-binding id.
+    pub binding: &'static str,
     /// Stable pack id.
     pub pack: &'static str,
     /// Phase that first funds the entrypoint.
@@ -92,9 +94,10 @@ impl PackSpec {
 }
 
 macro_rules! spec {
-    ($checker:literal, $pack:literal, $phase:literal, [$($scope:literal),* $(,)?], [$($implemented:literal),* $(,)?]) => {
+    ($checker:literal, $binding:literal, $pack:literal, $phase:literal, [$($scope:literal),* $(,)?], [$($implemented:literal),* $(,)?]) => {
         PackSpec {
             checker: $checker,
+            binding: $binding,
             pack: $pack,
             producing_phase: $phase,
             allowed_scopes: &[$($scope),*],
@@ -106,6 +109,7 @@ macro_rules! spec {
 const PACKS: &[PackSpec] = &[
     spec!(
         "checker/c-v3",
+        "core/sha256-datum-v1:683334ada045fdb5fdfd3709100a703557df210835040bfe623d7b94ec00b01f",
         "pack/retirement",
         "NV12.01",
         ["retirement/bootstrap", "retirement/final"],
@@ -113,6 +117,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-id",
+        "core/sha256-datum-v1:9c5981c7fc65df78db1079ee58429821ea93bb36dd18c241a03ed63e24d2b75b",
         "pack/identity",
         "NV12.01",
         [
@@ -130,6 +135,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-own",
+        "core/sha256-datum-v1:f794a7d0c15f8b9fe55e9a2de0f46b547491005d41909d4ede2968ff3632a95f",
         "pack/ownership",
         "NV12.01",
         [
@@ -143,6 +149,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-boundary",
+        "core/sha256-datum-v1:506025bc7d5e0542d24e89073bb9852f6c906e777370b49a29b51450df88cc55",
         "pack/boundary",
         "NV12.01",
         [
@@ -157,6 +164,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-source",
+        "core/sha256-datum-v1:c8d5369ab87dc0af89e94e963858d534fcd83421c688524ff4acb86524ebbfb3",
         "pack/source",
         "NV12.10",
         ["source/admission", "source/performance", "source/composed"],
@@ -164,6 +172,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-evidence",
+        "core/sha256-datum-v1:dfe5edd6c822eb896aa73f30cfbbde2a53a9fe9f5dd941f3e158d211631447ca",
         "pack/evidence",
         "NV12.06",
         [
@@ -178,6 +187,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-op",
+        "core/sha256-datum-v1:5c6a05e3ac7358f772fe94b15e8448015b1c1192bace741d9deecb7469e8d374",
         "pack/operation",
         "NV12.04",
         [
@@ -191,6 +201,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-journal",
+        "core/sha256-datum-v1:ff8b794fce7a36c83cc6ff60e7d235cbe82acdb2a3ee0f1afec90959f22c7ecf",
         "pack/journal",
         "NV12.02",
         [
@@ -203,6 +214,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-closure",
+        "core/sha256-datum-v1:532cc7928742e608999e3142c9bf1f5e0061a7fe988c8352c3edc9240be8d2cf",
         "pack/closure",
         "NV12.06",
         [
@@ -216,6 +228,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-control",
+        "core/sha256-datum-v1:d08c6f27822723694facd7d21add64565178eeba7e497c68c6eed279bd7589a8",
         "pack/control",
         "NV12.13",
         ["control/liveness", "control/composed"],
@@ -223,6 +236,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-work",
+        "core/sha256-datum-v1:87c5ff26728297fe5e1ffcdae23065bb9c849f608f1009ee116d7742582fef5d",
         "pack/work",
         "NV12.01",
         [
@@ -236,6 +250,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-drive",
+        "core/sha256-datum-v1:92ba62611e349ca12f9fc6b7bc96ff73366f4d19a923f73dfd170ecb509455fe",
         "pack/drive",
         "NV12.25",
         ["drive/native", "drive/hot-no-op", "drive/composed"],
@@ -243,6 +258,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-converge",
+        "core/sha256-datum-v1:21be62ab7560dbd44b14ede674480b230581192e2fc3679a674255b05d338fba",
         "pack/convergence",
         "NV12.15",
         [
@@ -254,6 +270,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-facet",
+        "core/sha256-datum-v1:cabd7057fee809692ed3e31a2b2aaec6c9d420e02dd6d56e64ff89819a491f75",
         "pack/facet",
         "NV12.01",
         [
@@ -267,6 +284,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-disclose",
+        "core/sha256-datum-v1:d3b3b658780dc2d1a33aa2d3dc6c422b17e39d200be42bde8df40a47cec589c2",
         "pack/disclosure",
         "NV12.06",
         [
@@ -279,6 +297,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-deliver",
+        "core/sha256-datum-v1:bc08074815f8d4fb19a1e7a41f1dfaa788da3bd9a7b1d3f0f619e62a53519ccf",
         "pack/delivery",
         "NV12.19",
         [
@@ -292,6 +311,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-author",
+        "core/sha256-datum-v1:2694e192692ce1baded061bc4882733d55f18e49d99909b0c0c2264bd665fec6",
         "pack/authoring",
         "NV12.24",
         ["authoring/family", "authoring/composed"],
@@ -299,6 +319,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-port",
+        "core/sha256-datum-v1:95ae5cbe403fc8e57cfd0f1273b0443b0e96d522b8ea92ad5e3001d27f687c37",
         "pack/portability",
         "NV12.11",
         ["portability/foreign-project", "portability/consumer-seams"],
@@ -306,6 +327,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-product",
+        "core/sha256-datum-v1:b9baa94a3ae79f1b3fdd30f73c10684c7f7ebe1802b19dfea8ee8c91b1d3f3a5",
         "pack/product",
         "NV12.06",
         [
@@ -324,6 +346,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-release",
+        "core/sha256-datum-v1:f12e44d0825b1b54bec8ddfab96007eccc97b9dbcf99ac8ddfe6cb34fc720cf3",
         "pack/release",
         "NV12.01",
         [
@@ -360,6 +383,7 @@ const PACKS: &[PackSpec] = &[
     ),
     spec!(
         "checker/c-succeed",
+        "core/sha256-datum-v1:f14267fae4d45eb57c175546ebd809831a0cfa9510bd109f04ec9a280269feab",
         "pack/succession",
         "NV12.28",
         ["succession/composed-precheck", "succession/cold-change"],

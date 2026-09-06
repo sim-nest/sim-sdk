@@ -294,7 +294,7 @@ use sim_conformance_core::{
     InputPort, OwnerBinding, SemanticId,
 };
 use sim_conformance_packs::{
-    MemorySubject, PackRequest, PackVerdict, all_packs, packs,
+    MemorySubject, PackRequest, PackVerdict, all_packs, find_pack, packs,
     packs::{facet::FacetLaw, work::PacketLaw},
 };
 use sim_work_core::{
@@ -303,15 +303,13 @@ use sim_work_core::{
 
 // conformance: foreign public-trait implementation and scope-exact pack registry.
 
-const BINDING: &str =
-    "core/sha256-datum-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const SUBJECT: &str =
     "core/sha256-datum-v1:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
 
 fn request<'a>(checker: &'a str, scope: &'a str, evidence: &'a MemorySubject) -> PackRequest<'a> {
     PackRequest {
         checker,
-        binding: BINDING,
+        binding: find_pack(checker).unwrap().binding,
         subject: SUBJECT,
         scope,
         evidence,
@@ -354,6 +352,19 @@ fn wrong_scope_and_skipped_release_gate_are_named_refusals() {
             &evidence,
         )),
         PackVerdict::Refused(ref failure) if failure.code == "missing-evidence"
+    ));
+
+    let binding =
+        "core/sha256-datum-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    assert!(matches!(
+        packs::identity::check(&PackRequest {
+            checker: "checker/c-id",
+            binding,
+            subject: SUBJECT,
+            scope: "identity/vectors",
+            evidence: &evidence,
+        }),
+        PackVerdict::Refused(ref failure) if failure.code == "wrong-binding"
     ));
 }
 

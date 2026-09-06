@@ -14,10 +14,10 @@ policy = "descriptor"
 reason = "The recipe describes a pure injected-evidence checker contract."
 
 [dependencies]
-sim-artifact-facet = "0.1.0"
-sim-conformance-core = "0.1.0"
+sim-artifact-facet = "0.2.0"
+sim-conformance-core = "0.2.0"
 sim-kernel = "0.4.0"
-sim-work-core = "0.1.0"
+sim-work-core = "0.2.0"
 
 [lints]
 workspace = true
