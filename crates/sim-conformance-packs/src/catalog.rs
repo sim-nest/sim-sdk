@@ -1,12 +1,23 @@
 //! Static checker, phase, and scope catalog.
 
+use std::collections::BTreeSet;
+
+use sim_conformance_core::{
+    CheckArgument, CheckScopeId, CheckTemplate, CheckerBinding, CommandId, ConformanceError,
+    ConformancePackId, EnvironmentPolicyId, OutputShapeId, OwnerBindingId, ProofCodeId,
+    RevocationSourceId, WorkingDirectoryPolicyId,
+};
+
+const ACTIVATION_OWNER_BINDING: &str =
+    "core/sha256-datum-v1:6fc0e9594fe3a592c1877d9034cc7a6b5f9aa9ce50e3251a705955b348ccf827";
+
 /// One statically registered checker pack.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct PackSpec {
     /// Stable checker id.
     pub checker: &'static str,
-    /// Exact activated static checker-binding id.
-    pub binding: &'static str,
+    /// Exact immutable NV12.00 activation-record id from which the runtime binding is derived.
+    pub activation_binding: &'static str,
     /// Stable pack id.
     pub pack: &'static str,
     /// Phase that first funds the entrypoint.
@@ -18,6 +29,92 @@ pub struct PackSpec {
 }
 
 impl PackSpec {
+    /// Returns the exact immutable published checker-code identity.
+    pub fn checker_code_id(&self) -> Result<ProofCodeId, ConformanceError> {
+        ProofCodeId::from_text(&format!(
+            "sim-conformance-packs@{}",
+            env!("CARGO_PKG_VERSION")
+        ))
+    }
+
+    /// Returns the typed pack id bound to this exact activation record.
+    pub fn pack_id(&self) -> Result<ConformancePackId, ConformanceError> {
+        ConformancePackId::from_text(&format!("{}@{}", self.pack, self.activation_binding))
+    }
+
+    /// Constructs the typed runtime binding derived from this frozen activation record.
+    pub fn checker_binding(&self) -> Result<CheckerBinding, ConformanceError> {
+        let allowed_scopes = self
+            .allowed_scopes
+            .iter()
+            .map(|scope| CheckScopeId::from_text(scope))
+            .collect::<Result<BTreeSet<_>, _>>()?;
+        let template = CheckTemplate::new(
+            "cargo".into(),
+            vec![
+                CheckArgument::Literal("run".into()),
+                CheckArgument::Literal("--manifest-path".into()),
+                CheckArgument::Literal("../sim-tooling/Cargo.toml".into()),
+                CheckArgument::Literal("-p".into()),
+                CheckArgument::Literal("xtask".into()),
+                CheckArgument::Literal("--".into()),
+                CheckArgument::Literal("check-pack".into()),
+                CheckArgument::Literal("--checker".into()),
+                CheckArgument::Literal(self.checker.into()),
+                CheckArgument::Literal("--binding".into()),
+                CheckArgument::BindingSlot,
+                CheckArgument::Literal("--subject".into()),
+                CheckArgument::SubjectSlot,
+                CheckArgument::Literal("--scope".into()),
+                CheckArgument::ScopeSlot,
+            ],
+            WorkingDirectoryPolicyId::from_text("command/sim-private-root")?,
+            EnvironmentPolicyId::from_text("command/sealed-rust-toolchain")?,
+            OutputShapeId::from_text("check/result-v1")?,
+        )?;
+        CheckerBinding::new(
+            self.checker.into(),
+            OwnerBindingId::from_text(ACTIVATION_OWNER_BINDING)?,
+            self.public_symbol()?.into(),
+            vec![self.pack_id()?],
+            OutputShapeId::from_text("check/receipt-v1")?,
+            RevocationSourceId::from_text("crates.io/sim-conformance-packs")?,
+            CommandId::from_text(
+                "cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps && cargo clippy --workspace --all-features --all-targets -- -D warnings && cargo test --workspace --all-features",
+            )?,
+            CommandId::from_text("cargo run -p xtask -- simdoc --check")?,
+            allowed_scopes,
+            template,
+        )
+    }
+
+    fn public_symbol(&self) -> Result<&'static str, ConformanceError> {
+        Ok(match self.checker {
+            "checker/c-v3" => "sim_conformance_packs::packs::retirement::check",
+            "checker/c-id" => "sim_conformance_packs::packs::identity::check",
+            "checker/c-own" => "sim_conformance_packs::packs::ownership::check",
+            "checker/c-boundary" => "sim_conformance_packs::packs::boundary::check",
+            "checker/c-source" => "sim_conformance_packs::packs::source::check",
+            "checker/c-evidence" => "sim_conformance_packs::packs::evidence::check",
+            "checker/c-op" => "sim_conformance_packs::packs::operation::check",
+            "checker/c-journal" => "sim_conformance_packs::packs::journal::check",
+            "checker/c-closure" => "sim_conformance_packs::packs::closure::check",
+            "checker/c-control" => "sim_conformance_packs::packs::control::check",
+            "checker/c-work" => "sim_conformance_packs::packs::work::check",
+            "checker/c-drive" => "sim_conformance_packs::packs::drive::check",
+            "checker/c-converge" => "sim_conformance_packs::packs::convergence::check",
+            "checker/c-facet" => "sim_conformance_packs::packs::facet::check",
+            "checker/c-disclose" => "sim_conformance_packs::packs::disclosure::check",
+            "checker/c-deliver" => "sim_conformance_packs::packs::delivery::check",
+            "checker/c-author" => "sim_conformance_packs::packs::authoring::check",
+            "checker/c-port" => "sim_conformance_packs::packs::portability::check",
+            "checker/c-product" => "sim_conformance_packs::packs::product::check",
+            "checker/c-release" => "sim_conformance_packs::packs::release::check",
+            "checker/c-succeed" => "sim_conformance_packs::packs::succession::check",
+            _ => return Err(ConformanceError::UnresolvedBinding),
+        })
+    }
+
     /// Returns the first phase that funds scenarios for one declared scope.
     pub fn funded_phase(&self, scope: &str) -> String {
         if let Some(suffix) = scope.strip_prefix("release/nv12-") {
@@ -97,7 +194,7 @@ macro_rules! spec {
     ($checker:literal, $binding:literal, $pack:literal, $phase:literal, [$($scope:literal),* $(,)?], [$($implemented:literal),* $(,)?]) => {
         PackSpec {
             checker: $checker,
-            binding: $binding,
+            activation_binding: $binding,
             pack: $pack,
             producing_phase: $phase,
             allowed_scopes: &[$($scope),*],

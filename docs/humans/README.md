@@ -290,8 +290,7 @@ use sim_artifact_facet::{
     ArtifactFacet, BaseImage, FacetError, IntendedImage, MergeOutcome, ObservedImage, merge_facet,
 };
 use sim_conformance_core::{
-    CheckArgument, CheckScopeId, CheckTemplate, CheckerBinding, DependencyUseSet, IdKind,
-    InputPort, OwnerBinding, SemanticId,
+    CheckScopeId, DependencyUseSet, IdKind, InputPort, OwnerBinding, SemanticId,
 };
 use sim_conformance_packs::{
     MemorySubject, PackRequest, PackVerdict, all_packs, find_pack, packs,
@@ -307,13 +306,24 @@ const SUBJECT: &str =
     "core/sha256-datum-v1:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
 
 fn request<'a>(checker: &'a str, scope: &'a str, evidence: &'a MemorySubject) -> PackRequest<'a> {
+    let binding = find_pack(checker).unwrap().checker_binding().unwrap();
+    let binding = Box::leak(Box::new(render(binding.id().content_id())));
     PackRequest {
         checker,
-        binding: find_pack(checker).unwrap().binding,
+        binding,
         subject: SUBJECT,
         scope,
         evidence,
     }
+}
+
+fn render(id: &sim_kernel::ContentId) -> String {
+    let digest = id
+        .bytes
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
+    format!("{}:{digest}", id.algorithm.as_qualified_str())
 }
 
 #[test]
@@ -435,45 +445,20 @@ fn sid<K: IdKind>(value: &str) -> SemanticId<K> {
 
 #[test]
 fn one_static_binding_yields_four_exact_invocation_ids() {
+    let spec = find_pack("checker/c-id").unwrap();
+    let binding = spec.checker_binding().unwrap();
     let scopes: BTreeSet<CheckScopeId> = [sid("identity/register"), sid("identity/vectors")]
         .into_iter()
         .collect();
-    let template = CheckTemplate::new(
-        "check-pack".into(),
-        vec![
-            CheckArgument::Literal("--binding".into()),
-            CheckArgument::BindingSlot,
-            CheckArgument::Literal("--subject".into()),
-            CheckArgument::SubjectSlot,
-            CheckArgument::Literal("--scope".into()),
-            CheckArgument::ScopeSlot,
-        ],
-        sid("cwd/repo"),
-        sid("environment/sealed"),
-        sid("check/result-v1"),
-    )
-    .unwrap();
-    let binding = CheckerBinding::new(
-        "checker/c-id".into(),
-        sid("owner/checker-packs"),
-        "sim_conformance_packs::packs::identity::check".into(),
-        vec![sid("pack/identity")],
-        sid("check/receipt-v1"),
-        sid("checker/identity"),
-        sid("command/sdk-validation"),
-        sid("command/sdk-docs"),
-        scopes.clone(),
-        template,
-    )
-    .unwrap();
     let original = binding.id().clone();
+    assert_ne!(render(binding.id().content_id()), spec.activation_binding);
     let mut invocations = BTreeSet::new();
     for subject in [sid("subject/a"), sid("subject/b")] {
         for scope in scopes.clone() {
             let invocation = binding
                 .instantiate(
-                    sid("code/identity-v1"),
-                    sid("pack/identity"),
+                    sid("sim-conformance-packs@0.2.0"),
+                    spec.pack_id().unwrap(),
                     subject.clone(),
                     scope,
                     sid("closure/bootstrap"),

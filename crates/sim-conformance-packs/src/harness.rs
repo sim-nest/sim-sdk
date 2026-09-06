@@ -127,7 +127,11 @@ pub(crate) fn check_registered(
     let Some(spec) = find_pack(expected_checker) else {
         return refused("unknown-checker", expected_checker);
     };
-    if request.binding != spec.binding {
+    let expected_binding = match spec.checker_binding() {
+        Ok(binding) => render(binding.id().content_id()),
+        Err(error) => return refused("invalid-static-binding", &error.to_string()),
+    };
+    if request.binding != expected_binding {
         return refused("wrong-binding", request.binding);
     }
     if !spec.allowed_scopes.contains(&request.scope) {
@@ -264,6 +268,15 @@ fn validate_reference(label: &'static str, value: &str) -> Result<(), PackFailur
         });
     }
     Ok(())
+}
+
+fn render(id: &sim_kernel::ContentId) -> String {
+    let digest = id
+        .bytes
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
+    format!("{}:{digest}", id.algorithm.as_qualified_str())
 }
 
 fn refused(code: &'static str, detail: &str) -> PackVerdict {
