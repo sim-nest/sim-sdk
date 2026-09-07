@@ -23,10 +23,10 @@ frameworks = "advisory"
 [[feature]]
 id = "feature/sim-sdk/neutral-conformance-packs"
 title = "Scope-exact neutral conformance packs"
-summary = "Expose all 21 checker entrypoints with pure bootstrap scenarios, canonical results, and typed unavailable outcomes for scopes whose funded phase has not shipped."
+summary = "Expose all 21 checker entrypoints with pure evidence-driven scenarios, canonical results, and typed unavailable outcomes for scopes whose funded phase has not shipped, including canonical native-journal identity, compatibility, replay performance, and causal sharing."
 owner = "crate/sim-conformance-packs"
 audiences = ["code", "framework"]
-guidance = "Materialize evidence through an authorized adapter, derive the typed runtime binding from PackSpec's immutable activation record, and instantiate the exact subject and scope before calling the public pack. Reuse the foreign-implementation seams for facet and packet laws. Only a passing result may enter a verified CheckerReceipt; unavailable and refused results never satisfy a gate."
+guidance = "Materialize evidence through an authorized adapter, derive the typed runtime binding from PackSpec's immutable activation record, and instantiate the exact subject and scope before calling the public pack. Supply the journal scopes only with synthetic native compatibility outcomes, isolated active-reference measurements, and causal reducer observations; the pack performs no host work itself. Reuse the foreign-implementation seams for facet and packet laws. Only a passing result may enter a verified CheckerReceipt; unavailable and refused results never satisfy a gate."
 claims_anchors = [
   "anchor/crate/sim-conformance-packs",
   "anchor/export/sim-conformance-packs/shape/proposal",

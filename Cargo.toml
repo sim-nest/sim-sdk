@@ -1,6 +1,6 @@
 [package]
 name = "sim-nest"
-version = "0.2.3"
+version = "0.2.4"
 edition = "2024"
 license = "MPL-2.0"
 description = "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features."
@@ -52,7 +52,7 @@ sim-citizen = { optional = true, version = "0.4.0" }
 sim-citizen-derive = { optional = true, version = "0.4.0" }
 sim-run-loaders = { optional = true, version = "0.4.0", default-features = false }
 sim-run-core = { optional = true, version = "0.5.0" }
-sim-lib-hotload = { optional = true, version = "0.1.1" }
+sim-lib-hotload = { optional = true, version = "0.1.2" }
 sim-lib-platform = { optional = true, version = "0.1.1" }
 sim-lib-net-http = { optional = true, version = "0.2.0" }
 sim-lib-web-core = { optional = true, version = "0.2.0" }
@@ -166,7 +166,7 @@ sim-lib-oauth-core = { optional = true, version = "0.2.0" }
 sim-lib-oauth-http = { optional = true, version = "0.1.1" }
 sim-lib-oauth-jose = { optional = true, version = "0.2.0" }
 sim-lib-protected-state = { optional = true, version = "0.2.0" }
-sim-lib-study = { optional = true, version = "0.2.0" }
+sim-lib-study = { optional = true, version = "0.2.1" }
 sim-lib-model-test = { optional = true, version = "0.2.0" }
 sim-cancel = { optional = true, version = "0.2.0" }
 sim-lib-midi-ble = { optional = true, version = "0.2.1" }
@@ -340,7 +340,7 @@ sim-citizen = "0.4.0"
 sim-lib-capability-pack = "0.1.0"
 sim-lib-expedition-book = "0.1.0"
 sim-lib-exec = "0.3.0"
-sim-lib-journal = "0.2.0"
+sim-lib-journal = "0.3.0"
 sim-lib-view-worktable = "0.1.0"
 sim-run-loaders = "0.4.0"
 sim-storage-port = "0.2.0"

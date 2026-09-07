@@ -47,14 +47,14 @@ fn catalog_has_all_bindings_and_future_scopes_fail_closed() {
     assert!(matches!(
         packs::journal::check(&request(
             "checker/c-journal",
-            "journal/native-compatibility",
+            "journal/composed",
             &evidence,
         )),
         PackVerdict::UnimplementedPack {
             checker: "checker/c-journal",
             ref funded_phase,
             ..
-        } if funded_phase == "NV12.02"
+        } if funded_phase == "NV12.26"
     ));
     assert!(matches!(
         packs::facet::check(&request("checker/c-facet", "facet/landing", &evidence)),
@@ -89,6 +89,117 @@ fn wrong_scope_and_skipped_release_gate_are_named_refusals() {
             evidence: &evidence,
         }),
         PackVerdict::Refused(ref failure) if failure.code == "wrong-binding"
+    ));
+}
+
+#[test]
+fn journal_and_normalized_identity_scopes_are_exact_and_fail_closed() {
+    let native_keys = [
+        "journal.old-only-replay",
+        "journal.new-only-replay",
+        "journal.mixed-replay",
+        "journal.v1-prefix-byte-identical",
+        "journal.corrupt-prefix-refused",
+        "journal.corrupt-payload-refused",
+        "journal.truncated-transition-refused",
+        "journal.head-mismatch-refused",
+        "journal.stale-fence-refused",
+        "journal.all-upgrade-crashes-recover",
+        "journal.all-append-crashes-recover",
+        "journal.paused-old-writer-cas-loses",
+        "journal.old-residue-inert",
+        "journal.old-winner-included",
+        "journal.competing-upgrades-one-winner",
+        "journal.conflicting-new-writers-one-head",
+        "journal.progress-after-every-recovery",
+        "journal.correspondence-index-rebuilds",
+        "journal.object-index-rebuilds",
+        "journal.no-v3-schema-reader",
+    ];
+    let native = native_keys
+        .into_iter()
+        .fold(MemorySubject::default(), |subject, key| {
+            subject.with(key, "true")
+        });
+    assert!(matches!(
+        packs::journal::check(&request(
+            "checker/c-journal",
+            "journal/native-compatibility",
+            &native,
+        )),
+        PackVerdict::Pass { .. }
+    ));
+    let missing = MemorySubject::default();
+    assert!(matches!(
+        packs::journal::check(&request(
+            "checker/c-journal",
+            "journal/native-compatibility",
+            &missing,
+        )),
+        PackVerdict::Refused(ref failure) if failure.code == "missing-evidence"
+    ));
+
+    let normalized = [
+        "identity.journal-entry-is-datum",
+        "identity.journal-payload-is-datum",
+        "identity.journal-head-is-semantic",
+        "identity.storage-id-is-separated",
+        "identity.v1-ids-bounded-to-reader",
+        "identity.consumers-see-canonical-only",
+    ]
+    .into_iter()
+    .fold(MemorySubject::default(), |subject, key| {
+        subject.with(key, "true")
+    })
+    .with("identity.journal-algorithm", "core/sha256-datum-v1");
+    assert!(matches!(
+        packs::identity::check(&request(
+            "checker/c-id",
+            "identity/journal-normalized",
+            &normalized,
+        )),
+        PackVerdict::Pass { .. }
+    ));
+}
+
+#[test]
+fn journal_performance_and_causal_scopes_bind_measured_facts() {
+    let performance = MemorySubject::default()
+        .with("journal.performance.records", "100000")
+        .with("journal.performance.samples", "5")
+        .with("journal.performance.maximum-ns", "1")
+        .with(
+            "journal.performance.ceiling-ns",
+            sim_conformance_packs::packs::journal::COLD_REPLAY_100K_CEILING_NS.to_string(),
+        )
+        .with("journal.performance.isolated-processes", "true")
+        .with("journal.performance.active-reference", "true");
+    assert!(matches!(
+        packs::journal::check(&request(
+            "checker/c-journal",
+            "journal/performance",
+            &performance,
+        )),
+        PackVerdict::Pass { .. }
+    ));
+
+    let causal = [
+        "journal.semantic-deltas-cause-only",
+        "journal.evidence-set-roots-persistent",
+        "journal.snapshots-verified",
+        "journal.snapshot-damage-refused",
+        "journal.retention-roots-explicit",
+        "journal.telemetry-separate",
+        "journal.unchanged-10000-no-records",
+        "journal.unchanged-10000-no-linear-evidence-copy",
+    ]
+    .into_iter()
+    .fold(MemorySubject::default(), |subject, key| {
+        subject.with(key, "true")
+    });
+    assert!(matches!(
+        packs::journal::check(&request("checker/c-journal", "journal/causal", &causal)),
+        PackVerdict::Pass { .. }
     ));
 }
 
