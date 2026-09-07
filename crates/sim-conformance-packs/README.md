@@ -13,8 +13,10 @@ can instantiate one exact subject and scope before it issues and verifies the
 receipt. A pack neither stores evidence nor performs
 filesystem, process, Git, network, release, or approval effects.
 
-The bootstrap release implements retirement, identity register/vector,
-activation ownership, boundary inventory, pure work-packet, pure artifact-facet,
-and NV12.01 release scopes. The facet and work packs expose public implementation
-traits so independently authored foreign implementations can be judged with the
-same scenario suite.
+The implemented scopes cover retirement, identity register/vector and canonical
+journal identities, activation ownership, boundary inventory, pure work-packet,
+pure artifact-facet, native journal compatibility and replay performance, causal
+journal sharing, and the NV12.01 release closure. The facet and work packs expose
+public implementation traits so independently authored foreign implementations
+can be judged with the same scenario suite. Journal packs consume explicit
+synthetic-model, measurement, and reducer evidence; they never perform host work.

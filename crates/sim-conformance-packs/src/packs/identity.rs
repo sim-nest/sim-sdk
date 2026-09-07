@@ -10,8 +10,29 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-id", request, |request| match request.scope {
         "identity/register" => register(request),
         "identity/vectors" => vectors(request),
+        "identity/journal-normalized" => journal_normalized(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
+}
+
+fn journal_normalized(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {
+    let mut observations = Vec::new();
+    for key in [
+        "identity.journal-entry-is-datum",
+        "identity.journal-payload-is-datum",
+        "identity.journal-head-is-semantic",
+        "identity.storage-id-is-separated",
+        "identity.v1-ids-bounded-to-reader",
+        "identity.consumers-see-canonical-only",
+    ] {
+        observations.push(harness::expect_true(request, key)?);
+    }
+    observations.push(harness::expect_eq(
+        request,
+        "identity.journal-algorithm",
+        "core/sha256-datum-v1",
+    )?);
+    Ok(observations)
 }
 
 fn register(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {

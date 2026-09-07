@@ -228,7 +228,11 @@ const PACKS: &[PackSpec] = &[
             "identity/evidence",
             "identity/final-seal"
         ],
-        ["identity/register", "identity/vectors"]
+        [
+            "identity/register",
+            "identity/vectors",
+            "identity/journal-normalized"
+        ]
     ),
     spec!(
         "checker/c-own",
@@ -307,7 +311,11 @@ const PACKS: &[PackSpec] = &[
             "journal/causal",
             "journal/composed"
         ],
-        []
+        [
+            "journal/native-compatibility",
+            "journal/performance",
+            "journal/causal"
+        ]
     ),
     spec!(
         "checker/c-closure",
