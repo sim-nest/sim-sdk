@@ -48,9 +48,33 @@ impl PacketLaw for CanonicalPacketLaw {
 
 /// Checks the exact requested work scope.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
-    harness::check_registered("checker/c-work", request, |_| {
-        check_implementation(&CanonicalPacketLaw)
+    harness::check_registered("checker/c-work", request, |request| match request.scope {
+        "work/packet-pure" => check_implementation(&CanonicalPacketLaw),
+        "work/packet-effects" => packet_effects(request),
+        _ => unreachable!("availability was checked before dispatch"),
     })
+}
+
+fn packet_effects(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {
+    [
+        "work.effect-port-is-local-check-port",
+        "work.packet-cannot-construct-native-command",
+        "work.packet-names-installed-command-id",
+        "work.command-bytes-cannot-be-substituted",
+        "work.proposals-remain-pure",
+        "work.proposals-apply-only-in-disposable-checkout",
+        "work.actual-owner-integration-remains-operator",
+        "work.formatter-result-observed",
+        "work.test-pass-result-observed",
+        "work.test-failure-result-observed",
+        "work.validation-and-docs-results-observed",
+        "work.operation-outcomes-typed",
+        "work.actor-grant-handoff-recorded",
+        "work.future-world-source-proof-unassumed",
+    ]
+    .into_iter()
+    .map(|key| harness::expect_true(request, key))
+    .collect()
 }
 
 /// Runs the complete bootstrap packet scenario set through a public trait.

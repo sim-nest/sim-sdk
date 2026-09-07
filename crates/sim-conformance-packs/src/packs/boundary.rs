@@ -8,9 +8,33 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         match request.scope {
             "boundary/inventory" => inventory(request),
             "boundary/identity-closure" => identity_closure(request),
+            "boundary/local-adapter" => local_adapter(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })
+}
+
+fn local_adapter(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
+    [
+        "boundary.kernel-unchanged",
+        "boundary.behavior-remains-loaded",
+        "boundary.local-port-owned-by-runtime",
+        "boundary.local-adapter-owned-by-ubuntu-capsule",
+        "boundary.packet-tooling-has-no-native-process",
+        "boundary.command-spec-has-no-native-path",
+        "boundary.native-paths-boot-resolved",
+        "boundary.operation-gate-composed-on-journal",
+        "boundary.process-port-reused",
+        "boundary.sandbox-launcher-reused",
+        "boundary.no-ambient-process",
+        "boundary.no-ambient-network",
+        "boundary.no-general-checkout-transaction",
+        "boundary.operator-retains-integration-and-release",
+        "boundary.local-route-and-specimen-indexed",
+    ]
+    .into_iter()
+    .map(|key| harness::expect_true(request, key))
+    .collect()
 }
 
 fn inventory(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {

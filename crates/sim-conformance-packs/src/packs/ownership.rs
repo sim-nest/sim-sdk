@@ -7,8 +7,34 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-own", request, |request| match request.scope {
         "ownership/activation" => activation(request),
         "ownership/dependencies" => dependencies(request),
+        "ownership/bootstrap" => bootstrap(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
+}
+
+fn bootstrap(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
+    let mut observations = harness::expect_same_u64(
+        request,
+        "ownership.bootstrap-reached-surfaces",
+        "ownership.bootstrap-qualified-surfaces",
+    )?;
+    for key in [
+        "ownership.bootstrap-closure-complete",
+        "ownership.bootstrap-transitive-dependencies-released",
+        "ownership.bootstrap-produced-source-qualified",
+        "ownership.bootstrap-produced-api-qualified",
+        "ownership.bootstrap-produced-release-qualified",
+        "ownership.bootstrap-binding-receipts-verified",
+        "ownership.bootstrap-dependency-use-sets-qualified",
+        "ownership.bootstrap-later-surfaces-planned",
+        "ownership.bootstrap-roadmap-final-unclaimed",
+        "ownership.bootstrap-handoff-boundary-recorded",
+        "ownership.bootstrap-support-graph-acyclic",
+        "ownership.bootstrap-overlaps-zero",
+    ] {
+        observations.push(harness::expect_true(request, key)?);
+    }
+    Ok(observations)
 }
 
 fn activation(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
