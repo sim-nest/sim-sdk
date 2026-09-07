@@ -189,6 +189,160 @@ fn journal_and_normalized_identity_scopes_are_exact_and_fail_closed() {
 }
 
 #[test]
+fn nv12_03_identity_closure_and_store_roundtrip_are_scope_exact() {
+    let closure = [
+        "identity.unresolved-reached-zero",
+        "identity.unique-versioned-domain-tags",
+        "identity.all-preimage-fields-covered",
+        "identity.order-insensitive-sets-stable",
+        "identity.ordered-fields-sensitive",
+        "identity.semantic-fields-sensitive",
+        "identity.old-authority-refused",
+        "identity.debug-authority-absent",
+        "identity.pointer-authority-absent",
+        "identity.default-hasher-authority-absent",
+        "identity.value-fingerprint-authority-absent",
+        "identity.forge-fabricated-authority-refused",
+        "identity.loader-consumers-normalized",
+        "identity.tooling-delegates-codec",
+        "identity.dependent-caches-invalidated",
+        "identity.compatibility-read-only",
+        "identity.new-families-classified",
+        "identity.semantic-byte-roles-distinct",
+    ]
+    .into_iter()
+    .fold(MemorySubject::default(), |subject, key| {
+        subject.with(key, "true")
+    })
+    .with("identity.reached-semantic-sites", "14")
+    .with("identity.normalized-semantic-sites", "14")
+    .with("identity.semantic-algorithm", "core/sha256-datum-v1")
+    .with("identity.semantic-digest-bytes", "32");
+    assert!(matches!(
+        packs::identity::check(&request("checker/c-id", "identity/closure-final", &closure,)),
+        PackVerdict::Pass { .. }
+    ));
+    let wrong_algorithm = closure
+        .clone()
+        .with("identity.semantic-algorithm", "core/sha256");
+    assert!(matches!(
+        packs::identity::check(&request(
+            "checker/c-id",
+            "identity/closure-final",
+            &wrong_algorithm,
+        )),
+        PackVerdict::Refused(ref failure) if failure.code == "evidence-mismatch"
+    ));
+
+    let store = [
+        "identity.object-put-get-roundtrip",
+        "identity.missing-object-refused",
+        "identity.corrupt-object-refused",
+        "identity.semantic-mismatch-refused",
+        "identity.semantic-storage-crossing-mutant-refused",
+        "identity.byte-helpers-remain-byte-role",
+    ]
+    .into_iter()
+    .fold(MemorySubject::default(), |subject, key| {
+        subject.with(key, "true")
+    });
+    let PackVerdict::Pass { observations, .. } =
+        packs::identity::check(&request("checker/c-id", "identity/store-roundtrip", &store))
+    else {
+        panic!("store roundtrip scope did not pass")
+    };
+    assert!(observations.iter().any(|observation| {
+        observation.key == "identity.roundtrip-semantic-algorithm"
+            && observation.value == "core/sha256-datum-v1"
+    }));
+    assert!(observations.iter().any(|observation| {
+        observation.key == "identity.roundtrip-storage-algorithm"
+            && observation.value == "storage/sha256-bytes-v1"
+    }));
+}
+
+#[test]
+fn nv12_03_ownership_and_boundary_cover_loader_codec_and_tooling() {
+    let ownership = [
+        "ownership.actual-closure-complete",
+        "ownership.loader-owner-qualified",
+        "ownership.tooling-owner-qualified",
+        "ownership.codec-owns-vault-identity",
+        "ownership.dependency-use-sets-qualified",
+        "ownership.unresolved-rows-zero",
+        "ownership.singular-owner-per-construction",
+        "ownership.support-graph-acyclic",
+        "ownership.overlaps-zero",
+        "ownership.unavailable-dependency-refused",
+    ]
+    .into_iter()
+    .fold(MemorySubject::default(), |subject, key| {
+        subject.with(key, "true")
+    })
+    .with("ownership.reached-owner-surfaces", "9")
+    .with("ownership.qualified-owner-surfaces", "9");
+    assert!(matches!(
+        packs::ownership::check(&request(
+            "checker/c-own",
+            "ownership/dependencies",
+            &ownership,
+        )),
+        PackVerdict::Pass { .. }
+    ));
+
+    let boundary = [
+        "boundary.kernel-unchanged",
+        "boundary.kernel-policy-absent",
+        "boundary.behavior-remains-loaded",
+        "boundary.semantic-byte-types-distinct",
+        "boundary.loader-membrane-retained",
+        "boundary.tooling-delegates-codec",
+        "boundary.compatibility-reader-read-only",
+        "boundary.ambient-identity-authority-refused",
+        "boundary.cache-reuse-requires-exact-semantics",
+        "boundary.identity-closure-complete",
+    ]
+    .into_iter()
+    .fold(MemorySubject::default(), |subject, key| {
+        subject.with(key, "true")
+    });
+    assert!(matches!(
+        packs::boundary::check(&request(
+            "checker/c-boundary",
+            "boundary/identity-closure",
+            &boundary,
+        )),
+        PackVerdict::Pass { .. }
+    ));
+}
+
+#[test]
+fn nv12_03_release_scope_requires_the_complete_release_gate() {
+    let evidence = [
+        "release.audit-passed",
+        "release.authorship-passed",
+        "release.boot-smoke-passed",
+        "release.generated-converged",
+        "release.mirrors-current",
+        "release.owner-docs-passed",
+        "release.owner-validation-passed",
+        "release.packages-assembled",
+        "release.pins-exact",
+        "release.publication-confirmed",
+        "release.standalone-ci-green",
+        "release.tags-exact",
+    ]
+    .into_iter()
+    .fold(MemorySubject::default(), |subject, key| {
+        subject.with(key, "true")
+    });
+    assert!(matches!(
+        packs::release::check(&request("checker/c-release", "release/nv12-03", &evidence,)),
+        PackVerdict::Pass { .. }
+    ));
+}
+
+#[test]
 fn journal_performance_and_causal_scopes_bind_measured_facts() {
     let performance = MemorySubject::default()
         .with("journal.performance.records", "100000")

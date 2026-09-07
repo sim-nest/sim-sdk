@@ -132,6 +132,7 @@ impl PackSpec {
             "ownership/bootstrap" => "NV12.05",
             "ownership/produced" => "NV12.06",
             "ownership/roadmap-final" => "NV12.28",
+            "boundary/identity-closure" => "NV12.03",
             "boundary/local-adapter" => "NV12.05",
             "boundary/projection-admission" => "NV12.06",
             "boundary/observation" => "NV12.09",
@@ -231,7 +232,9 @@ const PACKS: &[PackSpec] = &[
         [
             "identity/register",
             "identity/vectors",
-            "identity/journal-normalized"
+            "identity/journal-normalized",
+            "identity/closure-final",
+            "identity/store-roundtrip"
         ]
     ),
     spec!(
@@ -246,7 +249,7 @@ const PACKS: &[PackSpec] = &[
             "ownership/produced",
             "ownership/roadmap-final"
         ],
-        ["ownership/activation"]
+        ["ownership/activation", "ownership/dependencies"]
     ),
     spec!(
         "checker/c-boundary",
@@ -255,13 +258,14 @@ const PACKS: &[PackSpec] = &[
         "NV12.01",
         [
             "boundary/inventory",
+            "boundary/identity-closure",
             "boundary/local-adapter",
             "boundary/projection-admission",
             "boundary/observation",
             "boundary/source-closure",
             "boundary/composed"
         ],
-        ["boundary/inventory"]
+        ["boundary/inventory", "boundary/identity-closure"]
     ),
     spec!(
         "checker/c-source",
@@ -484,7 +488,7 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-27",
             "release/nv12-28"
         ],
-        ["release/nv12-01", "release/nv12-02"]
+        ["release/nv12-01", "release/nv12-02", "release/nv12-03"]
     ),
     spec!(
         "checker/c-succeed",
