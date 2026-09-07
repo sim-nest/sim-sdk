@@ -379,6 +379,32 @@ fn wrong_scope_and_skipped_release_gate_are_named_refusals() {
 }
 
 #[test]
+fn nv12_02_release_scope_is_funded_and_requires_the_complete_gate() {
+    let evidence = [
+        "release.audit-passed",
+        "release.authorship-passed",
+        "release.boot-smoke-passed",
+        "release.generated-converged",
+        "release.mirrors-current",
+        "release.owner-docs-passed",
+        "release.owner-validation-passed",
+        "release.packages-assembled",
+        "release.pins-exact",
+        "release.publication-confirmed",
+        "release.standalone-ci-green",
+        "release.tags-exact",
+    ]
+    .into_iter()
+    .fold(MemorySubject::default(), |subject, key| {
+        subject.with(key, "true")
+    });
+    assert!(matches!(
+        packs::release::check(&request("checker/c-release", "release/nv12-02", &evidence,)),
+        PackVerdict::Pass { .. }
+    ));
+}
+
+#[test]
 fn journal_and_normalized_identity_scopes_are_exact_and_fail_closed() {
     let native_keys = [
         "journal.old-only-replay",
