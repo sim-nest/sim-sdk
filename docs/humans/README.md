@@ -17,7 +17,7 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 
 | Feature | Subject | Specimens | Summary |
 | --- | --- | ---: | --- |
-| `feature/sim-sdk/neutral-conformance-packs` | `crate/sim-conformance-packs` | 1 | Expose all 21 checker entrypoints with pure evidence-driven scenarios, canonical results, and typed unavailable outcomes for scopes whose funded phase has not shipped, including canonical native-journal identity, compatibility, replay performance, and causal sharing. |
+| `feature/sim-sdk/neutral-conformance-packs` | `crate/sim-conformance-packs` | 1 | Expose all 21 checker entrypoints with pure evidence-driven scenarios, canonical results, and typed unavailable outcomes for scopes whose funded phase has not shipped, including canonical identity, native journal, and durable operation-log qualification. |
 | `feature/sim-sdk/hotload-facade` | `crate/sim-nest` | 4 | Expose immutable native build, admission, compatibility, atomic activation, and durable receipt records without exposing host provider implementations. |
 | `feature/sim-sdk/layered-physics-facade` | `crate/sim-nest` | 1 | Curates quantities, physics core, audit, proof, studies, findings, and explicit adapters as one coherent domain bundle. |
 | `feature/sim-sdk/media-edge-music-vertical` | `crate/sim-nest` | 1 | Expose the owning music route plan and exact stream-host effect adapters behind one opt-in vertical feature. |
@@ -624,6 +624,82 @@ fn nv12_03_release_scope_requires_the_complete_release_gate() {
     });
     assert!(matches!(
         packs::release::check(&request("checker/c-release", "release/nv12-03", &evidence,)),
+        PackVerdict::Pass { .. }
+    ));
+}
+
+#[test]
+fn nv12_04_operation_log_scope_checks_the_crash_safe_boundary() {
+    let evidence = [
+        "operation.intent-is-canonical-datum",
+        "operation.operation-id-binds-target",
+        "operation.operation-id-binds-intended-result",
+        "operation.operation-id-binds-replay-policy",
+        "operation.grant-recorded-separately",
+        "operation.attempt-recorded-separately",
+        "operation.lease-excluded-from-operation-id",
+        "operation.contradictory-intent-refused",
+        "operation.intent-before-dispatch",
+        "operation.dispatch-before-performance",
+        "operation.raw-receipt-after-performance",
+        "operation.all-crash-cuts-reconstruct",
+        "operation.recorded-dispatch-not-repeated",
+        "operation.external-counter-survives-replay",
+        "operation.missing-acknowledgement-not-failure",
+        "operation.fake-performers-only",
+        "operation.real-process-network-disabled",
+        "operation.reconciliation-unimplemented",
+    ]
+    .into_iter()
+    .fold(MemorySubject::default(), |subject, key| {
+        subject.with(key, "true")
+    })
+    .with("operation.crash-cuts", "6")
+    .with("operation.durable-states", "3");
+    assert!(matches!(
+        packs::operation::check(&request("checker/c-op", "operation/log", &evidence)),
+        PackVerdict::Pass { .. }
+    ));
+    assert!(matches!(
+        packs::operation::check(&request(
+            "checker/c-op",
+            "operation/reconcile",
+            &evidence,
+        )),
+        PackVerdict::UnimplementedPack {
+            ref funded_phase,
+            ..
+        } if funded_phase == "NV12.05"
+    ));
+    let missing = evidence.clone().with("operation.crash-cuts", "5");
+    assert!(matches!(
+        packs::operation::check(&request("checker/c-op", "operation/log", &missing)),
+        PackVerdict::Refused(ref failure) if failure.code == "evidence-mismatch"
+    ));
+}
+
+#[test]
+fn nv12_04_release_scope_requires_the_complete_release_gate() {
+    let evidence = [
+        "release.audit-passed",
+        "release.authorship-passed",
+        "release.boot-smoke-passed",
+        "release.generated-converged",
+        "release.mirrors-current",
+        "release.owner-docs-passed",
+        "release.owner-validation-passed",
+        "release.packages-assembled",
+        "release.pins-exact",
+        "release.publication-confirmed",
+        "release.standalone-ci-green",
+        "release.tags-exact",
+    ]
+    .into_iter()
+    .fold(MemorySubject::default(), |subject, key| {
+        subject.with(key, "true")
+    });
+    assert!(matches!(
+        packs::release::check(&request("checker/c-release", "release/nv12-04", &evidence,)),
         PackVerdict::Pass { .. }
     ));
 }
