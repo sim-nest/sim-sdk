@@ -302,7 +302,7 @@ const PACKS: &[PackSpec] = &[
             "operation/delivery-adapters",
             "operation/composed"
         ],
-        []
+        ["operation/log"]
     ),
     spec!(
         "checker/c-journal",
@@ -488,7 +488,12 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-27",
             "release/nv12-28"
         ],
-        ["release/nv12-01", "release/nv12-02", "release/nv12-03"]
+        [
+            "release/nv12-01",
+            "release/nv12-02",
+            "release/nv12-03",
+            "release/nv12-04"
+        ]
     ),
     spec!(
         "checker/c-succeed",
