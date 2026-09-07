@@ -249,7 +249,11 @@ const PACKS: &[PackSpec] = &[
             "ownership/produced",
             "ownership/roadmap-final"
         ],
-        ["ownership/activation", "ownership/dependencies"]
+        [
+            "ownership/activation",
+            "ownership/dependencies",
+            "ownership/bootstrap"
+        ]
     ),
     spec!(
         "checker/c-boundary",
@@ -265,7 +269,11 @@ const PACKS: &[PackSpec] = &[
             "boundary/source-closure",
             "boundary/composed"
         ],
-        ["boundary/inventory", "boundary/identity-closure"]
+        [
+            "boundary/inventory",
+            "boundary/identity-closure",
+            "boundary/local-adapter"
+        ]
     ),
     spec!(
         "checker/c-source",
@@ -302,7 +310,7 @@ const PACKS: &[PackSpec] = &[
             "operation/delivery-adapters",
             "operation/composed"
         ],
-        ["operation/log"]
+        ["operation/log", "operation/reconcile", "operation/local"]
     ),
     spec!(
         "checker/c-journal",
@@ -355,7 +363,7 @@ const PACKS: &[PackSpec] = &[
             "work/native-dispatch",
             "work/composed"
         ],
-        ["work/packet-pure"]
+        ["work/packet-pure", "work/packet-effects"]
     ),
     spec!(
         "checker/c-drive",
@@ -492,7 +500,8 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-01",
             "release/nv12-02",
             "release/nv12-03",
-            "release/nv12-04"
+            "release/nv12-04",
+            "release/nv12-05"
         ]
     ),
     spec!(

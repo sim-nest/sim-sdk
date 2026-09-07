@@ -13,10 +13,12 @@ can instantiate one exact subject and scope before it issues and verifies the
 receipt. A pack neither stores evidence nor performs
 filesystem, process, Git, network, release, or approval effects.
 
-The implemented scopes cover retirement, identity register/vector and canonical
-journal identities, activation ownership, boundary inventory, pure work-packet,
-pure artifact-facet, native journal compatibility and replay performance, causal
-journal sharing, and the NV12.01 release closure. The facet and work packs expose
-public implementation traits so independently authored foreign implementations
-can be judged with the same scenario suite. Journal packs consume explicit
-synthetic-model, measurement, and reducer evidence; they never perform host work.
+The implemented scopes cover retirement, canonical identity, scoped bootstrap
+ownership, architecture inventory and the local adapter boundary, pure work
+packets and their local effect handoff, pure artifact facets, native journal
+compatibility and performance, causal journal sharing, durable operation logging
+and reconciliation, the exact local command path, and release closure through
+NV12.05. The facet and work packs expose public implementation traits so
+independently authored foreign implementations can be judged with the same
+scenario suite. Every pack consumes supplied evidence and never performs host
+work.
