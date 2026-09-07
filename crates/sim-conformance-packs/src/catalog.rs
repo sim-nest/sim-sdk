@@ -484,7 +484,7 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-27",
             "release/nv12-28"
         ],
-        ["release/nv12-01"]
+        ["release/nv12-01", "release/nv12-02"]
     ),
     spec!(
         "checker/c-succeed",
