@@ -252,7 +252,8 @@ const PACKS: &[PackSpec] = &[
         [
             "ownership/activation",
             "ownership/dependencies",
-            "ownership/bootstrap"
+            "ownership/bootstrap",
+            "ownership/produced"
         ]
     ),
     spec!(
@@ -272,7 +273,8 @@ const PACKS: &[PackSpec] = &[
         [
             "boundary/inventory",
             "boundary/identity-closure",
-            "boundary/local-adapter"
+            "boundary/local-adapter",
+            "boundary/projection-admission"
         ]
     ),
     spec!(
@@ -296,7 +298,7 @@ const PACKS: &[PackSpec] = &[
             "evidence/convergence",
             "evidence/composed"
         ],
-        []
+        ["evidence/projection"]
     ),
     spec!(
         "checker/c-op",
@@ -410,7 +412,7 @@ const PACKS: &[PackSpec] = &[
             "disclosure/landing",
             "disclosure/composed"
         ],
-        []
+        ["disclosure/projection"]
     ),
     spec!(
         "checker/c-deliver",
@@ -459,7 +461,7 @@ const PACKS: &[PackSpec] = &[
             "product/installed",
             "product/composed"
         ],
-        []
+        ["product/world", "product/query-latency"]
     ),
     spec!(
         "checker/c-release",
@@ -501,7 +503,8 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-02",
             "release/nv12-03",
             "release/nv12-04",
-            "release/nv12-05"
+            "release/nv12-05",
+            "release/nv12-06"
         ]
     ),
     spec!(
