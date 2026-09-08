@@ -23,15 +23,15 @@ frameworks = "advisory"
 [[feature]]
 id = "feature/sim-sdk/neutral-conformance-packs"
 title = "Scope-exact neutral conformance packs"
-summary = "Expose all 21 checker entrypoints with pure evidence-driven scenarios, canonical results, and typed unavailable outcomes for scopes whose funded phase has not shipped, including canonical identity, native journal, durable operation reconciliation, and the real local checker boundary."
+summary = "Expose all 21 checker entrypoints with pure evidence-driven scenarios, canonical results, and typed unavailable outcomes for scopes whose funded phase has not shipped, including canonical identity, native journal, durable operation reconciliation, semantic projection, disclosure scoping, and the real local checker boundary."
 owner = "crate/sim-conformance-packs"
 audiences = ["code", "framework"]
-guidance = "Materialize evidence through an authorized adapter, derive the typed runtime binding from PackSpec's immutable activation record, and instantiate the exact subject and scope before calling the public pack. Use operation/reconcile for fenced leases, independent observation, recovery reduction and eight crash boundaries; use operation/local and boundary/local-adapter only with the released exact-command Ubuntu adapter evidence. Work/packet-effects checks the portable port and operator handoff without performing host work itself. Ownership/bootstrap qualifies only the produced bootstrap closure and explicitly leaves roadmap-final unclaimed. Only a passing result may enter a verified CheckerReceipt; unavailable and refused results never satisfy a gate."
+guidance = "Materialize evidence through an authorized adapter, derive the typed runtime binding from PackSpec's immutable activation record, and instantiate the exact subject and scope before calling the public pack. Use operation/reconcile for fenced leases, independent observation, recovery reduction and eight crash boundaries; use operation/local and boundary/local-adapter only with the released exact-command Ubuntu adapter evidence. Use the NV12.06 projection scopes for provider admission, semantic digest and disclosure evidence, world product behavior, query latency, and produced ownership; the projection reference specimen checks the released crates directly. Work/packet-effects checks the portable port and operator handoff without performing host work itself. Ownership/bootstrap qualifies only the produced bootstrap closure and explicitly leaves roadmap-final unclaimed. Only a passing result may enter a verified CheckerReceipt; unavailable and refused results never satisfy a gate."
 claims_anchors = [
   "anchor/crate/sim-conformance-packs",
   "anchor/export/sim-conformance-packs/shape/proposal",
 ]
-claims_specimens = ["spec-test/sim-sdk/crates/sim-conformance-packs/tests/bootstrap_packs"]
+claims_specimens = ["spec-test/sim-sdk/crates/sim-conformance-packs/tests/bootstrap_packs", "spec-test/sim-sdk/crates/sim-conformance-packs/tests/projection_reference"]
 supports = [
   "feature/sim-foundation/conformance-core",
   "feature/sim-foundation/bounded-work-core",

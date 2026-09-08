@@ -1,6 +1,6 @@
 [package]
 name = "sim-conformance-packs"
-version = "0.5.1"
+version = "0.6.0"
 edition.workspace = true
 license.workspace = true
 description = "Public neutral conformance packs and bootstrap checkers for SIM."
@@ -18,6 +18,13 @@ sim-artifact-facet = "0.2.0"
 sim-conformance-core = "0.2.0"
 sim-kernel = "0.4.0"
 sim-work-core = "0.2.0"
+
+[dev-dependencies]
+sim-incremental-core = "0.5.0"
+sim-lib-world = "0.1.0"
+sim-platform-ubuntu-pc = "0.3.0"
+sim-wasm-abi = "0.6.0"
+wat = "1"
 
 [lints]
 workspace = true

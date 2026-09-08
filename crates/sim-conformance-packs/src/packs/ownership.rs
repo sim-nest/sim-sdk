@@ -8,8 +8,34 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         "ownership/activation" => activation(request),
         "ownership/dependencies" => dependencies(request),
         "ownership/bootstrap" => bootstrap(request),
+        "ownership/produced" => produced(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
+}
+
+fn produced(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
+    let mut observations = harness::expect_same_u64(
+        request,
+        "ownership.produced-target-surfaces",
+        "ownership.qualified-target-surfaces",
+    )?;
+    for key in [
+        "ownership.target-was-planned-before-construction",
+        "ownership.packet-dependencies-released",
+        "ownership.unimplemented-external-dependency-refused",
+        "ownership.target-source-qualified",
+        "ownership.target-api-qualified",
+        "ownership.target-release-qualified",
+        "ownership.owner-validation-and-docs-exact",
+        "ownership.index-route-present",
+        "ownership.crate-admission-complete",
+        "ownership.support-graph-acyclic",
+        "ownership.overlaps-zero",
+        "ownership.kernel-head-unchanged",
+    ] {
+        observations.push(harness::expect_true(request, key)?);
+    }
+    Ok(observations)
 }
 
 fn bootstrap(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
