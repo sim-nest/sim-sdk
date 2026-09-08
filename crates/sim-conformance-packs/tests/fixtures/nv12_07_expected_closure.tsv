@@ -1,0 +1,11 @@
+# NV12.07 independently authored stage-one acceptance oracle.
+# Frozen before projection-assay implementation. Columns after the header are:
+# delta, semantic class, declared-conclusion denominator, maximum affected,
+# maximum revision delta, carried state, expected affected conclusions.
+delta	class	denominator	max_affected	max_revision_delta	carried_state	expected_affected
+D1	no-semantic-change	40	0	0	false	-
+D2	private-implementation	40	2	1	false	conclusion/01,conclusion/02
+D3	public-api	40	8	1	false	conclusion/03,conclusion/04,conclusion/05,conclusion/06,conclusion/07,conclusion/08,conclusion/09,conclusion/10
+D4	three-public-heads-and-control-pins	40	12	4	false	conclusion/11,conclusion/12,conclusion/13,conclusion/14,conclusion/15,conclusion/16,conclusion/17,conclusion/18,conclusion/19,conclusion/20,conclusion/21,conclusion/22
+D5	proof-and-checker-implementation	40	4	2	false	conclusion/23,conclusion/24,conclusion/25,conclusion/26
+D6	plan-display-order-semantic-no-op	40	0	1	false	-
