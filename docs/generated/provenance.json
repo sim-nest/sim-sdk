@@ -3,10 +3,10 @@
   "generated_by": "cargo run -p xtask -- simdoc",
   "generation_timestamp": "2026-07-19T07:28:29+02:00",
   "generator": "xtask repo-contract v1",
-  "git_commit": "93ebc2026c2636512e373912e0a75945d708c053",
+  "git_commit": "18072d262175a301fe1dfc0429b92f698cfe0441",
   "repo": "sim-sdk",
   "schema": "sim.provenance.v1",
-  "source_commit": "93ebc2026c2636512e373912e0a75945d708c053",
+  "source_commit": "18072d262175a301fe1dfc0429b92f698cfe0441",
   "source_remote": "https://github.com/sim-nest/sim-sdk",
   "validation_commands": [
     "cargo fmt --all --check",
@@ -19,9 +19,9 @@
     "cargo run -p xtask -- validation-matrix --check --repo .",
     "cargo run -p xtask -- crate-catalog --check --repo ."
   ],
-  "workspace_hash": "46cbc3cca36de897",
+  "workspace_hash": "90420f1025b7d968",
   "workspace_hash_algorithm": "fnv1a64",
-  "workspace_hash_input_count": 335,
+  "workspace_hash_input_count": 336,
   "workspace_hash_inputs": [
     "Cargo.toml",
     "crates/sim-conformance/Cargo.toml",
@@ -85,6 +85,7 @@
     "crates/sim-conformance-packs/src/packs/source.rs",
     "crates/sim-conformance-packs/src/packs/succession.rs",
     "crates/sim-conformance-packs/src/packs/work.rs",
+    "crates/sim-conformance-packs/tests/bootstrap_packs/nv12_05.rs",
     "crates/sim-conformance-packs/tests/bootstrap_packs.rs",
     "docs/generated/citizens.md",
     "features.toml",
