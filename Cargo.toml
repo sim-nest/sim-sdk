@@ -111,7 +111,7 @@ sim-lib-daw-session = { optional = true, version = "0.3.0" }
 sim-lib-discrete = { optional = true, version = "0.3.0" }
 sim-lib-discrete-search = { optional = true, version = "0.3.0" }
 sim-lib-dispatch = { optional = true, version = "0.3.0" }
-sim-lib-exec = { optional = true, version = "0.3.0" }
+sim-lib-exec = { optional = true, version = "0.4.0" }
 sim-estate-core = { optional = true, version = "0.2.0" }
 sim-estate-project = { optional = true, version = "0.1.1" }
 sim-lib-estate = { optional = true, version = "0.2.0" }
@@ -119,7 +119,7 @@ sim-lib-estate-serve = { optional = true, version = "0.2.0" }
 sim-site-estate-model = { optional = true, version = "0.1.1" }
 sim-lib-expr-tree = { optional = true, version = "0.4.0" }
 sim-lib-expr-tree-server = { optional = true, version = "0.4.0" }
-sim-lib-forge = { optional = true, version = "0.1.5" }
+sim-lib-forge = { optional = true, version = "0.2.0" }
 sim-lib-gc-tracing = { optional = true, version = "0.3.0" }
 sim-lib-femm-assembly = { optional = true, version = "0.5.0" }
 sim-lib-femm-codec = { optional = true, version = "0.2.2" }
@@ -339,7 +339,7 @@ sim-kernel = { version = "0.4.0", features = ["test-support"] }
 sim-citizen = "0.4.0"
 sim-lib-capability-pack = "0.1.0"
 sim-lib-expedition-book = "0.1.0"
-sim-lib-exec = "0.3.0"
+sim-lib-exec = "0.4.0"
 sim-lib-journal = "0.3.0"
 sim-lib-view-worktable = "0.1.0"
 sim-run-loaders = "0.4.1"
