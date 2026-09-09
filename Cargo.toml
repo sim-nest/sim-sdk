@@ -52,7 +52,7 @@ sim-citizen = { optional = true, version = "0.4.0" }
 sim-citizen-derive = { optional = true, version = "0.4.0" }
 sim-run-loaders = { optional = true, version = "0.4.1", default-features = false }
 sim-run-core = { optional = true, version = "0.5.0" }
-sim-lib-hotload = { optional = true, version = "0.2.0" }
+sim-lib-hotload = { optional = true, version = "0.2.1" }
 sim-lib-platform = { optional = true, version = "0.1.1" }
 sim-lib-net-http = { optional = true, version = "0.2.0" }
 sim-lib-web-core = { optional = true, version = "0.2.0" }
@@ -88,7 +88,7 @@ sim-lib-agent-conduct = { optional = true, version = "0.2.0" }
 sim-lib-agent-conduct-core = { optional = true, version = "0.2.0" }
 sim-lib-agent-runner-core = { optional = true, version = "0.4.0" }
 sim-lib-agent-runner-http = { optional = true, version = "0.4.0" }
-sim-lib-agent-runner-process = { optional = true, version = "0.3.0" }
+sim-lib-agent-runner-process = { optional = true, version = "0.3.1" }
 sim-lib-provider = { optional = true, version = "0.2.0" }
 sim-lib-audio-dsp = { optional = true, version = "0.3.0" }
 sim-lib-audio-graph-core = { optional = true, version = "0.3.0" }
@@ -161,7 +161,7 @@ sim-lib-mcp = { optional = true, version = "0.3.0" }
 sim-lib-mcp-client = { optional = true, version = "0.1.1" }
 sim-lib-mcp-http = { optional = true, version = "0.2.0" }
 sim-lib-mcp-legacy = { optional = true, version = "0.2.0" }
-sim-lib-mcp-stdio = { optional = true, version = "0.1.1" }
+sim-lib-mcp-stdio = { optional = true, version = "0.1.2" }
 sim-lib-oauth-core = { optional = true, version = "0.2.0" }
 sim-lib-oauth-http = { optional = true, version = "0.1.1" }
 sim-lib-oauth-jose = { optional = true, version = "0.2.0" }
@@ -234,7 +234,7 @@ sim-lib-physics-influence = { optional = true, version = "0.2.1" }
 sim-lib-physics-power = { optional = true, version = "0.2.0" }
 sim-lib-physics-proof = { optional = true, version = "0.2.0" }
 sim-lib-physics-runtime = { optional = true, version = "0.1.1", default-features = false }
-sim-lib-physics-study = { optional = true, version = "0.2.0" }
+sim-lib-physics-study = { optional = true, version = "0.2.1" }
 sim-lib-pitch-chord = { optional = true, version = "0.4.0" }
 sim-lib-pitch-core = { optional = true, version = "0.4.0" }
 sim-lib-pitch-dissonance = { optional = true, version = "0.3.0" }
@@ -268,7 +268,7 @@ sim-lib-scene = { optional = true, version = "0.4.0" }
 sim-lib-serial-core = { optional = true, version = "0.3.0" }
 sim-lib-sequence = { optional = true, version = "0.3.0" }
 sim-lib-server = { optional = true, version = "0.3.1" }
-sim-lib-skill = { optional = true, version = "0.4.0" }
+sim-lib-skill = { optional = true, version = "0.4.1" }
 sim-lib-sound-audio-lift = { optional = true, version = "0.3.0" }
 sim-lib-sound-bridge = { optional = true, version = "0.3.0" }
 sim-lib-sound-core = { optional = true, version = "0.4.0" }
