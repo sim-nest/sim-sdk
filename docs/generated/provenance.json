@@ -3,10 +3,10 @@
   "generated_by": "cargo run -p xtask -- simdoc",
   "generation_timestamp": "2026-07-19T07:28:29+02:00",
   "generator": "xtask repo-contract v1",
-  "git_commit": "332b758dceef5277c053c6d4dc2001fc5d24b073",
+  "git_commit": "843c85510e7173795f89d3f834404f012631674a",
   "repo": "sim-sdk",
   "schema": "sim.provenance.v1",
-  "source_commit": "332b758dceef5277c053c6d4dc2001fc5d24b073",
+  "source_commit": "843c85510e7173795f89d3f834404f012631674a",
   "source_remote": "https://github.com/sim-nest/sim-sdk",
   "validation_commands": [
     "cargo fmt --all --check",
@@ -19,7 +19,7 @@
     "cargo run -p xtask -- validation-matrix --check --repo .",
     "cargo run -p xtask -- crate-catalog --check --repo ."
   ],
-  "workspace_hash": "a06488aefc777bf6",
+  "workspace_hash": "67a93df06827dbe5",
   "workspace_hash_algorithm": "fnv1a64",
   "workspace_hash_input_count": 338,
   "workspace_hash_inputs": [

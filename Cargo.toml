@@ -62,7 +62,7 @@ sim-lib-search-http = { optional = true, version = "0.1.2" }
 sim-lib-search = { optional = true, version = "0.2.1" }
 sim-lib-doc-web = { optional = true, version = "0.1.1" }
 sim-lib-view-search = { optional = true, version = "0.1.1" }
-sim-lib-repl = { optional = true, version = "0.4.1" }
+sim-lib-repl = { optional = true, version = "0.4.2" }
 sim-web-shell = { optional = true, version = "0.3.0", default-features = false }
 sim-codec = { optional = true, version = "0.3.0" }
 sim-codec-algol = { optional = true, version = "0.3.0" }
@@ -87,7 +87,7 @@ sim-lib-agent = { optional = true, version = "0.3.1" }
 sim-lib-agent-conduct = { optional = true, version = "0.2.0" }
 sim-lib-agent-conduct-core = { optional = true, version = "0.2.0" }
 sim-lib-agent-runner-core = { optional = true, version = "0.4.0" }
-sim-lib-agent-runner-http = { optional = true, version = "0.4.0" }
+sim-lib-agent-runner-http = { optional = true, version = "0.4.2" }
 sim-lib-agent-runner-process = { optional = true, version = "0.3.1" }
 sim-lib-provider = { optional = true, version = "0.2.1" }
 sim-lib-audio-dsp = { optional = true, version = "0.3.0" }
@@ -95,7 +95,7 @@ sim-lib-audio-graph-core = { optional = true, version = "0.3.0" }
 sim-lib-audio-graph-live = { optional = true, version = "0.3.0" }
 sim-lib-music-synth = { optional = true, version = "0.3.0" }
 sim-lib-binding = { optional = true, version = "0.3.0" }
-sim-lib-bridge = { optional = true, version = "0.3.0" }
+sim-lib-bridge = { optional = true, version = "0.3.1" }
 sim-lib-control = { optional = true, version = "0.3.0" }
 sim-lib-continuity = { optional = true, version = "0.2.0" }
 sim-lib-compute-auto = { optional = true, version = "0.5.0" }
@@ -118,7 +118,7 @@ sim-lib-estate = { optional = true, version = "0.2.0" }
 sim-lib-estate-serve = { optional = true, version = "0.2.0" }
 sim-site-estate-model = { optional = true, version = "0.1.1" }
 sim-lib-expr-tree = { optional = true, version = "0.4.1" }
-sim-lib-expr-tree-server = { optional = true, version = "0.4.0" }
+sim-lib-expr-tree-server = { optional = true, version = "0.4.1" }
 sim-lib-forge = { optional = true, version = "0.2.0" }
 sim-lib-gc-tracing = { optional = true, version = "0.3.0" }
 sim-lib-femm-assembly = { optional = true, version = "0.5.0" }
@@ -160,14 +160,14 @@ sim-lib-logic = { optional = true, version = "0.3.0" }
 sim-lib-mcp = { optional = true, version = "0.3.1" }
 sim-lib-mcp-client = { optional = true, version = "0.1.2" }
 sim-lib-mcp-http = { optional = true, version = "0.2.1" }
-sim-lib-mcp-legacy = { optional = true, version = "0.2.0" }
+sim-lib-mcp-legacy = { optional = true, version = "0.2.1" }
 sim-lib-mcp-stdio = { optional = true, version = "0.1.2" }
 sim-lib-oauth-core = { optional = true, version = "0.2.0" }
 sim-lib-oauth-http = { optional = true, version = "0.1.1" }
 sim-lib-oauth-jose = { optional = true, version = "0.2.0" }
 sim-lib-protected-state = { optional = true, version = "0.2.0" }
 sim-lib-study = { optional = true, version = "0.2.1" }
-sim-lib-model-test = { optional = true, version = "0.2.0" }
+sim-lib-model-test = { optional = true, version = "0.2.1" }
 sim-cancel = { optional = true, version = "0.2.0" }
 sim-lib-midi-ble = { optional = true, version = "0.2.1" }
 sim-lib-midi-core = { optional = true, version = "0.3.0" }
