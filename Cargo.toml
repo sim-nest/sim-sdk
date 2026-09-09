@@ -51,15 +51,15 @@ serde_json = { version = "1", optional = true }
 sim-citizen = { optional = true, version = "0.4.0" }
 sim-citizen-derive = { optional = true, version = "0.4.0" }
 sim-run-loaders = { optional = true, version = "0.4.1", default-features = false }
-sim-run-core = { optional = true, version = "0.5.0" }
+sim-run-core = { optional = true, version = "0.5.1" }
 sim-lib-hotload = { optional = true, version = "0.2.1" }
 sim-lib-platform = { optional = true, version = "0.1.1" }
 sim-lib-net-http = { optional = true, version = "0.2.0" }
 sim-lib-web-core = { optional = true, version = "0.2.0" }
 sim-lib-search-core = { optional = true, version = "0.2.0" }
 sim-lib-web-fetch = { optional = true, version = "0.2.0" }
-sim-lib-search-http = { optional = true, version = "0.1.1" }
-sim-lib-search = { optional = true, version = "0.2.0" }
+sim-lib-search-http = { optional = true, version = "0.1.2" }
+sim-lib-search = { optional = true, version = "0.2.1" }
 sim-lib-doc-web = { optional = true, version = "0.1.1" }
 sim-lib-view-search = { optional = true, version = "0.1.1" }
 sim-lib-repl = { optional = true, version = "0.4.1" }
@@ -89,7 +89,7 @@ sim-lib-agent-conduct-core = { optional = true, version = "0.2.0" }
 sim-lib-agent-runner-core = { optional = true, version = "0.4.0" }
 sim-lib-agent-runner-http = { optional = true, version = "0.4.0" }
 sim-lib-agent-runner-process = { optional = true, version = "0.3.1" }
-sim-lib-provider = { optional = true, version = "0.2.0" }
+sim-lib-provider = { optional = true, version = "0.2.1" }
 sim-lib-audio-dsp = { optional = true, version = "0.3.0" }
 sim-lib-audio-graph-core = { optional = true, version = "0.3.0" }
 sim-lib-audio-graph-live = { optional = true, version = "0.3.0" }
@@ -117,7 +117,7 @@ sim-estate-project = { optional = true, version = "0.1.1" }
 sim-lib-estate = { optional = true, version = "0.2.0" }
 sim-lib-estate-serve = { optional = true, version = "0.2.0" }
 sim-site-estate-model = { optional = true, version = "0.1.1" }
-sim-lib-expr-tree = { optional = true, version = "0.4.0" }
+sim-lib-expr-tree = { optional = true, version = "0.4.1" }
 sim-lib-expr-tree-server = { optional = true, version = "0.4.0" }
 sim-lib-forge = { optional = true, version = "0.2.0" }
 sim-lib-gc-tracing = { optional = true, version = "0.3.0" }
@@ -157,9 +157,9 @@ sim-lib-lang-ruby = { optional = true, version = "0.3.0" }
 sim-lib-lang-scheme = { optional = true, version = "0.3.0" }
 sim-lib-lang-typed-lazy = { optional = true, version = "0.3.0" }
 sim-lib-logic = { optional = true, version = "0.3.0" }
-sim-lib-mcp = { optional = true, version = "0.3.0" }
-sim-lib-mcp-client = { optional = true, version = "0.1.1" }
-sim-lib-mcp-http = { optional = true, version = "0.2.0" }
+sim-lib-mcp = { optional = true, version = "0.3.1" }
+sim-lib-mcp-client = { optional = true, version = "0.1.2" }
+sim-lib-mcp-http = { optional = true, version = "0.2.1" }
 sim-lib-mcp-legacy = { optional = true, version = "0.2.0" }
 sim-lib-mcp-stdio = { optional = true, version = "0.1.2" }
 sim-lib-oauth-core = { optional = true, version = "0.2.0" }
@@ -188,7 +188,7 @@ sim-lib-music-serial = { optional = true, version = "0.3.0" }
 sim-lib-music-notation = { optional = true, version = "0.4.0" }
 sim-lib-music-shapes = { optional = true, version = "0.4.0" }
 sim-lib-music-transform = { optional = true, version = "0.3.0" }
-sim-lib-music-wasm-frame = { optional = true, version = "0.1.5" }
+sim-lib-music-wasm-frame = { optional = true, version = "0.1.6" }
 sim-lib-mutation = { optional = true, version = "0.3.0" }
 sim-lib-namespace = { optional = true, version = "0.4.0" }
 sim-lib-numbers-ad = { optional = true, version = "0.4.0" }
@@ -224,7 +224,7 @@ sim-lib-numbers-tensor-f64 = { optional = true, version = "0.5.0" }
 sim-lib-numbers-tensor-i64 = { optional = true, version = "0.5.0" }
 sim-lib-numbers-tensor-linalg = { optional = true, version = "0.5.0" }
 sim-lib-numbers-tensor-rat64 = { optional = true, version = "0.5.0" }
-sim-lib-openai-server = { optional = true, version = "0.5.0" }
+sim-lib-openai-server = { optional = true, version = "0.5.1" }
 sim-lib-pattern = { optional = true, version = "0.4.0" }
 sim-lib-physics-adapter = { optional = true, version = "0.2.0" }
 sim-lib-physics-audit = { optional = true, version = "0.2.0" }
@@ -233,7 +233,7 @@ sim-lib-physics-findings = { optional = true, version = "0.2.0" }
 sim-lib-physics-influence = { optional = true, version = "0.2.1" }
 sim-lib-physics-power = { optional = true, version = "0.2.0" }
 sim-lib-physics-proof = { optional = true, version = "0.2.0" }
-sim-lib-physics-runtime = { optional = true, version = "0.1.1", default-features = false }
+sim-lib-physics-runtime = { optional = true, version = "0.1.2", default-features = false }
 sim-lib-physics-study = { optional = true, version = "0.2.1" }
 sim-lib-pitch-chord = { optional = true, version = "0.4.0" }
 sim-lib-pitch-core = { optional = true, version = "0.4.0" }
@@ -291,7 +291,7 @@ sim-lib-stream-core = { optional = true, version = "0.3.0" }
 sim-lib-stream-coreaudio = { optional = true, version = "0.1.5" }
 sim-lib-stream-device = { optional = true, version = "0.3.0" }
 sim-lib-stream-halo = { optional = true, version = "0.1.3" }
-sim-lib-stream-fabric = { optional = true, version = "0.4.0" }
+sim-lib-stream-fabric = { optional = true, version = "0.4.1" }
 sim-lib-stream-file = { optional = true, version = "0.1.5" }
 sim-lib-stream-host = { optional = true, version = "0.3.0" }
 sim-lib-stream-viture = { optional = true, version = "0.3.1" }
@@ -312,7 +312,7 @@ sim-lib-view-daw = { optional = true, version = "0.1.4" }
 sim-lib-view-device = { optional = true, version = "0.3.0" }
 sim-lib-view-estate = { optional = true, version = "0.1.1" }
 sim-lib-view-doc = { optional = true, version = "0.2.0" }
-sim-lib-view-expr-tree = { optional = true, version = "0.4.0" }
+sim-lib-view-expr-tree = { optional = true, version = "0.4.1" }
 sim-lib-view-interference = { optional = true, version = "0.1.2" }
 sim-lib-view-math = { optional = true, version = "0.3.0" }
 sim-lib-view-spatial = { optional = true, version = "0.3.0" }
@@ -330,7 +330,7 @@ sim-table-hash = { optional = true, version = "0.1.5" }
 sim-table-http = { optional = true, version = "0.1.3" }
 sim-table-lazy = { optional = true, version = "0.1.5" }
 sim-table-override = { optional = true, version = "0.1.3" }
-sim-table-remote = { optional = true, version = "0.1.4" }
+sim-table-remote = { optional = true, version = "0.1.5" }
 sim-value = { optional = true, version = "0.4.0" }
 sim-wasm-abi = { optional = true, version = "0.5.0" }
 
