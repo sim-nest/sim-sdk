@@ -16,9 +16,11 @@ filesystem, process, Git, network, release, or approval effects.
 The installed checker-code identity covers the crate's source tree, manifest,
 dependency lock, compiler toolchain, target, enabled features, and compiler
 configuration rather than only its package version. The SDK also owns the
-`operation/local` revocation-policy issuer. Its immutable snapshots contain
-explicit current or revoked decisions for exact subjects; omission is
-`Unknown`, and crates.io availability is never treated as currentness.
+`operation/local` revocation-policy issuer. A host binds its opaque read/control
+pair through the kernel `GrantSeat`; loaded callables never receive that seat.
+The control holds explicit current or revoked decisions for exact subjects,
+omission is `Unknown`, and every reuse is resolved atomically against its live
+state. Neutral snapshots remain canonical data but are never owner authority.
 
 The implemented scopes cover retirement, canonical identity, scoped bootstrap
 ownership, architecture inventory and the local adapter boundary, pure work
