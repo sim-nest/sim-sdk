@@ -988,27 +988,16 @@ Specimen `spec-test/sim-sdk/crates/sim-conformance-packs/tests/revocation_policy
 Source `crates/sim-conformance-packs/tests/revocation_policy.rs`:
 
 ```rust
-use std::sync::Arc;
-
 use sim_conformance_core::{
-    CheckInputClosureId, CheckScopeId, CheckedSubjectId, EvidenceGrade, EvidenceProvenanceId,
-    EvidenceSetId, IdKind, SemanticId,
+    CheckInputClosureId, CheckScopeId, CheckedSubjectId, EvidenceGrade, IdKind, SemanticId,
 };
 use sim_conformance_packs::{
-    MemorySubject, OperationLocalAuthorityError, bind_operation_local_owner, find_pack,
+    MemorySubject, OperationLocalAuthorityError, OperationLocalOwner, find_pack,
 };
-use sim_kernel::{Cx, DefaultFactory, EagerPolicy, HandleSeed};
+use sim_kernel::{ContentId, Datum, Symbol};
 
 fn sid<K: IdKind>(value: &str) -> SemanticId<K> {
     SemanticId::from_text(value).unwrap()
-}
-
-fn provenance(value: &str) -> EvidenceProvenanceId {
-    sid(value)
-}
-
-fn support(value: &str) -> EvidenceSetId {
-    sid(value)
 }
 
 fn evidence() -> MemorySubject {
@@ -1042,16 +1031,24 @@ fn evidence() -> MemorySubject {
     })
 }
 
-fn context(seed: u64) -> (Cx, sim_kernel::GrantSeat) {
-    Cx::new_seated(
-        Arc::new(EagerPolicy),
-        Arc::new(DefaultFactory),
-        HandleSeed::new(seed),
-    )
+fn canonical(facts: &MemorySubject) -> String {
+    facts
+        .facts()
+        .iter()
+        .map(|(key, value)| format!("{key}={value}\n"))
+        .collect()
+}
+
+fn subject(facts: &MemorySubject) -> CheckedSubjectId {
+    CheckedSubjectId::from_fields(vec![(
+        Symbol::qualified("conformance", "evidence"),
+        Datum::String(canonical(facts)),
+    )])
+    .unwrap()
 }
 
 fn invocation(
-    subject: CheckedSubjectId,
+    facts: &MemorySubject,
 ) -> (
     sim_conformance_core::CheckerBinding,
     sim_conformance_core::CheckInvocation,
@@ -1062,58 +1059,62 @@ fn invocation(
         .instantiate(
             spec.checker_code_id().unwrap(),
             spec.pack_id().unwrap(),
-            subject,
+            subject(facts),
             CheckScopeId::from_text("operation/local").unwrap(),
-            CheckInputClosureId::from_text("closure/exact").unwrap(),
+            CheckInputClosureId::from_fields(vec![(
+                Symbol::qualified("conformance", "evidence"),
+                Datum::String(canonical(facts)),
+            )])
+            .unwrap(),
         )
         .unwrap();
     (binding, invocation)
 }
 
-#[test]
-fn owner_handle_issues_and_rechecks_without_accepting_snapshots() {
-    let (mut cx, seat) = context(1);
-    let (authority, mut control) = bind_operation_local_owner(&mut cx, &seat).unwrap();
-    let subject: CheckedSubjectId = sid("subject/a");
-    control.mark_current(subject.clone()).unwrap();
-    let (binding, invocation) = invocation(subject.clone());
-    let qualified = authority
+fn owner(byte: u8) -> OperationLocalOwner {
+    OperationLocalOwner::boot(ContentId::from_bytes(
+        Symbol::qualified("conformance", "runner-generation"),
+        [byte; 32],
+    ))
+}
+
+fn issue(
+    owner: &OperationLocalOwner,
+    facts: &MemorySubject,
+) -> sim_conformance_packs::QualifiedOperationLocalCheck {
+    owner.mark_current(subject(facts)).unwrap();
+    let authority = owner.operation_handle();
+    let (binding, invocation) = invocation(facts);
+    authority
         .check_and_issue(
             binding,
             invocation,
-            &evidence(),
+            facts,
             EvidenceGrade::Reproducible,
-            provenance("provenance/held-output"),
-            support("support/exact"),
+            sid("provenance/held-output"),
+            sid("support/exact"),
         )
-        .unwrap();
+        .unwrap()
+}
+
+#[test]
+fn owner_handle_issues_and_rechecks_without_accepting_snapshots() {
+    let owner = owner(1);
+    let facts = evidence();
+    let authority = owner.operation_handle();
+    let qualified = issue(&owner, &facts);
     authority.observe_receipt(&qualified).unwrap();
 
-    control.revoke(subject).unwrap();
+    owner.revoke(subject(&facts)).unwrap();
     assert!(qualified.verify_current(&authority).is_err());
 }
 
 #[test]
-fn old_owner_and_foreign_owner_cannot_be_substituted() {
-    let (mut first_cx, first_seat) = context(2);
-    let (first, mut first_control) =
-        bind_operation_local_owner(&mut first_cx, &first_seat).unwrap();
-    let subject: CheckedSubjectId = sid("subject/a");
-    first_control.mark_current(subject.clone()).unwrap();
-    let (binding, invocation) = invocation(subject);
-    let qualified = first
-        .check_and_issue(
-            binding,
-            invocation,
-            &evidence(),
-            EvidenceGrade::Bootstrap,
-            provenance("provenance/a"),
-            support("support/a"),
-        )
-        .unwrap();
-
-    let (mut second_cx, second_seat) = context(3);
-    let (second, _) = bind_operation_local_owner(&mut second_cx, &second_seat).unwrap();
+fn foreign_generation_cannot_be_substituted() {
+    let first_owner = owner(2);
+    let qualified = issue(&first_owner, &evidence());
+    let second_owner = owner(3);
+    let second = second_owner.operation_handle();
     assert!(matches!(
         second.observe_receipt(&qualified),
         Err(OperationLocalAuthorityError::ForeignAuthority)
@@ -1122,32 +1123,54 @@ fn old_owner_and_foreign_owner_cannot_be_substituted() {
 
 #[test]
 fn missing_owner_decision_fails_closed() {
-    let (mut cx, seat) = context(4);
-    let (authority, _) = bind_operation_local_owner(&mut cx, &seat).unwrap();
-    let (binding, invocation) = invocation(sid("subject/missing"));
+    let owner = owner(4);
+    let authority = owner.operation_handle();
+    let facts = evidence();
+    let (binding, invocation) = invocation(&facts);
     assert!(
         authority
             .check_and_issue(
                 binding,
                 invocation,
-                &evidence(),
+                &facts,
                 EvidenceGrade::Bootstrap,
-                provenance("provenance/missing"),
-                support("support/missing"),
+                sid("provenance/missing"),
+                sid("support/missing"),
             )
             .is_err()
     );
 }
 
 #[test]
-fn foreign_host_seat_cannot_bind_an_owner() {
-    let (mut first, _) = context(5);
-    let (_, foreign_seat) = context(6);
+fn owner_drop_invalidates_handle_and_qualified_check() {
+    let owner = owner(5);
+    let authority = owner.operation_handle();
+    let qualified = issue(&owner, &evidence());
+    drop(owner);
     assert!(matches!(
-        bind_operation_local_owner(&mut first, &foreign_seat),
-        Err(OperationLocalAuthorityError::Kernel(
-            sim_kernel::Error::ForeignGrantSeat
-        ))
+        authority.ensure_live(),
+        Err(OperationLocalAuthorityError::Unavailable)
+    ));
+    assert!(qualified.verify_current(&authority).is_err());
+}
+
+#[test]
+fn substituted_facts_cannot_use_a_genuine_current_invocation() {
+    let owner = owner(6);
+    let original = evidence();
+    owner.mark_current(subject(&original)).unwrap();
+    let (binding, invocation) = invocation(&original);
+    let substituted = original.clone().with("subject.variant", "substituted");
+    assert!(matches!(
+        owner.operation_handle().check_and_issue(
+            binding,
+            invocation,
+            &substituted,
+            EvidenceGrade::Reproducible,
+            sid("provenance/substituted"),
+            sid("support/substituted"),
+        ),
+        Err(OperationLocalAuthorityError::Unsupported)
     ));
 }
 ```

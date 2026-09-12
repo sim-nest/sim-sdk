@@ -18,8 +18,8 @@ mod revocation;
 pub mod packs;
 
 pub use authority::{
-    OperationLocalAuthority, OperationLocalAuthorityError, OperationLocalOwnerControl,
-    QualifiedOperationLocalReceipt, bind_operation_local_owner,
+    OperationLocalAuthority, OperationLocalAuthorityError, OperationLocalOwner,
+    QualifiedOperationLocalCheck,
 };
 pub use catalog::{PackSpec, all_packs, find_pack};
 pub use harness::{

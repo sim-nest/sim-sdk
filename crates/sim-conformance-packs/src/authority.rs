@@ -1,18 +1,17 @@
-//! Host-bound authority for `checker/c-op` `operation/local` qualification.
+//! Boot-owned authority for `checker/c-op` `operation/local` qualification.
 
 use std::collections::BTreeMap;
 use std::fmt;
-use std::sync::atomic::{AtomicU64, Ordering};
-use std::sync::{Arc, Mutex, MutexGuard};
+use std::sync::{Arc, Mutex, MutexGuard, Weak};
 
 use sim_conformance_core::{
-    CheckInvocation, CheckScopeId, CheckedSubjectId, CheckerBinding, CheckerReceipt,
+    CheckInputClosureId, CheckScopeId, CheckedSubjectId, CheckerBinding, CheckerReceipt,
     CheckerRevocationDecision, CheckerRevocationHeadId, CheckerRevocationKey,
     CheckerRevocationKeyId, CheckerRevocationObservation, CheckerRevocationSelection,
     CheckerRevocationSet, ConformanceError, EvidenceGrade, EvidenceProvenanceId, EvidenceSetId,
     RevocationStatus,
 };
-use sim_kernel::{CapabilityName, Cx, GrantSeat};
+use sim_kernel::{ContentId, Datum, Symbol};
 
 use crate::revocation::operation_spec;
 use crate::{
@@ -20,36 +19,30 @@ use crate::{
     operation_local_policy_id, owner_revocation_source, packs,
 };
 
-const OWNER_BIND_CAPABILITY: &str = "conformance/operation-local-owner";
-static NEXT_AUTHORITY: AtomicU64 = AtomicU64::new(1);
-
-/// Failure while binding, issuing, or observing owner-qualified evidence.
+/// Failure while issuing or observing owner-qualified evidence.
 #[derive(Debug)]
 pub enum OperationLocalAuthorityError {
-    /// The host grant seat was foreign or the owner capability was absent.
-    Kernel(sim_kernel::Error),
     /// A canonical conformance identity or join was invalid.
     Conformance(ConformanceError),
     /// The installed checker refused the supplied evidence.
     Refused(PackFailure),
     /// The requested checker/scope is not the owner implemented here.
     Unsupported,
-    /// The authority state could not be read without ambiguity.
+    /// The boot owner has stopped or its state cannot be read safely.
     Unavailable,
-    /// The qualified artifact belongs to a different owner instance.
+    /// The qualified artifact belongs to another boot generation.
     ForeignAuthority,
 }
 
 impl fmt::Display for OperationLocalAuthorityError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Kernel(error) => error.fmt(formatter),
             Self::Conformance(error) => error.fmt(formatter),
             Self::Refused(failure) => write!(formatter, "{}: {}", failure.code, failure.detail),
             Self::Unsupported => formatter.write_str("unsupported checker or scope"),
-            Self::Unavailable => formatter.write_str("operation/local owner state unavailable"),
+            Self::Unavailable => formatter.write_str("operation/local boot owner is not live"),
             Self::ForeignAuthority => {
-                formatter.write_str("qualified receipt belongs to another owner authority")
+                formatter.write_str("qualified receipt belongs to another boot generation")
             }
         }
     }
@@ -63,110 +56,92 @@ impl From<ConformanceError> for OperationLocalAuthorityError {
     }
 }
 
-impl From<sim_kernel::Error> for OperationLocalAuthorityError {
-    fn from(error: sim_kernel::Error) -> Self {
-        Self::Kernel(error)
-    }
-}
-
 #[derive(Debug)]
 struct OwnerState {
-    instance: u64,
+    generation: ContentId,
     revision: u64,
     decisions: BTreeMap<CheckerRevocationKeyId, (CheckerRevocationKey, RevocationStatus)>,
 }
 
-/// Read and qualification side of the SDK owner's live currentness boundary.
+/// The boot-selected provider's sole strong owner of operation/local state.
 ///
-/// This handle has no neutral-data constructor. A host must bind it through
-/// [`bind_operation_local_owner`] while holding a kernel [`GrantSeat`]. Loaded
-/// callables receive a [`Cx`] but never its seat, so they cannot mint an owner
-/// or turn a neutral `Current` record into authority.
+/// `generation` is a durable content identity selected by provider boot, not a
+/// process-local counter. Dropping this value invalidates all issued handles.
+#[derive(Debug)]
+pub struct OperationLocalOwner {
+    state: Arc<Mutex<OwnerState>>,
+}
+
+/// Narrow, read/execute-only handle issued by the live boot owner.
+///
+/// Its weak reference cannot keep the provider alive.
 #[derive(Clone, Debug)]
 pub struct OperationLocalAuthority {
-    state: Arc<Mutex<OwnerState>>,
+    state: Weak<Mutex<OwnerState>>,
+    generation: ContentId,
 }
 
-/// Mutation side of one host-bound SDK owner instance.
+/// Opaque result of the exact operation/local checker join.
 ///
-/// The control is deliberately separate from [`OperationLocalAuthority`]. Give
-/// the read handle to checker consumers; retain this control at the selected
-/// boot provider that owns current/revoked decisions.
-#[derive(Debug)]
-pub struct OperationLocalOwnerControl {
-    state: Arc<Mutex<OwnerState>>,
-}
-
-/// Opaque result of an actual SDK-owned `operation/local` check.
-///
-/// Its fields and constructor are private. Neutral receipt/revocation records
-/// remain useful canonical data, but cannot be promoted to this authority-bearing
-/// artifact by a caller.
+/// Neutral receipts cannot be promoted to this type, and its weak binding
+/// cannot keep a dead provider current.
 #[derive(Clone, Debug)]
-pub struct QualifiedOperationLocalReceipt {
-    authority: Arc<Mutex<OwnerState>>,
+pub struct QualifiedOperationLocalCheck {
+    authority: Weak<Mutex<OwnerState>>,
+    generation: ContentId,
     binding: CheckerBinding,
-    invocation: CheckInvocation,
+    invocation: sim_conformance_core::CheckInvocation,
     selection: CheckerRevocationSelection,
     receipt: CheckerReceipt,
     observation: CheckerRevocationObservation,
     observations: Vec<CheckObservation>,
 }
 
-/// Binds one operation/local owner to a host-controlled boot context.
-///
-/// The grant seat is checked against `cx`, then the private owner capability is
-/// seated in that context. A fresh context/seat pair creates a distinct owner;
-/// artifacts from one owner instance are never accepted by another.
-pub fn bind_operation_local_owner(
-    cx: &mut Cx,
-    seat: &GrantSeat,
-) -> Result<(OperationLocalAuthority, OperationLocalOwnerControl), OperationLocalAuthorityError> {
-    let capability = CapabilityName::new(OWNER_BIND_CAPABILITY);
-    seat.grant(cx, capability.clone())?;
-    cx.require(&capability)?;
-    let instance = NEXT_AUTHORITY
-        .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
-            value.checked_add(1)
-        })
-        .map_err(|_| OperationLocalAuthorityError::Unavailable)?;
-    let state = Arc::new(Mutex::new(OwnerState {
-        instance,
-        revision: 0,
-        decisions: BTreeMap::new(),
-    }));
-    Ok((
-        OperationLocalAuthority {
-            state: Arc::clone(&state),
-        },
-        OperationLocalOwnerControl { state },
-    ))
-}
+impl OperationLocalOwner {
+    /// Starts one provider-owned generation from its durable boot identity.
+    pub fn boot(generation: ContentId) -> Self {
+        Self {
+            state: Arc::new(Mutex::new(OwnerState {
+                generation,
+                revision: 0,
+                decisions: BTreeMap::new(),
+            })),
+        }
+    }
 
-impl OperationLocalOwnerControl {
-    /// Selects `Current` for one exact subject under the installed implementation.
+    /// Issues a weak, operation-only handle for an admitted consumer.
+    pub fn operation_handle(&self) -> OperationLocalAuthority {
+        let generation = self
+            .state
+            .lock()
+            .map(|state| state.generation.clone())
+            .unwrap_or_else(|poisoned| poisoned.into_inner().generation.clone());
+        OperationLocalAuthority {
+            state: Arc::downgrade(&self.state),
+            generation,
+        }
+    }
+
+    /// Selects `Current` for one exact checked subject.
     pub fn mark_current(
-        &mut self,
+        &self,
         subject: CheckedSubjectId,
     ) -> Result<(), OperationLocalAuthorityError> {
         self.record(subject, RevocationStatus::Current)
     }
 
-    /// Selects `Revoked` for one exact subject under the installed implementation.
-    pub fn revoke(
-        &mut self,
-        subject: CheckedSubjectId,
-    ) -> Result<(), OperationLocalAuthorityError> {
+    /// Selects `Revoked` for one exact checked subject.
+    pub fn revoke(&self, subject: CheckedSubjectId) -> Result<(), OperationLocalAuthorityError> {
         self.record(subject, RevocationStatus::Revoked)
     }
 
     fn record(
-        &mut self,
+        &self,
         subject: CheckedSubjectId,
         status: RevocationStatus,
     ) -> Result<(), OperationLocalAuthorityError> {
         let key = operation_key(subject)?;
-        let mut state = lock(&self.state)?;
+        let mut state = lock_arc(&self.state)?;
         state.revision = state
             .revision
             .checked_add(1)
@@ -177,31 +152,55 @@ impl OperationLocalOwnerControl {
 }
 
 impl OperationLocalAuthority {
-    /// Runs the actual installed checker and issues an opaque qualified receipt.
+    /// Returns the durable boot-generation identity bound to this handle.
+    pub const fn generation(&self) -> &ContentId {
+        &self.generation
+    }
+
+    /// Confirms that the exact provider generation which issued this handle is live.
+    pub fn ensure_live(&self) -> Result<(), OperationLocalAuthorityError> {
+        let strong = self
+            .state
+            .upgrade()
+            .ok_or(OperationLocalAuthorityError::Unavailable)?;
+        let state = lock_arc(&strong)?;
+        if state.generation == self.generation {
+            Ok(())
+        } else {
+            Err(OperationLocalAuthorityError::ForeignAuthority)
+        }
+    }
+
+    /// Runs the checker and issues an opaque, live-bound exact-input artifact.
     #[allow(clippy::too_many_arguments)]
     pub fn check_and_issue(
         &self,
         binding: CheckerBinding,
-        invocation: CheckInvocation,
+        invocation: sim_conformance_core::CheckInvocation,
         evidence: &dyn PackSubject,
         grade: EvidenceGrade,
         provenance: EvidenceProvenanceId,
         support: EvidenceSetId,
-    ) -> Result<QualifiedOperationLocalReceipt, OperationLocalAuthorityError> {
-        verify_operation_invocation(&binding, &invocation)?;
-        let state = lock(&self.state)?;
+    ) -> Result<QualifiedOperationLocalCheck, OperationLocalAuthorityError> {
+        verify_operation_invocation(&binding, &invocation, evidence)?;
+        let strong = self
+            .state
+            .upgrade()
+            .ok_or(OperationLocalAuthorityError::Unavailable)?;
+        let state = lock_arc(&strong)?;
+        if state.generation != self.generation {
+            return Err(OperationLocalAuthorityError::ForeignAuthority);
+        }
         let set = snapshot(&state)?;
         let key = CheckerRevocationKey::for_invocation(owner_revocation_source()?, &invocation)?;
         let selection = set.lookup(&key);
-        let checker = "checker/c-op";
         let binding_text = render(binding.id().content_id());
         let subject_text = render(invocation.subject().content_id());
-        let scope = "operation/local";
         let request = PackRequest {
-            checker,
+            checker: "checker/c-op",
             binding: &binding_text,
             subject: &subject_text,
-            scope,
+            scope: "operation/local",
             evidence,
         };
         let (result, observations) = match packs::operation::check(&request) {
@@ -228,8 +227,9 @@ impl OperationLocalAuthority {
         )?;
         let observation = selection.bind_receipt(receipt.id().clone());
         receipt.verify(&binding, &invocation, &observation)?;
-        Ok(QualifiedOperationLocalReceipt {
-            authority: Arc::clone(&self.state),
+        Ok(QualifiedOperationLocalCheck {
+            authority: Arc::downgrade(&strong),
+            generation: self.generation.clone(),
             binding,
             invocation,
             selection,
@@ -239,57 +239,55 @@ impl OperationLocalAuthority {
         })
     }
 
-    /// Resolves a qualified receipt against the owner's current live state.
-    ///
-    /// No snapshot or head is accepted from the caller. The lock covers head
-    /// selection and exact-key lookup, so a self-consistent older pair cannot
-    /// be replayed after the owner advances.
+    /// Resolves an artifact against the exact live boot owner.
     pub fn observe_receipt(
         &self,
-        qualified: &QualifiedOperationLocalReceipt,
+        qualified: &QualifiedOperationLocalCheck,
     ) -> Result<CheckerRevocationObservation, OperationLocalAuthorityError> {
-        if !Arc::ptr_eq(&self.state, &qualified.authority) {
+        if self.generation != qualified.generation
+            || !Weak::ptr_eq(&self.state, &qualified.authority)
+        {
             return Err(OperationLocalAuthorityError::ForeignAuthority);
         }
-        let state = lock(&self.state)?;
+        let strong = self
+            .state
+            .upgrade()
+            .ok_or(OperationLocalAuthorityError::Unavailable)?;
+        let state = lock_arc(&strong)?;
         let set = snapshot(&state)?;
-        let selection = set.lookup(qualified.selection.key());
-        Ok(selection.bind_receipt(qualified.receipt.id().clone()))
+        Ok(set
+            .lookup(qualified.selection.key())
+            .bind_receipt(qualified.receipt.id().clone()))
     }
 }
 
-impl QualifiedOperationLocalReceipt {
+impl QualifiedOperationLocalCheck {
     /// Returns the exact installed checker binding.
     pub const fn binding(&self) -> &CheckerBinding {
         &self.binding
     }
-
     /// Returns the exact checker invocation.
-    pub const fn invocation(&self) -> &CheckInvocation {
+    pub const fn invocation(&self) -> &sim_conformance_core::CheckInvocation {
         &self.invocation
     }
-
-    /// Returns the owner selection observed at issue time.
+    /// Returns the issue-time owner selection.
     pub const fn issue_selection(&self) -> &CheckerRevocationSelection {
         &self.selection
     }
-
     /// Returns the exact checker receipt.
     pub const fn receipt(&self) -> &CheckerReceipt {
         &self.receipt
     }
-
-    /// Returns the receipt-bound owner observation made at issue time.
+    /// Returns the receipt-bound issue observation.
     pub const fn issue_observation(&self) -> &CheckerRevocationObservation {
         &self.observation
     }
-
-    /// Returns the deterministic observations covered by the result.
+    /// Returns deterministic observations covered by the result.
     pub fn observations(&self) -> &[CheckObservation] {
         &self.observations
     }
 
-    /// Verifies issue-time coherence and fresh owner currentness.
+    /// Verifies issue coherence and fresh live-owner currentness.
     pub fn verify_current(
         &self,
         authority: &OperationLocalAuthority,
@@ -320,27 +318,75 @@ fn operation_key(subject: CheckedSubjectId) -> Result<CheckerRevocationKey, Conf
 
 fn verify_operation_invocation(
     binding: &CheckerBinding,
-    invocation: &CheckInvocation,
+    invocation: &sim_conformance_core::CheckInvocation,
+    evidence: &dyn PackSubject,
 ) -> Result<(), OperationLocalAuthorityError> {
     let spec = operation_spec()?;
     let expected = spec.checker_binding()?;
     let scope = CheckScopeId::from_text("operation/local")?;
+    let canonical = canonical_evidence(evidence)?;
+    let subject = CheckedSubjectId::from_fields(vec![(
+        Symbol::qualified("conformance", "evidence"),
+        Datum::String(canonical.clone()),
+    )])?;
+    let closure = CheckInputClosureId::from_fields(vec![(
+        Symbol::qualified("conformance", "evidence"),
+        Datum::String(canonical),
+    )])?;
     if binding != &expected
         || invocation.binding() != binding.id()
         || invocation.checker_code() != &spec.checker_code_id()?
         || invocation.pack() != &spec.pack_id()?
         || invocation.scope() != &scope
+        || invocation.subject() != &subject
+        || invocation.input_closure() != &closure
     {
         return Err(OperationLocalAuthorityError::Unsupported);
     }
     Ok(())
 }
 
+fn canonical_evidence(evidence: &dyn PackSubject) -> Result<String, OperationLocalAuthorityError> {
+    let keys = evidence.fact_keys();
+    if keys.windows(2).any(|pair| pair[0] >= pair[1]) {
+        return Err(OperationLocalAuthorityError::Unsupported);
+    }
+    let mut canonical = String::new();
+    for key in keys {
+        let value = evidence
+            .fact(key)
+            .ok_or(OperationLocalAuthorityError::Unsupported)?;
+        canonical.push_str(key);
+        canonical.push('=');
+        canonical.push_str(value);
+        canonical.push('\n');
+    }
+    Ok(canonical)
+}
+
 fn snapshot(state: &OwnerState) -> Result<CheckerRevocationSet, OperationLocalAuthorityError> {
-    let head = CheckerRevocationHeadId::from_text(&format!(
-        "sim-sdk/operation-local-owner/{}/revision/{}",
-        state.instance, state.revision
-    ))?;
+    let head = CheckerRevocationHeadId::from_fields(vec![
+        (
+            Symbol::qualified("conformance", "owner-generation"),
+            Datum::Node {
+                tag: Symbol::qualified("conformance", "content-id"),
+                fields: vec![
+                    (
+                        Symbol::new("algorithm"),
+                        Datum::Symbol(state.generation.algorithm.clone()),
+                    ),
+                    (
+                        Symbol::new("digest"),
+                        Datum::Bytes(state.generation.bytes.to_vec()),
+                    ),
+                ],
+            },
+        ),
+        (
+            Symbol::qualified("conformance", "owner-revision"),
+            Datum::String(state.revision.to_string()),
+        ),
+    ])?;
     let decisions = state
         .decisions
         .values()
@@ -356,7 +402,7 @@ fn snapshot(state: &OwnerState) -> Result<CheckerRevocationSet, OperationLocalAu
     )?)
 }
 
-fn lock(
+fn lock_arc(
     state: &Arc<Mutex<OwnerState>>,
 ) -> Result<MutexGuard<'_, OwnerState>, OperationLocalAuthorityError> {
     state
@@ -364,7 +410,7 @@ fn lock(
         .map_err(|_| OperationLocalAuthorityError::Unavailable)
 }
 
-fn render(id: &sim_kernel::ContentId) -> String {
+fn render(id: &ContentId) -> String {
     let digest = id
         .bytes
         .iter()
