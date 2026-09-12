@@ -19,6 +19,181 @@ use crate::{
     operation_local_policy_id, owner_revocation_source, packs,
 };
 
+/// Maximum byte length of one canonical `operation/local` evidence value.
+pub const MAX_OPERATION_LOCAL_EVIDENCE_BYTES: usize = 16_384;
+/// Maximum number of facts in one canonical `operation/local` evidence value.
+pub const MAX_OPERATION_LOCAL_EVIDENCE_FACTS: usize = 256;
+
+/// Refusal while freezing one exact `operation/local` evidence value.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum OperationLocalEvidenceError {
+    /// The canonical byte representation exceeds its fixed resource ceiling.
+    ByteBound,
+    /// The fact count exceeds its fixed resource ceiling.
+    FactBound,
+    /// The input is not in the one canonical lexical form.
+    Malformed(String),
+}
+
+impl fmt::Display for OperationLocalEvidenceError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::ByteBound => formatter.write_str("evidence exceeds 16384 bytes"),
+            Self::FactBound => formatter.write_str("evidence exceeds 256 facts"),
+            Self::Malformed(detail) => detail.fmt(formatter),
+        }
+    }
+}
+
+impl std::error::Error for OperationLocalEvidenceError {}
+
+/// One owned, bounded, unambiguous snapshot of `operation/local` facts.
+///
+/// Construction reads a [`PackSubject`] exactly once. Identity derivation and
+/// checker execution subsequently use only this sealed map, so a stateful
+/// subject cannot change between those operations.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OperationLocalEvidence {
+    facts: BTreeMap<String, String>,
+    canonical: String,
+}
+
+impl OperationLocalEvidence {
+    /// Parses the strict canonical P3 text representation.
+    pub fn parse(bytes: &[u8]) -> Result<Self, OperationLocalEvidenceError> {
+        if bytes.len() > MAX_OPERATION_LOCAL_EVIDENCE_BYTES {
+            return Err(OperationLocalEvidenceError::ByteBound);
+        }
+        let text = std::str::from_utf8(bytes)
+            .map_err(|_| OperationLocalEvidenceError::Malformed("evidence is not UTF-8".into()))?;
+        if text.is_empty() {
+            return Err(OperationLocalEvidenceError::Malformed(
+                "empty evidence".into(),
+            ));
+        }
+        let body = text.strip_suffix('\n').ok_or_else(|| {
+            OperationLocalEvidenceError::Malformed(
+                "canonical evidence must end with a newline".into(),
+            )
+        })?;
+        if body.is_empty() {
+            return Err(OperationLocalEvidenceError::Malformed(
+                "empty evidence".into(),
+            ));
+        }
+        let mut facts = BTreeMap::new();
+        let mut previous: Option<&str> = None;
+        for (index, line) in body.split('\n').enumerate() {
+            if index >= MAX_OPERATION_LOCAL_EVIDENCE_FACTS {
+                return Err(OperationLocalEvidenceError::FactBound);
+            }
+            let (key, value) = line.split_once('=').ok_or_else(|| {
+                OperationLocalEvidenceError::Malformed(format!("fact {index} has no `=`"))
+            })?;
+            validate_fact(index, key, value)?;
+            if previous.is_some_and(|seen| seen >= key) {
+                return Err(OperationLocalEvidenceError::Malformed(format!(
+                    "fact keys are duplicate or unsorted at `{key}`"
+                )));
+            }
+            facts.insert(key.to_owned(), value.to_owned());
+            previous = Some(key);
+        }
+        Ok(Self {
+            facts,
+            canonical: text.to_owned(),
+        })
+    }
+
+    /// Reads an arbitrary subject once and freezes it under the exact P3 rules.
+    pub fn capture(subject: &dyn PackSubject) -> Result<Self, OperationLocalEvidenceError> {
+        let keys = subject.fact_keys();
+        if keys.is_empty() {
+            return Err(OperationLocalEvidenceError::Malformed(
+                "empty evidence".into(),
+            ));
+        }
+        if keys.len() > MAX_OPERATION_LOCAL_EVIDENCE_FACTS {
+            return Err(OperationLocalEvidenceError::FactBound);
+        }
+        let mut facts = BTreeMap::new();
+        let mut canonical = String::new();
+        let mut previous: Option<&str> = None;
+        for (index, key) in keys.into_iter().enumerate() {
+            if previous.is_some_and(|seen| seen >= key) {
+                return Err(OperationLocalEvidenceError::Malformed(format!(
+                    "fact keys are duplicate or unsorted at `{key}`"
+                )));
+            }
+            let value = subject.fact(key).ok_or_else(|| {
+                OperationLocalEvidenceError::Malformed(format!(
+                    "fact {index} disappeared while being captured"
+                ))
+            })?;
+            validate_fact(index, key, value)?;
+            facts.insert(key.to_owned(), value.to_owned());
+            canonical.push_str(key);
+            canonical.push('=');
+            canonical.push_str(value);
+            canonical.push('\n');
+            if canonical.len() > MAX_OPERATION_LOCAL_EVIDENCE_BYTES {
+                return Err(OperationLocalEvidenceError::ByteBound);
+            }
+            previous = Some(key);
+        }
+        Ok(Self { facts, canonical })
+    }
+
+    /// Returns the unique canonical bytes bound into P3 identities.
+    pub fn canonical(&self) -> &str {
+        &self.canonical
+    }
+
+    /// Derives the exact checked-subject identity of this frozen value.
+    pub fn subject_id(&self) -> Result<CheckedSubjectId, ConformanceError> {
+        CheckedSubjectId::from_fields(vec![(
+            Symbol::qualified("conformance", "evidence"),
+            Datum::String(self.canonical.clone()),
+        )])
+    }
+
+    /// Derives the exact input-closure identity of this frozen value.
+    pub fn input_closure_id(&self) -> Result<CheckInputClosureId, ConformanceError> {
+        CheckInputClosureId::from_fields(vec![(
+            Symbol::qualified("conformance", "evidence"),
+            Datum::String(self.canonical.clone()),
+        )])
+    }
+}
+
+impl PackSubject for OperationLocalEvidence {
+    fn fact(&self, key: &str) -> Option<&str> {
+        self.facts.get(key).map(String::as_str)
+    }
+
+    fn fact_keys(&self) -> Vec<&str> {
+        self.facts.keys().map(String::as_str).collect()
+    }
+}
+
+fn validate_fact(index: usize, key: &str, value: &str) -> Result<(), OperationLocalEvidenceError> {
+    if key.is_empty()
+        || value.is_empty()
+        || key.len() > 256
+        || value.len() > 4_096
+        || key.contains('=')
+        || key
+            .chars()
+            .any(|character| character.is_control() || character.is_whitespace())
+        || value.chars().any(char::is_control)
+    {
+        return Err(OperationLocalEvidenceError::Malformed(format!(
+            "fact {index} is empty, unbounded, ambiguous, or contains control text"
+        )));
+    }
+    Ok(())
+}
+
 /// Failure while issuing or observing owner-qualified evidence.
 #[derive(Debug)]
 pub enum OperationLocalAuthorityError {
@@ -177,7 +352,7 @@ impl OperationLocalAuthority {
         &self,
         binding: CheckerBinding,
         invocation: sim_conformance_core::CheckInvocation,
-        evidence: &dyn PackSubject,
+        evidence: &OperationLocalEvidence,
         grade: EvidenceGrade,
         provenance: EvidenceProvenanceId,
         support: EvidenceSetId,
@@ -319,20 +494,13 @@ fn operation_key(subject: CheckedSubjectId) -> Result<CheckerRevocationKey, Conf
 fn verify_operation_invocation(
     binding: &CheckerBinding,
     invocation: &sim_conformance_core::CheckInvocation,
-    evidence: &dyn PackSubject,
+    evidence: &OperationLocalEvidence,
 ) -> Result<(), OperationLocalAuthorityError> {
     let spec = operation_spec()?;
     let expected = spec.checker_binding()?;
     let scope = CheckScopeId::from_text("operation/local")?;
-    let canonical = canonical_evidence(evidence)?;
-    let subject = CheckedSubjectId::from_fields(vec![(
-        Symbol::qualified("conformance", "evidence"),
-        Datum::String(canonical.clone()),
-    )])?;
-    let closure = CheckInputClosureId::from_fields(vec![(
-        Symbol::qualified("conformance", "evidence"),
-        Datum::String(canonical),
-    )])?;
+    let subject = evidence.subject_id()?;
+    let closure = evidence.input_closure_id()?;
     if binding != &expected
         || invocation.binding() != binding.id()
         || invocation.checker_code() != &spec.checker_code_id()?
@@ -344,24 +512,6 @@ fn verify_operation_invocation(
         return Err(OperationLocalAuthorityError::Unsupported);
     }
     Ok(())
-}
-
-fn canonical_evidence(evidence: &dyn PackSubject) -> Result<String, OperationLocalAuthorityError> {
-    let keys = evidence.fact_keys();
-    if keys.windows(2).any(|pair| pair[0] >= pair[1]) {
-        return Err(OperationLocalAuthorityError::Unsupported);
-    }
-    let mut canonical = String::new();
-    for key in keys {
-        let value = evidence
-            .fact(key)
-            .ok_or(OperationLocalAuthorityError::Unsupported)?;
-        canonical.push_str(key);
-        canonical.push('=');
-        canonical.push_str(value);
-        canonical.push('\n');
-    }
-    Ok(canonical)
 }
 
 fn snapshot(state: &OwnerState) -> Result<CheckerRevocationSet, OperationLocalAuthorityError> {

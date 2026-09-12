@@ -18,8 +18,9 @@ mod revocation;
 pub mod packs;
 
 pub use authority::{
-    OperationLocalAuthority, OperationLocalAuthorityError, OperationLocalOwner,
-    QualifiedOperationLocalCheck,
+    MAX_OPERATION_LOCAL_EVIDENCE_BYTES, MAX_OPERATION_LOCAL_EVIDENCE_FACTS,
+    OperationLocalAuthority, OperationLocalAuthorityError, OperationLocalEvidence,
+    OperationLocalEvidenceError, OperationLocalOwner, QualifiedOperationLocalCheck,
 };
 pub use catalog::{PackSpec, all_packs, find_pack};
 pub use harness::{

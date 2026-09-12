@@ -992,7 +992,8 @@ use sim_conformance_core::{
     CheckInputClosureId, CheckScopeId, CheckedSubjectId, EvidenceGrade, IdKind, SemanticId,
 };
 use sim_conformance_packs::{
-    MemorySubject, OperationLocalAuthorityError, OperationLocalOwner, find_pack,
+    MemorySubject, OperationLocalAuthorityError, OperationLocalEvidence,
+    OperationLocalEvidenceError, OperationLocalOwner, PackSubject, find_pack,
 };
 use sim_kernel::{ContentId, Datum, Symbol};
 
@@ -1085,11 +1086,12 @@ fn issue(
     owner.mark_current(subject(facts)).unwrap();
     let authority = owner.operation_handle();
     let (binding, invocation) = invocation(facts);
+    let frozen = OperationLocalEvidence::capture(facts).unwrap();
     authority
         .check_and_issue(
             binding,
             invocation,
-            facts,
+            &frozen,
             EvidenceGrade::Reproducible,
             sid("provenance/held-output"),
             sid("support/exact"),
@@ -1127,12 +1129,13 @@ fn missing_owner_decision_fails_closed() {
     let authority = owner.operation_handle();
     let facts = evidence();
     let (binding, invocation) = invocation(&facts);
+    let frozen = OperationLocalEvidence::capture(&facts).unwrap();
     assert!(
         authority
             .check_and_issue(
                 binding,
                 invocation,
-                &facts,
+                &frozen,
                 EvidenceGrade::Bootstrap,
                 sid("provenance/missing"),
                 sid("support/missing"),
@@ -1161,6 +1164,7 @@ fn substituted_facts_cannot_use_a_genuine_current_invocation() {
     owner.mark_current(subject(&original)).unwrap();
     let (binding, invocation) = invocation(&original);
     let substituted = original.clone().with("subject.variant", "substituted");
+    let substituted = OperationLocalEvidence::capture(&substituted).unwrap();
     assert!(matches!(
         owner.operation_handle().check_and_issue(
             binding,
@@ -1171,6 +1175,116 @@ fn substituted_facts_cannot_use_a_genuine_current_invocation() {
             sid("support/substituted"),
         ),
         Err(OperationLocalAuthorityError::Unsupported)
+    ));
+}
+
+#[test]
+fn stateful_subject_is_read_once_before_identity_and_check() {
+    use std::cell::Cell;
+
+    struct SwitchingSubject {
+        base: MemorySubject,
+        target_reads: Cell<usize>,
+    }
+    impl PackSubject for SwitchingSubject {
+        fn fact(&self, key: &str) -> Option<&str> {
+            if key == "operation.local-network-absent" {
+                let reads = self.target_reads.get();
+                self.target_reads.set(reads + 1);
+                return Some(if reads == 0 { "false" } else { "true" });
+            }
+            self.base.fact(key)
+        }
+
+        fn fact_keys(&self) -> Vec<&str> {
+            self.base.fact_keys()
+        }
+    }
+
+    let changing = SwitchingSubject {
+        base: evidence(),
+        target_reads: Cell::new(0),
+    };
+    let frozen = OperationLocalEvidence::capture(&changing).unwrap();
+    assert_eq!(changing.target_reads.get(), 1);
+    let owner = owner(7);
+    owner.mark_current(frozen.subject_id().unwrap()).unwrap();
+    let spec = find_pack("checker/c-op").unwrap();
+    let binding = spec.checker_binding().unwrap();
+    let invocation = binding
+        .instantiate(
+            spec.checker_code_id().unwrap(),
+            spec.pack_id().unwrap(),
+            frozen.subject_id().unwrap(),
+            CheckScopeId::from_text("operation/local").unwrap(),
+            frozen.input_closure_id().unwrap(),
+        )
+        .unwrap();
+    assert!(matches!(
+        owner.operation_handle().check_and_issue(
+            binding,
+            invocation,
+            &frozen,
+            EvidenceGrade::Reproducible,
+            sid("provenance/stateful"),
+            sid("support/stateful"),
+        ),
+        Err(OperationLocalAuthorityError::Refused(_))
+    ));
+    assert_eq!(changing.target_reads.get(), 1);
+}
+
+#[test]
+fn delimiter_collisions_are_refused_before_identity_derivation() {
+    let split = evidence().with("extra.a", "left").with("extra.b", "right");
+    let injected = evidence().with("extra.a", "left\nextra.b=right");
+    let split = OperationLocalEvidence::capture(&split).unwrap();
+    assert!(matches!(
+        OperationLocalEvidence::capture(&injected),
+        Err(OperationLocalEvidenceError::Malformed(_))
+    ));
+    assert!(split.canonical().contains("extra.a=left\nextra.b=right\n"));
+
+    let ambiguous_key = evidence().with("extra.a=left", "right");
+    assert!(OperationLocalEvidence::capture(&ambiguous_key).is_err());
+}
+
+#[test]
+fn every_p3_forbidden_evidence_class_fails_at_the_shared_constructor() {
+    for malformed in [
+        b"".as_slice(),
+        b"a=true".as_slice(),
+        b"a=true\r\n".as_slice(),
+        b"a=\n".as_slice(),
+        b"a =true\n".as_slice(),
+        b"a=bad\x01value\n".as_slice(),
+        b"b=true\na=true\n".as_slice(),
+        b"a=true\na=false\n".as_slice(),
+        b"no-separator\n".as_slice(),
+        &[0xff, b'=', b'x', b'\n'],
+    ] {
+        assert!(OperationLocalEvidence::parse(malformed).is_err());
+    }
+
+    let long_key = format!("{}=true\n", "k".repeat(257));
+    assert!(OperationLocalEvidence::parse(long_key.as_bytes()).is_err());
+    let long_value = format!("key={}\n", "v".repeat(4_097));
+    assert!(OperationLocalEvidence::parse(long_value.as_bytes()).is_err());
+
+    let too_many = (0..257)
+        .map(|index| format!("key{index:03}=true\n"))
+        .collect::<String>();
+    assert!(matches!(
+        OperationLocalEvidence::parse(too_many.as_bytes()),
+        Err(OperationLocalEvidenceError::FactBound)
+    ));
+
+    let too_large = (0..5)
+        .map(|index| format!("key{index}={}\n", "v".repeat(4_096)))
+        .collect::<String>();
+    assert!(matches!(
+        OperationLocalEvidence::parse(too_large.as_bytes()),
+        Err(OperationLocalEvidenceError::ByteBound)
     ));
 }
 ```
