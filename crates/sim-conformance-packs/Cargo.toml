@@ -19,6 +19,9 @@ sim-conformance-core = "0.2.0"
 sim-kernel = "0.4.0"
 sim-work-core = "0.2.0"
 
+[build-dependencies]
+sha2 = "0.10"
+
 [dev-dependencies]
 sim-incremental-core = "0.5.0"
 sim-lib-world = "0.1.0"

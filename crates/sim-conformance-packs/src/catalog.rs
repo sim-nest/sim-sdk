@@ -5,7 +5,7 @@ use std::collections::BTreeSet;
 use sim_conformance_core::{
     CheckArgument, CheckScopeId, CheckTemplate, CheckerBinding, CommandId, ConformanceError,
     ConformancePackId, EnvironmentPolicyId, OutputShapeId, OwnerBindingId, ProofCodeId,
-    RevocationSourceId, WorkingDirectoryPolicyId,
+    WorkingDirectoryPolicyId,
 };
 
 const ACTIVATION_OWNER_BINDING: &str =
@@ -31,10 +31,31 @@ pub struct PackSpec {
 impl PackSpec {
     /// Returns the exact immutable published checker-code identity.
     pub fn checker_code_id(&self) -> Result<ProofCodeId, ConformanceError> {
+        self.checker_code_id_for_build_inputs(env!("SIM_CONFORMANCE_PACKS_BUILD_INPUTS_SHA256"))
+    }
+
+    fn checker_code_id_for_build_inputs(
+        &self,
+        build_inputs_sha256: &str,
+    ) -> Result<ProofCodeId, ConformanceError> {
+        if build_inputs_sha256.len() != 64
+            || !build_inputs_sha256
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+        {
+            return Err(ConformanceError::UnresolvedBinding);
+        }
         ProofCodeId::from_text(&format!(
-            "sim-conformance-packs@{}",
+            "sim-conformance-packs@{};build-inputs-sha256={build_inputs_sha256}",
             env!("CARGO_PKG_VERSION")
         ))
+    }
+
+    /// Returns the SHA-256 identity of the exact source, dependency lock,
+    /// toolchain, target, feature, and compiler configuration inputs used to
+    /// build this installed checker.
+    pub const fn build_inputs_sha256(&self) -> &'static str {
+        env!("SIM_CONFORMANCE_PACKS_BUILD_INPUTS_SHA256")
     }
 
     /// Returns the typed pack id bound to this exact activation record.
@@ -78,7 +99,7 @@ impl PackSpec {
             self.public_symbol()?.into(),
             vec![self.pack_id()?],
             OutputShapeId::from_text("check/receipt-v1")?,
-            RevocationSourceId::from_text("crates.io/sim-conformance-packs")?,
+            crate::owner_revocation_source()?,
             CommandId::from_text(
                 "cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps && cargo clippy --workspace --all-features --all-targets -- -D warnings && cargo test --workspace --all-features",
             )?,
@@ -525,4 +546,96 @@ pub const fn all_packs() -> &'static [PackSpec] {
 /// Looks up one exact checker id.
 pub fn find_pack(checker: &str) -> Option<&'static PackSpec> {
     PACKS.iter().find(|spec| spec.checker == checker)
+}
+
+#[cfg(test)]
+mod tests {
+    use sim_conformance_core::{
+        CheckInputClosureId, CheckScopeId, CheckedSubjectId, CheckerReceipt,
+        CheckerRevocationDecision, CheckerRevocationHeadId, CheckerRevocationKey,
+        CheckerRevocationSet, EvidenceGrade, EvidenceProvenanceId, EvidenceSetId, IdKind, PolicyId,
+        RevocationStatus, SemanticId,
+    };
+
+    use super::*;
+
+    fn sid<K: IdKind>(value: &str) -> SemanticId<K> {
+        SemanticId::from_text(value).unwrap()
+    }
+
+    #[test]
+    fn same_version_source_substitution_changes_code_and_invocation_identity() {
+        let spec = find_pack("checker/c-op").unwrap();
+        let source_a = spec
+            .checker_code_id_for_build_inputs(&"a".repeat(64))
+            .unwrap();
+        let source_b = spec
+            .checker_code_id_for_build_inputs(&"b".repeat(64))
+            .unwrap();
+        assert_ne!(source_a, source_b);
+        let binding = spec.checker_binding().unwrap();
+        let subject: CheckedSubjectId = sid("subject/same");
+        let scope: CheckScopeId = sid("operation/local");
+        let closure: CheckInputClosureId = sid("closure/same");
+        let instantiate = |code| {
+            binding
+                .instantiate(
+                    code,
+                    spec.pack_id().unwrap(),
+                    subject.clone(),
+                    scope.clone(),
+                    closure.clone(),
+                )
+                .unwrap()
+        };
+        let invocation_a = instantiate(source_a);
+        let invocation_b = instantiate(source_b);
+        assert_ne!(invocation_a.id(), invocation_b.id());
+
+        let issue = |invocation: &sim_conformance_core::CheckInvocation| {
+            let key = CheckerRevocationKey::for_invocation(
+                binding.revocation_source().clone(),
+                invocation,
+            )
+            .unwrap();
+            let policy: PolicyId = sid("policy/same-version-test");
+            let head: CheckerRevocationHeadId = sid("head/same");
+            let provenance: EvidenceProvenanceId = sid("provenance/exact");
+            let support: EvidenceSetId = sid("support/exact");
+            let selected = CheckerRevocationSet::from_owner_snapshot(
+                binding.owner().clone(),
+                binding.revocation_source().clone(),
+                policy.clone(),
+                head,
+                vec![
+                    CheckerRevocationDecision::new(key.clone(), RevocationStatus::Current).unwrap(),
+                ],
+            )
+            .unwrap()
+            .lookup(&key);
+            CheckerReceipt::passing(
+                &binding,
+                invocation,
+                sid("result/pass"),
+                EvidenceGrade::Reproducible,
+                provenance,
+                policy,
+                support,
+                &selected,
+            )
+            .unwrap()
+        };
+        assert_ne!(issue(&invocation_a).id(), issue(&invocation_b).id());
+    }
+
+    #[test]
+    fn installed_build_identity_is_a_lowercase_sha256() {
+        let identity = find_pack("checker/c-op").unwrap().build_inputs_sha256();
+        assert_eq!(identity.len(), 64);
+        assert!(
+            identity
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+        );
+    }
 }

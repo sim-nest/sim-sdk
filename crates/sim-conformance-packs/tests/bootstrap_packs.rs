@@ -540,7 +540,7 @@ fn one_static_binding_yields_four_exact_invocation_ids() {
         for scope in scopes.clone() {
             let invocation = binding
                 .instantiate(
-                    sid("sim-conformance-packs@0.2.0"),
+                    spec.checker_code_id().unwrap(),
                     spec.pack_id().unwrap(),
                     subject.clone(),
                     scope,

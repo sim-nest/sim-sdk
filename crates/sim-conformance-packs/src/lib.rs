@@ -11,6 +11,7 @@
 
 mod catalog;
 mod harness;
+mod revocation;
 
 /// The 21 statically bound conformance pack entrypoints.
 pub mod packs;
@@ -18,4 +19,8 @@ pub mod packs;
 pub use catalog::{PackSpec, all_packs, find_pack};
 pub use harness::{
     CheckObservation, MemorySubject, PackFailure, PackRequest, PackSubject, PackVerdict,
+};
+pub use revocation::{
+    OperationLocalRevocationDecision, issue_operation_local_revocation_set,
+    operation_local_policy_id, owner_revocation_source,
 };

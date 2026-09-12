@@ -13,6 +13,13 @@ can instantiate one exact subject and scope before it issues and verifies the
 receipt. A pack neither stores evidence nor performs
 filesystem, process, Git, network, release, or approval effects.
 
+The installed checker-code identity covers the crate's source tree, manifest,
+dependency lock, compiler toolchain, target, enabled features, and compiler
+configuration rather than only its package version. The SDK also owns the
+`operation/local` revocation-policy issuer. Its immutable snapshots contain
+explicit current or revoked decisions for exact subjects; omission is
+`Unknown`, and crates.io availability is never treated as currentness.
+
 The implemented scopes cover retirement, canonical identity, scoped bootstrap
 ownership, architecture inventory and the local adapter boundary, pure work
 packets and their local effect handoff, pure artifact facets, native journal
