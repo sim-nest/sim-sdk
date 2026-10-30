@@ -58,6 +58,11 @@ impl PackSpec {
         env!("SIM_CONFORMANCE_PACKS_BUILD_INPUTS_SHA256")
     }
 
+    /// Returns the exact dependency-lock digest selected for this build.
+    pub const fn dependency_lock_sha256(&self) -> &'static str {
+        env!("SIM_CONFORMANCE_PACKS_DEPENDENCY_LOCK_SHA256")
+    }
+
     /// Returns the typed pack id bound to this exact activation record.
     pub fn pack_id(&self) -> Result<ConformancePackId, ConformanceError> {
         ConformancePackId::from_text(&format!("{}@{}", self.pack, self.activation_binding))
@@ -105,6 +110,92 @@ impl PackSpec {
             )?,
             CommandId::from_text("cargo run -p xtask -- simdoc --check")?,
             allowed_scopes,
+            template,
+        )
+    }
+
+    /// Constructs the distinct binding for an in-process native Rust call.
+    ///
+    /// The native binding is currently funded only for C-OP's
+    /// `operation/local` bootstrap join. It must not be substituted for the
+    /// maintenance command binding: each binding records a different call that
+    /// actually ran and therefore has a different identity.
+    pub fn native_operation_local_binding(&self) -> Result<CheckerBinding, ConformanceError> {
+        if self.checker != "checker/c-op"
+            || !self.allowed_scopes.contains(&"operation/local")
+            || !self.implemented_scopes.contains(&"operation/local")
+        {
+            return Err(ConformanceError::UnauthorizedScope);
+        }
+        let scope = CheckScopeId::from_text("operation/local")?;
+        let template = CheckTemplate::new(
+            "sim_check_pack::invoke_operation_local".into(),
+            vec![
+                CheckArgument::Literal(self.checker.into()),
+                CheckArgument::BindingSlot,
+                CheckArgument::SubjectSlot,
+                CheckArgument::ScopeSlot,
+            ],
+            WorkingDirectoryPolicyId::from_text("call/no-working-directory")?,
+            EnvironmentPolicyId::from_text("call/native-rust-v1")?,
+            OutputShapeId::from_text("check/result-v1")?,
+        )?;
+        CheckerBinding::new(
+            self.checker.into(),
+            OwnerBindingId::from_text(ACTIVATION_OWNER_BINDING)?,
+            self.public_symbol()?.into(),
+            vec![self.pack_id()?],
+            OutputShapeId::from_text("check/receipt-v1")?,
+            crate::owner_revocation_source()?,
+            CommandId::from_text(
+                "cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps && cargo clippy --workspace --all-features --all-targets -- -D warnings && cargo test --workspace --all-features",
+            )?,
+            CommandId::from_text("cargo run -p xtask -- simdoc --check")?,
+            BTreeSet::from([scope]),
+            template,
+        )
+    }
+
+    /// Constructs the distinct native binding for projection admission.
+    ///
+    /// This is a C-BOUNDARY call and deliberately does not widen C-OP's sole
+    /// `operation/local` native authority.
+    pub fn native_projection_binding(&self) -> Result<CheckerBinding, ConformanceError> {
+        if self.checker != "checker/c-boundary"
+            || !self
+                .allowed_scopes
+                .contains(&"boundary/projection-admission")
+            || !self
+                .implemented_scopes
+                .contains(&"boundary/projection-admission")
+        {
+            return Err(ConformanceError::UnauthorizedScope);
+        }
+        let scope = CheckScopeId::from_text("boundary/projection-admission")?;
+        let template = CheckTemplate::new(
+            "sim_check_pack::invoke_projection_admission".into(),
+            vec![
+                CheckArgument::Literal(self.checker.into()),
+                CheckArgument::BindingSlot,
+                CheckArgument::SubjectSlot,
+                CheckArgument::ScopeSlot,
+            ],
+            WorkingDirectoryPolicyId::from_text("call/no-working-directory")?,
+            EnvironmentPolicyId::from_text("call/native-rust-v1")?,
+            OutputShapeId::from_text("check/result-v1")?,
+        )?;
+        CheckerBinding::new(
+            self.checker.into(),
+            OwnerBindingId::from_text(ACTIVATION_OWNER_BINDING)?,
+            self.public_symbol()?.into(),
+            vec![self.pack_id()?],
+            OutputShapeId::from_text("check/receipt-v1")?,
+            crate::owner_revocation_source()?,
+            CommandId::from_text(
+                "cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps && cargo clippy --workspace --all-features --all-targets -- -D warnings && cargo test --workspace --all-features",
+            )?,
+            CommandId::from_text("cargo run -p xtask -- simdoc --check")?,
+            BTreeSet::from([scope]),
             template,
         )
     }
@@ -319,7 +410,7 @@ const PACKS: &[PackSpec] = &[
             "evidence/convergence",
             "evidence/composed"
         ],
-        ["evidence/projection"]
+        ["evidence/projection", "evidence/predicted-closure"]
     ),
     spec!(
         "checker/c-op",
@@ -525,7 +616,8 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-03",
             "release/nv12-04",
             "release/nv12-05",
-            "release/nv12-06"
+            "release/nv12-06",
+            "release/nv12-07"
         ]
     ),
     spec!(
@@ -636,6 +728,36 @@ mod tests {
             identity
                 .bytes()
                 .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+        );
+    }
+
+    #[test]
+    fn native_operation_binding_is_distinct_and_names_the_call_that_runs() {
+        let spec = find_pack("checker/c-op").unwrap();
+        let command = spec.checker_binding().unwrap();
+        let native = spec.native_operation_local_binding().unwrap();
+        assert_ne!(command.id(), native.id());
+        assert_eq!(
+            native.template().entrypoint(),
+            "sim_check_pack::invoke_operation_local"
+        );
+        assert_eq!(
+            native.template().cwd(),
+            &WorkingDirectoryPolicyId::from_text("call/no-working-directory").unwrap()
+        );
+        assert_eq!(
+            native.template().environment(),
+            &EnvironmentPolicyId::from_text("call/native-rust-v1").unwrap()
+        );
+        assert_eq!(
+            native.allowed_scopes(),
+            &BTreeSet::from([CheckScopeId::from_text("operation/local").unwrap()])
+        );
+        assert!(
+            find_pack("checker/c-work")
+                .unwrap()
+                .native_operation_local_binding()
+                .is_err()
         );
     }
 }

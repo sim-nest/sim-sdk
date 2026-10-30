@@ -8,6 +8,9 @@ use sha2::{Digest, Sha256};
 
 fn main() {
     for variable in [
+        "SIM_CONFORMANCE_PACKS_LOCK_FILE",
+        "SIM_CONFORMANCE_PACKS_LOCK_SHA256",
+        "CARGO_FEATURE_EXTERNAL_RESOLVER_LOCK",
         "RUSTC",
         "TARGET",
         "PROFILE",
@@ -22,10 +25,9 @@ fn main() {
     println!("cargo:rerun-if-changed=src");
     let manifest_dir = PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").expect("manifest dir"));
     let source = hash_source_inputs(&manifest_dir);
-    let lock_path = find_lock(&manifest_dir)
-        .expect("sim-conformance-packs requires an exact Cargo.lock build input");
+    let (lock_path, lock_bytes) = selected_lock(&manifest_dir);
     println!("cargo:rerun-if-changed={}", lock_path.display());
-    let lock = hash_bytes(&fs::read(lock_path).expect("read dependency lock"));
+    let lock = hash_bytes(&lock_bytes);
     let rustc = env::var_os("RUSTC").expect("rustc executable");
     let toolchain = Command::new(rustc)
         .arg("-vV")
@@ -109,6 +111,54 @@ fn find_lock(start: &Path) -> Option<PathBuf> {
         .ancestors()
         .map(|directory| directory.join("Cargo.lock"))
         .find(|path| path.is_file())
+}
+
+fn selected_lock(manifest_dir: &Path) -> (PathBuf, Vec<u8>) {
+    let selected = env::var_os("SIM_CONFORMANCE_PACKS_LOCK_FILE");
+    let expected = env::var("SIM_CONFORMANCE_PACKS_LOCK_SHA256").ok();
+    match (selected, expected) {
+        (Some(path), Some(expected)) => {
+            assert!(
+                expected.len() == 64
+                    && expected
+                        .bytes()
+                        .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase()),
+                "SIM_CONFORMANCE_PACKS_LOCK_SHA256 must be lowercase SHA-256"
+            );
+            let path = PathBuf::from(path);
+            assert!(
+                path.is_absolute(),
+                "SIM_CONFORMANCE_PACKS_LOCK_FILE must be absolute"
+            );
+            let metadata = fs::symlink_metadata(&path).expect("inspect selected dependency lock");
+            assert!(
+                metadata.file_type().is_file() && !metadata.file_type().is_symlink(),
+                "selected dependency lock must be a regular non-symlink file"
+            );
+            let bytes = fs::read(&path).expect("read selected dependency lock");
+            let actual = hash_bytes(&bytes);
+            assert_eq!(actual, expected, "selected dependency lock digest differs");
+            (path, bytes)
+        }
+        (None, None) => {
+            assert!(
+                env::var_os("CARGO_FEATURE_EXTERNAL_RESOLVER_LOCK").is_none(),
+                "external-resolver-lock requires an explicit lock path and digest"
+            );
+            let packaged = manifest_dir.join("Cargo.lock");
+            if packaged.is_file() {
+                let bytes = fs::read(&packaged).expect("read packaged dependency lock");
+                return (packaged, bytes);
+            }
+            let path = find_lock(manifest_dir)
+                .expect("sim-conformance-packs requires an exact Cargo.lock build input");
+            let bytes = fs::read(&path).expect("read primary dependency lock");
+            (path, bytes)
+        }
+        _ => panic!(
+            "SIM_CONFORMANCE_PACKS_LOCK_FILE and SIM_CONFORMANCE_PACKS_LOCK_SHA256 must be supplied together"
+        ),
+    }
 }
 
 fn hash_lines(lines: impl IntoIterator<Item = String>) -> String {

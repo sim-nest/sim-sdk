@@ -20,9 +20,29 @@ pub fn operation_local_policy_id() -> Result<PolicyId, ConformanceError> {
     ))
 }
 
+/// Returns the exact installed projection-admission currentness policy.
+pub fn projection_admission_policy_id() -> Result<PolicyId, ConformanceError> {
+    let code = projection_spec()?.checker_code_id()?;
+    PolicyId::from_text(&format!(
+        "sim-sdk/projection-admission-currentness-v1;checker-code={}",
+        render(code.content_id())
+    ))
+}
+
 pub(crate) fn operation_spec() -> Result<&'static PackSpec, ConformanceError> {
     let spec = find_pack("checker/c-op").ok_or(ConformanceError::UnresolvedBinding)?;
     if !spec.implemented_scopes.contains(&"operation/local") {
+        return Err(ConformanceError::UnresolvedBinding);
+    }
+    Ok(spec)
+}
+
+pub(crate) fn projection_spec() -> Result<&'static PackSpec, ConformanceError> {
+    let spec = find_pack("checker/c-boundary").ok_or(ConformanceError::UnresolvedBinding)?;
+    if !spec
+        .implemented_scopes
+        .contains(&"boundary/projection-admission")
+    {
         return Err(ConformanceError::UnresolvedBinding);
     }
     Ok(spec)

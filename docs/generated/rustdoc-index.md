@@ -5,5 +5,6 @@
 | Package | Group | Summary |
 | --- | --- | --- |
 | `sim-conformance` | `workspace` | One typed truth source for bidirectional MCP conformance runners. |
-| `sim-nest` | `workspace` | The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features. |
+| `sim-conformance-packs` | `workspace` | Public, project-neutral conformance packs. |
+| `sim-nest` | `workspace` | Published on crates.io as **sim-nest** (the bare name sim is taken), while its library import identifier is sim. Depend on sim-nest and write use sim::...; use sim_nest::... does not resolve. The #sim::sim_lib and #sim::sim_fn macros use the same stable import identifier. |
 | `xtask` | `workspace` | SIM workspace package for xtask. |

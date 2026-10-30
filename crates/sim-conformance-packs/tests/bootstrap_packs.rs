@@ -393,6 +393,8 @@ fn nv12_04_operation_log_scope_checks_the_crash_safe_boundary() {
 mod nv12_05;
 #[path = "bootstrap_packs/nv12_06.rs"]
 mod nv12_06;
+#[path = "bootstrap_packs/nv12_07.rs"]
+mod nv12_07;
 
 #[test]
 fn nv12_04_release_scope_requires_the_complete_release_gate() {

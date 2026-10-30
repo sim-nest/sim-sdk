@@ -131,7 +131,22 @@ pub(crate) fn check_registered(
         Ok(binding) => render(binding.id().content_id()),
         Err(error) => return refused("invalid-static-binding", &error.to_string()),
     };
-    if request.binding != expected_binding {
+    let expected_native_binding = match (request.checker, request.scope) {
+        ("checker/c-op", "operation/local") => match spec.native_operation_local_binding() {
+            Ok(binding) => Some(render(binding.id().content_id())),
+            Err(error) => return refused("invalid-static-binding", &error.to_string()),
+        },
+        ("checker/c-boundary", "boundary/projection-admission") => {
+            match spec.native_projection_binding() {
+                Ok(binding) => Some(render(binding.id().content_id())),
+                Err(error) => return refused("invalid-static-binding", &error.to_string()),
+            }
+        }
+        _ => None,
+    };
+    if request.binding != expected_binding
+        && expected_native_binding.as_deref() != Some(request.binding)
+    {
         return refused("wrong-binding", request.binding);
     }
     if !spec.allowed_scopes.contains(&request.scope) {
@@ -185,6 +200,47 @@ pub(crate) fn expect_true(
     key: &'static str,
 ) -> Result<CheckObservation, PackFailure> {
     expect_eq(request, key, "true")
+}
+
+/// Requires the canonical rendered form of one complete content identity.
+///
+/// The enclosing authority still compares this value with the independently
+/// supplied support definition. This lexical check makes the neutral checker
+/// itself refuse Boolean fixtures and malformed identity-shaped strings.
+pub(crate) fn expect_content_identity(
+    request: &PackRequest<'_>,
+    key: &'static str,
+) -> Result<CheckObservation, PackFailure> {
+    let Some(observed) = request.evidence.fact(key) else {
+        return Err(PackFailure {
+            code: "missing-evidence",
+            detail: key.into(),
+        });
+    };
+    let Some((algorithm, digest)) = observed.rsplit_once(':') else {
+        return Err(PackFailure {
+            code: "malformed-content-identity",
+            detail: key.into(),
+        });
+    };
+    if algorithm.is_empty()
+        || algorithm
+            .chars()
+            .any(|character| character.is_control() || character.is_whitespace())
+        || digest.len() != 64
+        || !digest
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    {
+        return Err(PackFailure {
+            code: "malformed-content-identity",
+            detail: key.into(),
+        });
+    }
+    Ok(CheckObservation {
+        key: key.into(),
+        value: observed.into(),
+    })
 }
 
 pub(crate) fn expect_eq(

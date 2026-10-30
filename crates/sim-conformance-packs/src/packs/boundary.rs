@@ -18,34 +18,36 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
 fn projection_admission(
     request: &PackRequest<'_>,
 ) -> Result<Vec<CheckObservation>, crate::PackFailure> {
-    [
-        "boundary.kernel-unchanged",
-        "boundary.projection-registry-open",
-        "boundary.config-shape-checked",
-        "boundary.inputs-immutable-and-selected",
-        "boundary.mediated-reads-exact",
-        "boundary.semantic-envelope-separated",
-        "boundary.qualification-separate-from-confinement",
-        "boundary.native-source-and-dependencies-reviewed",
-        "boundary.native-loaded-code-identity-exact",
-        "boundary.untrusted-native-refused",
-        "boundary.native-proc-read-refused",
-        "boundary.unprojected-mount-read-refused",
-        "boundary.wasm-import-manifest-complete",
-        "boundary.wasm-imports-exact",
-        "boundary.wasm-clock-random-wasi-refused",
-        "boundary.wasm-runtime-semantics-qualified",
-        "boundary.wasm-instance-fresh",
-        "boundary.wasm-budgets-bound",
-        "boundary.bwrap-confinement-not-purity",
-        "boundary.absent-membrane-typed-unavailable",
-        "boundary.baseline-provider-kinds-complete",
-        "boundary.federated-owner-closure-sealed",
-    ]
-    .into_iter()
-    .map(|key| harness::expect_true(request, key))
-    .collect()
+    PROJECTION_ADMISSION_FACTS
+        .into_iter()
+        .map(|key| harness::expect_content_identity(request, key))
+        .collect()
 }
+
+pub(crate) const PROJECTION_ADMISSION_FACTS: [&str; 22] = [
+    "boundary.kernel-unchanged",
+    "boundary.projection-registry-open",
+    "boundary.config-shape-checked",
+    "boundary.inputs-immutable-and-selected",
+    "boundary.mediated-reads-exact",
+    "boundary.semantic-envelope-separated",
+    "boundary.qualification-separate-from-confinement",
+    "boundary.native-source-and-dependencies-reviewed",
+    "boundary.native-loaded-code-identity-exact",
+    "boundary.untrusted-native-refused",
+    "boundary.native-proc-read-refused",
+    "boundary.unprojected-mount-read-refused",
+    "boundary.wasm-import-manifest-complete",
+    "boundary.wasm-imports-exact",
+    "boundary.wasm-clock-random-wasi-refused",
+    "boundary.wasm-runtime-semantics-qualified",
+    "boundary.wasm-instance-fresh",
+    "boundary.wasm-budgets-bound",
+    "boundary.bwrap-confinement-not-purity",
+    "boundary.absent-membrane-typed-unavailable",
+    "boundary.baseline-provider-kinds-complete",
+    "boundary.federated-owner-closure-sealed",
+];
 
 fn local_adapter(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
     [

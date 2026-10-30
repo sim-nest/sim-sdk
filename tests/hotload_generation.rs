@@ -8,8 +8,8 @@ use std::{
 use sim::{
     hotload::{
         ActivationRequest, ActivationService, AdmissionRequest, AdmissionService, BuildMounts,
-        CompatibilityPolicy, HotloadGeneration, NativeBuildRequest, NativeBuilder, PreflightLimits,
-        ToolchainIdentity,
+        CargoResolverIdentity, CompatibilityPolicy, HotloadGeneration, NativeArtifactTarget,
+        NativeBuildRequest, NativeBuilder, PreflightLimits, ToolchainIdentity,
     },
     kernel::{
         AbiVersion, Args, Callable, Cx, DefaultFactory, Dependency, EagerPolicy, Export,
@@ -42,6 +42,30 @@ version = 4\n\n\
 [[package]]\n\
 name = \"sdk-hotload-fixture\"\n\
 version = \"0.1.0\"\n";
+const TARGET_TRIPLE: &str = "x86_64-unknown-linux-gnu";
+const FIXTURE_CONFIGURATION: &[u8] = b"[net]\noffline = true\n[source.crates-io]\nreplace-with = 'vendored-sources'\n[source.vendored-sources]\ndirectory = '/toolchain/vendor'\n";
+
+fn resolver() -> CargoResolverIdentity {
+    CargoResolverIdentity::from_bytes(
+        ".",
+        "Cargo.lock",
+        FIXTURE_LOCK,
+        ".cargo/config.toml",
+        FIXTURE_CONFIGURATION,
+        "/toolchain/vendor",
+    )
+}
+
+fn toolchain(content: &str) -> ToolchainIdentity {
+    let resolver = resolver();
+    let mut environment = vec![("PATH".into(), "/toolchain/bin".into())];
+    environment.extend(resolver.environment_bindings());
+    ToolchainIdentity {
+        content: content.into(),
+        cargo_program: "sealed-cargo".into(),
+        environment,
+    }
+}
 
 fn path(value: &str) -> Vec<String> {
     value.split('/').map(str::to_owned).collect()
@@ -54,6 +78,14 @@ fn mount_fixture(label: &str, manifest: &[u8], lock: &[u8], source: &[u8]) -> Me
         .unwrap();
     mount
         .replace(&path("Cargo.lock"), lock, &NeverCancel)
+        .unwrap();
+    mount.create_dir(&path(".cargo")).unwrap();
+    mount
+        .replace(
+            &path(".cargo/config.toml"),
+            FIXTURE_CONFIGURATION,
+            &NeverCancel,
+        )
         .unwrap();
     mount.create_dir(&path("src")).unwrap();
     mount
@@ -86,10 +118,14 @@ impl SandboxLauncher for FixtureLauncher {
             });
         }
         self.target
-            .create_dir(&path("debug"))
+            .create_dir(&path(TARGET_TRIPLE))
+            .and_then(|_| {
+                self.target
+                    .create_dir(&path(&format!("{TARGET_TRIPLE}/debug")))
+            })
             .and_then(|_| {
                 self.target.replace(
-                    &path("debug/libsdk_hotload_fixture.so"),
+                    &path(&format!("{TARGET_TRIPLE}/debug/libsdk_hotload_fixture.so")),
                     &self.artifact,
                     &NeverCancel,
                 )
@@ -119,7 +155,10 @@ impl SandboxLauncher for FixtureLauncher {
         })
         .collect();
         SandboxAttempt::Completed(SandboxResult {
-            stdout: br#"{"reason":"compiler-artifact","package_id":"sdk-hotload-fixture 0.1.0 (path+file:///source)","target":{"kind":["cdylib"]},"filenames":["/target/debug/libsdk_hotload_fixture.so"]}"#.to_vec(),
+            stdout: format!(
+                "{{\"reason\":\"compiler-artifact\",\"package_id\":\"sdk-hotload-fixture 0.1.0 (path+file:///source)\",\"target\":{{\"name\":\"sdk-hotload-fixture\",\"kind\":[\"cdylib\"]}},\"filenames\":[\"/target/{TARGET_TRIPLE}/debug/libsdk_hotload_fixture.so\"]}}"
+            )
+            .into_bytes(),
             stderr: Vec::new(),
             exit_code: 0,
             report: SandboxReport {
@@ -152,12 +191,14 @@ fn build(
                 manifest: "Cargo.toml".into(),
                 package: "sdk-hotload-fixture".into(),
                 features: BTreeSet::new(),
-                expected_library: Symbol::qualified("sdk-fixture", "library"),
-                toolchain: ToolchainIdentity {
-                    content: "sha256:sealed-rust-toolchain".into(),
-                    cargo_program: "sealed-cargo".into(),
-                    environment: vec![("PATH".into(), "/toolchain/bin".into())],
+                target_triple: TARGET_TRIPLE.into(),
+                profile: sim_lib_hotload::NativeBuildProfile::Development,
+                resolver: resolver(),
+                read_only_resources: std::collections::BTreeMap::new(),
+                artifact: NativeArtifactTarget::DynamicLibrary {
+                    expected_library: Symbol::qualified("sdk-fixture", "library"),
                 },
+                toolchain: toolchain("sha256:sealed-rust-toolchain"),
             },
             BuildMounts {
                 source,
@@ -521,12 +562,14 @@ fn public_build_to_generation_loop_is_safe_and_replayable() {
                 manifest: "Cargo.toml".into(),
                 package: "sdk-hotload-fixture".into(),
                 features: BTreeSet::new(),
-                expected_library: Symbol::qualified("sdk-fixture", "library"),
-                toolchain: ToolchainIdentity {
-                    content: "sha256:toolchain".into(),
-                    cargo_program: "sealed-cargo".into(),
-                    environment: Vec::new(),
+                target_triple: TARGET_TRIPLE.into(),
+                profile: sim_lib_hotload::NativeBuildProfile::Development,
+                resolver: resolver(),
+                read_only_resources: std::collections::BTreeMap::new(),
+                artifact: NativeArtifactTarget::DynamicLibrary {
+                    expected_library: Symbol::qualified("sdk-fixture", "library"),
                 },
+                toolchain: toolchain("sha256:toolchain"),
             },
             BuildMounts {
                 source: &source_b,

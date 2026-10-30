@@ -7,7 +7,13 @@
       "package": "sim-conformance"
     },
     {
-      "features": [],
+      "features": [
+        {
+          "edges": [],
+          "name": "external-resolver-lock",
+          "workspace_edges": []
+        }
+      ],
       "group": "workspace",
       "package": "sim-conformance-packs"
     },

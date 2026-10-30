@@ -1,9 +1,10 @@
 use sim_conformance_core::{
-    CheckInputClosureId, CheckScopeId, CheckedSubjectId, EvidenceGrade, IdKind, SemanticId,
+    CheckInputClosureId, CheckScopeId, CheckedSubjectId, IdKind, SemanticId,
 };
 use sim_conformance_packs::{
     MemorySubject, OperationLocalAuthorityError, OperationLocalEvidence,
-    OperationLocalEvidenceError, OperationLocalOwner, PackSubject, find_pack,
+    OperationLocalEvidenceError, OperationLocalOwner, OperationLocalSupportDefinition, PackSubject,
+    find_pack,
 };
 use sim_kernel::{ContentId, Datum, Symbol};
 
@@ -65,7 +66,7 @@ fn invocation(
     sim_conformance_core::CheckInvocation,
 ) {
     let spec = find_pack("checker/c-op").unwrap();
-    let binding = spec.checker_binding().unwrap();
+    let binding = spec.native_operation_local_binding().unwrap();
     let invocation = binding
         .instantiate(
             spec.checker_code_id().unwrap(),
@@ -89,6 +90,19 @@ fn owner(byte: u8) -> OperationLocalOwner {
     ))
 }
 
+fn support(evidence: &OperationLocalEvidence) -> OperationLocalSupportDefinition {
+    OperationLocalSupportDefinition::new(evidence.canonical().lines().map(|line| {
+        let (name, _) = line.split_once('=').unwrap();
+        (
+            name.to_owned(),
+            Datum::String(format!("support:{name}"))
+                .content_id()
+                .unwrap(),
+        )
+    }))
+    .unwrap()
+}
+
 fn issue(
     owner: &OperationLocalOwner,
     facts: &MemorySubject,
@@ -97,12 +111,13 @@ fn issue(
     let authority = owner.operation_handle();
     let (binding, invocation) = invocation(facts);
     let frozen = OperationLocalEvidence::capture(facts).unwrap();
+    let support = support(&frozen);
     authority
         .check_and_issue(
             binding,
             invocation,
             &frozen,
-            EvidenceGrade::Reproducible,
+            &support,
             sid("provenance/held-output"),
             sid("support/exact"),
         )
@@ -140,13 +155,14 @@ fn missing_owner_decision_fails_closed() {
     let facts = evidence();
     let (binding, invocation) = invocation(&facts);
     let frozen = OperationLocalEvidence::capture(&facts).unwrap();
+    let support = support(&frozen);
     assert!(
         authority
             .check_and_issue(
                 binding,
                 invocation,
                 &frozen,
-                EvidenceGrade::Bootstrap,
+                &support,
                 sid("provenance/missing"),
                 sid("support/missing"),
             )
@@ -175,12 +191,13 @@ fn substituted_facts_cannot_use_a_genuine_current_invocation() {
     let (binding, invocation) = invocation(&original);
     let substituted = original.clone().with("subject.variant", "substituted");
     let substituted = OperationLocalEvidence::capture(&substituted).unwrap();
+    let support = support(&substituted);
     assert!(matches!(
         owner.operation_handle().check_and_issue(
             binding,
             invocation,
             &substituted,
-            EvidenceGrade::Reproducible,
+            &support,
             sid("provenance/substituted"),
             sid("support/substituted"),
         ),
@@ -220,7 +237,7 @@ fn stateful_subject_is_read_once_before_identity_and_check() {
     let owner = owner(7);
     owner.mark_current(frozen.subject_id().unwrap()).unwrap();
     let spec = find_pack("checker/c-op").unwrap();
-    let binding = spec.checker_binding().unwrap();
+    let binding = spec.native_operation_local_binding().unwrap();
     let invocation = binding
         .instantiate(
             spec.checker_code_id().unwrap(),
@@ -230,12 +247,13 @@ fn stateful_subject_is_read_once_before_identity_and_check() {
             frozen.input_closure_id().unwrap(),
         )
         .unwrap();
+    let support = support(&frozen);
     assert!(matches!(
         owner.operation_handle().check_and_issue(
             binding,
             invocation,
             &frozen,
-            EvidenceGrade::Reproducible,
+            &support,
             sid("provenance/stateful"),
             sid("support/stateful"),
         ),
@@ -296,4 +314,28 @@ fn every_p3_forbidden_evidence_class_fails_at_the_shared_constructor() {
         OperationLocalEvidence::parse(too_large.as_bytes()),
         Err(OperationLocalEvidenceError::ByteBound)
     ));
+}
+
+#[test]
+fn support_definition_is_order_independent_and_duplicate_safe() {
+    let alpha = Datum::String("alpha-record".into()).content_id().unwrap();
+    let beta = Datum::String("beta-record".into()).content_id().unwrap();
+    let forward = OperationLocalSupportDefinition::new(vec![
+        ("fact.alpha".into(), alpha.clone()),
+        ("fact.beta".into(), beta.clone()),
+    ])
+    .unwrap();
+    let reverse = OperationLocalSupportDefinition::new(vec![
+        ("fact.beta".into(), beta),
+        ("fact.alpha".into(), alpha.clone()),
+    ])
+    .unwrap();
+    assert_eq!(forward.identity(), reverse.identity());
+    assert!(
+        OperationLocalSupportDefinition::new(vec![
+            ("fact.alpha".into(), alpha.clone()),
+            ("fact.alpha".into(), alpha),
+        ])
+        .is_err()
+    );
 }

@@ -272,6 +272,7 @@
 | `codec/lisp` | `surface-card` | `sim` | .siml |
 | `codec/positions` | `surface-card` | `sim` | codec position behavior facet |
 | `cookbook/sim-conformance` | `cookbook-recipe` | `sim-conformance` | Recipes that show how the executable architecture contract is run. |
+| `cookbook/sim-conformance-packs` | `cookbook-recipe` | `sim-conformance-packs` |  |
 | `cookbook/sim-sdk` | `cookbook-recipe` | `sim-nest` | Small recipes for booting and checking the umbrella SIM facade. |
 | `core/Card` | `browse-reflection` | `sim` | Card fixed-field browse envelope |
 | `core/args` | `browse-reflection` | `sim` | projects one stable Card field for a subject |
