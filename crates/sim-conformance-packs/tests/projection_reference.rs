@@ -1,3 +1,4 @@
+#![cfg(false)]
 // conformance: NV12.06 projection packs exercise the released reference products.
 
 use std::{

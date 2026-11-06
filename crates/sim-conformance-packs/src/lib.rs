@@ -12,13 +12,15 @@
 mod authority;
 mod catalog;
 mod harness;
-#[cfg(target_os = "linux")]
+// Projection custody stays out of this package build. Its resolver closure is
+// not part of the portable checker.
+#[cfg(false)]
 mod projection_authority;
-#[cfg(all(test, target_os = "linux"))]
+#[cfg(false)]
 mod projection_authority_tests;
-#[cfg(target_os = "linux")]
+#[cfg(false)]
 mod projection_compiler_review;
-#[cfg(target_os = "linux")]
+#[cfg(false)]
 mod projection_source_review;
 mod revocation;
 
@@ -36,7 +38,7 @@ pub use catalog::{PackSpec, all_packs, find_pack};
 pub use harness::{
     CheckObservation, MemorySubject, PackFailure, PackRequest, PackSubject, PackVerdict,
 };
-#[cfg(target_os = "linux")]
+#[cfg(false)]
 pub use projection_authority::{
     ActivatedProjectionAdmissionSession, ProjectionAdmissionAuthority,
     ProjectionAdmissionAuthorityError, ProjectionAdmissionOwner, ProjectionChildFactoryObservation,
@@ -46,12 +48,12 @@ pub use projection_authority::{
     ProjectionParentReviewSessionPhase, ProjectionSourceReviewPrerequisite,
     QualifiedProjectionAdmissionCheck, VerifiedProjectionProducerRecords,
 };
-#[cfg(target_os = "linux")]
+#[cfg(false)]
 pub use projection_compiler_review::{
     ProjectionCompilerReviewAuthority, ProjectionCompilerReviewError,
     QualifiedProjectionCompilerReview,
 };
-#[cfg(target_os = "linux")]
+#[cfg(false)]
 pub use projection_source_review::{
     ProjectionSourceForbiddenClass, ProjectionSourceReviewAuthority, ProjectionSourceReviewError,
     QualifiedProjectionSourceReview,

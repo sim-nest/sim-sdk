@@ -13,9 +13,9 @@ sim-codec-binary = "0.4.1"
 sim-conformance-core = "0.3.0"
 sim-kernel = "0.4.0"
 sim-lib-server = { version = "0.3.1", default-features = false }
-sim-platform-linux = { version = "0.1.1", default-features = false }
+sim-platform-linux = { version = "0.1.0", default-features = false }
 sim-platform-ubuntu-projection = "0.1.0"
-sim-run-core = "0.5.1"
+sim-run-core = "0.5.0"
 
 [lints]
 workspace = true

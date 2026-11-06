@@ -22,28 +22,15 @@ external-resolver-lock = []
 [dependencies]
 sim-artifact-facet = "0.2.0"
 sim-conformance-core = "0.3.0"
-sim-codec-binary = "0.4.1"
 sim-kernel = "0.4.0"
-sim-lib-exec = "0.5.0"
-sim-lib-hotload = "0.2.1"
-sim-platform-linux = "0.1.1"
-sim-platform-ubuntu-pc = "0.3.1"
-sim-projection-admission-protocol = { version = "0.1.0", path = "../sim-projection-admission-protocol" }
-sim-lib-server = "0.3.1"
-sim-run-core = "0.5.1"
-sim-work-core = "0.2.1"
-serde_json = "1"
-sha2 = "0.10"
-syn = { version = "2", features = ["full", "visit"] }
+sim-work-core = "0.3.0"
 
 [build-dependencies]
 sha2 = "0.10"
 
 [dev-dependencies]
+sha2 = "0.10"
 sim-incremental-core = "0.5.0"
-sim-lib-world = "0.1.0"
-sim-platform-ubuntu-pc = "0.3.1"
-sim-wasm-abi = "0.6.0"
 wat = "1"
 
 [lints]

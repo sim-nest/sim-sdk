@@ -554,7 +554,7 @@ const PACKS: &[PackSpec] = &[
         "pack/portability",
         "NV12.11",
         ["portability/foreign-project", "portability/consumer-seams"],
-        []
+        ["portability/foreign-project"]
     ),
     spec!(
         "checker/c-product",
