@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Boot-owned authority for `checker/c-op` `operation/local` qualification.
 
 use std::collections::BTreeMap;
@@ -588,8 +593,9 @@ impl OperationLocalOwner {
     }
 
     /// Selects `Current` for the exact subject and input closure `evidence`
-    /// identifies -- the same pair `check_and_issue` binds a decision to, not
-    /// the subject alone (see [`operation_key`]'s own doc comment).
+    /// identifies. That pair is what `check_and_issue` binds a decision to.
+    /// Input closure is not a function of the subject, so the subject alone
+    /// does not name the recorded decision.
     pub fn mark_current(
         &self,
         evidence: &OperationLocalEvidence,
