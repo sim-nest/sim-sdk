@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 #![cfg(feature = "hotload")]
 
 use std::{
@@ -8,8 +13,8 @@ use std::{
 use sim::{
     hotload::{
         ActivationRequest, ActivationService, AdmissionRequest, AdmissionService, BuildMounts,
-        CargoResolverIdentity, CompatibilityPolicy, HotloadGeneration, NativeArtifactTarget,
-        NativeBuildRequest, NativeBuilder, PreflightLimits, ToolchainIdentity,
+        CompatibilityPolicy, HotloadGeneration, NativeBuildRequest, NativeBuilder, PreflightLimits,
+        ToolchainIdentity,
     },
     kernel::{
         AbiVersion, Args, Callable, Cx, DefaultFactory, Dependency, EagerPolicy, Export,
@@ -43,27 +48,12 @@ version = 4\n\n\
 name = \"sdk-hotload-fixture\"\n\
 version = \"0.1.0\"\n";
 const TARGET_TRIPLE: &str = "x86_64-unknown-linux-gnu";
-const FIXTURE_CONFIGURATION: &[u8] = b"[net]\noffline = true\n[source.crates-io]\nreplace-with = 'vendored-sources'\n[source.vendored-sources]\ndirectory = '/toolchain/vendor'\n";
-
-fn resolver() -> CargoResolverIdentity {
-    CargoResolverIdentity::from_bytes(
-        ".",
-        "Cargo.lock",
-        FIXTURE_LOCK,
-        ".cargo/config.toml",
-        FIXTURE_CONFIGURATION,
-        "/toolchain/vendor",
-    )
-}
 
 fn toolchain(content: &str) -> ToolchainIdentity {
-    let resolver = resolver();
-    let mut environment = vec![("PATH".into(), "/toolchain/bin".into())];
-    environment.extend(resolver.environment_bindings());
     ToolchainIdentity {
         content: content.into(),
         cargo_program: "sealed-cargo".into(),
-        environment,
+        environment: vec![("PATH".into(), "/toolchain/bin".into())],
     }
 }
 
@@ -78,14 +68,6 @@ fn mount_fixture(label: &str, manifest: &[u8], lock: &[u8], source: &[u8]) -> Me
         .unwrap();
     mount
         .replace(&path("Cargo.lock"), lock, &NeverCancel)
-        .unwrap();
-    mount.create_dir(&path(".cargo")).unwrap();
-    mount
-        .replace(
-            &path(".cargo/config.toml"),
-            FIXTURE_CONFIGURATION,
-            &NeverCancel,
-        )
         .unwrap();
     mount.create_dir(&path("src")).unwrap();
     mount
@@ -191,13 +173,7 @@ fn build(
                 manifest: "Cargo.toml".into(),
                 package: "sdk-hotload-fixture".into(),
                 features: BTreeSet::new(),
-                target_triple: TARGET_TRIPLE.into(),
-                profile: sim_lib_hotload::NativeBuildProfile::Development,
-                resolver: resolver(),
-                read_only_resources: std::collections::BTreeMap::new(),
-                artifact: NativeArtifactTarget::DynamicLibrary {
-                    expected_library: Symbol::qualified("sdk-fixture", "library"),
-                },
+                expected_library: Symbol::qualified("sdk-fixture", "library"),
                 toolchain: toolchain("sha256:sealed-rust-toolchain"),
             },
             BuildMounts {
@@ -562,13 +538,7 @@ fn public_build_to_generation_loop_is_safe_and_replayable() {
                 manifest: "Cargo.toml".into(),
                 package: "sdk-hotload-fixture".into(),
                 features: BTreeSet::new(),
-                target_triple: TARGET_TRIPLE.into(),
-                profile: sim_lib_hotload::NativeBuildProfile::Development,
-                resolver: resolver(),
-                read_only_resources: std::collections::BTreeMap::new(),
-                artifact: NativeArtifactTarget::DynamicLibrary {
-                    expected_library: Symbol::qualified("sdk-fixture", "library"),
-                },
+                expected_library: Symbol::qualified("sdk-fixture", "library"),
                 toolchain: toolchain("sha256:toolchain"),
             },
             BuildMounts {
