@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Neutral owner-issued review of retained compiler-semantic observations.
 //!
 //! Raw analyzer JSON remains descriptive. This module can issue support only
@@ -18,8 +23,7 @@ use sim_conformance_core::{
     CheckerRevocationObservation, CommandId, ConformanceError, ConformancePackId,
     EnvironmentPolicyId, EvidenceGrade, EvidenceProvenanceId, EvidenceSetId, LiveCheckerAuthority,
     LiveCheckerError, LiveCheckerIssuer, LiveCheckerOwner, LiveCheckerReceipt, OutputShapeId,
-    OwnerBindingId,
-    PolicyId, ProofCodeId, WorkingDirectoryPolicyId, content_id_datum,
+    OwnerBindingId, PolicyId, ProofCodeId, WorkingDirectoryPolicyId, content_id_datum,
 };
 use sim_kernel::{ContentId, Datum, Symbol};
 use sim_lib_hotload::{
