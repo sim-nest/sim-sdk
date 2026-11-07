@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Static checker, phase, and scope catalog.
 
 use std::collections::BTreeSet;
@@ -617,7 +622,8 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-04",
             "release/nv12-05",
             "release/nv12-06",
-            "release/nv12-07"
+            "release/nv12-07",
+            "release/nv12-27"
         ]
     ),
     spec!(
