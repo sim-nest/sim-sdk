@@ -3,12 +3,15 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-//! Foreign-project portability conformance pack.
+//! Portability conformance pack.
 //!
 //! The foreign-project scope judges an injected law over one caller-named
 //! document: a custom provider, nested resolver roots, generated output,
 //! proof declarations, a hostile model remote, and an absent provider.
-//! `portability/consumer-seams` stays unimplemented.
+//! The consumer-seams scope runs the outside composition specimen.
+
+#[path = "consumer_seams.rs"]
+pub mod consumer_seams;
 
 use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};
 
@@ -282,8 +285,10 @@ impl PortabilityLaw for CanonicalLaw {
 
 /// Checks the exact requested portability scope.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
-    harness::check_registered("checker/c-port", request, |_| {
-        check_implementation(&CanonicalLaw)
+    harness::check_registered("checker/c-port", request, |request| match request.scope {
+        "portability/foreign-project" => check_implementation(&CanonicalLaw),
+        "portability/consumer-seams" => consumer_seams::check_subject(request),
+        _ => Err(failure("wrong-scope")),
     })
 }
 

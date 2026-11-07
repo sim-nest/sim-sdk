@@ -38,7 +38,7 @@ fn render(id: &sim_kernel::ContentId) -> String {
 }
 
 #[test]
-fn foreign_project_scope_passes_and_consumer_seams_stay_unimplemented() {
+fn foreign_project_scope_passes_and_consumer_seams_need_a_freeze() {
     let evidence = MemorySubject::default();
     assert!(matches!(
         packs::portability::check(&request("portability/foreign-project", &evidence)),
@@ -46,11 +46,7 @@ fn foreign_project_scope_passes_and_consumer_seams_stay_unimplemented() {
     ));
     assert!(matches!(
         packs::portability::check(&request("portability/consumer-seams", &evidence)),
-        PackVerdict::UnimplementedPack {
-            checker: "checker/c-port",
-            ref funded_phase,
-            ..
-        } if funded_phase == "NV12.26"
+        PackVerdict::Refused(ref failure) if failure.code == "missing-freeze"
     ));
     assert!(matches!(
         packs::portability::check(&request("portability/not-a-scope", &evidence)),
