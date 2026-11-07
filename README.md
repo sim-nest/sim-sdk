@@ -601,8 +601,8 @@ cargo test -p sim-conformance
 cargo test --workspace
 cargo clippy --workspace --all-targets -- -D warnings
 cargo doc --workspace --no-deps
-cargo clippy --workspace --all-features --all-targets -- -D warnings
-cargo test --workspace --all-features
+SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" cargo clippy --workspace --all-features --all-targets -- -D warnings
+SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" cargo test --workspace --all-features
 cargo run -p xtask -- simdoc --check
 ```
 

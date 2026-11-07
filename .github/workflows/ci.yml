@@ -104,8 +104,8 @@ jobs:
           key: ${{ runner.os }}-sim-sdk-all-features-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
           restore-keys: |
             ${{ runner.os }}-sim-sdk-all-features-
-      - run: cargo clippy --workspace --all-features --all-targets -- -D warnings
-      - run: cargo test --workspace --all-features
+      - run: SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" cargo clippy --workspace --all-features --all-targets -- -D warnings
+      - run: SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" cargo test --workspace --all-features
 
   check:
     name: check
