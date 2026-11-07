@@ -1,9 +1,14 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use sha2::{Digest, Sha256};
 use sim_incremental_core::projection::{
     ArchitectureFaultReview, AssayError, AssayOutcome, ControlledDelta, ControlledDeltaClass,
-    ExpectedClosure, ExpectedClosureSet, FactId, FederatedClosure, OwnerProjectionGraphOwner,
+    ExpectedClosure, ExpectedClosureSet, FactId, FederatedClosure, OwnerProjectionGraph,
     PredictedClosureAssay, ProjectionRepairItem, ProjectionRepairTracker, RepairDisposition,
 };
 use sim_kernel::Datum;
@@ -23,7 +28,6 @@ enum Mutation {
 
 struct OwnedClosure {
     closure: FederatedClosure,
-    _owners: Vec<OwnerProjectionGraphOwner>,
 }
 
 impl Deref for OwnedClosure {
@@ -111,19 +115,12 @@ fn closure(mutation: Option<Mutation>) -> OwnedClosure {
             .or_default()
             .push((conclusion(index), dependencies));
     }
-    let owners = owners
+    let graphs = owners
         .into_iter()
-        .map(|(owner, rows)| OwnerProjectionGraphOwner::new(owner, rows).unwrap())
+        .map(|(owner, rows)| OwnerProjectionGraph::new(owner, rows).unwrap())
         .collect::<Vec<_>>();
-    let closure = FederatedClosure::seal(
-        universe,
-        owners.iter().map(OwnerProjectionGraphOwner::retain),
-    )
-    .unwrap();
-    OwnedClosure {
-        closure,
-        _owners: owners,
-    }
+    let closure = FederatedClosure::seal(universe, graphs).unwrap();
+    OwnedClosure { closure }
 }
 
 fn delta_class(value: &str) -> ControlledDeltaClass {

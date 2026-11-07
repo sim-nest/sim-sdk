@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 use sim_conformance_core::{
     CheckInputClosureId, CheckScopeId, CheckedSubjectId, IdKind, SemanticId,
 };
@@ -107,10 +112,10 @@ fn issue(
     owner: &OperationLocalOwner,
     facts: &MemorySubject,
 ) -> sim_conformance_packs::QualifiedOperationLocalCheck {
-    owner.mark_current(subject(facts)).unwrap();
+    let frozen = OperationLocalEvidence::capture(facts).unwrap();
+    owner.mark_current(&frozen).unwrap();
     let authority = owner.operation_handle();
     let (binding, invocation) = invocation(facts);
-    let frozen = OperationLocalEvidence::capture(facts).unwrap();
     let support = support(&frozen);
     authority
         .check_and_issue(
@@ -132,7 +137,9 @@ fn owner_handle_issues_and_rechecks_without_accepting_snapshots() {
     let qualified = issue(&owner, &facts);
     authority.observe_receipt(&qualified).unwrap();
 
-    owner.revoke(subject(&facts)).unwrap();
+    owner
+        .revoke(&OperationLocalEvidence::capture(&facts).unwrap())
+        .unwrap();
     assert!(qualified.verify_current(&authority).is_err());
 }
 
@@ -187,7 +194,8 @@ fn owner_drop_invalidates_handle_and_qualified_check() {
 fn substituted_facts_cannot_use_a_genuine_current_invocation() {
     let owner = owner(6);
     let original = evidence();
-    owner.mark_current(subject(&original)).unwrap();
+    let original_evidence = OperationLocalEvidence::capture(&original).unwrap();
+    owner.mark_current(&original_evidence).unwrap();
     let (binding, invocation) = invocation(&original);
     let substituted = original.clone().with("subject.variant", "substituted");
     let substituted = OperationLocalEvidence::capture(&substituted).unwrap();
@@ -235,7 +243,7 @@ fn stateful_subject_is_read_once_before_identity_and_check() {
     let frozen = OperationLocalEvidence::capture(&changing).unwrap();
     assert_eq!(changing.target_reads.get(), 1);
     let owner = owner(7);
-    owner.mark_current(frozen.subject_id().unwrap()).unwrap();
+    owner.mark_current(&frozen).unwrap();
     let spec = find_pack("checker/c-op").unwrap();
     let binding = spec.native_operation_local_binding().unwrap();
     let invocation = binding
