@@ -13,13 +13,23 @@ can instantiate one exact subject and scope before it issues and verifies the
 receipt. A pack neither stores evidence nor performs
 filesystem, process, Git, network, release, or approval effects.
 
+The installed checker-code identity covers the crate's source tree, manifest,
+dependency lock, compiler toolchain, target, enabled features, and compiler
+configuration rather than only its package version. The SDK also owns the
+`operation/local` revocation-policy issuer. A host binds its opaque read/control
+pair through the kernel `GrantSeat`; loaded callables never receive that seat.
+The control holds explicit current or revoked decisions for exact subjects,
+omission is `Unknown`, and every reuse is resolved atomically against its live
+state. Neutral snapshots remain canonical data but are never owner authority.
+
 The implemented scopes cover retirement, canonical identity, scoped bootstrap
 ownership, architecture inventory and the local adapter boundary, pure work
 packets and their local effect handoff, pure artifact facets, native journal
 compatibility and performance, causal journal sharing, durable operation logging
 and reconciliation, the exact local command path, semantic projection admission,
-projection evidence and disclosure, the read-only world product, measured query
-latency, produced ownership, and release closure through NV12.06. The projection
+projection evidence and disclosure, the stage-one predicted-closure assay, the
+read-only world product, measured query latency, produced ownership, and release
+closure through NV12.07. The projection
 reference specimen exercises released crates rather than workspace paths. The
 facet and work packs expose public implementation traits so
 independently authored foreign implementations can be judged with the same

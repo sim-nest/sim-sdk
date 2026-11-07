@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Static checker, phase, and scope catalog.
 
 use std::collections::BTreeSet;
@@ -5,7 +10,7 @@ use std::collections::BTreeSet;
 use sim_conformance_core::{
     CheckArgument, CheckScopeId, CheckTemplate, CheckerBinding, CommandId, ConformanceError,
     ConformancePackId, EnvironmentPolicyId, OutputShapeId, OwnerBindingId, ProofCodeId,
-    RevocationSourceId, WorkingDirectoryPolicyId,
+    WorkingDirectoryPolicyId,
 };
 
 const ACTIVATION_OWNER_BINDING: &str =
@@ -31,10 +36,36 @@ pub struct PackSpec {
 impl PackSpec {
     /// Returns the exact immutable published checker-code identity.
     pub fn checker_code_id(&self) -> Result<ProofCodeId, ConformanceError> {
+        self.checker_code_id_for_build_inputs(env!("SIM_CONFORMANCE_PACKS_BUILD_INPUTS_SHA256"))
+    }
+
+    fn checker_code_id_for_build_inputs(
+        &self,
+        build_inputs_sha256: &str,
+    ) -> Result<ProofCodeId, ConformanceError> {
+        if build_inputs_sha256.len() != 64
+            || !build_inputs_sha256
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+        {
+            return Err(ConformanceError::UnresolvedBinding);
+        }
         ProofCodeId::from_text(&format!(
-            "sim-conformance-packs@{}",
+            "sim-conformance-packs@{};build-inputs-sha256={build_inputs_sha256}",
             env!("CARGO_PKG_VERSION")
         ))
+    }
+
+    /// Returns the SHA-256 identity of the exact source, dependency lock,
+    /// toolchain, target, feature, and compiler configuration inputs used to
+    /// build this installed checker.
+    pub const fn build_inputs_sha256(&self) -> &'static str {
+        env!("SIM_CONFORMANCE_PACKS_BUILD_INPUTS_SHA256")
+    }
+
+    /// Returns the exact dependency-lock digest selected for this build.
+    pub const fn dependency_lock_sha256(&self) -> &'static str {
+        env!("SIM_CONFORMANCE_PACKS_DEPENDENCY_LOCK_SHA256")
     }
 
     /// Returns the typed pack id bound to this exact activation record.
@@ -78,12 +109,98 @@ impl PackSpec {
             self.public_symbol()?.into(),
             vec![self.pack_id()?],
             OutputShapeId::from_text("check/receipt-v1")?,
-            RevocationSourceId::from_text("crates.io/sim-conformance-packs")?,
+            crate::owner_revocation_source()?,
             CommandId::from_text(
                 "cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps && cargo clippy --workspace --all-features --all-targets -- -D warnings && cargo test --workspace --all-features",
             )?,
             CommandId::from_text("cargo run -p xtask -- simdoc --check")?,
             allowed_scopes,
+            template,
+        )
+    }
+
+    /// Constructs the distinct binding for an in-process native Rust call.
+    ///
+    /// The native binding is currently funded only for C-OP's
+    /// `operation/local` bootstrap join. It must not be substituted for the
+    /// maintenance command binding: each binding records a different call that
+    /// actually ran and therefore has a different identity.
+    pub fn native_operation_local_binding(&self) -> Result<CheckerBinding, ConformanceError> {
+        if self.checker != "checker/c-op"
+            || !self.allowed_scopes.contains(&"operation/local")
+            || !self.implemented_scopes.contains(&"operation/local")
+        {
+            return Err(ConformanceError::UnauthorizedScope);
+        }
+        let scope = CheckScopeId::from_text("operation/local")?;
+        let template = CheckTemplate::new(
+            "sim_check_pack::invoke_operation_local".into(),
+            vec![
+                CheckArgument::Literal(self.checker.into()),
+                CheckArgument::BindingSlot,
+                CheckArgument::SubjectSlot,
+                CheckArgument::ScopeSlot,
+            ],
+            WorkingDirectoryPolicyId::from_text("call/no-working-directory")?,
+            EnvironmentPolicyId::from_text("call/native-rust-v1")?,
+            OutputShapeId::from_text("check/result-v1")?,
+        )?;
+        CheckerBinding::new(
+            self.checker.into(),
+            OwnerBindingId::from_text(ACTIVATION_OWNER_BINDING)?,
+            self.public_symbol()?.into(),
+            vec![self.pack_id()?],
+            OutputShapeId::from_text("check/receipt-v1")?,
+            crate::owner_revocation_source()?,
+            CommandId::from_text(
+                "cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps && cargo clippy --workspace --all-features --all-targets -- -D warnings && cargo test --workspace --all-features",
+            )?,
+            CommandId::from_text("cargo run -p xtask -- simdoc --check")?,
+            BTreeSet::from([scope]),
+            template,
+        )
+    }
+
+    /// Constructs the distinct native binding for projection admission.
+    ///
+    /// This is a C-BOUNDARY call and deliberately does not widen C-OP's sole
+    /// `operation/local` native authority.
+    pub fn native_projection_binding(&self) -> Result<CheckerBinding, ConformanceError> {
+        if self.checker != "checker/c-boundary"
+            || !self
+                .allowed_scopes
+                .contains(&"boundary/projection-admission")
+            || !self
+                .implemented_scopes
+                .contains(&"boundary/projection-admission")
+        {
+            return Err(ConformanceError::UnauthorizedScope);
+        }
+        let scope = CheckScopeId::from_text("boundary/projection-admission")?;
+        let template = CheckTemplate::new(
+            "sim_check_pack::invoke_projection_admission".into(),
+            vec![
+                CheckArgument::Literal(self.checker.into()),
+                CheckArgument::BindingSlot,
+                CheckArgument::SubjectSlot,
+                CheckArgument::ScopeSlot,
+            ],
+            WorkingDirectoryPolicyId::from_text("call/no-working-directory")?,
+            EnvironmentPolicyId::from_text("call/native-rust-v1")?,
+            OutputShapeId::from_text("check/result-v1")?,
+        )?;
+        CheckerBinding::new(
+            self.checker.into(),
+            OwnerBindingId::from_text(ACTIVATION_OWNER_BINDING)?,
+            self.public_symbol()?.into(),
+            vec![self.pack_id()?],
+            OutputShapeId::from_text("check/receipt-v1")?,
+            crate::owner_revocation_source()?,
+            CommandId::from_text(
+                "cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps && cargo clippy --workspace --all-features --all-targets -- -D warnings && cargo test --workspace --all-features",
+            )?,
+            CommandId::from_text("cargo run -p xtask -- simdoc --check")?,
+            BTreeSet::from([scope]),
             template,
         )
     }
@@ -298,7 +415,7 @@ const PACKS: &[PackSpec] = &[
             "evidence/convergence",
             "evidence/composed"
         ],
-        ["evidence/projection"]
+        ["evidence/projection", "evidence/predicted-closure"]
     ),
     spec!(
         "checker/c-op",
@@ -442,7 +559,7 @@ const PACKS: &[PackSpec] = &[
         "pack/portability",
         "NV12.11",
         ["portability/foreign-project", "portability/consumer-seams"],
-        []
+        ["portability/foreign-project", "portability/consumer-seams"]
     ),
     spec!(
         "checker/c-product",
@@ -504,7 +621,9 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-03",
             "release/nv12-04",
             "release/nv12-05",
-            "release/nv12-06"
+            "release/nv12-06",
+            "release/nv12-07",
+            "release/nv12-27"
         ]
     ),
     spec!(
@@ -525,4 +644,126 @@ pub const fn all_packs() -> &'static [PackSpec] {
 /// Looks up one exact checker id.
 pub fn find_pack(checker: &str) -> Option<&'static PackSpec> {
     PACKS.iter().find(|spec| spec.checker == checker)
+}
+
+#[cfg(test)]
+mod tests {
+    use sim_conformance_core::{
+        CheckInputClosureId, CheckScopeId, CheckedSubjectId, CheckerReceipt,
+        CheckerRevocationDecision, CheckerRevocationHeadId, CheckerRevocationKey,
+        CheckerRevocationSet, EvidenceGrade, EvidenceProvenanceId, EvidenceSetId, IdKind, PolicyId,
+        RevocationStatus, SemanticId,
+    };
+
+    use super::*;
+
+    fn sid<K: IdKind>(value: &str) -> SemanticId<K> {
+        SemanticId::from_text(value).unwrap()
+    }
+
+    #[test]
+    fn same_version_source_substitution_changes_code_and_invocation_identity() {
+        let spec = find_pack("checker/c-op").unwrap();
+        let source_a = spec
+            .checker_code_id_for_build_inputs(&"a".repeat(64))
+            .unwrap();
+        let source_b = spec
+            .checker_code_id_for_build_inputs(&"b".repeat(64))
+            .unwrap();
+        assert_ne!(source_a, source_b);
+        let binding = spec.checker_binding().unwrap();
+        let subject: CheckedSubjectId = sid("subject/same");
+        let scope: CheckScopeId = sid("operation/local");
+        let closure: CheckInputClosureId = sid("closure/same");
+        let instantiate = |code| {
+            binding
+                .instantiate(
+                    code,
+                    spec.pack_id().unwrap(),
+                    subject.clone(),
+                    scope.clone(),
+                    closure.clone(),
+                )
+                .unwrap()
+        };
+        let invocation_a = instantiate(source_a);
+        let invocation_b = instantiate(source_b);
+        assert_ne!(invocation_a.id(), invocation_b.id());
+
+        let issue = |invocation: &sim_conformance_core::CheckInvocation| {
+            let key = CheckerRevocationKey::for_invocation(
+                binding.revocation_source().clone(),
+                invocation,
+            )
+            .unwrap();
+            let policy: PolicyId = sid("policy/same-version-test");
+            let head: CheckerRevocationHeadId = sid("head/same");
+            let provenance: EvidenceProvenanceId = sid("provenance/exact");
+            let support: EvidenceSetId = sid("support/exact");
+            let selected = CheckerRevocationSet::from_owner_snapshot(
+                binding.owner().clone(),
+                binding.revocation_source().clone(),
+                policy.clone(),
+                head,
+                vec![
+                    CheckerRevocationDecision::new(key.clone(), RevocationStatus::Current).unwrap(),
+                ],
+            )
+            .unwrap()
+            .lookup(&key);
+            CheckerReceipt::passing(
+                &binding,
+                invocation,
+                sid("result/pass"),
+                EvidenceGrade::Reproducible,
+                provenance,
+                policy,
+                support,
+                &selected,
+            )
+            .unwrap()
+        };
+        assert_ne!(issue(&invocation_a).id(), issue(&invocation_b).id());
+    }
+
+    #[test]
+    fn installed_build_identity_is_a_lowercase_sha256() {
+        let identity = find_pack("checker/c-op").unwrap().build_inputs_sha256();
+        assert_eq!(identity.len(), 64);
+        assert!(
+            identity
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+        );
+    }
+
+    #[test]
+    fn native_operation_binding_is_distinct_and_names_the_call_that_runs() {
+        let spec = find_pack("checker/c-op").unwrap();
+        let command = spec.checker_binding().unwrap();
+        let native = spec.native_operation_local_binding().unwrap();
+        assert_ne!(command.id(), native.id());
+        assert_eq!(
+            native.template().entrypoint(),
+            "sim_check_pack::invoke_operation_local"
+        );
+        assert_eq!(
+            native.template().cwd(),
+            &WorkingDirectoryPolicyId::from_text("call/no-working-directory").unwrap()
+        );
+        assert_eq!(
+            native.template().environment(),
+            &EnvironmentPolicyId::from_text("call/native-rust-v1").unwrap()
+        );
+        assert_eq!(
+            native.allowed_scopes(),
+            &BTreeSet::from([CheckScopeId::from_text("operation/local").unwrap()])
+        );
+        assert!(
+            find_pack("checker/c-work")
+                .unwrap()
+                .native_operation_local_binding()
+                .is_err()
+        );
+    }
 }

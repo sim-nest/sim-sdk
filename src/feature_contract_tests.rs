@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 mod cfg_sentinels;
 mod facade_thinness;
 mod glasses;
@@ -207,8 +212,8 @@ const REQUIRED_PUBLIC_GATES: &[&str] = &[
     "cargo test --workspace",
     "cargo clippy --workspace --all-targets -- -D warnings",
     "cargo doc --workspace --no-deps",
-    "cargo clippy --workspace --all-features --all-targets -- -D warnings",
-    "cargo test --workspace --all-features",
+    "cargo clippy --locked --workspace --all-features --all-targets -- -D warnings",
+    "cargo test --locked --workspace --all-features",
     "cargo run -p xtask -- simdoc --check",
 ];
 

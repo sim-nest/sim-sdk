@@ -6,9 +6,17 @@ fn true_subject(keys: &[&str]) -> MemorySubject {
     })
 }
 
+fn identity_subject(keys: &[&str]) -> MemorySubject {
+    keys.iter()
+        .enumerate()
+        .fold(MemorySubject::default(), |subject, (index, key)| {
+            subject.with(*key, format!("projection/test-owner-v1:{:064x}", index + 1))
+        })
+}
+
 #[test]
 fn nv12_06_projection_scopes_are_funded_and_fail_closed() {
-    let boundary = true_subject(&[
+    let boundary = identity_subject(&[
         "boundary.kernel-unchanged",
         "boundary.projection-registry-open",
         "boundary.config-shape-checked",
@@ -46,9 +54,9 @@ fn nv12_06_projection_scopes_are_funded_and_fail_closed() {
             "boundary/projection-admission",
             &boundary
                 .clone()
-                .with("boundary.untrusted-native-refused", "false"),
+                .with("boundary.untrusted-native-refused", "true"),
         )),
-        PackVerdict::Refused(_)
+        PackVerdict::Refused(ref failure) if failure.code == "malformed-content-identity"
     ));
 
     let disclosure = true_subject(&[

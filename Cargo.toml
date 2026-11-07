@@ -1,6 +1,6 @@
 [package]
 name = "sim-nest"
-version = "0.2.6"
+version = "0.2.7"
 edition = "2024"
 license = "MPL-2.0"
 description = "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features."
@@ -50,9 +50,9 @@ serde = { version = "1", features = ["derive"], optional = true }
 serde_json = { version = "1", optional = true }
 sim-citizen = { optional = true, version = "0.4.0" }
 sim-citizen-derive = { optional = true, version = "0.4.0" }
-sim-run-loaders = { optional = true, version = "0.4.0", default-features = false }
+sim-run-loaders = { optional = true, version = "0.4.1", default-features = false }
 sim-run-core = { optional = true, version = "0.5.0" }
-sim-lib-hotload = { optional = true, version = "0.2.0" }
+sim-lib-hotload = { optional = true, version = "0.2.1" }
 sim-lib-platform = { optional = true, version = "0.1.1" }
 sim-lib-net-http = { optional = true, version = "0.2.0" }
 sim-lib-web-core = { optional = true, version = "0.2.0" }
@@ -80,14 +80,14 @@ sim-codec-lisp = { optional = true, version = "0.4.0" }
 sim-codec-mcp = { optional = true, version = "0.3.0" }
 sim-codec-python = { optional = true, version = "0.1.2" }
 sim-cookbook = { optional = true, version = "0.4.0" }
-sim-expr-tree-calc = { optional = true, version = "0.4.0" }
+sim-expr-tree-calc = { optional = true, version = "0.4.1" }
 sim-expr-tree-core = { optional = true, version = "0.3.0" }
 sim-kernel = { optional = true, version = "0.4.0" }
 sim-lib-agent = { optional = true, version = "0.3.0" }
 sim-lib-agent-conduct = { optional = true, version = "0.2.0" }
 sim-lib-agent-conduct-core = { optional = true, version = "0.2.0" }
 sim-lib-agent-runner-core = { optional = true, version = "0.4.0" }
-sim-lib-agent-runner-http = { optional = true, version = "0.4.0" }
+sim-lib-agent-runner-http = { optional = true, version = "0.4.1" }
 sim-lib-agent-runner-process = { optional = true, version = "0.3.0" }
 sim-lib-provider = { optional = true, version = "0.2.0" }
 sim-lib-audio-dsp = { optional = true, version = "0.3.0" }
@@ -111,7 +111,7 @@ sim-lib-daw-session = { optional = true, version = "0.3.0" }
 sim-lib-discrete = { optional = true, version = "0.3.0" }
 sim-lib-discrete-search = { optional = true, version = "0.3.0" }
 sim-lib-dispatch = { optional = true, version = "0.3.0" }
-sim-lib-exec = { optional = true, version = "0.3.0" }
+sim-lib-exec = { optional = true, version = "0.4.0" }
 sim-estate-core = { optional = true, version = "0.2.0" }
 sim-estate-project = { optional = true, version = "0.1.1" }
 sim-lib-estate = { optional = true, version = "0.2.0" }
@@ -119,7 +119,7 @@ sim-lib-estate-serve = { optional = true, version = "0.2.0" }
 sim-site-estate-model = { optional = true, version = "0.1.1" }
 sim-lib-expr-tree = { optional = true, version = "0.4.0" }
 sim-lib-expr-tree-server = { optional = true, version = "0.4.0" }
-sim-lib-forge = { optional = true, version = "0.1.5" }
+sim-lib-forge = { optional = true, version = "0.2.0" }
 sim-lib-gc-tracing = { optional = true, version = "0.3.0" }
 sim-lib-femm-assembly = { optional = true, version = "0.5.0" }
 sim-lib-femm-codec = { optional = true, version = "0.2.2" }
@@ -149,7 +149,7 @@ sim-lib-lang-clojure = { optional = true, version = "0.3.0" }
 sim-lib-lang-islisp = { optional = true, version = "0.3.0" }
 sim-lib-lang-julia = { optional = true, version = "0.3.0" }
 sim-lib-lang-javascript = { optional = true, version = "0.4.0" }
-sim-lib-lang-jvm = { optional = true, version = "0.2.1" }
+sim-lib-lang-jvm = { optional = true, version = "0.3.0" }
 sim-lib-lang-typescript = { optional = true, version = "0.1.3" }
 sim-lib-lang-lua = { optional = true, version = "0.4.0" }
 sim-lib-lang-python = { optional = true, version = "0.4.0" }
@@ -230,11 +230,11 @@ sim-lib-physics-adapter = { optional = true, version = "0.2.0" }
 sim-lib-physics-audit = { optional = true, version = "0.2.0" }
 sim-lib-physics-core = { optional = true, version = "0.2.0" }
 sim-lib-physics-findings = { optional = true, version = "0.2.0" }
-sim-lib-physics-influence = { optional = true, version = "0.2.0" }
+sim-lib-physics-influence = { optional = true, version = "0.2.1" }
 sim-lib-physics-power = { optional = true, version = "0.2.0" }
 sim-lib-physics-proof = { optional = true, version = "0.2.0" }
-sim-lib-physics-runtime = { optional = true, version = "0.1.1", default-features = false }
-sim-lib-physics-study = { optional = true, version = "0.2.0" }
+sim-lib-physics-runtime = { optional = true, version = "0.1.2", default-features = false }
+sim-lib-physics-study = { optional = true, version = "0.2.1" }
 sim-lib-pitch-chord = { optional = true, version = "0.4.0" }
 sim-lib-pitch-core = { optional = true, version = "0.4.0" }
 sim-lib-pitch-dissonance = { optional = true, version = "0.3.0" }
@@ -267,7 +267,7 @@ sim-platform-sqlite = { optional = true, version = "0.2.0" }
 sim-lib-scene = { optional = true, version = "0.4.0" }
 sim-lib-serial-core = { optional = true, version = "0.3.0" }
 sim-lib-sequence = { optional = true, version = "0.3.0" }
-sim-lib-server = { optional = true, version = "0.3.0" }
+sim-lib-server = { optional = true, version = "0.3.1" }
 sim-lib-skill = { optional = true, version = "0.4.0" }
 sim-lib-sound-audio-lift = { optional = true, version = "0.3.0" }
 sim-lib-sound-bridge = { optional = true, version = "0.3.0" }
@@ -339,10 +339,10 @@ sim-kernel = { version = "0.4.0", features = ["test-support"] }
 sim-citizen = "0.4.0"
 sim-lib-capability-pack = "0.1.0"
 sim-lib-expedition-book = "0.1.0"
-sim-lib-exec = "0.3.0"
+sim-lib-exec = "0.4.0"
 sim-lib-journal = "0.3.0"
 sim-lib-view-worktable = "0.1.0"
-sim-run-loaders = "0.4.0"
+sim-run-loaders = "0.4.1"
 sim-storage-port = "0.2.0"
 sim-table-fs = "0.2.1"
 wat = "1.245.1"

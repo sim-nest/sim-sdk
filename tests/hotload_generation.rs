@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 #![cfg(feature = "hotload")]
 
 use std::{
@@ -42,6 +47,15 @@ version = 4\n\n\
 [[package]]\n\
 name = \"sdk-hotload-fixture\"\n\
 version = \"0.1.0\"\n";
+const TARGET_TRIPLE: &str = "x86_64-unknown-linux-gnu";
+
+fn toolchain(content: &str) -> ToolchainIdentity {
+    ToolchainIdentity {
+        content: content.into(),
+        cargo_program: "sealed-cargo".into(),
+        environment: vec![("PATH".into(), "/toolchain/bin".into())],
+    }
+}
 
 fn path(value: &str) -> Vec<String> {
     value.split('/').map(str::to_owned).collect()
@@ -86,10 +100,14 @@ impl SandboxLauncher for FixtureLauncher {
             });
         }
         self.target
-            .create_dir(&path("debug"))
+            .create_dir(&path(TARGET_TRIPLE))
+            .and_then(|_| {
+                self.target
+                    .create_dir(&path(&format!("{TARGET_TRIPLE}/debug")))
+            })
             .and_then(|_| {
                 self.target.replace(
-                    &path("debug/libsdk_hotload_fixture.so"),
+                    &path(&format!("{TARGET_TRIPLE}/debug/libsdk_hotload_fixture.so")),
                     &self.artifact,
                     &NeverCancel,
                 )
@@ -119,7 +137,10 @@ impl SandboxLauncher for FixtureLauncher {
         })
         .collect();
         SandboxAttempt::Completed(SandboxResult {
-            stdout: br#"{"reason":"compiler-artifact","package_id":"sdk-hotload-fixture 0.1.0 (path+file:///source)","target":{"kind":["cdylib"]},"filenames":["/target/debug/libsdk_hotload_fixture.so"]}"#.to_vec(),
+            stdout: format!(
+                "{{\"reason\":\"compiler-artifact\",\"package_id\":\"sdk-hotload-fixture 0.1.0 (path+file:///source)\",\"target\":{{\"name\":\"sdk-hotload-fixture\",\"kind\":[\"cdylib\"]}},\"filenames\":[\"/target/{TARGET_TRIPLE}/debug/libsdk_hotload_fixture.so\"]}}"
+            )
+            .into_bytes(),
             stderr: Vec::new(),
             exit_code: 0,
             report: SandboxReport {
@@ -153,11 +174,7 @@ fn build(
                 package: "sdk-hotload-fixture".into(),
                 features: BTreeSet::new(),
                 expected_library: Symbol::qualified("sdk-fixture", "library"),
-                toolchain: ToolchainIdentity {
-                    content: "sha256:sealed-rust-toolchain".into(),
-                    cargo_program: "sealed-cargo".into(),
-                    environment: vec![("PATH".into(), "/toolchain/bin".into())],
-                },
+                toolchain: toolchain("sha256:sealed-rust-toolchain"),
             },
             BuildMounts {
                 source,
@@ -522,11 +539,7 @@ fn public_build_to_generation_loop_is_safe_and_replayable() {
                 package: "sdk-hotload-fixture".into(),
                 features: BTreeSet::new(),
                 expected_library: Symbol::qualified("sdk-fixture", "library"),
-                toolchain: ToolchainIdentity {
-                    content: "sha256:toolchain".into(),
-                    cargo_program: "sealed-cargo".into(),
-                    environment: Vec::new(),
-                },
+                toolchain: toolchain("sha256:toolchain"),
             },
             BuildMounts {
                 source: &source_b,

@@ -32,10 +32,16 @@ cargo fmt --all --check
 cargo test --workspace
 cargo clippy --workspace --all-targets -- -D warnings
 cargo doc --workspace --no-deps
-cargo clippy --workspace --all-features --all-targets -- -D warnings
-cargo test --workspace --all-features
+lock_sha="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" && printf '%s\n' "$lock_sha" | grep -Eq '^[0-9a-f]{64}$' && SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$lock_sha" cargo clippy --locked --workspace --all-features --all-targets -- -D warnings
+lock_sha="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" && printf '%s\n' "$lock_sha" | grep -Eq '^[0-9a-f]{64}$' && SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$lock_sha" cargo test --locked --workspace --all-features
 cargo run -p xtask -- simdoc --check
 ```
+
+The two all-features chains stop before cargo when `Cargo.lock` is missing
+or its digest is not 64 lowercase hex characters. `cargo test --workspace`
+above writes that lock on a local clone. The all-features CI job writes the
+gitignored lock itself, refuses the same bad digest, then runs the two
+`--locked` commands.
 
 The `sim-kernel` repository remains the dependency root and has no
 constellation-internal dependencies. Other repositories declare versioned

@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 // conformance: the standard JVM facade exports the complete public front door.
 
 #![cfg(feature = "standard-jvm")]
@@ -17,7 +22,9 @@ fn sdk_exports_caller_selected_jvm_execution() {
         classfile: include_str!("../recipes/jvm/StaticInt.hex")
             .trim()
             .as_bytes()
-            .chunks_exact(2)
+            .as_chunks::<2>()
+            .0
+            .iter()
             .map(|pair| u8::from_str_radix(std::str::from_utf8(pair).unwrap(), 16).unwrap())
             .collect(),
         class: "StaticInt".into(),
