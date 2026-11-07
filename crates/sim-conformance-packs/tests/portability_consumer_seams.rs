@@ -83,6 +83,7 @@ fn request<'a>(
 }
 
 #[test]
+#[ignore = "requires sibling repository checkouts"]
 fn frozen_executor_sources_qualify_the_outside_specimen() {
     let (_files, before) = closure();
     let report = qualify(&before, &before).expect("specimen");
@@ -159,6 +160,7 @@ fn altered_closure_bytes_change_the_digest() {
 }
 
 #[test]
+#[ignore = "requires sibling repository checkouts"]
 fn the_pack_passes_only_the_frozen_closure() {
     let binding = find_pack("checker/c-port")
         .unwrap()

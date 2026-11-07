@@ -104,8 +104,20 @@ jobs:
           key: ${{ runner.os }}-sim-sdk-all-features-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
           restore-keys: |
             ${{ runner.os }}-sim-sdk-all-features-
-      - run: SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" cargo clippy --workspace --all-features --all-targets -- -D warnings
-      - run: SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" cargo test --workspace --all-features
+      # Cargo.lock is gitignored, so a fresh checkout has nothing to hash.
+      # Materialize it first. A prefix assignment would keep an empty digest
+      # when sha256sum fails, and the pack build script rejects that digest.
+      - name: Materialize the dependency lock
+        run: |
+          cargo generate-lockfile
+          test -f "$PWD/Cargo.lock"
+          test ! -L "$PWD/Cargo.lock"
+          lock_sha="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)"
+          printf '%s\n' "$lock_sha" | grep -Eq '^[0-9a-f]{64}$'
+          echo "SIM_CONFORMANCE_PACKS_LOCK_FILE=$PWD/Cargo.lock" >> "$GITHUB_ENV"
+          echo "SIM_CONFORMANCE_PACKS_LOCK_SHA256=$lock_sha" >> "$GITHUB_ENV"
+      - run: cargo clippy --locked --workspace --all-features --all-targets -- -D warnings
+      - run: cargo test --locked --workspace --all-features
 
   check:
     name: check

@@ -601,10 +601,15 @@ cargo test -p sim-conformance
 cargo test --workspace
 cargo clippy --workspace --all-targets -- -D warnings
 cargo doc --workspace --no-deps
-SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" cargo clippy --workspace --all-features --all-targets -- -D warnings
-SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" cargo test --workspace --all-features
+lock_sha="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" && printf '%s\n' "$lock_sha" | grep -Eq '^[0-9a-f]{64}$' && SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$lock_sha" cargo clippy --locked --workspace --all-features --all-targets -- -D warnings
+lock_sha="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" && printf '%s\n' "$lock_sha" | grep -Eq '^[0-9a-f]{64}$' && SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$lock_sha" cargo test --locked --workspace --all-features
 cargo run -p xtask -- simdoc --check
 ```
+
+The all-features CI job writes the gitignored root `Cargo.lock` before
+it hashes that file, and it runs those two commands with `--locked`.
+The contributor chains above stop before cargo when that lock is missing
+or its digest is not 64 lowercase hex characters.
 
 CI runs `cargo test -p sim-conformance` for the standalone public-facade
 conformance suite. Conformance tests that name sibling recipe corpora or the

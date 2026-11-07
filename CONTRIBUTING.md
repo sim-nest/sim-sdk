@@ -21,9 +21,15 @@ Every PR runs these gates in CI, and they must be green before merge:
 - `cargo test --workspace`
 - `cargo clippy --workspace --all-targets -- -D warnings`
 - `cargo doc --workspace --no-deps`
-- `SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" cargo clippy --workspace --all-features --all-targets -- -D warnings`
-- `SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" cargo test --workspace --all-features`
+- `lock_sha="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" && printf '%s\n' "$lock_sha" | grep -Eq '^[0-9a-f]{64}$' && SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$lock_sha" cargo clippy --locked --workspace --all-features --all-targets -- -D warnings`
+- `lock_sha="$(sha256sum "$PWD/Cargo.lock" | cut -d' ' -f1)" && printf '%s\n' "$lock_sha" | grep -Eq '^[0-9a-f]{64}$' && SIM_CONFORMANCE_PACKS_LOCK_FILE="$PWD/Cargo.lock" SIM_CONFORMANCE_PACKS_LOCK_SHA256="$lock_sha" cargo test --locked --workspace --all-features`
 - `cargo run -p xtask -- simdoc --check`
+
+The all-features job writes the gitignored root `Cargo.lock` before it
+hashes that file. It refuses a digest that is not 64 lowercase hex
+characters, then runs the two `--locked` commands above. The contributor
+commands use the same refusal: a missing lock or a bad digest stops the
+chain before cargo starts.
 
 CI runs the standalone public-facade conformance suite with
 `cargo test -p sim-conformance`. Conformance tests whose ignored-test output
