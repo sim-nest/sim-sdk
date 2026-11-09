@@ -1,4 +1,5 @@
 use std::{
+    collections::BTreeSet,
     env, fs,
     path::{Path, PathBuf},
     process::Command,
@@ -25,6 +26,7 @@ fn main() {
     println!("cargo:rerun-if-changed=src");
     let manifest_dir = PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").expect("manifest dir"));
     let source = hash_source_inputs(&manifest_dir);
+    let path_dependencies = hash_path_dependencies(&manifest_dir);
     let (lock_path, lock_bytes) = selected_lock(&manifest_dir);
     println!("cargo:rerun-if-changed={}", lock_path.display());
     let lock = hash_bytes(&lock_bytes);
@@ -55,6 +57,7 @@ fn main() {
     );
     let exact = hash_lines([
         format!("source={source}"),
+        format!("path-dependencies={path_dependencies}"),
         format!("dependency-lock={lock}"),
         format!("toolchain={toolchain}"),
         format!("features={features}"),
@@ -68,6 +71,96 @@ fn main() {
         "cargo:rustc-env=SIM_CONFORMANCE_PACKS_BUILD_CONFIGURATION_SHA256={build_configuration}"
     );
     println!("cargo:rustc-env=SIM_CONFORMANCE_PACKS_BUILD_INPUTS_SHA256={exact}");
+}
+
+fn hash_path_dependencies(manifest_dir: &Path) -> String {
+    let manifest = fs::read_to_string(manifest_dir.join("Cargo.toml")).expect("pack manifest");
+    let mut files = Vec::new();
+    let mut seen = BTreeSet::new();
+    for dependency in path_dependencies(&manifest) {
+        walk_manifest(&manifest_dir.join(dependency), &mut files, &mut seen);
+    }
+    files.sort();
+    files.dedup();
+    let mut hasher = Sha256::new();
+    for (label, path) in files {
+        println!("cargo:rerun-if-changed={}", path.display());
+        let bytes = fs::read(&path).expect("read path dependency");
+        hasher.update((label.len() as u64).to_be_bytes());
+        hasher.update(label.as_bytes());
+        hasher.update((bytes.len() as u64).to_be_bytes());
+        hasher.update(bytes);
+    }
+    hex(hasher.finalize())
+}
+
+fn path_dependencies(manifest: &str) -> Vec<String> {
+    let mut section = String::new();
+    let mut paths = Vec::new();
+    for line in manifest.lines() {
+        let trimmed = line.trim();
+        if let Some(name) = trimmed.strip_prefix('[') {
+            section = name.trim_end_matches(']').to_owned();
+            continue;
+        }
+        if section == "dependencies"
+            && let Some(path) = path_from_line(trimmed)
+        {
+            paths.push(path);
+        }
+    }
+    paths
+}
+
+fn path_from_line(line: &str) -> Option<String> {
+    let (_, after) = line.split_once("path")?;
+    let (_, after) = after.split_once('"')?;
+    let (path, _) = after.split_once('"')?;
+    if path.is_empty() {
+        None
+    } else {
+        Some(path.to_owned())
+    }
+}
+
+fn walk_manifest(
+    manifest_dir: &Path,
+    files: &mut Vec<(String, PathBuf)>,
+    seen: &mut BTreeSet<PathBuf>,
+) {
+    let manifest_dir = manifest_dir
+        .canonicalize()
+        .expect("canonical path dependency");
+    if !seen.insert(manifest_dir.clone()) {
+        return;
+    }
+    collect_crate_sources(&manifest_dir, files);
+    let manifest =
+        fs::read_to_string(manifest_dir.join("Cargo.toml")).expect("dependency manifest");
+    for dependency in path_dependencies(&manifest) {
+        walk_manifest(&manifest_dir.join(dependency), files, seen);
+    }
+}
+
+fn collect_crate_sources(manifest_dir: &Path, files: &mut Vec<(String, PathBuf)>) {
+    let crate_name = manifest_dir
+        .file_name()
+        .expect("crate directory")
+        .to_string_lossy();
+    let manifest = manifest_dir.join("Cargo.toml");
+    files.push((format!("{crate_name}/Cargo.toml"), manifest));
+    let source = manifest_dir.join("src");
+    if source.is_dir() {
+        let mut found = Vec::new();
+        collect_files(&source, &mut found);
+        for path in found {
+            let relative = path
+                .strip_prefix(manifest_dir)
+                .expect("crate source path")
+                .to_string_lossy();
+            files.push((format!("{crate_name}/{relative}"), path));
+        }
+    }
 }
 
 fn hash_source_inputs(manifest_dir: &Path) -> String {

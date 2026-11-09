@@ -5,10 +5,9 @@
 
 //! Portability conformance pack.
 //!
-//! The foreign-project scope judges an injected law over one caller-named
-//! document: a custom provider, nested resolver roots, generated output,
-//! proof declarations, a hostile model remote, and an absent provider.
-//! The consumer-seams scope runs the outside composition specimen.
+//! The foreign-project scope calls the frozen executor and reads the owner
+//! back from the source provider. The consumer-seams scope runs the outside
+//! composition specimen. The law trait remains available to substituted laws.
 
 #[path = "consumer_seams.rs"]
 pub mod consumer_seams;
@@ -286,7 +285,11 @@ impl PortabilityLaw for CanonicalLaw {
 /// Checks the exact requested portability scope.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-port", request, |request| match request.scope {
-        "portability/foreign-project" => check_implementation(&CanonicalLaw),
+        "portability/foreign-project" => {
+            crate::executor::require_subject(request.subject)?;
+            crate::executor::require_support(request)?;
+            crate::executor::foreign_project(request.subject)
+        }
         "portability/consumer-seams" => consumer_seams::check_subject(request),
         _ => Err(failure("wrong-scope")),
     })

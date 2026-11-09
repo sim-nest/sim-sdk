@@ -11,7 +11,7 @@ homepage.workspace = true
 
 [package.metadata.sim-recipes]
 policy = "descriptor"
-reason = "The recipe describes a pure injected-evidence checker contract."
+reason = "The recipe names each checker scope. A funded scope calls the frozen executor through injected ports."
 
 [features]
 # Native adapters built from another resolver root must select that root's
@@ -23,7 +23,17 @@ external-resolver-lock = []
 sha2 = "0.10"
 sim-artifact-facet = "0.2.0"
 sim-conformance-core = "0.3.0"
+# The frozen executor's proof receipts use the 0.2 contract crate. The 0.3
+# crate above keeps the pack's own checker types. Cargo treats them as two
+# packages because their versions differ.
+sim-conformance-v02 = { package = "sim-conformance-core", version = "0.2.0" }
 sim-kernel = "0.4.0"
+sim-lib-exec = "0.3.0"
+sim-lib-journal = "0.3.0"
+sim-lib-roadmap-runner = { version = "0.3.0", path = "../../../sim-agent-net/crates/sim-lib-roadmap-runner" }
+sim-roadmap-core = { version = "0.3.0", path = "../../../sim-agent-net/crates/sim-roadmap-core" }
+sim-roadmap-exec-core = { version = "0.3.0", path = "../../../sim-agent-net/crates/sim-roadmap-exec-core" }
+sim-source-deck = { version = "0.2.0", path = "../../../sim-agent-net/crates/sim-source-deck" }
 sim-work-core = "0.3.0"
 
 [build-dependencies]

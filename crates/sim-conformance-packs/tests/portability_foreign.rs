@@ -4,7 +4,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 use sim_conformance_packs::{
-    MemorySubject, PackRequest, PackVerdict, find_pack, packs,
+    MemorySubject, PackRequest, PackVerdict, executor_support_evidence, find_pack, packs,
     packs::portability::{
         CanonicalLaw, Explain, PortabilityLaw, Project, Seal, SealDiff, Snapshot, SnapshotDiff,
     },
@@ -42,6 +42,18 @@ fn foreign_project_scope_passes_and_consumer_seams_need_a_freeze() {
     let evidence = MemorySubject::default();
     assert!(matches!(
         packs::portability::check(&request("portability/foreign-project", &evidence)),
+        PackVerdict::Refused(ref failure) if failure.code == "unqualified-support"
+    ));
+    let echoed = evidence
+        .clone()
+        .with("support.closure", "not-the-executor-record");
+    assert!(matches!(
+        packs::portability::check(&request("portability/foreign-project", &echoed)),
+        PackVerdict::Refused(ref failure) if failure.code == "unqualified-support"
+    ));
+    let issued = executor_support_evidence(SUBJECT).expect("executor support");
+    assert!(matches!(
+        packs::portability::check(&request("portability/foreign-project", &issued)),
         PackVerdict::Pass { .. }
     ));
     assert!(matches!(
