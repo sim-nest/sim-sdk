@@ -1,5 +1,11 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Activation ownership checks.
 
+use super::succession_record::{self, fail};
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
 
 /// Checks the exact requested ownership scope.
@@ -9,8 +15,80 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         "ownership/dependencies" => dependencies(request),
         "ownership/bootstrap" => bootstrap(request),
         "ownership/produced" => produced(request),
+        "ownership/roadmap-final" => roadmap_final(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
+}
+
+fn roadmap_final(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
+    let mut record_text = None;
+    let mut edges = 0_u64;
+    let mut cycles = 0_u64;
+    let mut planned = 0_u64;
+    for key in request.evidence.fact_keys() {
+        if key == "ownership.succession-record" {
+            record_text = request.evidence.fact(key);
+            continue;
+        }
+        if let Some(name) = graph_name(key, "ownership.edge.") {
+            if name.is_empty() {
+                return Err(fail("unexpected-fact", key));
+            }
+            edges = edges.saturating_add(1);
+            continue;
+        }
+        if let Some(name) = graph_name(key, "ownership.cycle.") {
+            if name.is_empty() {
+                return Err(fail("unexpected-fact", key));
+            }
+            cycles = cycles.saturating_add(1);
+            continue;
+        }
+        if let Some(name) = graph_name(key, "ownership.planned.") {
+            if name.is_empty() {
+                return Err(fail("unexpected-fact", key));
+            }
+            planned = planned.saturating_add(1);
+            continue;
+        }
+        return Err(fail("unexpected-fact", key));
+    }
+    if edges != 0 || cycles != 0 || planned != 0 {
+        return Err(fail("graph", "ownership.graph"));
+    }
+    let Some(record_text) = record_text else {
+        return Err(fail("missing-record", "ownership.succession-record"));
+    };
+    let derived = succession_record::derive(record_text)?;
+    Ok(vec![
+        observation("ownership.closed", &derived.closed),
+        observation("ownership.change", &derived.change),
+        observation("ownership.project", &derived.project),
+        observation("ownership.holds", &derived.holds.to_string()),
+        observation(
+            "ownership.second-converge",
+            &derived.converge_second.to_string(),
+        ),
+        observation(
+            "ownership.second-deliver",
+            &derived.deliver_second.to_string(),
+        ),
+        observation("ownership.edges", &edges.to_string()),
+        observation("ownership.cycles", &cycles.to_string()),
+        observation("ownership.planned-targets", &planned.to_string()),
+        observation("ownership.linux", &derived.linux),
+    ])
+}
+
+fn graph_name<'a>(key: &'a str, prefix: &str) -> Option<&'a str> {
+    key.strip_prefix(prefix)
+}
+
+fn observation(key: &str, value: &str) -> CheckObservation {
+    CheckObservation {
+        key: key.to_owned(),
+        value: value.to_owned(),
+    }
 }
 
 fn produced(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {

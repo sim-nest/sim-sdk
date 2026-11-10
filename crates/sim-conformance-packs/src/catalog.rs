@@ -370,7 +370,8 @@ const PACKS: &[PackSpec] = &[
             "ownership/activation",
             "ownership/dependencies",
             "ownership/bootstrap",
-            "ownership/produced"
+            "ownership/produced",
+            "ownership/roadmap-final"
         ]
     ),
     spec!(
@@ -632,7 +633,7 @@ const PACKS: &[PackSpec] = &[
         "pack/succession",
         "NV12.28",
         ["succession/composed-precheck", "succession/cold-change"],
-        []
+        ["succession/cold-change"]
     ),
 ];
 

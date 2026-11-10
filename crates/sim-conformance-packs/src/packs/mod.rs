@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Individually bound conformance packs.
 
 pub mod authoring;
@@ -20,4 +25,5 @@ pub mod release;
 pub mod retirement;
 pub mod source;
 pub mod succession;
+mod succession_record;
 pub mod work;
