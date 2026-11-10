@@ -1,6 +1,6 @@
 [package]
 name = "sim-conformance-packs"
-version = "0.8.0"
+version = "0.8.1"
 edition.workspace = true
 license.workspace = true
 description = "Public neutral conformance packs and bootstrap checkers for SIM."
@@ -30,10 +30,10 @@ sim-conformance-v02 = { package = "sim-conformance-core", version = "0.2.0" }
 sim-kernel = "0.4.0"
 sim-lib-exec = "0.3.0"
 sim-lib-journal = "0.3.0"
-sim-lib-roadmap-runner = { version = "0.3.0", path = "../../../sim-agent-net/crates/sim-lib-roadmap-runner" }
-sim-roadmap-core = { version = "0.3.0", path = "../../../sim-agent-net/crates/sim-roadmap-core" }
-sim-roadmap-exec-core = { version = "0.3.0", path = "../../../sim-agent-net/crates/sim-roadmap-exec-core" }
-sim-source-deck = { version = "0.2.0", path = "../../../sim-agent-net/crates/sim-source-deck" }
+sim-lib-roadmap-runner = "0.3.0"
+sim-roadmap-core = "0.3.0"
+sim-roadmap-exec-core = "0.3.0"
+sim-source-deck = "0.2.0"
 sim-work-core = "0.3.0"
 
 [build-dependencies]
