@@ -61,6 +61,10 @@ fn path(value: &str) -> Vec<String> {
     value.split('/').map(str::to_owned).collect()
 }
 
+fn segments(parts: &[&str]) -> String {
+    parts.join("/")
+}
+
 fn mount_fixture(label: &str, manifest: &[u8], lock: &[u8], source: &[u8]) -> MemoryHostDirPort {
     let mount = MemoryHostDirPort::new(label, 64 * 1024);
     mount
@@ -103,11 +107,15 @@ impl SandboxLauncher for FixtureLauncher {
             .create_dir(&path(TARGET_TRIPLE))
             .and_then(|_| {
                 self.target
-                    .create_dir(&path(&format!("{TARGET_TRIPLE}/debug")))
+                    .create_dir(&path(&segments(&[TARGET_TRIPLE, "debug"])))
             })
             .and_then(|_| {
                 self.target.replace(
-                    &path(&format!("{TARGET_TRIPLE}/debug/libsdk_hotload_fixture.so")),
+                    &path(&segments(&[
+                        TARGET_TRIPLE,
+                        "debug",
+                        "libsdk_hotload_fixture.so",
+                    ])),
                     &self.artifact,
                     &NeverCancel,
                 )
@@ -136,9 +144,16 @@ impl SandboxLauncher for FixtureLauncher {
             detail: "deterministic modeled control".into(),
         })
         .collect();
+        let artifact = segments(&[
+            "",
+            "target",
+            TARGET_TRIPLE,
+            "debug",
+            "libsdk_hotload_fixture.so",
+        ]);
         SandboxAttempt::Completed(SandboxResult {
             stdout: format!(
-                "{{\"reason\":\"compiler-artifact\",\"package_id\":\"sdk-hotload-fixture 0.1.0 (path+file:///source)\",\"target\":{{\"name\":\"sdk-hotload-fixture\",\"kind\":[\"cdylib\"]}},\"filenames\":[\"/target/{TARGET_TRIPLE}/debug/libsdk_hotload_fixture.so\"]}}"
+                "{{\"reason\":\"compiler-artifact\",\"package_id\":\"sdk-hotload-fixture 0.1.0 (path+file:///source)\",\"target\":{{\"name\":\"sdk-hotload-fixture\",\"kind\":[\"cdylib\"]}},\"filenames\":[{artifact:?}]}}"
             )
             .into_bytes(),
             stderr: Vec::new(),

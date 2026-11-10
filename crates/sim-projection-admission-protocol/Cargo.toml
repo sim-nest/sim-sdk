@@ -3,6 +3,7 @@ name = "sim-projection-admission-protocol"
 version = "0.1.0"
 edition.workspace = true
 license.workspace = true
+readme = "README.md"
 description = "Canonical dependency-light child protocol for native SIM projection admission."
 publish = true
 repository.workspace = true

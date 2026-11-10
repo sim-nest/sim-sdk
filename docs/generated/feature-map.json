@@ -3159,6 +3159,11 @@
     {
       "features": [],
       "group": "workspace",
+      "package": "sim-projection-admission-protocol"
+    },
+    {
+      "features": [],
+      "group": "workspace",
       "package": "xtask"
     }
   ]

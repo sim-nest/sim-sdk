@@ -1,6 +1,6 @@
 {
   "generator": "xtask crate-catalog v1",
-  "package_count": 4,
+  "package_count": 5,
   "packages": [
     {
       "description": "The SIM constellation umbrella facade: one crate that re-exports the runtime kernel, codecs, number domains, and libraries behind features.",
@@ -26,6 +26,7 @@
       "readme": "crates/sim-conformance-packs/README.md",
       "root": "crates/sim-conformance-packs",
       "target_kinds": [
+        "custom-build",
         "lib",
         "test"
       ]
@@ -41,6 +42,18 @@
       "target_kinds": [
         "lib",
         "test"
+      ]
+    },
+    {
+      "description": "Canonical dependency-light child protocol for native SIM projection admission.",
+      "generated_readme": true,
+      "manifest": "crates/sim-projection-admission-protocol/Cargo.toml",
+      "name": "sim-projection-admission-protocol",
+      "publish": "true",
+      "readme": "crates/sim-projection-admission-protocol/README.md",
+      "root": "crates/sim-projection-admission-protocol",
+      "target_kinds": [
+        "lib"
       ]
     },
     {

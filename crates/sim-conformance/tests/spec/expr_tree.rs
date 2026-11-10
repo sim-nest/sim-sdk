@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 use std::sync::Arc;
 
 use sim::{
@@ -45,7 +50,12 @@ fn expr_tree_recipe_restart_view_and_authority_compose_through_the_sdk() {
     assert_eq!(
         eval_expr(
             &mut recipe_cx,
-            "(expr-tree/ref sdk-finite-tree \"/measurements/trial-0001\")",
+            concat!(
+                "(expr-tree/ref sdk-finite-tree \"",
+                "/measurements",
+                "/",
+                "trial-0001\")"
+            ),
         ),
         Expr::String("measured-value".to_owned())
     );
