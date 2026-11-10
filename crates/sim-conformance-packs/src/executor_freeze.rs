@@ -28,7 +28,8 @@ macro_rules! closure_files {
         pub const EXECUTOR_CLOSURE_PATHS: &[&str] = &[$($path),+];
 
         const COMPILED: &[(&str, &[u8])] = &[
-            $(($path, include_bytes!(concat!("../../../../", $path)))),+
+            // Package-local copies. The path string remains the closure key.
+            $(($path, include_bytes!(concat!("../freeze/", $path, ".freeze")))),+
         ];
     };
 }
@@ -165,7 +166,7 @@ closure_files!(
 /// Stable label of the workspace resolver lock inside the executor identity.
 pub const WORKSPACE_RESOLVER_LOCK: &str = "resolver/workspace-cargo.lock";
 
-const WORKSPACE_RESOLVER_BYTES: &[u8] = include_bytes!("../../../Cargo.lock");
+const WORKSPACE_RESOLVER_BYTES: &[u8] = include_bytes!("../freeze/sim-sdk/Cargo.lock.freeze");
 
 /// Hex digest of the compiled executor, including the workspace resolver lock.
 pub fn compiled_executor_closure() -> String {
