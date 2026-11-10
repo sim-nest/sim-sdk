@@ -401,7 +401,7 @@ const PACKS: &[PackSpec] = &[
         "pack/source",
         "NV12.10",
         ["source/admission", "source/performance", "source/composed"],
-        []
+        ["source/admission", "source/performance", "source/composed"]
     ),
     spec!(
         "checker/c-evidence",
@@ -461,7 +461,13 @@ const PACKS: &[PackSpec] = &[
             "closure/resources",
             "closure/composed"
         ],
-        []
+        [
+            "closure/projection",
+            "closure/plan",
+            "closure/frontier",
+            "closure/resources",
+            "closure/composed"
+        ]
     ),
     spec!(
         "checker/c-control",
@@ -469,7 +475,7 @@ const PACKS: &[PackSpec] = &[
         "pack/control",
         "NV12.13",
         ["control/liveness", "control/composed"],
-        []
+        ["control/liveness", "control/composed"]
     ),
     spec!(
         "checker/c-work",
@@ -491,7 +497,7 @@ const PACKS: &[PackSpec] = &[
         "pack/drive",
         "NV12.25",
         ["drive/native", "drive/hot-no-op", "drive/composed"],
-        []
+        ["drive/hot-no-op", "drive/composed"]
     ),
     spec!(
         "checker/c-converge",
@@ -503,7 +509,11 @@ const PACKS: &[PackSpec] = &[
             "convergence/fixed-point",
             "convergence/composed"
         ],
-        []
+        [
+            "convergence/candidate",
+            "convergence/fixed-point",
+            "convergence/composed"
+        ]
     ),
     spec!(
         "checker/c-facet",

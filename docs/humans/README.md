@@ -17,7 +17,7 @@ This generated lane consumes `docs/generated/sim-index-fragment.sx`. Global inde
 
 | Feature | Subject | Specimens | Summary |
 | --- | --- | ---: | --- |
-| `feature/sim-sdk/neutral-conformance-packs` | `crate/sim-conformance-packs` | 5 | Expose all 21 checker entrypoints with pure evidence-driven scenarios, exact source/build identities, a host-bound operation/local owner authority, canonical results, and typed unavailable outcomes for scopes whose funded phase has not shipped, including predicted-closure sensitivity. |
+| `feature/sim-sdk/neutral-conformance-packs` | `crate/sim-conformance-packs` | 5 | Expose all 21 checker entrypoints. Funded source, closure, control, drive, and convergence scopes call the frozen executor through injected ports only when the evidence is the support record that executor issued for the subject. The support record is a qualified receipt the live checker owner issued for the support proof that ran, resolved through that same owner. A fact-only copy is refused, and a record issued for another subject is refused. Exact source and build identities, a host-bound operation/local owner, canonical results, and typed unavailable outcomes remain for scopes whose funded phase has not shipped, including predicted-closure sensitivity and native drive. |
 | `feature/sim-sdk/hotload-facade` | `crate/sim-nest` | 2 | Expose immutable native build, admission, compatibility, atomic activation, and durable receipt records without exposing host provider implementations. |
 | `feature/sim-sdk/layered-physics-facade` | `crate/sim-nest` | 1 | Curates quantities, physics core, audit, proof, studies, findings, and explicit adapters as one coherent domain bundle. |
 | `feature/sim-sdk/media-edge-music-vertical` | `crate/sim-nest` | 1 | Expose the owning music route plan and exact stream-host effect adapters behind one opt-in vertical feature. |
@@ -854,7 +854,7 @@ Source `crates/sim-conformance-packs/tests/portability_foreign.rs`:
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 use sim_conformance_packs::{
-    MemorySubject, PackRequest, PackVerdict, find_pack, packs,
+    MemorySubject, PackRequest, PackVerdict, executor_support_evidence, find_pack, packs,
     packs::portability::{
         CanonicalLaw, Explain, PortabilityLaw, Project, Seal, SealDiff, Snapshot, SnapshotDiff,
     },
@@ -892,6 +892,18 @@ fn foreign_project_scope_passes_and_consumer_seams_need_a_freeze() {
     let evidence = MemorySubject::default();
     assert!(matches!(
         packs::portability::check(&request("portability/foreign-project", &evidence)),
+        PackVerdict::Refused(ref failure) if failure.code == "unqualified-support"
+    ));
+    let echoed = evidence
+        .clone()
+        .with("support.closure", "not-the-executor-record");
+    assert!(matches!(
+        packs::portability::check(&request("portability/foreign-project", &echoed)),
+        PackVerdict::Refused(ref failure) if failure.code == "unqualified-support"
+    ));
+    let issued = executor_support_evidence(SUBJECT).expect("executor support");
+    assert!(matches!(
+        packs::portability::check(&request("portability/foreign-project", &issued)),
         PackVerdict::Pass { .. }
     ));
     assert!(matches!(
@@ -997,22 +1009,16 @@ use std::fs;
 use std::path::Path;
 
 use sim_conformance_packs::{
-    MemorySubject, PackVerdict, find_pack,
+    EXECUTOR_CLOSURE_PATHS, MemorySubject, PackVerdict, WORKSPACE_RESOLVER_LOCK,
+    compiled_executor_closure, find_pack,
     packs::portability::consumer_seams::{
         SeamFault, advice_rejected, advice_slot, capture_executor_subject_closure, changed_answer,
-        direction_once, discover_affordance, hot_needs_begin, hot_noop, interrupt_once,
-        open_with_linux, over_bound, qualify, renote_stales, reopen_keeps_direction, reopen_same,
-        revoked_subject, scope_confusion, selection_is_distinct, selection_without_begin,
-        snapshot_pages, wrong_execution,
+        check_subject, direction_once, discover_affordance, hot_needs_begin, hot_noop,
+        interrupt_once, open_with_linux, over_bound, qualify, qualify_subject, renote_stales,
+        reopen_keeps_direction, reopen_same, revoked_subject, scope_confusion,
+        selection_is_distinct, selection_without_begin, snapshot_pages, wrong_execution,
     },
 };
-
-const ROOTS: &[&str] = &[
-    "sim-kernel",
-    "sim-storage/crates/sim-lib-journal",
-    "sim-agent-net/crates/sim-lib-roadmap-runner",
-    "sim-run/crates/sim-run-core",
-];
 
 fn projects_root() -> std::path::PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../..")
@@ -1021,14 +1027,14 @@ fn projects_root() -> std::path::PathBuf {
 fn closure() -> (Vec<(String, Vec<u8>)>, String) {
     let root = projects_root();
     let mut entries = Vec::new();
-    for relative in ROOTS {
-        let crate_root = root.join(relative);
-        let manifest = crate_root.join("Cargo.toml");
-        let bytes =
-            fs::read(&manifest).unwrap_or_else(|_| panic!("missing {}", manifest.display()));
-        entries.push((format!("{relative}/Cargo.toml"), bytes));
-        collect(&crate_root.join("src"), &root, &mut entries);
+    for relative in EXECUTOR_CLOSURE_PATHS {
+        let path = root.join(relative);
+        let bytes = fs::read(&path).unwrap_or_else(|_| panic!("missing {}", path.display()));
+        entries.push(((*relative).to_owned(), bytes));
     }
+    let lock = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../Cargo.lock");
+    let bytes = fs::read(&lock).unwrap_or_else(|_| panic!("missing {}", lock.display()));
+    entries.push((WORKSPACE_RESOLVER_LOCK.to_owned(), bytes));
     entries.sort_by(|left, right| left.0.cmp(&right.0));
     let borrowed = entries
         .iter()
@@ -1036,27 +1042,6 @@ fn closure() -> (Vec<(String, Vec<u8>)>, String) {
         .collect::<Vec<_>>();
     let digest = capture_executor_subject_closure(&borrowed).expect("closure");
     (entries, digest)
-}
-
-fn collect(dir: &Path, root: &Path, entries: &mut Vec<(String, Vec<u8>)>) {
-    let listing = fs::read_dir(dir).unwrap_or_else(|_| panic!("missing {}", dir.display()));
-    for item in listing {
-        let item = item.expect("dir entry");
-        let path = item.path();
-        if path.is_dir() {
-            collect(&path, root, entries);
-            continue;
-        }
-        if path.extension().and_then(|ext| ext.to_str()) != Some("rs") {
-            continue;
-        }
-        let relative = path
-            .strip_prefix(root)
-            .expect("under projects")
-            .to_string_lossy()
-            .replace('\\', "/");
-        entries.push((relative, fs::read(&path).expect("source")));
-    }
 }
 
 fn request<'a>(
@@ -1076,12 +1061,35 @@ fn request<'a>(
 #[ignore = "requires sibling repository checkouts"]
 fn frozen_executor_sources_qualify_the_outside_specimen() {
     let (_files, before) = closure();
+    assert_eq!(before, compiled_executor_closure());
+    let lock =
+        fs::read_to_string(projects_root().join("sim-agent-net/Cargo.lock")).expect("runner lock");
+    for name in ["sim-lib-journal", "sim-kernel", "sim-artifact-facet"] {
+        assert!(
+            !registry_checksums(&lock, name).is_empty(),
+            "{name} has no registry checksum"
+        );
+    }
+    for path in [
+        "sim-agent-net/crates/sim-lib-roadmap-runner/src/journal.rs",
+        "sim-agent-net/crates/sim-lib-roadmap-runner/src/causal.rs",
+        "sim-agent-net/crates/sim-lib-roadmap-runner/src/codec.rs",
+        "sim-agent-net/crates/sim-source-deck/src/build.rs",
+        "sim-agent-net/crates/sim-source-deck/src/canonical.rs",
+        "sim-agent-net/crates/sim-source-deck/src/types.rs",
+        "sim-agent-net/crates/sim-source-deck/src/lib.rs",
+    ] {
+        assert!(
+            EXECUTOR_CLOSURE_PATHS.contains(&path),
+            "closure omitted {path}"
+        );
+    }
     let report = qualify(&before, &before).expect("specimen");
     let (_again, after) = closure();
     assert_eq!(before, after);
     assert_eq!(before.len(), 64);
-    assert_eq!(report.first_page, 2);
-    assert_eq!(report.retained_revision, 1);
+    assert_eq!(report.first_page, 1);
+    assert_eq!(report.retained_revision.len(), 64);
     assert_eq!(report.transitions, 1);
     assert_eq!(report.stale_effects, 0);
     assert_eq!(report.effects, 1);
@@ -1095,15 +1103,45 @@ fn frozen_executor_sources_qualify_the_outside_specimen() {
         ]
     );
     assert_eq!(report.stale_edges, 1);
-    assert_eq!(report.source_bound, 4);
+    assert_eq!(report.source_bound, 1);
     assert!(!report.unrelated_proof.is_empty());
     assert!(qualify(&before, &"ab".repeat(32)).is_err());
     assert!(qualify("", "").is_err());
 }
 
 #[test]
+fn the_specimen_attributes_the_requested_subject() {
+    let digest = compiled_executor_closure();
+    let report = qualify_subject(&digest, &digest, "subject/other").expect("specimen");
+    assert_eq!(report.first_page, 1);
+    let binding = find_pack("checker/c-port")
+        .unwrap()
+        .checker_binding()
+        .unwrap();
+    let rendered = render(binding.id().content_id());
+    let evidence = MemorySubject::default()
+        .with("executor-freeze-before", digest.clone())
+        .with("executor-freeze-after", digest);
+    let observations = check_subject(&sim_conformance_packs::PackRequest {
+        checker: "checker/c-port",
+        binding: &rendered,
+        subject: "subject/other",
+        scope: "portability/consumer-seams",
+        evidence: &evidence,
+    })
+    .expect("scope");
+    assert!(
+        observations
+            .iter()
+            .any(|item| { item.key == "consumer-seams.subject" && item.value == "subject/other" })
+    );
+}
+
+#[test]
 fn each_seam_refusal_is_its_own_case() {
-    assert_eq!(snapshot_pages().expect("pages"), (2, 1));
+    let (page, revision) = snapshot_pages().expect("pages");
+    assert_eq!(page, 1);
+    assert_eq!(revision.len(), 64);
     assert_eq!(direction_once().expect("direction"), (1, 0));
     wrong_execution().expect("execution");
     changed_answer().expect("answer");
@@ -1116,8 +1154,10 @@ fn each_seam_refusal_is_its_own_case() {
     reopen_same().expect("reopen");
     interrupt_once().expect("interrupt");
     revoked_subject().expect("revoked");
-    assert_eq!(hot_noop().expect("hot"), 0);
-    assert_eq!(over_bound().expect("bound"), 4);
+    let (hot_delta, hot_samples) = hot_noop().expect("hot");
+    assert_eq!(hot_delta, 0);
+    assert_eq!(hot_samples.len(), 20);
+    assert_eq!(over_bound().expect("bound"), 1);
     scope_confusion().expect("scope");
     renote_stales().expect("renote");
     reopen_keeps_direction().expect("reopen direction");
@@ -1178,6 +1218,34 @@ fn the_pack_passes_only_the_frozen_closure() {
         sim_conformance_packs::packs::portability::check(&request(&moved, &rendered)),
         PackVerdict::Refused(ref failure) if failure.code == "freeze-mismatch"
     ));
+}
+
+fn registry_checksums(lock: &str, name: &str) -> Vec<String> {
+    let mut found = Vec::new();
+    for block in lock.split("[[package]]").skip(1) {
+        let Some(parsed) = block.lines().find_map(|line| {
+            line.trim()
+                .strip_prefix("name = ")
+                .map(|value| value.trim().trim_matches('"').to_owned())
+        }) else {
+            continue;
+        };
+        if parsed != name {
+            continue;
+        }
+        let checksum = block.lines().find_map(|line| {
+            line.trim()
+                .strip_prefix("checksum = ")
+                .map(|value| value.trim().trim_matches('"').to_owned())
+        });
+        let Some(checksum) = checksum.filter(|value| {
+            !value.is_empty() && value.bytes().all(|byte| byte.is_ascii_hexdigit())
+        }) else {
+            panic!("{name} package block has no registry checksum");
+        };
+        found.push(checksum);
+    }
+    found
 }
 
 fn render(id: &sim_kernel::ContentId) -> String {
