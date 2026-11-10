@@ -1,17 +1,23 @@
 //! Public, project-neutral conformance packs.
 //!
-//! Every checker entrypoint is present from the first release. A scope becomes
-//! usable only when its scenario implementation is funded and shipped; all
-//! other declared scopes return [`PackVerdict::UnimplementedPack`]. Packs are
-//! pure over an injected [`PackSubject`] and never read files, spawn processes,
-//! inspect environment variables, or store their own receipts.
+//! Every checker entrypoint is present. A scope is usable when its scenario
+//! calls the frozen executor and checks that result. Every other declared
+//! scope returns [`PackVerdict::UnimplementedPack`]. External ports are
+//! injected. The packs do not read files, spawn processes, inspect
+//! environment variables, or store their own receipts.
 
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
 mod authority;
 mod catalog;
+mod executor;
+mod executor_freeze;
+mod executor_scope;
+mod executor_support;
 mod harness;
+mod hot_noop;
+mod source_invoke;
 // Projection custody stays out of this package build. Its resolver closure is
 // not part of the portable checker.
 #[cfg(false)]
@@ -35,6 +41,10 @@ pub use authority::{
     OperationLocalSupportError, QualifiedOperationLocalCheck,
 };
 pub use catalog::{PackSpec, all_packs, find_pack};
+pub use executor::executor_support_evidence;
+pub use executor_freeze::{
+    EXECUTOR_CLOSURE_PATHS, WORKSPACE_RESOLVER_LOCK, compiled_executor_closure,
+};
 pub use harness::{
     CheckObservation, MemorySubject, PackFailure, PackRequest, PackSubject, PackVerdict,
 };

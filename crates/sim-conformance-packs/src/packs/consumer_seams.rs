@@ -5,21 +5,19 @@
 
 //! Outside consumer-seams specimen.
 //!
-//! The specimen is an invented owner with a deterministic approval port and a
-//! bounded landing target. It imports no executor crate. Callers supply the
-//! executor closure bytes; this module hashes those bytes and refuses an
-//! unequal pair. It does not read files, spawn processes, or contact a network.
+//! The specimen calls the frozen executor through its public service. Fake
+//! ports supply readiness, effects, and cancellation. The accepted closure
+//! digest is the closure compiled into this package. An equal digest that is
+//! not that closure is refused. This module does not read files, spawn
+//! processes, or contact a network.
 
 use std::collections::BTreeMap;
 
-use sha2::{Digest, Sha256};
-
+use crate::executor_freeze::{self, ClosureFault};
 use crate::{CheckObservation, PackFailure, PackRequest};
 
-const PAGE_ROWS: usize = 2;
-const MAX_SOURCES: usize = 4;
-const REQUIRED_LEAF: &str = "leaf/required";
-const PROVIDERS: &[&str] = &["model/snapshot", "model/direction", "model/landing"];
+#[path = "advice_verify.rs"]
+mod advice_verify;
 
 /// Refusal from the outside specimen.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -96,8 +94,8 @@ impl SeamFault {
 pub struct SeamReport {
     /// Rows on the first retained page.
     pub first_page: usize,
-    /// Revision kept when the live revision moved.
-    pub retained_revision: u64,
+    /// Hex identity of the revision the snapshot retained.
+    pub retained_revision: String,
     /// Accepted direction transitions.
     pub transitions: u64,
     /// Effects after a stale reply.
@@ -106,6 +104,8 @@ pub struct SeamReport {
     pub effects: u64,
     /// Effects added by the second unchanged pass.
     pub hot_delta: u64,
+    /// Wall time of each hot status sample, in microseconds, in call order.
+    pub hot_samples: Vec<u64>,
     /// Model providers the specimen used.
     pub providers: Vec<String>,
     /// Lineage edges that name the revised source and are stale.
@@ -139,30 +139,6 @@ impl Export {
     }
 }
 
-/// Labeled advice. It is not a receipt and not a decision.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Advice {
-    /// Shape tag. The canonical value is `advice`.
-    pub shape: String,
-    /// Advisory text.
-    pub text: String,
-}
-
-/// Proof view the advice names. Sufficiency is recomputed from these fields.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct ProofView {
-    /// Required and present leaves.
-    pub leaves: Vec<String>,
-    /// Named gaps.
-    pub gaps: Vec<String>,
-    /// Reasons that hold the floor.
-    pub reasons: Vec<String>,
-    /// Conservative floor.
-    pub floor: String,
-    /// Owning id, when one is present.
-    pub owner: Option<String>,
-}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Edge {
     commission: String,
@@ -170,73 +146,41 @@ struct Edge {
     stale: bool,
 }
 
-struct Source {
-    digest: String,
-}
-
-struct Request {
-    execution: String,
-    revision: u64,
-    answer: String,
-}
-
-struct Session {
-    live: u64,
-    rows: BTreeMap<u64, Vec<(String, String)>>,
-    request: Option<Request>,
-    consumed: Option<String>,
-    transitions: u64,
-    effects: u64,
-    begin: bool,
-    selected: bool,
-    candidate: String,
-    sources: BTreeMap<String, Source>,
-    edges: Vec<Edge>,
-    landing: String,
-    providers: BTreeMap<String, bool>,
-    pending: bool,
-    revoked: BTreeMap<String, bool>,
-    affordances: BTreeMap<String, String>,
-}
-
 /// Hashes sorted closure entries. The caller reads executor files.
 pub fn capture_executor_subject_closure(entries: &[(&str, &[u8])]) -> Result<String, SeamFault> {
-    if entries.is_empty() {
-        return Err(SeamFault::EmptyClosure);
-    }
-    let mut rows = entries.to_vec();
-    rows.sort_by(|left, right| left.0.cmp(right.0));
-    let mut hasher = Sha256::new();
-    let mut previous = "";
-    for (path, bytes) in rows {
-        if path.is_empty()
-            || path.starts_with('/')
-            || path.contains('\0')
-            || path.split('/').any(|part| part == "..")
-        {
-            return Err(SeamFault::BadPath);
-        }
-        if path == previous {
-            return Err(SeamFault::DuplicatePath);
-        }
-        previous = path;
-        hasher.update((path.len() as u64).to_be_bytes());
-        hasher.update(path.as_bytes());
-        hasher.update((bytes.len() as u64).to_be_bytes());
-        hasher.update(bytes);
-    }
-    Ok(hex(&hasher.finalize()))
+    executor_freeze::hash_closure(entries).map_err(|fault| match fault {
+        ClosureFault::Empty => SeamFault::EmptyClosure,
+        ClosureFault::BadPath => SeamFault::BadPath,
+        ClosureFault::Duplicate => SeamFault::DuplicatePath,
+    })
 }
 
-/// Runs the specimen when the two closure digests are one non-empty digest.
+/// Runs the specimen when both digests are the compiled executor closure.
 pub fn qualify(before: &str, after: &str) -> Result<SeamReport, SeamFault> {
-    if !is_digest(before) || before != after {
+    if !is_digest(before)
+        || before != after
+        || before != executor_freeze::compiled_executor_closure()
+    {
         return Err(SeamFault::FreezeMismatch);
     }
     cases::run_canonical()
 }
 
+/// Runs the frozen specimen against the requested subject.
+pub fn qualify_subject(before: &str, after: &str, subject: &str) -> Result<SeamReport, SeamFault> {
+    if !is_digest(before)
+        || before != after
+        || before != executor_freeze::compiled_executor_closure()
+    {
+        return Err(SeamFault::FreezeMismatch);
+    }
+    cases::run_for_subject(subject)
+}
+
 /// Judges the consumer-seams scope from injected closure digests.
+///
+/// Freeze facts are read first. The specimen then runs for the requested
+/// subject, and the pass records that subject.
 pub fn check_subject(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {
     let before = request
         .evidence
@@ -246,8 +190,11 @@ pub fn check_subject(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>,
         .evidence
         .fact("executor-freeze-after")
         .ok_or(pack_failure("missing-freeze"))?;
-    let report = qualify(before, after).map_err(|fault| pack_failure(fault.code()))?;
+    crate::executor::require_subject(request.subject)?;
+    let report = qualify_subject(before, after, request.subject)
+        .map_err(|fault| pack_failure(fault.code()))?;
     Ok(vec![
+        observation("consumer-seams.subject", request.subject),
         observation("consumer-seams.freeze", before),
         observation("consumer-seams.pages", &report.first_page.to_string()),
         observation(
@@ -264,6 +211,15 @@ pub fn check_subject(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>,
         ),
         observation("consumer-seams.effects", &report.effects.to_string()),
         observation("consumer-seams.hot-delta", &report.hot_delta.to_string()),
+        observation(
+            "consumer-seams.raw-us",
+            &report
+                .hot_samples
+                .iter()
+                .map(u64::to_string)
+                .collect::<Vec<_>>()
+                .join(" "),
+        ),
         observation("consumer-seams.providers", &report.providers.join(",")),
         observation(
             "consumer-seams.stale-edges",
@@ -295,19 +251,6 @@ pub use cases::{
     selection_without_begin, snapshot_pages, wrong_execution,
 };
 
-#[path = "consumer_seam_session.rs"]
-mod session;
-
-/// Coverage is sufficient only when the view itself names an owner, the
-/// required leaf, a reason, and a floor, and names no gap.
-pub fn coverage_sufficient(view: &ProofView) -> bool {
-    view.owner.is_some()
-        && view.gaps.is_empty()
-        && view.leaves.iter().any(|leaf| leaf == REQUIRED_LEAF)
-        && view.reasons.iter().any(|reason| !reason.is_empty())
-        && !view.floor.is_empty()
-}
-
 fn observation(key: &str, value: &str) -> CheckObservation {
     CheckObservation {
         key: key.to_owned(),
@@ -327,38 +270,4 @@ fn is_digest(value: &str) -> bool {
         && value
             .bytes()
             .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
-}
-
-pub(super) fn providers_used() -> Result<Vec<String>, SeamFault> {
-    let mut session = Session::open(PROVIDERS)?;
-    let mut cursor = 0usize;
-    let held = session.live;
-    let _ = session.read_page(held, &mut cursor)?;
-    let _ = session.ask()?;
-    session.note_source("source/a", "alpha")?;
-    session.select("candidate/1")?;
-    session.grant_begin();
-    session.execute()?;
-    if open_with_linux() != Err(SeamFault::LinuxProvider) {
-        return Err(SeamFault::LinuxProvider);
-    }
-    let mut names = session
-        .providers
-        .iter()
-        .filter(|(_, used)| **used)
-        .map(|(name, _)| name.clone())
-        .collect::<Vec<_>>();
-    names.sort();
-    if names.len() != PROVIDERS.len() || names.iter().any(|name| name.contains("linux")) {
-        return Err(SeamFault::LinuxProvider);
-    }
-    Ok(names)
-}
-
-fn digest(bytes: &[u8]) -> String {
-    hex(&Sha256::digest(bytes))
-}
-
-fn hex(bytes: &[u8]) -> String {
-    bytes.iter().map(|byte| format!("{byte:02x}")).collect()
 }

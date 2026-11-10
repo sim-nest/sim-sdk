@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 
-use sim_conformance_core::CheckerResultId;
+use sim_conformance_core::{CheckerResultId, LiveCheckerReceipt};
 use sim_kernel::{Datum, Symbol};
 
 use crate::find_pack;
@@ -14,6 +14,14 @@ pub trait PackSubject {
 
     /// Returns the stable fact keys in sorted order.
     fn fact_keys(&self) -> Vec<&str>;
+
+    /// Qualified receipt issued for this subject, when the caller retained one.
+    ///
+    /// Fact text does not carry the receipt. A subject built only from facts
+    /// returns none.
+    fn support_qualification(&self) -> Option<&LiveCheckerReceipt> {
+        None
+    }
 }
 
 impl PackSubject for BTreeMap<String, String> {
@@ -27,15 +35,42 @@ impl PackSubject for BTreeMap<String, String> {
 }
 
 /// Convenient in-memory subject for callers and conformance fixtures.
-#[derive(Clone, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Debug, Default)]
 pub struct MemorySubject {
     facts: BTreeMap<String, String>,
+    qualification: Option<LiveCheckerReceipt>,
+}
+
+impl PartialEq for MemorySubject {
+    fn eq(&self, other: &Self) -> bool {
+        self.facts == other.facts && same_qualification(&self.qualification, &other.qualification)
+    }
+}
+
+impl Eq for MemorySubject {}
+
+fn same_qualification(
+    left: &Option<LiveCheckerReceipt>,
+    right: &Option<LiveCheckerReceipt>,
+) -> bool {
+    match (left, right) {
+        (None, None) => true,
+        (Some(left), Some(right)) => left.receipt().id() == right.receipt().id(),
+        _ => false,
+    }
 }
 
 impl MemorySubject {
     /// Adds or replaces one named fact.
     pub fn with(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
         self.facts.insert(key.into(), value.into());
+        self.qualification = None;
+        self
+    }
+
+    /// Attaches the qualified receipt. [`Self::with`] clears it.
+    pub(crate) fn with_qualification(mut self, receipt: LiveCheckerReceipt) -> Self {
+        self.qualification = Some(receipt);
         self
     }
 
@@ -52,6 +87,10 @@ impl PackSubject for MemorySubject {
 
     fn fact_keys(&self) -> Vec<&str> {
         self.facts.keys().map(String::as_str).collect()
+    }
+
+    fn support_qualification(&self) -> Option<&LiveCheckerReceipt> {
+        self.qualification.as_ref()
     }
 }
 
