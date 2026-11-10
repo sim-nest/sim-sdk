@@ -43,6 +43,19 @@ homepage = "https://github.com/sim-nest/sim-sdk"
 [workspace.lints.rust]
 unsafe_code = "forbid"
 
+[workspace.metadata.sim]
+docs-command = "cargo run -p xtask -- simdoc"
+contract-workspaces = ["crates/sim-projection-admission-protocol"]
+contract-exclusions = [
+  { path = "recipes/hotload/public-generation-loop/generation-a", class = "recipe-fixture", consumer = "recipes/hotload/public-generation-loop/recipe.toml", reason = "The hotload generation recipe builds this unpublished input fixture." },
+  { path = "recipes/hotload/public-generation-loop/generation-b", class = "recipe-fixture", consumer = "recipes/hotload/public-generation-loop/recipe.toml", reason = "The hotload generation recipe builds this unpublished input fixture." },
+  { path = "tests/proc-macro-ui", class = "test-fixture", consumer = "tests/contract_fixtures.rs", reason = "Compile-fail shape fixtures live here and stay unpublished." },
+  { path = "tests/native-abi-ui", class = "test-fixture", consumer = "tests/contract_fixtures.rs", reason = "The native ABI compile-fail fixture lives here and stays unpublished." },
+  { path = "tests/native-plugin", class = "test-fixture", consumer = "tests/contract_fixtures.rs", reason = "The native plugin fixture crate lives here and stays unpublished." },
+  { path = "tests/first-light-focused", class = "test-fixture", consumer = "tests/contract_fixtures.rs", reason = "The first-light focused harness lives here and stays unpublished." },
+  { path = "tests/memo-acceptance-focused", class = "test-fixture", consumer = "tests/contract_fixtures.rs", reason = "The memo acceptance focused harness lives here and stays unpublished." },
+  { path = "tests/reversible-product-focused", class = "test-fixture", consumer = "tests/contract_fixtures.rs", reason = "The reversible product focused harness lives here and stays unpublished." },
+]
 
 [dependencies]
 proc-macro2 = { version = "1", features = ["span-locations"], optional = true }

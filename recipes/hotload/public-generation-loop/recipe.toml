@@ -6,3 +6,7 @@ purpose = "purpose.md"
 order = 10
 tags = ["hotload", "native", "offline", "deterministic", "sdk"]
 requires = ["hotload"]
+fixtures = [
+  "recipes/hotload/public-generation-loop/generation-a",
+  "recipes/hotload/public-generation-loop/generation-b",
+]

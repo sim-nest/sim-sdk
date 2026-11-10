@@ -19,12 +19,7 @@ use sim_codec_binary::{decode_frame, encode_frame};
 use sim_conformance_core::content_id_datum;
 use sim_kernel::{CodecId, ContentId, Datum, Expr, Symbol};
 use sim_lib_server::{FrameEnvelope, FrameKind, ServerFrame, decode_transport_frame};
-use sim_platform_linux::{KernelObjectIdentity, NativeDescriptorMessage};
-use sim_platform_ubuntu_projection::UbuntuProjectionAdmissionChannel;
-use sim_run_core::{
-    CliError, ProjectionConfigurationShapeEvidence, ProjectionFactoryEvidenceVisitor,
-    ProjectionOwnedEvidence, RetainedProjectionFactoryCapture,
-};
+use sim_run_core::CliError;
 
 const POLL_INTERVAL: Duration = Duration::from_millis(2);
 
@@ -49,6 +44,15 @@ impl fmt::Display for ProjectionAdmissionProtocolError {
 }
 
 impl std::error::Error for ProjectionAdmissionProtocolError {}
+
+mod evidence;
+mod portable;
+
+pub use evidence::{
+    ProjectionConfigurationShapeEvidence, ProjectionFactoryCapture,
+    ProjectionFactoryEvidenceVisitor, ProjectionOwnedEvidence,
+};
+pub use portable::{KernelObjectIdentity, NativeDescriptorMessage, ProjectionAdmissionChannel};
 
 /// Durable phase shared by the parent attempt and activated child session.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -219,9 +223,9 @@ pub struct ChildCurrent {
 }
 
 impl ChildCurrent {
-    fn from_observation(
+    fn from_observation<F: ProjectionFactoryCapture>(
         offer: &ParentOffer,
-        child: &ProjectionChildFactoryObservation,
+        child: &ProjectionChildFactoryObservation<F>,
     ) -> Result<Self, ProjectionAdmissionProtocolError> {
         let current = Self {
             attempt: offer.attempt.clone(),
@@ -679,7 +683,6 @@ pub struct ActivationComplete {
 
 impl ActivationComplete {
     /// Creates the exact child completion of message 10.
-    #[must_use]
     pub fn new(activated: &Activated) -> Result<Self, ProjectionAdmissionProtocolError> {
         Ok(Self {
             attempt: activated.attempt.clone(),
@@ -874,8 +877,8 @@ impl OperationStatement {
 }
 
 /// Child-side observation of the actual loaded C factory and composition.
-pub struct ProjectionChildFactoryObservation {
-    factory: RetainedProjectionFactoryCapture,
+pub struct ProjectionChildFactoryObservation<F: ProjectionFactoryCapture> {
+    factory: F,
     policies: BTreeSet<ContentId>,
     composition: ProjectionChildComposition,
 }
@@ -891,10 +894,10 @@ struct ProjectionChildComposition {
     closure: ContentId,
 }
 
-impl ProjectionChildFactoryObservation {
+impl<F: ProjectionFactoryCapture> ProjectionChildFactoryObservation<F> {
     /// Observes and retains the actual loaded child factory.
     pub fn observe(
-        factory: RetainedProjectionFactoryCapture,
+        factory: F,
         policies: BTreeSet<ContentId>,
     ) -> Result<Self, ProjectionAdmissionProtocolError> {
         if policies.is_empty() {
@@ -979,18 +982,18 @@ pub struct ProjectionNativeAdmissionOffer {
 }
 
 impl ProjectionNativeAdmissionOffer {
-    fn receive_once(
-        channel: &UbuntuProjectionAdmissionChannel,
+    fn receive_once<C: ProjectionAdmissionChannel>(
+        channel: &C,
         deadline: Instant,
     ) -> Result<Self, ProjectionAdmissionProtocolError> {
-        channel.revalidate().map_err(protocol)?;
+        channel.revalidate()?;
         let offer = ParentOffer::from_message(receive_child_until(channel, deadline)?)?;
         if offer.administrative_owner != channel.creator_identity() {
             return Err(ProjectionAdmissionProtocolError::new(
                 "projection admission offer came from a substituted administrative owner",
             ));
         }
-        channel.revalidate().map_err(protocol)?;
+        channel.revalidate()?;
         Ok(Self { offer })
     }
 
@@ -1016,10 +1019,14 @@ impl ProjectionNativeAdmissionOffer {
     }
 }
 
-/// Inert activated child session retaining actual C and its authenticated channel.
-pub struct ActivatedProjectionAdmissionSession {
-    channel: UbuntuProjectionAdmissionChannel,
-    child: ProjectionChildFactoryObservation,
+/// Inert activated child session retaining actual C and its admission channel.
+pub struct ActivatedProjectionAdmissionSession<C, F>
+where
+    C: ProjectionAdmissionChannel,
+    F: ProjectionFactoryCapture,
+{
+    channel: C,
+    child: ProjectionChildFactoryObservation<F>,
     admission: ProjectionNativeAdmission,
     expected_capture: ContentId,
     policies: BTreeSet<ContentId>,
@@ -1027,11 +1034,15 @@ pub struct ActivatedProjectionAdmissionSession {
     phase: ProjectionNativeAdmissionPhase,
 }
 
-impl ActivatedProjectionAdmissionSession {
-    /// Consumes actual C and the authenticated channel to complete messages 6-11.
+impl<C, F> ActivatedProjectionAdmissionSession<C, F>
+where
+    C: ProjectionAdmissionChannel,
+    F: ProjectionFactoryCapture,
+{
+    /// Consumes actual C and the admission channel to complete messages 6-11.
     pub fn activate(
-        child: ProjectionChildFactoryObservation,
-        channel: UbuntuProjectionAdmissionChannel,
+        child: ProjectionChildFactoryObservation<F>,
+        channel: C,
         deadline: Instant,
     ) -> Result<Self, ProjectionAdmissionProtocolError> {
         let received = ProjectionNativeAdmissionOffer::receive_once(&channel, deadline)?;
@@ -1045,10 +1056,10 @@ impl ActivatedProjectionAdmissionSession {
             &offer.expected_capture,
             &offer.policies,
             || -> Result<ProjectionNativeAdmission, ProjectionAdmissionProtocolError> {
-                channel.revalidate().map_err(protocol)?;
+                channel.revalidate()?;
                 let current = ChildCurrent::from_observation(&offer, &child)?;
                 let child_current = current.identity()?;
-                channel.send_frame(&current.frame()?).map_err(protocol)?;
+                channel.send_frame(&current.frame()?)?;
                 let admitted = Admitted::from_message(receive_child_until(&channel, deadline)?)?;
                 if admitted.attempt != offer.attempt
                     || admitted.challenge != offer.challenge
@@ -1060,7 +1071,7 @@ impl ActivatedProjectionAdmissionSession {
                         "projection admitted statement does not acknowledge current C",
                     ));
                 }
-                channel.revalidate().map_err(protocol)?;
+                channel.revalidate()?;
                 let acknowledgement = AdmissionAcknowledged::new(&admitted);
                 let acknowledgement_id = acknowledgement.identity()?;
                 let admission = ProjectionNativeAdmission {
@@ -1071,9 +1082,7 @@ impl ActivatedProjectionAdmissionSession {
                     implementation: admitted.implementation,
                     complete_input_closure: admitted.complete_input_closure,
                 };
-                channel
-                    .send_frame(&acknowledgement.frame()?)
-                    .map_err(protocol)?;
+                channel.send_frame(&acknowledgement.frame()?)?;
                 let activated = Activated::from_message(receive_child_until(&channel, deadline)?)?;
                 if activated.attempt != admission.attempt
                     || activated.challenge != admission.challenge
@@ -1085,10 +1094,8 @@ impl ActivatedProjectionAdmissionSession {
                         "projection activation differs from acknowledged provisional D",
                     ));
                 }
-                channel
-                    .send_frame(&ActivationComplete::new(&activated)?.frame()?)
-                    .map_err(protocol)?;
-                channel.revalidate().map_err(protocol)?;
+                channel.send_frame(&ActivationComplete::new(&activated)?.frame()?)?;
+                channel.revalidate()?;
                 Ok(admission)
             },
         )??;
@@ -1170,7 +1177,7 @@ impl ActivatedProjectionAdmissionSession {
                 .send_frame(&statement.frame(0, FrameKind::Request, "begin")?)
         {
             self.phase = ProjectionNativeAdmissionPhase::Uncertain;
-            return Err(protocol(error));
+            return Err(error);
         }
         let granted = statement.frame(1, FrameKind::Response, "granted")?;
         if let Err(error) = receive_child_bound_until(&self.channel, &granted, deadline) {
@@ -1182,14 +1189,13 @@ impl ActivatedProjectionAdmissionSession {
             .while_current(&self.expected_capture, &self.policies, || {
                 let output = action();
                 self.channel
-                    .send_frame(&statement.frame(2, FrameKind::Request, "finish")?)
-                    .map_err(protocol)?;
+                    .send_frame(&statement.frame(2, FrameKind::Request, "finish")?)?;
                 receive_child_bound_until(
                     &self.channel,
                     &statement.frame(3, FrameKind::Response, "accepted")?,
                     deadline,
                 )?;
-                self.channel.revalidate().map_err(protocol)?;
+                self.channel.revalidate()?;
                 Ok::<T, ProjectionAdmissionProtocolError>(output)
             });
         let output = match output {
@@ -1389,8 +1395,8 @@ impl ProjectionFactoryEvidenceVisitor for ConcreteProjectionVisitor<'_> {
     }
 }
 
-fn observe_child_factory(
-    factory: &RetainedProjectionFactoryCapture,
+fn observe_child_factory<F: ProjectionFactoryCapture>(
+    factory: &F,
     policies: &BTreeSet<ContentId>,
 ) -> Result<ProjectionChildComposition, CliError> {
     let mut visitor = ConcreteProjectionVisitor::new(policies);
@@ -1549,8 +1555,8 @@ fn frame_datum(frame: &ServerFrame) -> Result<Datum, ProjectionAdmissionProtocol
     Datum::try_from(expression).map_err(protocol)
 }
 
-fn receive_child_until(
-    channel: &UbuntuProjectionAdmissionChannel,
+fn receive_child_until<C: ProjectionAdmissionChannel>(
+    channel: &C,
     deadline: Instant,
 ) -> Result<NativeDescriptorMessage, ProjectionAdmissionProtocolError> {
     loop {
@@ -1559,15 +1565,15 @@ fn receive_child_until(
                 "projection admission response deadline expired",
             ));
         }
-        match channel.receive().map_err(protocol)? {
+        match channel.receive()? {
             Some(message) => return Ok(message),
             None => thread::sleep(POLL_INTERVAL),
         }
     }
 }
 
-fn receive_child_bound_until(
-    channel: &UbuntuProjectionAdmissionChannel,
+fn receive_child_bound_until<C: ProjectionAdmissionChannel>(
+    channel: &C,
     expected: &ServerFrame,
     deadline: Instant,
 ) -> Result<(), ProjectionAdmissionProtocolError> {
@@ -2057,5 +2063,96 @@ mod tests {
         reversed.graph_owner(&graph_b).unwrap();
         reversed.graph_owner(&graph_a).unwrap();
         assert_eq!(first.snapshot().unwrap(), reversed.snapshot().unwrap());
+    }
+
+    struct TestFactory {
+        capture: ContentId,
+        current: Arc<RwLock<bool>>,
+        policy: TestOwnerEvidence,
+    }
+
+    impl ProjectionFactoryCapture for TestFactory {
+        fn projection_capture(&self) -> &ContentId {
+            &self.capture
+        }
+
+        fn visit_projection_evidence<V: ProjectionFactoryEvidenceVisitor + ?Sized>(
+            &self,
+            visitor: &mut V,
+        ) -> Result<(), CliError> {
+            visitor.configuration_shape(
+                &Datum::String("selected".to_owned()),
+                &TestShape(TestOwnerEvidence::new("shape", Arc::clone(&self.current))),
+            )?;
+            visitor.provider_registration(&TestOwnerEvidence::new(
+                "provider",
+                Arc::clone(&self.current),
+            ))?;
+            visitor.selected_policy(&self.policy)?;
+            visitor.baseline_membership(&TestOwnerEvidence::new(
+                "baseline",
+                Arc::clone(&self.current),
+            ))?;
+            visitor.graph_owner(&TestOwnerEvidence::new("graph", Arc::clone(&self.current)))?;
+            visitor.federated_closure(&TestOwnerEvidence::new(
+                "closure",
+                Arc::clone(&self.current),
+            ))?;
+            visitor.complete()?;
+            Ok(())
+        }
+
+        fn with_projection_evidence_current<T, V: ProjectionFactoryEvidenceVisitor + ?Sized>(
+            &self,
+            visitor: &mut V,
+            action: impl FnOnce() -> T,
+        ) -> Result<T, CliError> {
+            if !*self.current.read().expect("current read") {
+                return Err(CliError::new("test factory is not current"));
+            }
+            self.visit_projection_evidence(visitor)?;
+            Ok(action())
+        }
+    }
+
+    #[test]
+    fn observe_retains_the_factory_capture_and_reruns_only_while_current() {
+        let current = Arc::new(RwLock::new(true));
+        let policy = TestOwnerEvidence::new("policy", Arc::clone(&current));
+        let policies = BTreeSet::from([policy.identity()]);
+        let capture = id("capture");
+        let observed = ProjectionChildFactoryObservation::observe(
+            TestFactory {
+                capture: capture.clone(),
+                current: Arc::clone(&current),
+                policy,
+            },
+            policies.clone(),
+        )
+        .expect("observation");
+        assert_eq!(observed.factory.projection_capture(), &capture);
+        assert_eq!(
+            observed
+                .while_current(&capture, &policies, || 7)
+                .expect("current action"),
+            7
+        );
+        *current.write().expect("current write") = false;
+        assert!(observed.while_current(&capture, &policies, || 7).is_err());
+    }
+
+    #[test]
+    fn observe_refuses_an_empty_policy_set() {
+        let current = Arc::new(RwLock::new(true));
+        let policy = TestOwnerEvidence::new("policy", Arc::clone(&current));
+        let observed = ProjectionChildFactoryObservation::observe(
+            TestFactory {
+                capture: id("capture"),
+                current,
+                policy,
+            },
+            BTreeSet::new(),
+        );
+        assert!(observed.is_err());
     }
 }

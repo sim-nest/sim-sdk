@@ -3317,6 +3317,81 @@
       "version": 0
     }
   ],
+  "contract_exclusions": [
+    {
+      "class": "recipe-fixture",
+      "consumer": "recipes/hotload/public-generation-loop/recipe.toml",
+      "manifests": [
+        "recipes/hotload/public-generation-loop/generation-a/Cargo.toml"
+      ],
+      "path": "recipes/hotload/public-generation-loop/generation-a",
+      "reason": "The hotload generation recipe builds this unpublished input fixture."
+    },
+    {
+      "class": "recipe-fixture",
+      "consumer": "recipes/hotload/public-generation-loop/recipe.toml",
+      "manifests": [
+        "recipes/hotload/public-generation-loop/generation-b/Cargo.toml"
+      ],
+      "path": "recipes/hotload/public-generation-loop/generation-b",
+      "reason": "The hotload generation recipe builds this unpublished input fixture."
+    },
+    {
+      "class": "test-fixture",
+      "consumer": "tests/contract_fixtures.rs",
+      "manifests": [
+        "tests/proc-macro-ui/invalid-shape/Cargo.toml",
+        "tests/proc-macro-ui/missing-constructor/Cargo.toml"
+      ],
+      "path": "tests/proc-macro-ui",
+      "reason": "Compile-fail shape fixtures live here and stay unpublished."
+    },
+    {
+      "class": "test-fixture",
+      "consumer": "tests/contract_fixtures.rs",
+      "manifests": [
+        "tests/native-abi-ui/borrow-to-destroy/Cargo.toml"
+      ],
+      "path": "tests/native-abi-ui",
+      "reason": "The native ABI compile-fail fixture lives here and stays unpublished."
+    },
+    {
+      "class": "test-fixture",
+      "consumer": "tests/contract_fixtures.rs",
+      "manifests": [
+        "tests/native-plugin/Cargo.toml"
+      ],
+      "path": "tests/native-plugin",
+      "reason": "The native plugin fixture crate lives here and stays unpublished."
+    },
+    {
+      "class": "test-fixture",
+      "consumer": "tests/contract_fixtures.rs",
+      "manifests": [
+        "tests/first-light-focused/Cargo.toml"
+      ],
+      "path": "tests/first-light-focused",
+      "reason": "The first-light focused harness lives here and stays unpublished."
+    },
+    {
+      "class": "test-fixture",
+      "consumer": "tests/contract_fixtures.rs",
+      "manifests": [
+        "tests/memo-acceptance-focused/Cargo.toml"
+      ],
+      "path": "tests/memo-acceptance-focused",
+      "reason": "The memo acceptance focused harness lives here and stays unpublished."
+    },
+    {
+      "class": "test-fixture",
+      "consumer": "tests/contract_fixtures.rs",
+      "manifests": [
+        "tests/reversible-product-focused/Cargo.toml"
+      ],
+      "path": "tests/reversible-product-focused",
+      "reason": "The reversible product focused harness lives here and stays unpublished."
+    }
+  ],
   "generator": "xtask repo-contract v1",
   "group_count": 1,
   "group_order": [
@@ -3327,12 +3402,13 @@
       "sim-conformance",
       "sim-conformance-packs",
       "sim-nest",
+      "sim-projection-admission-protocol",
       "xtask"
     ]
   },
   "non_citizen_exemption_count": 0,
   "non_citizen_exemptions": [],
-  "package_count": 4,
+  "package_count": 5,
   "packages": [
     {
       "crate_name": "sim_conformance",
@@ -3530,6 +3606,26 @@
           "kind": [
             "test"
           ],
+          "name": "portability_consumer_seams",
+          "src": "crates/sim-conformance-packs/tests/portability_consumer_seams.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "portability_foreign",
+          "src": "crates/sim-conformance-packs/tests/portability_foreign.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "projection_reference",
           "src": "crates/sim-conformance-packs/tests/projection_reference.rs"
         },
@@ -3540,8 +3636,28 @@
           "kind": [
             "test"
           ],
+          "name": "release_nv12_27",
+          "src": "crates/sim-conformance-packs/tests/release_nv12_27.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "revocation_policy",
           "src": "crates/sim-conformance-packs/tests/revocation_policy.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "succession_cold",
+          "src": "crates/sim-conformance-packs/tests/succession_cold.rs"
         },
         {
           "crate_types": [
@@ -6814,6 +6930,16 @@
           "kind": [
             "test"
           ],
+          "name": "contract_fixtures",
+          "src": "tests/contract_fixtures.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "conversational_instrument_adoption",
           "src": "tests/conversational_instrument_adoption.rs"
         },
@@ -6966,6 +7092,16 @@
           ],
           "name": "native_dynamic",
           "src": "tests/native_dynamic.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
+          "name": "physics_facade",
+          "src": "tests/physics_facade.rs"
         },
         {
           "crate_types": [
@@ -7204,6 +7340,16 @@
           "kind": [
             "test"
           ],
+          "name": "source_authority",
+          "src": "tests/source_authority.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "typescript_notation",
           "src": "tests/typescript_notation.rs"
         },
@@ -7290,6 +7436,33 @@
       ]
     },
     {
+      "crate_name": "sim_projection_admission_protocol",
+      "dependencies": [],
+      "description": "Canonical dependency-light child protocol for native SIM projection admission.",
+      "features": [],
+      "group": "workspace",
+      "manifest": "crates/sim-projection-admission-protocol/Cargo.toml",
+      "name": "sim-projection-admission-protocol",
+      "publish": "true",
+      "root": "crates/sim-projection-admission-protocol",
+      "rustdoc_summary": "Canonical child protocol for native projection admission.",
+      "target_kinds": [
+        "lib"
+      ],
+      "targets": [
+        {
+          "crate_types": [
+            "lib"
+          ],
+          "kind": [
+            "lib"
+          ],
+          "name": "sim_projection_admission_protocol",
+          "src": "crates/sim-projection-admission-protocol/src/lib.rs"
+        }
+      ]
+    },
+    {
       "crate_name": "xtask",
       "dependencies": [],
       "description": "SIM workspace package for xtask.",
@@ -7319,29 +7492,43 @@
   ],
   "provenance": {
     "api_docs": "target/doc/",
-    "generated_by": "cargo run -p xtask -- simdoc",
-    "generation_timestamp": "2026-07-19T07:28:29+02:00",
+    "execution": {
+      "executable": {
+        "lock_sha256": "de3cf584352514646909797b8454326e8ba4d3d90bf87ed7c3592ae971073678",
+        "package": "simdoc",
+        "source_sha256": "30ee154387cee2c2567026f0e916923798e440cba6f135d1bc279e80af8f49c1",
+        "version": "0.1.0"
+      },
+      "operation": "repo-contract --repo .",
+      "resolver": null,
+      "toolchain": {
+        "cargo": {
+          "commit_hash": "30a34c6821b57de0aaec83a901aca39f88f6778c",
+          "release": "1.96.0"
+        },
+        "rustc": {
+          "commit_hash": "ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96",
+          "release": "1.96.0"
+        }
+      }
+    },
+    "generation_timestamp": "2026-11-10T13:05:56+01:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "984b6bd2d46260ef467fadf82d027d0292509048",
+    "git_commit": "1e59ae9394b0d61e8a289383390c037ad562a457",
+    "regeneration_command": "cargo run -p xtask -- simdoc",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "984b6bd2d46260ef467fadf82d027d0292509048",
+    "source_commit": "1e59ae9394b0d61e8a289383390c037ad562a457",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
-      "cargo fmt --all --check",
-      "cargo test",
-      "cargo clippy --all-targets -- -D warnings",
-      "cargo doc --no-deps",
-      "cargo run -p xtask -- simdoc --check",
-      "cargo run -p xtask -- check-file-sizes",
-      "cargo run -p xtask -- repo-contract --check --repo .",
-      "cargo run -p xtask -- validation-matrix --check --repo .",
-      "cargo run -p xtask -- crate-catalog --check --repo ."
+      "cargo run -p xtask -- simdoc --check"
     ],
-    "workspace_hash": "232d24dc6321408a",
+    "workspace_hash": "3ac66688ca390552",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 344,
+    "workspace_hash_input_count": 425,
     "workspace_hash_inputs": [
+      ".github/workflows/authorship.yml",
+      ".github/workflows/ci.yml",
       "Cargo.toml",
       "crates/sim-conformance/Cargo.toml",
       "crates/sim-conformance/recipes/01-basics/run-contract/recipe.toml",
@@ -7387,6 +7574,9 @@
       "crates/sim-conformance-packs/src/packs/authoring.rs",
       "crates/sim-conformance-packs/src/packs/boundary.rs",
       "crates/sim-conformance-packs/src/packs/closure.rs",
+      "crates/sim-conformance-packs/src/packs/consumer_seam_cases.rs",
+      "crates/sim-conformance-packs/src/packs/consumer_seam_session.rs",
+      "crates/sim-conformance-packs/src/packs/consumer_seams.rs",
       "crates/sim-conformance-packs/src/packs/control.rs",
       "crates/sim-conformance-packs/src/packs/convergence.rs",
       "crates/sim-conformance-packs/src/packs/delivery.rs",
@@ -7402,19 +7592,38 @@
       "crates/sim-conformance-packs/src/packs/portability.rs",
       "crates/sim-conformance-packs/src/packs/product.rs",
       "crates/sim-conformance-packs/src/packs/release.rs",
+      "crates/sim-conformance-packs/src/packs/release_closure.rs",
       "crates/sim-conformance-packs/src/packs/retirement.rs",
       "crates/sim-conformance-packs/src/packs/source.rs",
       "crates/sim-conformance-packs/src/packs/succession.rs",
+      "crates/sim-conformance-packs/src/packs/succession_record.rs",
       "crates/sim-conformance-packs/src/packs/work.rs",
       "crates/sim-conformance-packs/src/projection_authority.rs",
       "crates/sim-conformance-packs/src/projection_authority_tests.rs",
+      "crates/sim-conformance-packs/src/projection_compiler_review.rs",
+      "crates/sim-conformance-packs/src/projection_compiler_review_tests.rs",
+      "crates/sim-conformance-packs/src/projection_native_admission.rs",
+      "crates/sim-conformance-packs/src/projection_source_review.rs",
+      "crates/sim-conformance-packs/src/projection_source_review_tests.rs",
       "crates/sim-conformance-packs/src/revocation.rs",
       "crates/sim-conformance-packs/tests/bootstrap_packs/nv12_05.rs",
       "crates/sim-conformance-packs/tests/bootstrap_packs/nv12_06.rs",
+      "crates/sim-conformance-packs/tests/bootstrap_packs/nv12_07.rs",
       "crates/sim-conformance-packs/tests/bootstrap_packs.rs",
+      "crates/sim-conformance-packs/tests/portability_consumer_seams.rs",
+      "crates/sim-conformance-packs/tests/portability_foreign.rs",
       "crates/sim-conformance-packs/tests/projection_reference.rs",
+      "crates/sim-conformance-packs/tests/release_nv12_27.rs",
       "crates/sim-conformance-packs/tests/revocation_policy.rs",
+      "crates/sim-conformance-packs/tests/succession_cold.rs",
+      "crates/sim-projection-admission-protocol/Cargo.toml",
+      "crates/sim-projection-admission-protocol/src/evidence.rs",
+      "crates/sim-projection-admission-protocol/src/lib.rs",
+      "crates/sim-projection-admission-protocol/src/portable.rs",
       "docs/generated/citizens.md",
+      "examples/codec_roundtrip.rs",
+      "examples/jvm_lambda_interop.rs",
+      "examples/repl.rs",
       "features.toml",
       "recipes/01-basics/boot-runtime/recipe.toml",
       "recipes/atelier/expedition-first-light/recipe.toml",
@@ -7678,14 +7887,71 @@
       "src/study.rs",
       "src/study_facade_tests.rs",
       "src/web_search.rs",
+      "tests/agent_conduct_exports.rs",
+      "tests/characterization.rs",
+      "tests/citizen.rs",
+      "tests/cli_surface.rs",
+      "tests/continuity_exports.rs",
+      "tests/contract_fixtures.rs",
+      "tests/conversational_instrument_adoption.rs",
+      "tests/cookbook.rs",
+      "tests/cross_repo_contracts.rs",
+      "tests/direct_surfaces.rs",
+      "tests/exceptions_facade.rs",
+      "tests/expedition_first_light.rs",
+      "tests/expr_tree_features.rs",
+      "tests/facade_aliases.rs",
       "tests/first-light-focused/Cargo.toml",
+      "tests/genai_feature_bundles.rs",
+      "tests/gpu_math_feature_bundles.rs",
+      "tests/hotload_generation.rs",
+      "tests/interference_feature_bundles.rs",
+      "tests/javascript.rs",
+      "tests/jvm_exports.rs",
       "tests/memo-acceptance-focused/Cargo.toml",
+      "tests/memo_acceptance.rs",
       "tests/native-abi-ui/borrow-to-destroy/Cargo.toml",
       "tests/native-plugin/Cargo.toml",
+      "tests/native_dynamic.rs",
+      "tests/physics_facade.rs",
+      "tests/platform_exports.rs",
       "tests/proc-macro-ui/invalid-shape/Cargo.toml",
       "tests/proc-macro-ui/missing-constructor/Cargo.toml",
+      "tests/proc_macro_compile_fail.rs",
+      "tests/proc_macros.rs",
+      "tests/provider_facade.rs",
+      "tests/python.rs",
+      "tests/r24_midi_features.rs",
+      "tests/r25_portaudio_features.rs",
+      "tests/r26_alsa_features.rs",
+      "tests/r27_pipewire_features.rs",
+      "tests/r28_jack_features.rs",
+      "tests/r29_audio_graph_live_features.rs",
+      "tests/r30_audio_dsp_features.rs",
+      "tests/r31_audio_synth_features.rs",
+      "tests/r32_plugin_clap_features.rs",
+      "tests/r33_plugin_lv2_features.rs",
+      "tests/r34_plugin_vst3_features.rs",
+      "tests/r35_platform_audio_features.rs",
+      "tests/r36_daw_session_features.rs",
+      "tests/relation_exports.rs",
       "tests/reversible-product-focused/Cargo.toml",
-      "xtask/Cargo.toml"
+      "tests/reversible_product.rs",
+      "tests/server_agent_e2e.rs",
+      "tests/server_agent_e2e_support.rs",
+      "tests/server_agent_swarm_e2e.rs",
+      "tests/source_authority.rs",
+      "tests/typescript_notation.rs",
+      "tests/validate_adopt_subtract_composition.rs",
+      "tests/validate_atelier_packs.rs",
+      "tests/validate_cadence_pack.rs",
+      "tests/validate_flock_pack.rs",
+      "tests/validate_garden_pack.rs",
+      "tests/validate_kitchen_pack.rs",
+      "tests/validate_media_reference_packs.rs",
+      "tests/validate_private_observation_pack.rs",
+      "xtask/Cargo.toml",
+      "xtask/src/main.rs"
     ]
   },
   "recipe_book_count": 3,
