@@ -38,7 +38,6 @@ type Service = RoadmapRunnerService<MemoryBackend, Ready, CountEffects, Never>;
 pub(crate) struct Drive {
     service: Arc<Mutex<Service>>,
     calls: Arc<AtomicUsize>,
-    phase: Arc<Mutex<String>>,
     backend: Arc<MemoryBackend>,
 }
 
@@ -59,13 +58,11 @@ impl Drive {
         calls: Arc<AtomicUsize>,
     ) -> Result<Self, ServiceError> {
         let admitted = request.phase.clone();
-        let phase = Arc::new(Mutex::new(String::new()));
         let service = RoadmapRunnerService::open(
             Arc::clone(&backend),
             Ready(admitted),
             CountEffects {
                 calls: Arc::clone(&calls),
-                phase: Arc::clone(&phase),
             },
             Never,
             request,
@@ -74,7 +71,6 @@ impl Drive {
         Ok(Self {
             service: Arc::new(Mutex::new(service)),
             calls,
-            phase,
             backend,
         })
     }
@@ -85,14 +81,6 @@ impl Drive {
 
     pub(crate) fn calls(&self) -> usize {
         self.calls.load(Ordering::SeqCst)
-    }
-
-    /// Phase the runner passed to the effect port. Empty until that port runs.
-    pub(crate) fn effect_phase(&self) -> Result<String, ServiceError> {
-        self.phase
-            .lock()
-            .map(|slot| slot.clone())
-            .map_err(|_| ServiceError::Adapter("effect phase lock poisoned".into()))
     }
 
     pub(crate) fn conduct(
@@ -399,7 +387,6 @@ impl ReadinessPort for Ready {
 
 struct CountEffects {
     calls: Arc<AtomicUsize>,
-    phase: Arc<Mutex<String>>,
 }
 
 impl EffectPort for CountEffects {
@@ -411,11 +398,6 @@ impl EffectPort for CountEffects {
         _: Option<&Symbol>,
     ) -> Result<ExecutionEvent, ServiceError> {
         self.calls.fetch_add(1, Ordering::SeqCst);
-        *self
-            .phase
-            .lock()
-            .map_err(|_| ServiceError::Adapter("effect phase lock poisoned".into()))? =
-            phase.as_str().to_owned();
         Ok(ExecutionEvent {
             execution: identity.execution.clone(),
             phase: phase.clone(),

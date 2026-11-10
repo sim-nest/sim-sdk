@@ -104,6 +104,8 @@ pub struct SeamReport {
     pub effects: u64,
     /// Effects added by the second unchanged pass.
     pub hot_delta: u64,
+    /// Wall time of each hot status sample, in microseconds, in call order.
+    pub hot_samples: Vec<u64>,
     /// Model providers the specimen used.
     pub providers: Vec<String>,
     /// Lineage edges that name the revised source and are stale.
@@ -209,6 +211,15 @@ pub fn check_subject(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>,
         ),
         observation("consumer-seams.effects", &report.effects.to_string()),
         observation("consumer-seams.hot-delta", &report.hot_delta.to_string()),
+        observation(
+            "consumer-seams.raw-us",
+            &report
+                .hot_samples
+                .iter()
+                .map(u64::to_string)
+                .collect::<Vec<_>>()
+                .join(" "),
+        ),
         observation("consumer-seams.providers", &report.providers.join(",")),
         observation(
             "consumer-seams.stale-edges",

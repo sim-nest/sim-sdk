@@ -294,37 +294,20 @@ fn composed_control(subject: &str) -> Result<Vec<CheckObservation>, PackFailure>
 }
 
 fn hot_noop(subject: &str) -> Result<Vec<CheckObservation>, PackFailure> {
-    let phase = phase_token(subject)?;
-    let token = phase.as_str().to_owned();
-    let mut request = executor::base_request();
-    request.phase = phase;
-    let drive = Drive::open(request).map_err(show)?;
-    let before = drive.records().map_err(show)?;
-    let ran = drive
-        .conduct(&InputBatch::conduct(), &CapabilityGrant::default())
-        .map_err(show)?;
-    if !matches!(ran, DriveResult::Advanced { .. })
-        || drive.calls() != 1
-        || drive.effect_phase().map_err(show)? != token
-    {
-        return Err(show_text("one conduct did not perform the subject phase"));
+    let measured = crate::hot_noop::measure().map_err(|detail| show_text(&detail))?;
+    if measured.effect_delta != 0 || measured.samples_us.len() != 20 {
+        return Err(show_text("hot status performed work"));
     }
-    let after = drive.records().map_err(show)?;
-    if after <= before {
-        return Err(show_text("conduct appended no record"));
-    }
-    let quiet = drive
-        .conduct(&InputBatch::no_change(), &CapabilityGrant::default())
-        .map_err(show)?;
-    if !matches!(quiet, DriveResult::Quiescent { .. })
-        || drive.calls() != 1
-        || drive.records().map_err(show)? != after
-    {
-        return Err(show_text("no-change wake performed work"));
-    }
+    let raw_us = measured
+        .samples_us
+        .iter()
+        .map(u64::to_string)
+        .collect::<Vec<_>>()
+        .join(" ");
     Ok(vec![
-        obs("drive.calls", "1"),
-        obs("drive.hot-delta", "0"),
+        obs("drive.hot-delta", measured.effect_delta.to_string()),
+        obs("drive.samples", measured.samples_us.len().to_string()),
+        obs("drive.raw-us", raw_us),
         obs("drive.subject", subject),
     ])
 }
@@ -518,11 +501,6 @@ fn units(subject: &str) -> Vec<ProofUnit> {
             ..ready_unit("linux")
         },
     ]
-}
-
-fn phase_token(subject: &str) -> Result<sim_roadmap_core::PhaseId, PackFailure> {
-    let token = subject.replace(['/', '\\'], "-");
-    sim_roadmap_core::PhaseId::new(token).map_err(|error| show_text(&format!("{error:?}")))
 }
 
 fn ready_unit(id: &str) -> ProofUnit {

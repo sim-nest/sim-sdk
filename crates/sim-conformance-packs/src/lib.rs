@@ -16,6 +16,7 @@ mod executor_freeze;
 mod executor_scope;
 mod executor_support;
 mod harness;
+mod hot_noop;
 mod source_invoke;
 // Projection custody stays out of this package build. Its resolver closure is
 // not part of the portable checker.

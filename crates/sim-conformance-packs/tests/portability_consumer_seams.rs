@@ -152,7 +152,9 @@ fn each_seam_refusal_is_its_own_case() {
     reopen_same().expect("reopen");
     interrupt_once().expect("interrupt");
     revoked_subject().expect("revoked");
-    assert_eq!(hot_noop().expect("hot"), 0);
+    let (hot_delta, hot_samples) = hot_noop().expect("hot");
+    assert_eq!(hot_delta, 0);
+    assert_eq!(hot_samples.len(), 20);
     assert_eq!(over_bound().expect("bound"), 1);
     scope_confusion().expect("scope");
     renote_stales().expect("renote");

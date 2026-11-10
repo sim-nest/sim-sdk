@@ -351,28 +351,14 @@ pub fn revoked_subject() -> Result<(), SeamFault> {
 }
 
 /// A second pass over an unchanged execution performs no effect.
-pub fn hot_noop() -> Result<u64, SeamFault> {
-    let drive = opened(executor::with_handoff(Some(executor::cid(12))));
-    drive
-        .conduct(&InputBatch::conduct(), &CapabilityGrant::default())
-        .unwrap_or_else(|error| panic!("conduct: {error}"));
-    let calls = drive.calls();
-    let records = drive
-        .records()
-        .unwrap_or_else(|error| panic!("records: {error}"));
-    let quiet = drive
-        .conduct(&InputBatch::no_change(), &CapabilityGrant::default())
-        .unwrap_or_else(|error| panic!("no-change: {error}"));
-    if !matches!(quiet, DriveResult::Quiescent { .. })
-        || drive.calls() != calls
-        || drive
-            .records()
-            .unwrap_or_else(|error| panic!("records: {error}"))
-            != records
-    {
-        return Err(SeamFault::Bound);
+pub fn hot_noop() -> Result<(u64, Vec<u64>), SeamFault> {
+    let measured =
+        crate::hot_noop::measure().unwrap_or_else(|detail| panic!("hot no-op: {detail}"));
+    if measured.effect_delta == 0 && measured.samples_us.len() == 20 {
+        Ok((measured.effect_delta, measured.samples_us))
+    } else {
+        Err(SeamFault::Bound)
     }
-    Ok(0)
 }
 
 /// Dropping one retained value leaves that reference stale and the other present.
@@ -512,7 +498,7 @@ pub(super) fn run_canonical() -> Result<SeamReport, SeamFault> {
     interrupt_once()?;
     revoked_subject()?;
     scope_confusion()?;
-    let hot_delta = hot_noop()?;
+    let (hot_delta, hot_samples) = hot_noop()?;
     discover_affordance()?;
     renote_stales()?;
     reopen_keeps_direction()?;
@@ -527,6 +513,7 @@ pub(super) fn run_canonical() -> Result<SeamReport, SeamFault> {
         stale_effects,
         effects,
         hot_delta,
+        hot_samples,
         providers,
         stale_edges,
         unrelated_proof,
