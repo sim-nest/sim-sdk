@@ -8,13 +8,24 @@ publish = true
 repository.workspace = true
 homepage.workspace = true
 
+[workspace]
+resolver = "3"
+members = ["."]
+
+[workspace.package]
+edition = "2024"
+license = "MPL-2.0"
+repository = "https://github.com/sim-nest/sim-sdk"
+homepage = "https://github.com/sim-nest/sim-sdk"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
 [dependencies]
 sim-codec-binary = "0.4.1"
 sim-conformance-core = "0.3.0"
 sim-kernel = "0.4.0"
 sim-lib-server = { version = "0.3.1", default-features = false }
-sim-platform-linux = { version = "0.1.0", default-features = false }
-sim-platform-ubuntu-projection = "0.1.0"
 sim-run-core = "0.5.0"
 
 [lints]
