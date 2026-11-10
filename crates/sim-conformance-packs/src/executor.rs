@@ -181,7 +181,7 @@ pub(crate) fn require_support(request: &crate::PackRequest<'_>) -> Result<(), Pa
     Ok(())
 }
 
-/// Facts and the qualified receipt that [`require_support`] accepts for `subject`.
+/// Facts and the qualified receipt accepted as support for `subject`.
 pub fn executor_support_evidence(subject: &str) -> Result<MemorySubject, PackFailure> {
     let definition = support_definition(subject)?;
     let mut evidence = MemorySubject::default();
