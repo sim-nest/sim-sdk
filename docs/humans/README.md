@@ -1074,6 +1074,7 @@ fn frozen_executor_sources_qualify_the_outside_specimen() {
         "sim-agent-net/crates/sim-lib-roadmap-runner/src/journal.rs",
         "sim-agent-net/crates/sim-lib-roadmap-runner/src/causal.rs",
         "sim-agent-net/crates/sim-lib-roadmap-runner/src/codec.rs",
+        "sim-agent-net/crates/sim-lib-roadmap-runner/src/local_emit.rs",
         "sim-agent-net/crates/sim-source-deck/src/build.rs",
         "sim-agent-net/crates/sim-source-deck/src/canonical.rs",
         "sim-agent-net/crates/sim-source-deck/src/types.rs",

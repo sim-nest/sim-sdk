@@ -69,6 +69,7 @@ closure_files!(
     "sim-agent-net/crates/sim-lib-roadmap-runner/src/land.rs",
     "sim-agent-net/crates/sim-lib-roadmap-runner/src/lib.rs",
     "sim-agent-net/crates/sim-lib-roadmap-runner/src/local_command.rs",
+    "sim-agent-net/crates/sim-lib-roadmap-runner/src/local_emit.rs",
     "sim-agent-net/crates/sim-lib-roadmap-runner/src/model.rs",
     "sim-agent-net/crates/sim-lib-roadmap-runner/src/mutation.rs",
     "sim-agent-net/crates/sim-lib-roadmap-runner/src/mutation/fs_workspace.rs",
