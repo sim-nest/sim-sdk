@@ -93,8 +93,7 @@ fn cold_change_derives_portable_closure() {
     let spec = find_pack("checker/c-succeed").expect("succeed");
     assert!(spec.implemented_scopes.contains(&"succession/cold-change"));
     assert!(
-        !spec
-            .implemented_scopes
+        spec.implemented_scopes
             .contains(&"succession/composed-precheck")
     );
     let verdict = check(
@@ -113,13 +112,102 @@ fn cold_change_derives_portable_closure() {
 }
 
 #[test]
-fn composed_precheck_stays_unimplemented() {
+fn composed_precheck_derives_the_closure_and_refuses_the_cold_record() {
+    let spec = find_pack("checker/c-succeed").expect("succeed");
+    assert!(
+        spec.implemented_scopes
+            .contains(&"succession/composed-precheck")
+    );
     let verdict = check(
         "checker/c-succeed",
         "succession/composed-precheck",
-        &MemorySubject::default().with("succession.record", record()),
+        &MemorySubject::default().with("release.closure", closure()),
     );
-    assert_eq!(code(&verdict), "unimplemented");
+    assert_eq!(code(&verdict), "pass");
+    assert_eq!(value(&verdict, "succession.precheck"), "ready");
+    assert_eq!(value(&verdict, "release.outward"), "consistent");
+    assert_eq!(value(&verdict, "release.order"), "sim-kernel,sim-runtime");
+    match &verdict {
+        PackVerdict::Pass { observations, .. } => {
+            assert!(
+                observations
+                    .iter()
+                    .all(|item| item.key != "succession.closed")
+            );
+            assert!(observations.iter().all(|item| item.value != "true"));
+            assert!(observations.iter().all(|item| item.value != "published"));
+            assert!(
+                observations
+                    .iter()
+                    .all(|item| item.value != "PortableClosed")
+            );
+        }
+        other => panic!("expected a pass, got {other:?}"),
+    }
+    assert_eq!(
+        code(&check(
+            "checker/c-succeed",
+            "succession/composed-precheck",
+            &MemorySubject::default()
+                .with("release.closure", closure())
+                .with("succession.record", record()),
+        )),
+        "cold-change-present"
+    );
+    assert_eq!(
+        code(&check(
+            "checker/c-succeed",
+            "succession/composed-precheck",
+            &MemorySubject::default()
+                .with("release.closure", closure())
+                .with("release.publication-confirmed", "true"),
+        )),
+        "local-publication-claim"
+    );
+    assert_eq!(
+        code(&check(
+            "checker/c-succeed",
+            "succession/composed-precheck",
+            &MemorySubject::default()
+                .with("release.closure", closure())
+                .with("succession.portable-closed", "true"),
+        )),
+        "unexpected-fact"
+    );
+    assert_eq!(
+        code(&check(
+            "checker/c-succeed",
+            "succession/composed-precheck",
+            &MemorySubject::default(),
+        )),
+        "missing-closure"
+    );
+    for name in ["true", "published"] {
+        assert_eq!(
+            code(&check(
+                "checker/c-succeed",
+                "succession/composed-precheck",
+                &MemorySubject::default().with("release.closure", release_row(name, "")),
+            )),
+            "claim-value"
+        );
+    }
+}
+
+fn closure() -> String {
+    let kernel = release_row("sim-kernel", "");
+    let runtime = release_row("sim-runtime", " sim-kernel");
+    format!("{kernel}\n\n{runtime}")
+}
+
+fn release_row(name: &str, deps: &str) -> String {
+    let pin = "22".repeat(20);
+    format!(
+        "crate {name}\nversion 0.1.0\nchecksum {}\ntag {name}-v0.1.0\npin {pin}\nmirror {pin}\nci {}\nboot {}\ndeps{deps}",
+        "11".repeat(32),
+        "33".repeat(32),
+        "44".repeat(32),
+    )
 }
 
 #[test]

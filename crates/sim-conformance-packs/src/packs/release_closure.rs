@@ -3,10 +3,13 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-//! Dependency-ordered release closure for `release/nv12-27`.
+//! Dependency-ordered release closure.
 //!
-//! The checker reads one injected closure. It does not contact a registry,
-//! create a tag, or accept a caller boolean as publication.
+//! `release/nv12-27` reads one injected closure. `release/nv12-28` reads that
+//! closure plus one cold succession record and derives both. Neither scope
+//! contacts a registry, creates a tag, accepts a caller boolean as
+//! publication, or derives completion. A pass refuses an observation whose
+//! whole value is `true`, `published`, or `PortableClosed`.
 
 use sha2::{Digest, Sha256};
 
@@ -51,13 +54,85 @@ pub(super) fn check_nv12_27(
         }
     }
     let Some(closure) = closure else {
-        let code = if dry_run.is_some() {
-            "publication-unreconciled"
-        } else {
-            "missing-closure"
-        };
-        return Err(fail(code, "release.closure"));
+        return Err(missing_closure(dry_run.is_some()));
     };
+    observe_closure(closure, dry_run)
+}
+
+pub(super) fn check_nv12_28(
+    request: &PackRequest<'_>,
+) -> Result<Vec<CheckObservation>, PackFailure> {
+    if request
+        .evidence
+        .fact("release.publication-confirmed")
+        .is_some()
+    {
+        return Err(fail(
+            "local-publication-claim",
+            "release.publication-confirmed",
+        ));
+    }
+    let mut closure = None;
+    let mut dry_run = None;
+    let mut succession = None;
+    for key in request.evidence.fact_keys() {
+        match key {
+            "release.closure" => closure = request.evidence.fact(key),
+            "release.dry-run" => dry_run = request.evidence.fact(key),
+            "succession.record" => succession = request.evidence.fact(key),
+            other => return Err(fail("unexpected-fact", other)),
+        }
+    }
+    let Some(closure) = closure else {
+        return Err(missing_closure(dry_run.is_some()));
+    };
+    let Some(succession) = succession else {
+        return Err(fail("missing-succession", "succession.record"));
+    };
+    let derived = super::super::succession_record::derive(succession)?;
+    let mut observations = observe_closure(closure, dry_run)?;
+    observations.extend([
+        observation("succession.closed", derived.closed),
+        observation("succession.change", derived.change),
+        observation("succession.project", derived.project),
+        observation(
+            "succession.second-converge",
+            derived.converge_second.to_string(),
+        ),
+        observation(
+            "succession.second-deliver",
+            derived.deliver_second.to_string(),
+        ),
+        observation("succession.holds", derived.holds.to_string()),
+        observation("succession.linux", derived.linux),
+        observation("release.succession", "derived"),
+    ]);
+    refuse_claim_values(&observations)?;
+    Ok(observations)
+}
+
+pub(super) fn refuse_claim_values(observations: &[CheckObservation]) -> Result<(), PackFailure> {
+    for item in observations {
+        if matches!(item.value.as_str(), "true" | "published" | "PortableClosed") {
+            return Err(fail("claim-value", &item.key));
+        }
+    }
+    Ok(())
+}
+
+fn missing_closure(dry_run: bool) -> PackFailure {
+    let code = if dry_run {
+        "publication-unreconciled"
+    } else {
+        "missing-closure"
+    };
+    fail(code, "release.closure")
+}
+
+fn observe_closure(
+    closure: &str,
+    dry_run: Option<&str>,
+) -> Result<Vec<CheckObservation>, PackFailure> {
     if closure.len() > MAX_BYTES {
         return Err(fail("bound", "release.closure"));
     }

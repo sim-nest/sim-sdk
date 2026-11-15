@@ -1332,8 +1332,8 @@ fn binding() -> String {
         "core/sha256-datum-v1:f12e44d0825b1b54bec8ddfab96007eccc97b9dbcf99ac8ddfe6cb34fc720cf3"
     );
     assert!(spec.implemented_scopes.contains(&"release/nv12-27"));
+    assert!(spec.implemented_scopes.contains(&"release/nv12-28"));
     assert!(!spec.implemented_scopes.contains(&"release/nv12-26"));
-    assert!(!spec.implemented_scopes.contains(&"release/nv12-28"));
     render(spec.checker_binding().expect("binding").id().content_id())
 }
 

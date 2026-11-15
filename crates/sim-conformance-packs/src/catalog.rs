@@ -634,7 +634,8 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-05",
             "release/nv12-06",
             "release/nv12-07",
-            "release/nv12-27"
+            "release/nv12-27",
+            "release/nv12-28"
         ]
     ),
     spec!(
@@ -643,7 +644,7 @@ const PACKS: &[PackSpec] = &[
         "pack/succession",
         "NV12.28",
         ["succession/composed-precheck", "succession/cold-change"],
-        ["succession/cold-change"]
+        ["succession/composed-precheck", "succession/cold-change"]
     ),
 ];
 
