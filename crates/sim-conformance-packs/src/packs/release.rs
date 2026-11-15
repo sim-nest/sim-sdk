@@ -8,13 +8,28 @@
 #[path = "release_closure.rs"]
 mod closure;
 
-use crate::{CheckObservation, PackRequest, PackVerdict, harness};
+use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};
+
+/// Checks one release closure before a cold succession record is accepted.
+pub(super) fn closure_precheck(
+    request: &PackRequest<'_>,
+) -> Result<Vec<CheckObservation>, PackFailure> {
+    closure::check_nv12_27(request)
+}
+
+/// Refuses an observation whose whole value is a publication or completion claim.
+pub(super) fn refuse_claim_values(observations: &[CheckObservation]) -> Result<(), PackFailure> {
+    closure::refuse_claim_values(observations)
+}
 
 /// Checks the exact requested release scope.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-release", request, |request| {
         if request.scope == "release/nv12-27" {
             return closure::check_nv12_27(request);
+        }
+        if request.scope == "release/nv12-28" {
+            return closure::check_nv12_28(request);
         }
         [
             "release.owner-validation-passed",

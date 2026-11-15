@@ -4,6 +4,10 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 //! Cold-succession conformance pack.
+//!
+//! The precheck derives a release closure and refuses a cold-change record.
+//! The cold-change scope derives that record. Neither scope accepts a
+//! publication flag or derives completion.
 
 use super::succession_record::{self, fail};
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
@@ -12,10 +16,41 @@ use crate::{CheckObservation, PackRequest, PackVerdict, harness};
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-succeed", request, |request| {
         match request.scope {
+            "succession/composed-precheck" => composed_precheck(request),
             "succession/cold-change" => cold_change(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })
+}
+
+fn composed_precheck(
+    request: &PackRequest<'_>,
+) -> Result<Vec<CheckObservation>, crate::PackFailure> {
+    if request
+        .evidence
+        .fact("release.publication-confirmed")
+        .is_some()
+    {
+        return Err(fail(
+            "local-publication-claim",
+            "release.publication-confirmed",
+        ));
+    }
+    let mut saw_cold_record = false;
+    for key in request.evidence.fact_keys() {
+        match key {
+            "release.closure" | "release.dry-run" => {}
+            "succession.record" => saw_cold_record = true,
+            other => return Err(fail("unexpected-fact", other)),
+        }
+    }
+    if saw_cold_record {
+        return Err(fail("cold-change-present", "succession.record"));
+    }
+    let mut observations = super::release::closure_precheck(request)?;
+    observations.push(observation("succession.precheck", "ready"));
+    super::release::refuse_claim_values(&observations)?;
+    Ok(observations)
 }
 
 fn cold_change(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
