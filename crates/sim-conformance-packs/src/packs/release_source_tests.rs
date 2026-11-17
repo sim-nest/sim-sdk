@@ -14,15 +14,35 @@ use super::{admit_parsed, observations};
 
 const SUBJECT: &str = "subject/source-example";
 const REV: &str = "0123456789abcdef0123456789abcdef01234567";
+const REV_B: &str = "0123456789abcdef0123456789abcdef01234568";
+const REV_C: &str = "fedcba9876543210fedcba9876543210fedcba98";
+
+fn inline_git(name: &str, rev: &str) -> String {
+    format!(
+        "{name} = {{ version = \"0.1.0\", git = \"https://example.invalid/{name}.git\", rev = \"{rev}\" }}"
+    )
+}
 
 fn manifest() -> String {
     format!(
-        "publish = false\nsim-example = {{ version = \"0.1.0\", git = \"https://example.invalid/sim-example.git\", rev = \"{REV}\" }}\n"
+        "[package]\npublish = false\n[dependencies]\n{}\n",
+        inline_git("sim-example", REV)
     )
 }
 
 fn identity() -> String {
     format!("git+{REV}:sim-example@0.1.0")
+}
+
+fn expected_result() -> String {
+    format!("source-identity {}", identity())
+}
+
+fn refuses(text: &str, code: &str) {
+    match super::observe_source_identity(SUBJECT, text) {
+        Err(error) => assert_eq!(error.code, code, "{text}"),
+        Ok(_) => panic!("{code} must not admit a receipt"),
+    }
 }
 
 fn request<'a>(evidence: &'a MemorySubject) -> PackRequest<'a> {
@@ -39,9 +59,10 @@ fn request<'a>(evidence: &'a MemorySubject) -> PackRequest<'a> {
 fn a_parsed_manifest_admits_its_source_receipt() {
     let text = manifest();
     let observed = super::observe_source_identity(SUBJECT, &text).expect("admitted");
-    let expected = format!("completion/claim-21 {}", identity());
+    let expected = expected_result();
     assert_eq!(observed.subject, SUBJECT);
     assert_eq!(observed.result, expected);
+    assert!(!observed.result.contains("completion/claim-"));
     assert_eq!(observed.revocation, RevocationStatus::Current);
     assert_eq!(
         observed.scope,
@@ -165,10 +186,8 @@ fn a_package_table_admits_its_real_git_dependency() {
         "[package]\npublish = false\n[package.metadata]\npublish = true\n[dependencies]\nsim-example = {{ version = \"0.1.0\", git = \"https://example.invalid/sim-example.git\", rev = \"{REV}\" }} # not a source\n"
     );
     let observed = super::observe_source_identity(SUBJECT, &text).expect("admitted");
-    assert_eq!(
-        observed.result,
-        format!("completion/claim-21 {}", identity())
-    );
+    assert_eq!(observed.result, expected_result());
+    assert!(!observed.result.contains("completion/claim-"));
 }
 
 #[test]
@@ -188,4 +207,97 @@ fn observations_name_only_parsed_identities() {
             },
         ]
     );
+}
+
+#[test]
+fn a_metadata_git_table_produces_no_dependency_evidence() {
+    let text = format!(
+        "[package]\npublish = false\n[package.metadata]\n{}\n",
+        inline_git("sim-example", REV)
+    );
+    refuses(&text, "missing-source");
+    let evidence = MemorySubject::default().with("release.manifest", text);
+    let error = observations(&request(&evidence)).expect_err("metadata table");
+    assert_eq!(error.code, "missing-source");
+}
+
+#[test]
+fn nested_metadata_and_workspace_tables_produce_no_dependency_evidence() {
+    let git = inline_git("sim-example", REV);
+    for text in [
+        format!("[package]\npublish = false\n[package.metadata.tools]\n{git}\n"),
+        format!("[package]\npublish = false\n[package.metadata.dependencies]\n{git}\n"),
+        format!("[package]\npublish = false\n[workspace.dependencies]\n{git}\n"),
+    ] {
+        refuses(&text, "missing-source");
+    }
+}
+
+#[test]
+fn a_metadata_git_table_beside_a_real_dependency_admits_only_the_real_one() {
+    let text = format!(
+        "[package]\npublish = false\n[package.metadata]\n{}\n[dependencies]\nsim-alias = {{ package = \"sim-example\", version = \"0.1.0\", git = \"https://example.invalid/sim-example.git\", rev = \"{REV}\" }}\nsim-crates = \"0.1.0\"\n",
+        inline_git("sim-hidden", REV)
+    );
+    let observed = super::observe_source_identity(SUBJECT, &text).expect("admitted");
+    assert_eq!(observed.result, expected_result());
+    assert!(!observed.result.contains("completion/claim-"));
+    assert!(!observed.result.contains("sim-hidden"));
+    assert!(!observed.result.contains("sim-alias"));
+    assert!(!observed.result.contains("sim-crates"));
+    let evidence = MemorySubject::default().with("release.manifest", text);
+    let seen = observations(&request(&evidence)).expect("observations");
+    let sources = seen
+        .iter()
+        .filter(|item| item.key == "release.source")
+        .map(|item| item.value.as_str())
+        .collect::<Vec<_>>();
+    assert_eq!(sources, vec![identity().as_str()]);
+}
+
+#[test]
+fn dev_build_and_target_dependency_tables_admit() {
+    let text = format!(
+        "[package]\npublish = false\n[dev-dependencies]\n{}\n[build-dependencies]\n{}\n[target.'cfg(unix)'.dependencies]\n{}\n",
+        inline_git("sim-example", REV),
+        inline_git("sim-build", REV_B),
+        inline_git("sim-target", REV_C)
+    );
+    let mut identities = [
+        format!("git+{REV}:sim-example@0.1.0"),
+        format!("git+{REV_B}:sim-build@0.1.0"),
+        format!("git+{REV_C}:sim-target@0.1.0"),
+    ];
+    identities.sort();
+    let expected = format!("source-identity {}", identities.join(" "));
+    let observed = super::observe_source_identity(SUBJECT, &text).expect("admitted");
+    assert_eq!(observed.result, expected);
+    assert!(!observed.result.contains("completion/claim-"));
+}
+
+#[test]
+fn a_target_named_metadata_is_still_a_dependency_table() {
+    let text = format!(
+        "[package]\npublish = false\n[target.metadata.dependencies]\n{}\n",
+        inline_git("sim-example", REV)
+    );
+    let observed = super::observe_source_identity(SUBJECT, &text).expect("admitted");
+    assert_eq!(observed.result, expected_result());
+}
+
+#[test]
+fn invalid_toml_produces_no_receipt() {
+    let text = format!(
+        "[package]\npublish = false\nthis is not toml\n[dependencies]\n{}\n",
+        inline_git("sim-example", REV)
+    );
+    refuses(&text, "bad-record");
+}
+
+#[test]
+fn the_same_crate_in_two_dependency_tables_is_duplicate() {
+    let git = inline_git("sim-example", REV);
+    let text =
+        format!("[package]\npublish = false\n[dependencies]\n{git}\n[dev-dependencies]\n{git}\n");
+    refuses(&text, "duplicate-crate");
 }

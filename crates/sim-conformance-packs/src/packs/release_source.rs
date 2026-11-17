@@ -6,10 +6,11 @@
 //! Source-identity observations for one unpublished git manifest.
 //!
 //! The pack reads the manifest text. It does not read a caller boolean, a
-//! source-deck label, or a completion claim. The harness builds the receipt
-//! from the identities that parse produced, verifies that construction, and
-//! the proof catalog admits the evidence. A missing or refused manifest
-//! produces no receipt.
+//! source-deck label, or a completion claim. Dependency evidence comes only
+//! from Cargo dependency tables. The receipt subject is the subject the
+//! caller names, and its result is those source identities. That result does
+//! not discharge completion claim 21. A missing or refused manifest produces
+//! no receipt.
 
 use std::collections::BTreeSet;
 
@@ -43,7 +44,10 @@ struct Dep {
 pub struct ObservedSourceRelease {
     /// Subject the checker invocation and the receipt both name.
     pub subject: String,
-    /// `completion/claim-21` plus the sorted identities the manifest parsed to.
+    /// `source-identity` plus the sorted git identities from dependency tables.
+    ///
+    /// This is the source-release evidence bound to [`Self::subject`]. It is
+    /// not a completion claim, and it does not discharge claim 21.
     pub result: String,
     /// Catalog that admitted the evidence.
     pub catalog: ProofCatalog,
@@ -136,11 +140,7 @@ fn admit_parsed(
             return Err(fail("evidence-mismatch", "release.source"));
         }
     }
-    let mut result = String::from("completion/claim-21");
-    if !identities.is_empty() {
-        result.push(' ');
-        result.push_str(&identities.join(" "));
-    }
+    let result = source_result(&identities);
     let unpublished = observations
         .iter()
         .filter(|item| item.key == "release.unpublished")
@@ -320,54 +320,14 @@ fn parse_manifest(text: &str) -> Result<Vec<Dep>, PackFailure> {
     if text.contains("PortableClosed") || text.contains("publication-confirmed") {
         return Err(fail("local-publication-claim", "release.manifest"));
     }
+    let root: toml::Value =
+        toml::from_str(text).map_err(|_| fail("bad-record", "release.manifest"))?;
+    let root = root
+        .as_table()
+        .ok_or_else(|| fail("bad-record", "release.manifest"))?;
+    package_unpublished(root)?;
     let mut deps = Vec::new();
-    let mut unpublished = false;
-    let mut table = String::new();
-    for raw in text.lines() {
-        let line = without_comment(raw).trim();
-        if line.is_empty() {
-            continue;
-        }
-        if let Some(name) = table_header(line) {
-            table = name.to_owned();
-            continue;
-        }
-        let Some((lhs, rhs)) = line.split_once('=') else {
-            continue;
-        };
-        let key = bare_key(lhs.trim());
-        let rhs = rhs.trim();
-        if key == "publish" {
-            if !publish_counts(&table) {
-                continue;
-            }
-            match rhs {
-                "false" => unpublished = true,
-                "true" => return Err(fail("local-publication-claim", "publish")),
-                _ => return Err(fail("bad-record", "publish")),
-            }
-            continue;
-        }
-        if !rhs.starts_with('{') || !rhs.contains("git") {
-            continue;
-        }
-        let name = quoted(rhs, "package").unwrap_or(key);
-        let version = quoted(rhs, "version").ok_or_else(|| fail("missing-source", "version"))?;
-        let url = quoted(rhs, "git").ok_or_else(|| fail("missing-source", "git"))?;
-        let rev = quoted(rhs, "rev").ok_or_else(|| fail("missing-source", "rev"))?;
-        if !is_name(name) || !is_version(version) || !is_rev(rev) || !is_url(url) {
-            return Err(fail("bad-record", name));
-        }
-        deps.push(Dep {
-            name: name.to_owned(),
-            version: version.to_owned(),
-            url: url.to_owned(),
-            rev: rev.to_owned(),
-        });
-    }
-    if !unpublished {
-        return Err(fail("missing-observation", "publish = false"));
-    }
+    walk(root, &[], &mut deps)?;
     if deps.is_empty() {
         return Err(fail("missing-source", "release.manifest"));
     }
@@ -379,6 +339,86 @@ fn parse_manifest(text: &str) -> Result<Vec<Dep>, PackFailure> {
     }
     deps.sort_by_key(identity);
     Ok(deps)
+}
+
+fn package_unpublished(root: &toml::Table) -> Result<(), PackFailure> {
+    let Some(package) = root.get("package").and_then(toml::Value::as_table) else {
+        return Err(fail("missing-observation", "publish = false"));
+    };
+    match package.get("publish") {
+        Some(toml::Value::Boolean(false)) => Ok(()),
+        Some(toml::Value::Boolean(true)) => Err(fail("local-publication-claim", "publish")),
+        Some(_) => Err(fail("bad-record", "publish")),
+        None => Err(fail("missing-observation", "publish = false")),
+    }
+}
+
+fn is_dependency_table(path: &[&str]) -> bool {
+    matches!(
+        path,
+        ["dependencies"]
+            | ["dev-dependencies"]
+            | ["build-dependencies"]
+            | ["target", _, "dependencies"]
+            | ["target", _, "dev-dependencies"]
+            | ["target", _, "build-dependencies"]
+    )
+}
+
+fn walk(table: &toml::Table, path: &[&str], deps: &mut Vec<Dep>) -> Result<(), PackFailure> {
+    if is_dependency_table(path) {
+        for (name, spec) in table {
+            if let Some(dep) = git_dep(name, spec)? {
+                deps.push(dep);
+            }
+        }
+        return Ok(());
+    }
+    for (key, value) in table {
+        let Some(child) = value.as_table() else {
+            continue;
+        };
+        let mut next = Vec::with_capacity(path.len() + 1);
+        next.extend_from_slice(path);
+        next.push(key.as_str());
+        walk(child, &next, deps)?;
+    }
+    Ok(())
+}
+
+fn git_dep(key: &str, spec: &toml::Value) -> Result<Option<Dep>, PackFailure> {
+    let Some(table) = spec.as_table() else {
+        return Ok(None);
+    };
+    if !table.contains_key("git") {
+        return Ok(None);
+    }
+    let version = require_string(table, "version")?;
+    let url = require_string(table, "git")?;
+    let rev = require_string(table, "rev")?;
+    let name = match table.get("package") {
+        Some(value) => value
+            .as_str()
+            .ok_or_else(|| fail("bad-record", "package"))?,
+        None => key,
+    };
+    if !is_name(name) || !is_version(version) || !is_rev(rev) || !is_url(url) {
+        return Err(fail("bad-record", name));
+    }
+    Ok(Some(Dep {
+        name: name.to_owned(),
+        version: version.to_owned(),
+        url: url.to_owned(),
+        rev: rev.to_owned(),
+    }))
+}
+
+fn require_string<'a>(table: &'a toml::Table, key: &str) -> Result<&'a str, PackFailure> {
+    match table.get(key) {
+        Some(toml::Value::String(value)) => Ok(value),
+        Some(_) => Err(fail("bad-record", key)),
+        None => Err(fail("missing-source", key)),
+    }
 }
 
 fn discovered(deps: &[Dep]) -> Vec<DiscoveredDefinition> {
@@ -453,64 +493,13 @@ fn exact_identity(value: &str) -> bool {
     is_rev(rev) && is_name(name) && is_version(version)
 }
 
-fn without_comment(line: &str) -> &str {
-    let bytes = line.as_bytes();
-    let mut quote: Option<u8> = None;
-    let mut escaped = false;
-    for (index, byte) in bytes.iter().copied().enumerate() {
-        if let Some(mark) = quote {
-            if mark == b'"' && escaped {
-                escaped = false;
-            } else if mark == b'"' && byte == b'\\' {
-                escaped = true;
-            } else if byte == mark {
-                quote = None;
-            }
-            continue;
-        }
-        if byte == b'"' || byte == b'\'' {
-            quote = Some(byte);
-        } else if byte == b'#' {
-            return line[..index].trim_end();
-        }
+fn source_result(identities: &[String]) -> String {
+    let mut result = String::from("source-identity");
+    for identity in identities {
+        result.push(' ');
+        result.push_str(identity);
     }
-    line
-}
-
-fn table_header(line: &str) -> Option<&str> {
-    let line = line.trim();
-    if line.starts_with('[') && line.ends_with(']') {
-        Some(line.trim_matches(['[', ']']).trim())
-    } else {
-        None
-    }
-}
-
-fn bare_key(key: &str) -> &str {
-    let bytes = key.as_bytes();
-    if bytes.len() >= 2
-        && ((bytes[0] == b'"' && bytes[bytes.len() - 1] == b'"')
-            || (bytes[0] == b'\'' && bytes[bytes.len() - 1] == b'\''))
-    {
-        return &key[1..key.len() - 1];
-    }
-    key
-}
-
-fn publish_counts(table: &str) -> bool {
-    table.is_empty() || table == "package"
-}
-
-fn quoted<'a>(body: &'a str, name: &str) -> Option<&'a str> {
-    let spaced = format!("{name} = \"");
-    let tight = format!("{name}=\"");
-    let start = body
-        .find(&spaced)
-        .map(|at| at + spaced.len())
-        .or_else(|| body.find(&tight).map(|at| at + tight.len()))?;
-    let rest = body.get(start..)?;
-    let end = rest.find('"')?;
-    Some(&rest[..end])
+    result
 }
 
 fn is_name(value: &str) -> bool {
