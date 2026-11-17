@@ -127,6 +127,51 @@ fn another_subject_is_another_receipt() {
 }
 
 #[test]
+fn a_commented_git_key_produces_no_receipt() {
+    let text = format!(
+        "[package]\npublish = false\n[dependencies]\nsim-example = {{ version = \"0.1.0\" }} # git = \"https://example.invalid/sim-example.git\", rev = \"{REV}\"\n"
+    );
+    match super::observe_source_identity(SUBJECT, &text) {
+        Err(error) => assert_eq!(error.code, "missing-source"),
+        Ok(_) => panic!("a comment must not admit a git identity"),
+    }
+}
+
+#[test]
+fn a_quoted_package_publish_true_produces_no_receipt() {
+    let text = format!(
+        "[package]\n\"publish\" = true\n[package.metadata]\npublish = false\n[dependencies]\nsim-example = {{ version = \"0.1.0\", git = \"https://example.invalid/sim-example.git\", rev = \"{REV}\" }}\n"
+    );
+    match super::observe_source_identity(SUBJECT, &text) {
+        Err(error) => assert_eq!(error.code, "local-publication-claim"),
+        Ok(_) => panic!("package publish = true must not admit a receipt"),
+    }
+}
+
+#[test]
+fn metadata_publish_false_does_not_cover_a_package() {
+    let text = format!(
+        "[package]\nname = \"source-review-fixture\"\n[package.metadata]\npublish = false\n[dependencies]\nsim-example = {{ version = \"0.1.0\", git = \"https://example.invalid/sim-example.git\", rev = \"{REV}\" }}\n"
+    );
+    match super::observe_source_identity(SUBJECT, &text) {
+        Err(error) => assert_eq!(error.code, "missing-observation"),
+        Ok(_) => panic!("metadata publish = false must not cover the package"),
+    }
+}
+
+#[test]
+fn a_package_table_admits_its_real_git_dependency() {
+    let text = format!(
+        "[package]\npublish = false\n[package.metadata]\npublish = true\n[dependencies]\nsim-example = {{ version = \"0.1.0\", git = \"https://example.invalid/sim-example.git\", rev = \"{REV}\" }} # not a source\n"
+    );
+    let observed = super::observe_source_identity(SUBJECT, &text).expect("admitted");
+    assert_eq!(
+        observed.result,
+        format!("completion/claim-21 {}", identity())
+    );
+}
+
+#[test]
 fn observations_name_only_parsed_identities() {
     let evidence = MemorySubject::default().with("release.manifest", manifest());
     let seen = observations(&request(&evidence)).expect("observations");

@@ -322,17 +322,25 @@ fn parse_manifest(text: &str) -> Result<Vec<Dep>, PackFailure> {
     }
     let mut deps = Vec::new();
     let mut unpublished = false;
-    for line in text.lines() {
-        let line = line.trim();
-        if line.is_empty() || line.starts_with('#') {
+    let mut table = String::new();
+    for raw in text.lines() {
+        let line = without_comment(raw).trim();
+        if line.is_empty() {
+            continue;
+        }
+        if let Some(name) = table_header(line) {
+            table = name.to_owned();
             continue;
         }
         let Some((lhs, rhs)) = line.split_once('=') else {
             continue;
         };
-        let key = lhs.trim();
+        let key = bare_key(lhs.trim());
         let rhs = rhs.trim();
         if key == "publish" {
+            if !publish_counts(&table) {
+                continue;
+            }
             match rhs {
                 "false" => unpublished = true,
                 "true" => return Err(fail("local-publication-claim", "publish")),
@@ -443,6 +451,54 @@ fn exact_identity(value: &str) -> bool {
         return false;
     };
     is_rev(rev) && is_name(name) && is_version(version)
+}
+
+fn without_comment(line: &str) -> &str {
+    let bytes = line.as_bytes();
+    let mut quote: Option<u8> = None;
+    let mut escaped = false;
+    for (index, byte) in bytes.iter().copied().enumerate() {
+        if let Some(mark) = quote {
+            if mark == b'"' && escaped {
+                escaped = false;
+            } else if mark == b'"' && byte == b'\\' {
+                escaped = true;
+            } else if byte == mark {
+                quote = None;
+            }
+            continue;
+        }
+        if byte == b'"' || byte == b'\'' {
+            quote = Some(byte);
+        } else if byte == b'#' {
+            return line[..index].trim_end();
+        }
+    }
+    line
+}
+
+fn table_header(line: &str) -> Option<&str> {
+    let line = line.trim();
+    if line.starts_with('[') && line.ends_with(']') {
+        Some(line.trim_matches(['[', ']']).trim())
+    } else {
+        None
+    }
+}
+
+fn bare_key(key: &str) -> &str {
+    let bytes = key.as_bytes();
+    if bytes.len() >= 2
+        && ((bytes[0] == b'"' && bytes[bytes.len() - 1] == b'"')
+            || (bytes[0] == b'\'' && bytes[bytes.len() - 1] == b'\''))
+    {
+        return &key[1..key.len() - 1];
+    }
+    key
+}
+
+fn publish_counts(table: &str) -> bool {
+    table.is_empty() || table == "package"
 }
 
 fn quoted<'a>(body: &'a str, name: &str) -> Option<&'a str> {
