@@ -21,6 +21,7 @@ external-resolver-lock = []
 
 [dependencies]
 sha2 = "0.10"
+toml = "0.8"
 sim-artifact-facet = "0.2.0"
 sim-conformance-core = "0.3.0"
 # The frozen executor's proof receipts use the 0.2 contract crate. The 0.3
