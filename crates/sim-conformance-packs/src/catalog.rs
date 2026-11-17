@@ -624,7 +624,8 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-25",
             "release/nv12-26",
             "release/nv12-27",
-            "release/nv12-28"
+            "release/nv12-28",
+            "release/source-identity"
         ],
         [
             "release/nv12-01",
@@ -635,7 +636,8 @@ const PACKS: &[PackSpec] = &[
             "release/nv12-06",
             "release/nv12-07",
             "release/nv12-27",
-            "release/nv12-28"
+            "release/nv12-28",
+            "release/source-identity"
         ]
     ),
     spec!(

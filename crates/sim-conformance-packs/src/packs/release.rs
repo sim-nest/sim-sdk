@@ -7,6 +7,10 @@
 
 #[path = "release_closure.rs"]
 mod closure;
+#[path = "release_source.rs"]
+mod source;
+
+pub use source::observe_source_identity;
 
 use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};
 
@@ -30,6 +34,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/nv12-28" {
             return closure::check_nv12_28(request);
+        }
+        if request.scope == "release/source-identity" {
+            return source::observations(request);
         }
         [
             "release.owner-validation-passed",
