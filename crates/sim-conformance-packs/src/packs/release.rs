@@ -13,9 +13,10 @@ mod replay;
 mod source;
 
 pub use replay::{
-    ExecutedEntry, ExecutedJournal, format_executed_journal, observe_journal_completion,
+    ExecutedEntry, ExecutedJournal, ObservedJournalCompletion, format_executed_journal,
+    observe_journal_completion,
 };
-pub use source::observe_source_identity;
+pub use source::{ObservedSourceRelease, observe_source_identity};
 
 use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};
 
