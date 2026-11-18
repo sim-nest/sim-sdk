@@ -296,6 +296,90 @@ fn wrong_output_claim_text_and_a_failed_process_are_refused() {
 }
 
 #[test]
+fn a_quoted_complete_marker_is_not_the_frontier_field() {
+    let dir = scratch("quoted-complete");
+    let program = write_sim(
+        &dir,
+        &format!(
+            r#"cmd="$1"
+sub="$2"
+receipt='{RECEIPT}'
+case "$cmd:$sub" in
+prove:plan)
+  printf '%s\n' '#(prove/plan-v1 (denominator 29) (excluded ["leaf/native-worker-adapter"]))'
+  printf '%s\n' "$receipt"
+  ;;
+prove:run)
+  printf '%s\n' '#(prove/cold-v1 (denominator 29) (executed 29) (view "v"))'
+  printf '%s\n' "$receipt"
+  ;;
+prove:status)
+  printf '%s\n' '#(prove/status-v1 (denominator 29) (executed 29))'
+  printf '%s\n' "$receipt"
+  ;;
+prove:frontier)
+  printf '%s\n' '#(prove/frontier-v1 (diagnostic "(complete true)") (complete false) (denominator 29) (executed 29))'
+  printf '%s\n' "$receipt"
+  ;;
+esac
+"#
+        ),
+    );
+    let (code, detail) = refusal(&execute("product/prove", &command(&program)));
+    assert_eq!(code, "record-mismatch");
+    assert_eq!(detail, "complete");
+    std::fs::remove_dir_all(dir).ok();
+}
+
+#[test]
+fn a_deep_program_runs_in_its_checkout() {
+    let dir = scratch("deep");
+    assert!(
+        Command::new("git")
+            .args(["init", "-q"])
+            .current_dir(&dir)
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .status()
+            .expect("git init")
+            .success()
+    );
+    let mut nested = dir.clone();
+    for index in 0..40 {
+        nested.push(format!("d{index}"));
+    }
+    std::fs::create_dir_all(&nested).unwrap();
+    let program = write_sim(
+        &nested,
+        r#"pwd
+cmd="$1"
+sub="$2"
+case "$cmd:$sub" in
+world:why)
+  printf '%s\n' '#(world/explanation-v1 (path ["owner/sim-private/disclosure"]))'
+  ;;
+world:project)
+  printf '%s\n' '#(world/projection-v1 conclusion/source-api)'
+  ;;
+world:diff)
+  printf '%s\n' '#(world/diff-v1 (changed true) conclusion/public-release)'
+  ;;
+esac
+"#,
+    );
+    let world = execute("product/world", &command(&program));
+    let checkout = dir.canonicalize().unwrap();
+    assert_eq!(
+        pass_value(&world, "product.world-why")
+            .lines()
+            .next()
+            .map(Path::new),
+        Some(checkout.as_path())
+    );
+    std::fs::remove_dir_all(dir).ok();
+}
+
+#[test]
 fn installed_sim_records_product_commands() {
     let named = std::env::var_os("SIM_PRODUCT_BIN").map(PathBuf::from);
     let Some(program) = named.filter(|path| path.is_file()) else {

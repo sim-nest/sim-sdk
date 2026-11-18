@@ -263,13 +263,12 @@ fn run(program: &Path, args: &[impl AsRef<str>]) -> Result<String, PackFailure> 
 /// Checkout root of `program`: the nearest ancestor with a `.git` file or directory.
 fn checkout_dir(program: &Path) -> Option<PathBuf> {
     let mut dir = program.parent()?;
-    for _ in 0..32 {
+    loop {
         if dir.join(".git").exists() {
             return Some(dir.to_path_buf());
         }
         dir = dir.parent()?;
     }
-    None
 }
 
 fn prove_record(stdout: &str) -> Result<&str, PackFailure> {
@@ -314,14 +313,38 @@ fn view_of(record: &str) -> Result<String, PackFailure> {
 
 fn field<'a>(record: &'a str, name: &str) -> Result<&'a str, PackFailure> {
     let key = format!("({name} ");
-    let Some(start) = record.find(&key) else {
-        return Err(fail("marker-absent", name));
-    };
-    let rest = &record[start + key.len()..];
-    let end = rest
-        .find([' ', ')'])
-        .ok_or_else(|| fail("marker-absent", name))?;
-    Ok(&rest[..end])
+    let mut rest = record;
+    let mut quoted = false;
+    let mut escaped = false;
+    while !rest.is_empty() {
+        if quoted {
+            let ch = rest.chars().next().expect("quoted character");
+            if escaped {
+                escaped = false;
+            } else if ch == '\\' {
+                escaped = true;
+            } else if ch == '"' {
+                quoted = false;
+            }
+            rest = &rest[ch.len_utf8()..];
+            continue;
+        }
+        if rest.starts_with('"') {
+            quoted = true;
+            rest = &rest[1..];
+            continue;
+        }
+        if rest.starts_with(&key) {
+            let value = &rest[key.len()..];
+            let end = value
+                .find([' ', ')'])
+                .ok_or_else(|| fail("marker-absent", name))?;
+            return Ok(&value[..end]);
+        }
+        let ch = rest.chars().next().expect("record character");
+        rest = &rest[ch.len_utf8()..];
+    }
+    Err(fail("marker-absent", name))
 }
 
 fn require_field(record: &str, name: &str, expected: &str) -> Result<(), PackFailure> {
