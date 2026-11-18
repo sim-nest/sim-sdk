@@ -5,24 +5,43 @@
 
 //! Exact release-closure evidence checks.
 
+#[path = "release_binding.rs"]
+mod binding;
 #[path = "release_closure.rs"]
 mod closure;
 #[path = "release_receipt.rs"]
 mod receipt;
 #[path = "release_replay.rs"]
 mod replay;
+#[path = "release_retirement.rs"]
+mod retirement;
+#[path = "release_selection.rs"]
+mod selection;
 #[path = "release_source.rs"]
 mod source;
+#[path = "release_transfer.rs"]
+mod transfer;
 #[path = "release_validation.rs"]
 mod validation;
 #[path = "release_worktree.rs"]
 mod worktree;
 
+pub use binding::{
+    ObservedBindingCatalog, ObservedIdentityRoundtrip, bind_binding_catalog,
+    bind_identity_roundtrip, observe_binding_catalog, observe_identity_roundtrip,
+};
 pub use replay::{
     ExecutedEntry, ExecutedJournal, ObservedJournalCompletion, format_executed_journal,
     observe_journal_completion,
 };
+pub use retirement::{ObservedRetirementGuard, bind_retirement_guard, observe_retirement_guard};
+pub use selection::{
+    ObservedSourceSelection, SelectedSource, bind_source_selection, observe_source_selection,
+};
 pub use source::{ObservedSourceRelease, observe_source_identity};
+pub use transfer::{
+    ObservedAuthorityTransfer, TransferSource, bind_authority_transfer, observe_authority_transfer,
+};
 pub use validation::{ObservedOwnerValidation, bind_owner_validation, observe_owner_validation};
 pub use worktree::{GitPackage, ObservedGitRelease, bind_git_release, observe_git_release};
 
@@ -73,6 +92,21 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/owner-validation" {
             return validation::observations(request);
+        }
+        if request.scope == "release/source-selection" {
+            return selection::observations(request);
+        }
+        if request.scope == "release/retirement-guard" {
+            return retirement::observations(request);
+        }
+        if request.scope == "release/authority-transfer" {
+            return transfer::observations(request);
+        }
+        if request.scope == "release/binding-catalog" {
+            return binding::binding_observations(request);
+        }
+        if request.scope == "release/identity-roundtrip" {
+            return binding::identity_observations(request);
         }
         if request.scope == "completion/replay" {
             return replay::observations(request);
