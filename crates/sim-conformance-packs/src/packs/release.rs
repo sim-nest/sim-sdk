@@ -13,6 +13,8 @@ mod boot;
 mod brochure;
 #[path = "release_closure.rs"]
 mod closure;
+#[path = "release_index.rs"]
+mod index_guard;
 #[path = "release_observed.rs"]
 mod observed;
 #[path = "release_receipt.rs"]
@@ -40,6 +42,7 @@ pub use binding::{
 };
 pub use boot::{ObservedBootGuard, bind_boot_guard, observe_boot_guard};
 pub use brochure::{ObservedBrochureGuard, bind_brochure_guard, observe_brochure_guard};
+pub use index_guard::{ObservedIndexGuard, bind_index_guard, observe_index_guard};
 pub use observed::{
     ObservedPublished, ObservedReleaseObligations, PublishedObligation, ReleaseObligations,
     bind_release_obligations, observe_release_obligations,
@@ -127,6 +130,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/brochure-guard" {
             return brochure::observations(request);
+        }
+        if request.scope == "release/index-guard" {
+            return index_guard::observations(request);
         }
         if request.scope == "release/authority-transfer" {
             return transfer::observations(request);
