@@ -29,6 +29,8 @@ mod replay;
 mod retirement;
 #[path = "release_roundtrip.rs"]
 mod roundtrip;
+#[path = "release_route.rs"]
+mod route_guard;
 #[path = "release_selection.rs"]
 mod selection;
 #[path = "release_source.rs"]
@@ -60,6 +62,7 @@ pub use retirement::{ObservedRetirementGuard, bind_retirement_guard, observe_ret
 pub use roundtrip::{
     ObservedSourceRoundtrip, SourceRoundtrip, bind_source_roundtrip, observe_source_roundtrip,
 };
+pub use route_guard::{ObservedRouteGuard, bind_route_guard, observe_route_guard};
 pub use selection::{
     ObservedSourceSelection, SelectedSource, bind_source_selection, observe_source_selection,
 };
@@ -141,6 +144,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/recipe-guard" {
             return recipe_guard::observations(request);
+        }
+        if request.scope == "release/route-guard" {
+            return route_guard::observations(request);
         }
         if request.scope == "release/authority-transfer" {
             return transfer::observations(request);
