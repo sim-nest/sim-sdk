@@ -12,7 +12,9 @@ mod replay;
 #[path = "release_source.rs"]
 mod source;
 
-pub use replay::observe_phase_replay;
+pub use replay::{
+    ExecutedEntry, ExecutedJournal, format_executed_journal, observe_journal_completion,
+};
 pub use source::observe_source_identity;
 
 use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};

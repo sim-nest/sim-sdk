@@ -3,14 +3,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-//! Replay-digest observations for one executed portable phase union.
+//! Journal completion observations for one executed export.
 //!
-//! The pack reads the injected replay body. It does not read a caller
-//! boolean, a source-deck label, a manifest, or a completion claim. Each
-//! line is one executed leaf, `phase/NN` plus its digest, from `phase/00`
-//! through `phase/28`. The receipt subject is the subject the caller names.
-//! Its result is `completion/claim-17`. A missing or refused body produces
-//! no receipt.
+//! The pack reads the injected export, republishes it, and checks replay,
+//! reopen, snapshot, shared references, and telemetry removal by executing
+//! them. It does not read a caller boolean, a phase digest list, a manifest,
+//! or a completion claim. The receipt subject is the subject the caller
+//! names. Its result is `completion/claim-17`. A missing or refused export
+//! produces no receipt.
 
 use std::collections::BTreeSet;
 
@@ -30,25 +30,23 @@ use sim_lib_roadmap_runner::{
 
 use crate::{CheckObservation, MemorySubject, PackFailure, PackRequest, PackVerdict, find_pack};
 
-const PHASES: usize = 29;
-const MAX_BYTES: usize = 65_536;
+#[path = "release_journal.rs"]
+mod journal;
+
+pub use journal::{ExecutedEntry, ExecutedJournal, format_executed_journal};
+
 const SCOPE: &str = "completion/replay";
-const FACT: &str = "release.replay-body";
 const RESULT: &str = "completion/claim-17";
 const DOMAIN: &str = "completion/replay";
+const PROOF: &str = "journal-replay";
 
-struct Leaf {
-    name: String,
-    digest: String,
-}
-
-/// Receipt the proof catalog admitted for one observed phase-union replay.
-pub struct ObservedPhaseReplay {
+/// Receipt the proof catalog admitted for one re-executed journal.
+pub struct ObservedJournalCompletion {
     /// Subject the checker invocation and the receipt both name.
     pub subject: String,
     /// `completion/claim-17` for this subject.
     ///
-    /// The digest stays in the admitted replay body. It is not a tail on
+    /// The replay encoding stays in the proof leaf. It is not a tail on
     /// this result.
     pub result: String,
     /// Catalog that admitted the evidence.
@@ -63,14 +61,17 @@ pub struct ObservedPhaseReplay {
     pub revocation: RevocationStatus,
 }
 
-/// Checks one injected replay body and admits the derived claim receipt.
+/// Re-executes one injected journal export and admits the derived receipt.
 ///
 /// # Errors
 ///
-/// Returns a pack refusal when the body is missing a required leaf, names a
-/// publication or the construction specimen, or the catalog refuses the
-/// constructed receipt.
-pub fn observe_phase_replay(subject: &str, body: &str) -> Result<ObservedPhaseReplay, PackFailure> {
+/// Returns a pack refusal when the export is missing a journal law, names a
+/// publication or the construction specimen, is a phase digest list, or the
+/// catalog refuses the constructed receipt.
+pub fn observe_journal_completion(
+    subject: &str,
+    body: &str,
+) -> Result<ObservedJournalCompletion, PackFailure> {
     let checked =
         CheckedSubjectId::from_text(subject).map_err(|_| fail("subject-identity", subject))?;
     let rendered = render(checked.content_id());
@@ -80,7 +81,7 @@ pub fn observe_phase_replay(subject: &str, body: &str) -> Result<ObservedPhaseRe
         .checker_binding()
         .map_err(|error| fail("invalid-static-binding", &error.to_string()))?;
     let binding_id = render(binding.id().content_id());
-    let evidence = MemorySubject::default().with(FACT, body);
+    let evidence = MemorySubject::default().with(journal::FACT, body);
     let verdict = super::check(&PackRequest {
         checker: "checker/c-release",
         binding: &binding_id,
@@ -102,83 +103,76 @@ pub(super) fn observations(
     let mut body = None;
     for key in request.evidence.fact_keys() {
         match key {
-            FACT => body = request.evidence.fact(key),
+            journal::FACT => body = request.evidence.fact(key),
             other => return Err(fail("unexpected-fact", other)),
         }
     }
     let Some(body) = body else {
-        return Err(fail("missing-replay", FACT));
+        return Err(fail("missing-journal", journal::FACT));
     };
-    let leaves = parse_body(body)?;
-    let observations = leaves
-        .iter()
-        .map(|leaf| observation("release.replay", leaf.line()))
-        .collect::<Vec<_>>();
-    super::refuse_claim_values(&observations)?;
-    Ok(observations)
+    let inspected = journal::inspect(body)?;
+    super::refuse_claim_values(&inspected.observations)?;
+    Ok(inspected.observations)
 }
 
 fn admit_parsed(
     subject: &str,
     body: &str,
     observations: &[CheckObservation],
-) -> Result<ObservedPhaseReplay, PackFailure> {
-    let leaves = parse_body(body)?;
-    let lines = leaves.iter().map(Leaf::line).collect::<Vec<_>>();
+) -> Result<ObservedJournalCompletion, PackFailure> {
+    let inspected = journal::inspect(body)?;
     let mut observed = observations
         .iter()
-        .filter(|item| item.key == "release.replay")
-        .map(|item| item.value.clone())
+        .map(|item| (item.key.as_str(), item.value.as_str()))
         .collect::<Vec<_>>();
     observed.sort();
-    let mut expected = lines.clone();
+    let mut expected = inspected
+        .observations
+        .iter()
+        .map(|item| (item.key.as_str(), item.value.as_str()))
+        .collect::<Vec<_>>();
     expected.sort();
-    if observed != expected || observations.len() != leaves.len() {
-        return Err(fail("evidence-mismatch", "release.replay"));
+    if observed != expected || observations.len() != inspected.observations.len() {
+        return Err(fail("evidence-mismatch", journal::FACT));
     }
-    let found = discovered(&leaves);
-    if found.len() != leaves.len() {
-        return Err(fail("missing-replay", FACT));
+    if inspected.left != inspected.right || inspected.left.as_slice() == body.as_bytes() {
+        return Err(fail("bad-record", journal::FACT));
     }
+    let text = source_text(&inspected.storage);
+    let found = discovered(&inspected.storage);
+    let selected = [&found];
     let leaf = ProofLeaf::ArtifactEquality {
-        name: "replay-digest".into(),
-        left: body.as_bytes().to_vec(),
-        right: body.as_bytes().to_vec(),
+        name: PROOF.into(),
+        left: inspected.left,
+        right: inspected.right,
     };
     let scope = CheckScopeId::from_text(SCOPE)
         .map_err(|error| fail("receipt-refused", &error.to_string()))?;
     let subject_id = CheckedSubjectId::from_text(subject)
         .map_err(|error| fail("subject-identity", &error.to_string()))?;
-    let policy = PolicyId::from_text("policy/replay-digest")
+    let policy = PolicyId::from_text("policy/journal-replay")
         .map_err(|error| fail("receipt-refused", &error.to_string()))?;
-    let mut shape_members = found
-        .iter()
-        .map(|row| row.semantic.clone())
-        .collect::<Vec<_>>();
-    shape_members.sort();
-    shape_members.dedup();
     let claim = EvidenceClaim {
-        proof: "replay-digest".into(),
+        proof: PROOF.into(),
         subject: subject_id.clone(),
         scope: scope.clone(),
         checker_receipt: CheckerReceiptId::from_text("receipt/unused")
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-        projections: vec!["projection/replay".into()],
-        environment: "environment/replay-digest".into(),
-        source_text: source_text(&leaves),
-        members: shape_members,
+        projections: vec!["projection/journal-replay".into()],
+        environment: "environment/journal-replay".into(),
+        source_text: text,
+        members: vec![found.semantic.clone()],
         domains: vec![DOMAIN.into()],
         policies: vec![policy.clone()],
         supports: Vec::new(),
         telemetry: String::new(),
         requested_grade: None,
     };
-    let selected = found.iter().collect::<Vec<_>>();
     let bound = input_closure(&leaf, &claim, &selected)?;
     let binding = receipt_binding(&scope)?;
     let invocation = binding
         .instantiate(
-            ProofCodeId::from_text("code/replay-digest")
+            ProofCodeId::from_text("code/journal-replay")
                 .map_err(|error| fail("receipt-refused", &error.to_string()))?,
             ConformancePackId::from_text("pack/release")
                 .map_err(|error| fail("receipt-refused", &error.to_string()))?,
@@ -192,10 +186,10 @@ fn admit_parsed(
         CheckerResultId::from_text(RESULT)
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
         EvidenceGrade::Release,
-        EvidenceProvenanceId::from_text("provenance/replay-digest")
+        EvidenceProvenanceId::from_text("provenance/journal-replay")
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
         policy,
-        EvidenceSetId::from_text("support/replay-digest")
+        EvidenceSetId::from_text("support/journal-replay")
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
         RevocationStatus::Current,
     )
@@ -222,7 +216,7 @@ fn admit_parsed(
             return Err(fail("receipt-refused", "release-reuse"));
         }
     }
-    Ok(ObservedPhaseReplay {
+    Ok(ObservedJournalCompletion {
         subject: subject.to_owned(),
         result: RESULT.to_owned(),
         catalog,
@@ -258,7 +252,7 @@ fn current(_: &CheckerReceiptId) -> RevocationStatus {
 fn receipt_binding(scope: &CheckScopeId) -> Result<CheckerBinding, PackFailure> {
     CheckerBinding::new(
         "checker/c-release".into(),
-        OwnerBindingId::from_text("owner/replay-digest")
+        OwnerBindingId::from_text("owner/journal-replay")
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
         "packs::release::check".into(),
         vec![
@@ -267,7 +261,7 @@ fn receipt_binding(scope: &CheckScopeId) -> Result<CheckerBinding, PackFailure> 
         ],
         OutputShapeId::from_text("shape/check-receipt")
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-        RevocationSourceId::from_text("revocation/replay-digest")
+        RevocationSourceId::from_text("revocation/journal-replay")
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
         CommandId::from_text("command/validate")
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
@@ -281,7 +275,7 @@ fn receipt_binding(scope: &CheckScopeId) -> Result<CheckerBinding, PackFailure> 
                 CheckArgument::SubjectSlot,
                 CheckArgument::ScopeSlot,
             ],
-            WorkingDirectoryPolicyId::from_text("cwd/replay")
+            WorkingDirectoryPolicyId::from_text("cwd/journal-replay")
                 .map_err(|error| fail("receipt-refused", &error.to_string()))?,
             EnvironmentPolicyId::from_text("environment/sealed")
                 .map_err(|error| fail("receipt-refused", &error.to_string()))?,
@@ -293,93 +287,14 @@ fn receipt_binding(scope: &CheckScopeId) -> Result<CheckerBinding, PackFailure> 
     .map_err(|error| fail("receipt-refused", &error.to_string()))
 }
 
-fn parse_body(text: &str) -> Result<Vec<Leaf>, PackFailure> {
-    if text.len() > MAX_BYTES {
-        return Err(fail("bound", FACT));
+fn discovered(storage: &str) -> DiscoveredDefinition {
+    DiscoveredDefinition {
+        class: "package",
+        domain: DOMAIN.to_owned(),
+        name: "journal-export".to_owned(),
+        semantic: semantic("package", &[DOMAIN, "git", "journal-export", "0", "leaf"]),
+        storage: storage.to_owned(),
     }
-    if text.contains('\r') {
-        return Err(fail("bad-record", FACT));
-    }
-    if text.contains("shade-1") {
-        return Err(fail("construction-specimen", FACT));
-    }
-    if text.contains("PortableClosed")
-        || text.contains("publication-confirmed")
-        || text.contains("completion/claim-")
-    {
-        return Err(fail("local-publication-claim", FACT));
-    }
-    if text.is_empty() || text.chars().all(|ch| ch == '\n') {
-        return Err(fail("missing-replay", FACT));
-    }
-    if !text.ends_with('\n') {
-        return Err(fail("bad-record", FACT));
-    }
-    let mut parts: Vec<&str> = text.split('\n').collect();
-    if parts.last().copied() == Some("") {
-        parts.pop();
-    }
-    if parts.iter().any(|line| line.is_empty()) || parts.len() != PHASES {
-        return Err(fail("bad-record", FACT));
-    }
-    parts
-        .iter()
-        .enumerate()
-        .map(|(index, line)| checked_line(index, line))
-        .collect()
-}
-
-fn checked_line(index: usize, line: &str) -> Result<Leaf, PackFailure> {
-    let Some((name, digest)) = line.split_once(' ') else {
-        return Err(fail("bad-record", "release.replay"));
-    };
-    if digest.contains(' ') || name != format!("phase/{index:02}") || !is_digest(digest) {
-        return Err(fail("bad-record", "release.replay"));
-    }
-    Ok(Leaf {
-        name: name.to_owned(),
-        digest: digest.to_owned(),
-    })
-}
-
-fn is_digest(value: &str) -> bool {
-    value.len() == 64
-        && value
-            .bytes()
-            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
-}
-
-impl Leaf {
-    fn line(&self) -> String {
-        format!("{} {}", self.name, self.digest)
-    }
-}
-
-fn discovered(leaves: &[Leaf]) -> Vec<DiscoveredDefinition> {
-    leaves
-        .iter()
-        .map(|leaf| DiscoveredDefinition {
-            class: "package",
-            domain: DOMAIN.to_owned(),
-            name: leaf.name.clone(),
-            semantic: semantic("package", &[DOMAIN, "git", leaf.name.as_str(), "0", "leaf"]),
-            storage: leaf.digest.clone(),
-        })
-        .collect()
-}
-
-fn source_text(leaves: &[Leaf]) -> String {
-    let mut text = String::from(
-        "sim-world-inputs-v1\nroot-package replay-digest\ndomain completion/replay . compiling replay\n",
-    );
-    for leaf in leaves {
-        text.push_str("member completion/replay git ");
-        text.push_str(&leaf.name);
-        text.push_str(" 0 leaf ");
-        text.push_str(&leaf.digest);
-        text.push_str(" git leaf\n");
-    }
-    text
 }
 
 fn semantic(class: &str, fields: &[&str]) -> String {
@@ -398,11 +313,10 @@ fn push_field(out: &mut String, field: &str) {
     out.push(';');
 }
 
-fn observation(key: &str, value: impl Into<String>) -> CheckObservation {
-    CheckObservation {
-        key: key.to_owned(),
-        value: value.into(),
-    }
+fn source_text(storage: &str) -> String {
+    format!(
+        "sim-world-inputs-v1\nroot-package journal-replay\ndomain completion/replay . compiling replay\nmember completion/replay git journal-export 0 leaf {storage} git leaf\n"
+    )
 }
 
 fn fail(code: &'static str, detail: &str) -> PackFailure {

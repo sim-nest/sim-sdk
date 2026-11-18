@@ -3,45 +3,67 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+use std::sync::Arc;
+
 use sim_conformance_v02::{
     CheckScopeId, CheckedSubjectId, CheckerResultId, EvidenceGrade, RevocationStatus,
 };
+use sim_kernel::Symbol;
+use sim_lib_journal::{Journal, JournalEntry, JournalObject, MemoryBackend};
 use sim_lib_roadmap_runner::{EvidenceDecision, ProofLeaf};
 
-use crate::{CheckObservation, MemorySubject, PackRequest};
+use crate::{MemorySubject, PackRequest};
 
 use super::observations;
 
 const SUBJECT: &str = "subject/replay-example";
 const RESULT: &str = "completion/claim-17";
 
-fn digest(index: usize) -> String {
-    format!("{index:064x}")
+fn executed_body() -> String {
+    let backend = Arc::new(MemoryBackend::new());
+    let journal = Journal::new(Arc::clone(&backend));
+    let lease = journal.acquire_lease().expect("lease");
+    let object = JournalObject::from_bytes([9]);
+    let kind = Symbol::qualified("world", "fact");
+    let first = JournalEntry::new(0, None, kind.clone(), vec![object.id.clone()]);
+    let head = journal
+        .publish(&lease, None, vec![object.clone()], vec![first.clone()])
+        .expect("publish");
+    let second = JournalEntry::new(1, Some(first.id), kind, vec![object.id.clone()]);
+    journal
+        .publish(&lease, Some(&head), Vec::new(), vec![second])
+        .expect("reference");
+    let qualified = object_kind();
+    super::format_executed_journal(&super::ExecutedJournal {
+        objects: vec![object.bytes],
+        entries: vec![entry(0, &qualified), entry(1, &qualified)],
+        telemetry: vec!["side-channel".to_owned()],
+    })
 }
 
-fn line(index: usize, digest: &str) -> String {
-    format!("phase/{index:02} {digest}")
+fn object_kind() -> (String, String) {
+    let qualified = Symbol::qualified("world", "fact").as_qualified_str();
+    let (namespace, name) = qualified.split_once('/').expect("kind");
+    (namespace.to_owned(), name.to_owned())
 }
 
-fn body_from(lines: &[String]) -> String {
-    let mut text = String::new();
-    for line in lines {
-        text.push_str(line);
-        text.push('\n');
+fn entry(sequence: u64, kind: &(String, String)) -> super::ExecutedEntry {
+    super::ExecutedEntry {
+        sequence,
+        namespace: kind.0.clone(),
+        name: kind.1.clone(),
+        object: 0,
     }
-    text
 }
 
-fn full_lines() -> Vec<String> {
-    (0..29).map(|index| line(index, &digest(index))).collect()
-}
-
-fn full_body() -> String {
-    body_from(&full_lines())
+fn digest_list() -> String {
+    (0..29)
+        .map(|index| format!("phase/{index:02} {index:064x}\n"))
+        .collect()
 }
 
 fn refuses(text: &str, code: &str) {
-    match super::observe_phase_replay(SUBJECT, text) {
+    match super::observe_journal_completion(SUBJECT, text) {
         Err(error) => assert_eq!(error.code, code, "{text}"),
         Ok(_) => panic!("{code} must not admit a receipt"),
     }
@@ -58,9 +80,9 @@ fn request<'a>(evidence: &'a MemorySubject) -> PackRequest<'a> {
 }
 
 #[test]
-fn an_executed_replay_body_admits_claim_17() {
-    let text = full_body();
-    let observed = super::observe_phase_replay(SUBJECT, &text).expect("admitted");
+fn an_executed_journal_admits_claim_17() {
+    let text = executed_body();
+    let observed = super::observe_journal_completion(SUBJECT, &text).expect("admitted");
     assert_eq!(observed.subject, SUBJECT);
     assert_eq!(observed.result, RESULT);
     assert!(!observed.result.contains(' '));
@@ -86,13 +108,13 @@ fn an_executed_replay_body_admits_claim_17() {
         receipt.result(),
         &CheckerResultId::from_text(RESULT).expect("result")
     );
-    assert_eq!(receipt.scope(), &observed.scope);
-    match observed.catalog.leaf("replay-digest").expect("leaf") {
+    match observed.catalog.leaf("journal-replay").expect("leaf") {
         ProofLeaf::ArtifactEquality { left, right, .. } => {
-            assert_eq!(left, text.as_bytes());
-            assert_eq!(right, text.as_bytes());
+            assert_eq!(left, right);
+            assert_ne!(left.as_slice(), text.as_bytes());
+            assert_ne!(right.as_slice(), text.as_bytes());
         }
-        other => panic!("expected the replay body leaf, got {other:?}"),
+        other => panic!("expected two replay encodings, got {other:?}"),
     }
     match observed
         .catalog
@@ -105,10 +127,24 @@ fn an_executed_replay_body_admits_claim_17() {
 }
 
 #[test]
+fn a_fabricated_digest_list_cannot_discharge_claim_17() {
+    refuses(&digest_list(), "fabricated-digest-list");
+    refuses(
+        "phase/00 0000000000000000000000000000000000000000000000000000000000000001\n",
+        "fabricated-digest-list",
+    );
+    let evidence = MemorySubject::default().with("release.replay-body", digest_list());
+    match observations(&request(&evidence)) {
+        Err(error) => assert_eq!(error.code, "unexpected-fact"),
+        Ok(observations) => panic!("digest fact admitted {observations:?}"),
+    }
+}
+
+#[test]
 fn the_receipt_names_the_caller_subject() {
-    let text = full_body();
-    let first = super::observe_phase_replay(SUBJECT, &text).expect("first");
-    let second = super::observe_phase_replay("subject/other", &text).expect("second");
+    let text = executed_body();
+    let first = super::observe_journal_completion(SUBJECT, &text).expect("first");
+    let second = super::observe_journal_completion("subject/other", &text).expect("second");
     assert_eq!(first.result, RESULT);
     assert_eq!(second.result, RESULT);
     let first_receipt = first
@@ -124,60 +160,62 @@ fn the_receipt_names_the_caller_subject() {
 }
 
 #[test]
-fn a_changed_digest_changes_the_receipt() {
-    let text = full_body();
-    let first = super::observe_phase_replay(SUBJECT, &text).expect("first");
-    let mut lines = full_lines();
-    lines[4] = line(4, &digest(40));
-    let changed = body_from(&lines);
-    let second = super::observe_phase_replay(SUBJECT, &changed).expect("second");
+fn a_changed_object_changes_the_receipt() {
+    let text = executed_body();
+    let first = super::observe_journal_completion(SUBJECT, &text).expect("first");
+    let changed = text.replacen("object 09\n", "object 0a\n", 1);
+    assert_ne!(changed, text);
+    let second = super::observe_journal_completion(SUBJECT, &changed).expect("second");
     assert_eq!(first.result, second.result);
     assert_ne!(first.checker, second.checker);
-    match second.catalog.leaf("replay-digest").expect("leaf") {
+    match second.catalog.leaf("journal-replay").expect("leaf") {
         ProofLeaf::ArtifactEquality { left, right, .. } => {
-            assert_eq!(left, changed.as_bytes());
-            assert_eq!(right, changed.as_bytes());
-            assert_ne!(left, text.as_bytes());
+            assert_eq!(left, right);
+            assert_ne!(left.as_slice(), changed.as_bytes());
+            assert_ne!(left.as_slice(), text.as_bytes());
         }
-        other => panic!("expected the replay body leaf, got {other:?}"),
+        other => panic!("expected two replay encodings, got {other:?}"),
     }
 }
 
 #[test]
-fn refused_bodies_produce_no_receipt() {
-    refuses("", "missing-replay");
-    refuses("\n", "missing-replay");
+fn refused_exports_produce_no_receipt() {
+    refuses("", "missing-journal");
+    refuses("\n", "missing-journal");
     refuses("shade-1\n", "construction-specimen");
-    let mut shaded = full_body();
+    let mut shaded = executed_body();
     shaded.push_str("shade-1\n");
     refuses(&shaded, "construction-specimen");
     refuses("PortableClosed\n", "local-publication-claim");
     refuses("publication-confirmed\n", "local-publication-claim");
     refuses("completion/claim-17\n", "local-publication-claim");
-    let mut declared = full_body();
+    let mut declared = executed_body();
     declared.push_str("completion/claim-17\n");
     refuses(&declared, "local-publication-claim");
-    refuses(&body_from(&full_lines()[..28]), "bad-record");
-    let mut extra = full_lines();
-    extra.push(line(29, &digest(29)));
-    refuses(&body_from(&extra), "bad-record");
-    let mut skipped = full_lines();
-    skipped[5] = line(6, &digest(5));
-    refuses(&body_from(&skipped), "bad-record");
-    let mut upper = full_lines();
-    upper[1] = line(1, &"A".repeat(64));
-    refuses(&body_from(&upper), "bad-record");
-    let mut bare = full_body();
+    refuses("not-a-journal\n", "bad-record");
+    let mut bare = executed_body();
     bare.pop();
     refuses(&bare, "bad-record");
-    refuses(&full_body().replace('\n', "\r\n"), "bad-record");
-    refuses("phase/00\n", "bad-record");
+    refuses(&executed_body().replace('\n', "\r\n"), "bad-record");
+    let kind = object_kind();
+    let one = super::format_executed_journal(&super::ExecutedJournal {
+        objects: vec![vec![9]],
+        entries: vec![entry(0, &kind)],
+        telemetry: vec!["side-channel".to_owned()],
+    });
+    refuses(&one, "missing-journal");
+    let silent = super::format_executed_journal(&super::ExecutedJournal {
+        objects: vec![vec![9]],
+        entries: vec![entry(0, &kind), entry(1, &kind)],
+        telemetry: Vec::new(),
+    });
+    refuses(&silent, "missing-journal");
 }
 
 #[test]
 fn an_unexpected_fact_produces_no_observations() {
     let evidence = MemorySubject::default()
-        .with("release.replay-body", full_body())
+        .with("journal.export", executed_body())
         .with("release.manifest", "[package]\npublish = false\n");
     match observations(&request(&evidence)) {
         Err(error) => assert_eq!(error.code, "unexpected-fact"),
@@ -186,17 +224,32 @@ fn an_unexpected_fact_produces_no_observations() {
 }
 
 #[test]
-fn observations_name_each_executed_leaf() {
-    let evidence = MemorySubject::default().with("release.replay-body", full_body());
+fn observations_name_the_executed_journal_laws() {
+    let text = executed_body();
+    let evidence = MemorySubject::default().with("journal.export", text.clone());
     let seen = observations(&request(&evidence)).expect("observations");
-    let expected = full_lines()
-        .into_iter()
-        .map(|value| CheckObservation {
-            key: "release.replay".to_owned(),
-            value,
-        })
+    let keys = seen
+        .iter()
+        .map(|item| item.key.as_str())
         .collect::<Vec<_>>();
-    assert_eq!(seen, expected);
+    assert_eq!(
+        keys,
+        vec![
+            "journal.replay",
+            "journal.reopen",
+            "journal.snapshot",
+            "journal.reference",
+            "journal.telemetry",
+        ]
+    );
+    assert!(
+        seen.iter()
+            .all(|item| item.value != text && !item.value.is_empty())
+    );
+    assert_eq!(seen[0].value, seen[1].value);
+    assert_eq!(seen[0].value, seen[2].value);
+    assert_eq!(seen[0].value, seen[4].value);
+    assert_ne!(seen[3].value, seen[0].value);
 }
 
 #[test]
