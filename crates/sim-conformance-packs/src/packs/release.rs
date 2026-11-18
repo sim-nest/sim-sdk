@@ -7,6 +7,8 @@
 
 #[path = "release_binding.rs"]
 mod binding;
+#[path = "release_boot.rs"]
+mod boot;
 #[path = "release_closure.rs"]
 mod closure;
 #[path = "release_observed.rs"]
@@ -34,6 +36,7 @@ pub use binding::{
     ObservedBindingCatalog, ObservedIdentityRoundtrip, bind_binding_catalog,
     bind_identity_roundtrip, observe_binding_catalog, observe_identity_roundtrip,
 };
+pub use boot::{ObservedBootGuard, bind_boot_guard, observe_boot_guard};
 pub use observed::{
     ObservedPublished, ObservedReleaseObligations, PublishedObligation, ReleaseObligations,
     bind_release_obligations, observe_release_obligations,
@@ -115,6 +118,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/retirement-guard" {
             return retirement::observations(request);
+        }
+        if request.scope == "release/boot-guard" {
+            return boot::observations(request);
         }
         if request.scope == "release/authority-transfer" {
             return transfer::observations(request);
