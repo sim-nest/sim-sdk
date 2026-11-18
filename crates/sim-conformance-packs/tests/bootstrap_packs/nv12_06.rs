@@ -132,14 +132,17 @@ fn nv12_06_product_latency_and_produced_ownership_are_funded() {
         "product.query-effect-calls-zero",
     ])
     .with("product.query-command", "world/why");
-    assert!(matches!(
-        packs::product::check(&request(
-            "checker/c-product",
-            "product/query-latency",
-            &latency,
-        )),
-        PackVerdict::Pass { .. }
-    ));
+    match packs::product::check(&request(
+        "checker/c-product",
+        "product/query-latency",
+        &latency,
+    )) {
+        PackVerdict::Refused(failure) => {
+            assert_eq!(failure.code, "unexpected-fact");
+            assert_eq!(failure.detail, "product.query-command");
+        }
+        other => panic!("boolean latency facts are not a measurement, got {other:?}"),
+    }
 
     let produced = true_subject(&[
         "ownership.target-was-planned-before-construction",
