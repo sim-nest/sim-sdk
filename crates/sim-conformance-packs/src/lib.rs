@@ -3,8 +3,9 @@
 //! Every checker entrypoint is present. A scope is usable when its scenario
 //! calls the frozen executor and checks that result. Every other declared
 //! scope returns [`PackVerdict::UnimplementedPack`]. External ports are
-//! injected. The packs do not read files, spawn processes, inspect
-//! environment variables, or store their own receipts.
+//! injected. Release and product command scopes run the one program named by
+//! their subject and record that program's output. The packs do not store
+//! their own receipts.
 
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]

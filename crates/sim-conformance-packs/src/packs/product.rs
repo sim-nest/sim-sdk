@@ -4,8 +4,19 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 //! Loadable-product conformance pack.
+//!
+//! World, prove, deliver, and roadmap run the program named by
+//! [`COMMAND_FACT`] and record that program's output. Query latency compares
+//! its measurement facts. The remaining portable product scopes have no
+//! executed command.
+
+#[path = "product_command.rs"]
+mod command;
 
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
+
+/// Fact whose value is the filesystem path of the `sim` program.
+pub const COMMAND_FACT: &str = "product.command";
 
 /// Checks funded loadable-product scopes.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
@@ -26,43 +37,12 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     })
 }
 
-/// Loadable-product observations required beyond the world and latency scopes.
-pub const PORTABLE_SCENARIOS: [&str; 7] = [
-    "product.loads-through-sim-run",
-    "product.stable-value",
-    "product.index-route",
-    "product.recipe-checked",
-    "product.brochure-present",
-    "product.boot-smoke-passed",
-    "product.verb-not-baked",
-];
-
 fn portable(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
-    PORTABLE_SCENARIOS
-        .into_iter()
-        .map(|key| harness::expect_true(request, key))
-        .collect()
+    command::portable(request)
 }
 
 fn world(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
-    [
-        "product.world-loads-through-sim-run",
-        "product.world-verb-not-kernel-or-frame",
-        "product.world-project-stable-value",
-        "product.world-diff-stable-value",
-        "product.world-why-stable-value",
-        "product.world-read-only",
-        "product.world-no-observation-port",
-        "product.world-no-proof-execution-port",
-        "product.world-no-mutation-capability",
-        "product.world-index-route",
-        "product.world-recipe-checked",
-        "product.world-brochure-present",
-        "product.world-boot-smoke-passed",
-    ]
-    .into_iter()
-    .map(|key| harness::expect_true(request, key))
-    .collect()
+    command::world(request)
 }
 
 fn query_latency(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
