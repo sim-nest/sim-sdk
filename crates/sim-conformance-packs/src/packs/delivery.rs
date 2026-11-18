@@ -4,10 +4,20 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 //! Outward-delivery conformance pack.
+//!
+//! Each funded scope runs `world deliver model` and admits that program's
+//! record only when the seven delivery laws are printed in it. A caller fact
+//! is not a delivery.
 
-use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};
+#[path = "delivery_execute.rs"]
+mod execute;
 
-/// Scenarios every funded delivery scope must execute.
+use crate::{PackRequest, PackVerdict, harness};
+
+/// Fact whose value is the filesystem path of the `sim` program.
+pub const COMMAND_FACT: &str = "delivery.command";
+
+/// Laws the deliver record must show. These names are not caller facts.
 pub const SCENARIOS: [&str; 7] = [
     "delivery.already-true",
     "delivery.stale-observer-refused",
@@ -26,15 +36,8 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
             | "delivery/plan"
             | "delivery/adapters"
             | "delivery/real-canary"
-            | "delivery/composed" => scenarios(request),
+            | "delivery/composed" => execute::record(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })
-}
-
-fn scenarios(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {
-    SCENARIOS
-        .into_iter()
-        .map(|key| harness::expect_true(request, key))
-        .collect()
 }
