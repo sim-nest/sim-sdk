@@ -169,7 +169,7 @@ fn funded_delivery_and_authoring_scopes_execute_their_scenarios() {
 }
 
 #[test]
-fn portable_product_scopes_do_not_accept_a_world_fixture() {
+fn portable_product_scopes_do_not_accept_caller_supplied_truths() {
     let world = truths([
         "product.world-loads-through-sim-run",
         "product.world-verb-not-kernel-or-frame",
@@ -185,36 +185,35 @@ fn portable_product_scopes_do_not_accept_a_world_fixture() {
         "product.world-brochure-present",
         "product.world-boot-smoke-passed",
     ]);
-    let portable = truths(packs::product::PORTABLE_SCENARIOS);
+    let (code, _) = refusal(&execute("checker/c-product", "product/world", &world));
+    assert_eq!(code, "unexpected-fact");
+    let portable = truths([
+        "product.loads-through-sim-run",
+        "product.stable-value",
+        "product.index-route",
+        "product.recipe-checked",
+        "product.brochure-present",
+        "product.boot-smoke-passed",
+        "product.verb-not-baked",
+    ]);
     for scope in [
         "product/prove-plan",
         "product/prove",
-        "product/convergence-queries",
-        "product/landing-queries",
         "product/deliver",
         "product/roadmap",
+    ] {
+        let (code, detail) = refusal(&execute("checker/c-product", scope, &portable));
+        assert_eq!(code, "unexpected-fact", "{scope} {detail}");
+    }
+    for scope in [
+        "product/convergence-queries",
+        "product/landing-queries",
         "product/installed",
         "product/composed",
     ] {
-        assert_missing(
-            "checker/c-product",
-            scope,
-            &world,
-            "product.loads-through-sim-run",
-        );
-        assert_pass(
-            "checker/c-product",
-            scope,
-            &portable,
-            &packs::product::PORTABLE_SCENARIOS,
-        );
+        let (code, detail) = refusal(&execute("checker/c-product", scope, &portable));
+        assert_eq!(code, "unexecuted", "{scope} {detail}");
     }
-    let (code, _) = refusal(&execute(
-        "checker/c-product",
-        "product/prove",
-        &portable.with("product.verb-not-baked", "false"),
-    ));
-    assert_eq!(code, "evidence-mismatch");
 }
 
 #[test]

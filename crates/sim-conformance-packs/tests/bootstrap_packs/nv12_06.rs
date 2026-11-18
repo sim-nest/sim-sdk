@@ -121,10 +121,10 @@ fn nv12_06_product_latency_and_produced_ownership_are_funded() {
         "product.world-brochure-present",
         "product.world-boot-smoke-passed",
     ]);
-    assert!(matches!(
-        packs::product::check(&request("checker/c-product", "product/world", &world)),
-        PackVerdict::Pass { .. }
-    ));
+    match packs::product::check(&request("checker/c-product", "product/world", &world)) {
+        PackVerdict::Refused(failure) => assert_eq!(failure.code, "unexpected-fact"),
+        other => panic!("boolean world facts are not execution, got {other:?}"),
+    }
     let latency = true_subject(&[
         "product.query-warmups-20",
         "product.query-samples-200",
