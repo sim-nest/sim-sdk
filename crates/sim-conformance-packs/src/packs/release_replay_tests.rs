@@ -12,7 +12,7 @@ use sim_kernel::Symbol;
 use sim_lib_journal::{Journal, JournalEntry, JournalObject, MemoryBackend};
 use sim_lib_roadmap_runner::{EvidenceDecision, ProofLeaf};
 
-use crate::{MemorySubject, PackRequest};
+use crate::{MemorySubject, PackRequest, PackVerdict};
 
 use super::observations;
 
@@ -76,6 +76,26 @@ fn refuses_for(subject: &str, text: &str, code: &str) {
 
 fn subject_object(subject: &str) -> String {
     subject.bytes().map(|byte| format!("{byte:02x}")).collect()
+}
+
+fn rendered_subject(subject: &str) -> String {
+    let checked = CheckedSubjectId::from_text(subject).expect("subject");
+    super::render(checked.content_id())
+}
+
+fn public_check(subject: &str, body: &str) -> PackVerdict {
+    let spec = crate::find_pack("checker/c-release").expect("checker");
+    let binding = spec.checker_binding().expect("binding");
+    let binding = super::render(binding.id().content_id());
+    let rendered = rendered_subject(subject);
+    let evidence = MemorySubject::default().with("journal.export", body);
+    super::super::check(&PackRequest {
+        checker: "checker/c-release",
+        binding: &binding,
+        subject: &rendered,
+        scope: "completion/replay",
+        evidence: &evidence,
+    })
 }
 
 fn request<'a>(evidence: &'a MemorySubject) -> PackRequest<'a> {
@@ -258,7 +278,15 @@ fn an_unexpected_fact_produces_no_observations() {
 fn observations_name_the_executed_journal_laws() {
     let text = executed_body(SUBJECT);
     let evidence = MemorySubject::default().with("journal.export", text.clone());
-    let seen = observations(&request(&evidence)).expect("observations");
+    let rendered = rendered_subject(SUBJECT);
+    let seen = observations(&PackRequest {
+        checker: "checker/c-release",
+        binding: "core/sha256-datum-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        subject: &rendered,
+        scope: "completion/replay",
+        evidence: &evidence,
+    })
+    .expect("observations");
     let keys = seen
         .iter()
         .map(|item| item.key.as_str())
@@ -281,6 +309,40 @@ fn observations_name_the_executed_journal_laws() {
     assert_eq!(seen[0].value, seen[2].value);
     assert_eq!(seen[0].value, seen[4].value);
     assert_ne!(seen[3].value, seen[0].value);
+}
+
+#[test]
+fn the_registered_checker_refuses_a_second_subject() {
+    let body = executed_body("subject/never-executed-a");
+    assert!(
+        matches!(
+            public_check("subject/never-executed-a", &body),
+            PackVerdict::Pass { .. }
+        ),
+        "the bound subject must still pass the registered checker"
+    );
+    match public_check("subject/never-executed-b", &body) {
+        PackVerdict::Refused(error) => assert_eq!(error.code, "subject-mismatch"),
+        other => panic!("one export must not pass for a second subject, got {other:?}"),
+    }
+    let parent = "\
+journal-export-v1
+object 09
+entry 0 world fact 0
+entry 1 world fact 0
+telemetry side-channel
+";
+    for subject in ["subject/never-executed-a", "subject/never-executed-b"] {
+        assert!(
+            matches!(public_check(subject, parent), PackVerdict::Refused(_)),
+            "{subject} must refuse an export with no subject line"
+        );
+    }
+    let evidence = MemorySubject::default().with("journal.export", body);
+    match observations(&request(&evidence)) {
+        Err(error) => assert_eq!(error.code, "subject-mismatch"),
+        Ok(observations) => panic!("unbound request subject admitted {observations:?}"),
+    }
 }
 
 #[test]

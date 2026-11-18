@@ -9,9 +9,10 @@
 //! reopen, snapshot, shared references, and telemetry removal by executing
 //! them. It does not read a caller boolean, a phase digest list, a manifest,
 //! or a completion claim. The export names one subject and carries that
-//! subject's bytes as its shared object. The caller argument must equal
-//! that subject. The result is `completion/claim-17`. A missing or refused
-//! export produces no receipt.
+//! subject's bytes as its shared object. The registered request subject is
+//! the rendered content id of that subject, and the caller argument must
+//! name the same subject. The result is `completion/claim-17`. A missing or
+//! refused export produces no receipt.
 
 use std::collections::BTreeSet;
 
@@ -112,6 +113,11 @@ pub(super) fn observations(
         return Err(fail("missing-journal", journal::FACT));
     };
     let inspected = journal::inspect(body)?;
+    let bound = CheckedSubjectId::from_text(&inspected.subject)
+        .map_err(|_| fail("subject-mismatch", journal::FACT))?;
+    if render(bound.content_id()) != request.subject {
+        return Err(fail("subject-mismatch", journal::FACT));
+    }
     super::refuse_claim_values(&inspected.observations)?;
     Ok(inspected.observations)
 }
