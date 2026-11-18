@@ -355,6 +355,11 @@ pub(super) const PACKS: &[PackSpec] = &[
             "release/nv12-28",
             "release/git-worktree",
             "release/owner-validation",
+            "release/source-selection",
+            "release/retirement-guard",
+            "release/authority-transfer",
+            "release/binding-catalog",
+            "release/identity-roundtrip",
             "release/source-identity",
             "completion/replay"
         ],
@@ -389,6 +394,11 @@ pub(super) const PACKS: &[PackSpec] = &[
             "release/nv12-28",
             "release/git-worktree",
             "release/owner-validation",
+            "release/source-selection",
+            "release/retirement-guard",
+            "release/authority-transfer",
+            "release/binding-catalog",
+            "release/identity-roundtrip",
             "release/source-identity",
             "completion/replay"
         ]
