@@ -9,6 +9,8 @@
 mod binding;
 #[path = "release_boot.rs"]
 mod boot;
+#[path = "release_brochure.rs"]
+mod brochure;
 #[path = "release_closure.rs"]
 mod closure;
 #[path = "release_observed.rs"]
@@ -37,6 +39,7 @@ pub use binding::{
     bind_identity_roundtrip, observe_binding_catalog, observe_identity_roundtrip,
 };
 pub use boot::{ObservedBootGuard, bind_boot_guard, observe_boot_guard};
+pub use brochure::{ObservedBrochureGuard, bind_brochure_guard, observe_brochure_guard};
 pub use observed::{
     ObservedPublished, ObservedReleaseObligations, PublishedObligation, ReleaseObligations,
     bind_release_obligations, observe_release_obligations,
@@ -121,6 +124,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/boot-guard" {
             return boot::observations(request);
+        }
+        if request.scope == "release/brochure-guard" {
+            return brochure::observations(request);
         }
         if request.scope == "release/authority-transfer" {
             return transfer::observations(request);
