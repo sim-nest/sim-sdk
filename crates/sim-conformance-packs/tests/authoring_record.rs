@@ -229,6 +229,36 @@ fn an_empty_root_with_a_space_glued_to_a_second_record_is_extra() {
 }
 
 #[test]
+fn a_negative_effect_count_is_not_zero() {
+    let dir = scratch("effects");
+    let selected = SELECTED.replace("(effects 0)", "(effects -1)");
+    let program = write_sim(&dir, &selected, CONSULTED, SUPERSEDED);
+    let (code, detail) = refusal(&execute("authoring/family", &command(&program)));
+    assert_eq!(code, "record-mismatch");
+    assert_eq!(detail, "effects");
+}
+
+#[test]
+fn a_negative_subprocess_count_is_not_zero() {
+    let dir = scratch("subprocesses");
+    let selected = SELECTED.replace("(subprocesses 0)", "(subprocesses -1)");
+    let program = write_sim(&dir, &selected, CONSULTED, SUPERSEDED);
+    let (code, detail) = refusal(&execute("authoring/family", &command(&program)));
+    assert_eq!(code, "record-mismatch");
+    assert_eq!(detail, "subprocesses");
+}
+
+#[test]
+fn a_resident_phrase_is_not_resident() {
+    let dir = scratch("resident");
+    let selected = SELECTED.replace("(resident true)", "(resident \"not resident\")");
+    let program = write_sim(&dir, &selected, CONSULTED, SUPERSEDED);
+    let (code, detail) = refusal(&execute("authoring/composed", &command(&program)));
+    assert_eq!(code, "record-mismatch");
+    assert_eq!(detail, "resident");
+}
+
+#[test]
 fn an_unclosed_root_is_not_a_record() {
     let dir = scratch("unclosed");
     let selected = SELECTED.strip_suffix(')').expect("root closes");

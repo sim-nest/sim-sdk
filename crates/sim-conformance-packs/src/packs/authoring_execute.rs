@@ -111,14 +111,14 @@ fn is_gap(line: &str) -> bool {
 }
 
 fn require_plain(record: &str, name: &str, expected: &str) -> Result<(), PackFailure> {
-    if plain(record, name)? != expected {
+    if plain(record, name).ok() != Some(expected) {
         return Err(fail("record-mismatch", name));
     }
     Ok(())
 }
 
 fn require_count(record: &str, name: &str, expected: u64) -> Result<(), PackFailure> {
-    if count(record, name)? != expected {
+    if count(record, name).ok() != Some(expected) {
         return Err(fail("record-mismatch", name));
     }
     Ok(())
