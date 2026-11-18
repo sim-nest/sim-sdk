@@ -8,8 +8,9 @@
 //! The record must say `scope portable`, `native-credential false`, and
 //! either `caller-zero true` or `caller-zero false` with a retained role.
 //! `git show` reads that blob with `--no-replace-objects`. The provider
-//! directory is listed by the process. A credential file name refuses the
-//! receipt. The result is `authority-transfer`. It is not
+//! directory is listed by the process. A file named `credentials`, a
+//! private-key name, `publish-token`, or a `.pem` or `.key` suffix refuses
+//! the receipt. The result is `authority-transfer`. It is not
 //! `completion/claim-22`: the record is not an observed handoff event.
 
 use std::path::{Component, Path, PathBuf};
@@ -253,11 +254,24 @@ fn scan_provider(dir: &Path) -> Result<String, PackFailure> {
 
 fn credential_name(name: &str) -> bool {
     let lower = name.to_ascii_lowercase();
-    lower == "credentials.toml"
-        || lower == "credentials.json"
+    let stem = lower
+        .rsplit_once('.')
+        .map(|(stem, _)| stem)
+        .unwrap_or(lower.as_str());
+    stem == "credentials"
         || lower == "publish-token"
         || lower.ends_with(".pem")
         || lower.ends_with(".key")
+        || is_private_key_name(&lower)
+}
+
+fn is_private_key_name(lower: &str) -> bool {
+    for name in ["id_rsa", "id_dsa", "id_ecdsa", "id_ed25519"] {
+        if lower == name || lower.starts_with(&format!("{name}.")) {
+            return true;
+        }
+    }
+    false
 }
 
 fn verify_commit(source: &TransferSource) -> Result<String, PackFailure> {

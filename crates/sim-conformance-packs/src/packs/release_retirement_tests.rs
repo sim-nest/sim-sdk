@@ -50,6 +50,29 @@ fn retirement_guard_refuses_a_non_zero_script() {
 }
 
 #[test]
+fn retirement_guard_uses_the_root_as_its_working_directory() {
+    let dir = scratch("cwd");
+    std::fs::write(dir.join("marker"), b"in-root").expect("marker");
+    write_script(&dir, "test -f marker\n");
+    observe_retirement_guard(SUBJECT, &dir).expect("root marker");
+
+    let outside = std::env::current_dir()
+        .expect("cwd")
+        .join(format!(".nv12-cwd-marker-{}", std::process::id()));
+    let _ = std::fs::remove_file(&outside);
+    std::fs::write(&outside, b"outside").expect("outside");
+    let name = outside.file_name().expect("name").to_string_lossy();
+    write_script(&dir, &format!("test -f {name}\n"));
+    let result = observe_retirement_guard(SUBJECT, &dir);
+    let _ = std::fs::remove_file(&outside);
+    match result {
+        Err(error) => assert_eq!(error.code, "process-failed"),
+        Ok(_) => panic!("a file outside the root satisfied the guard"),
+    }
+    std::fs::remove_dir_all(dir).ok();
+}
+
+#[test]
 fn retirement_guard_refuses_a_missing_script() {
     let dir = scratch("missing");
     match observe_retirement_guard(SUBJECT, &dir) {

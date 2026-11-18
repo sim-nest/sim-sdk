@@ -54,6 +54,22 @@ fn authority_transfer_refuses_a_credential_file() {
 }
 
 #[test]
+fn authority_transfer_refuses_credential_like_names() {
+    for name in ["credentials", "credentials.yaml", "id_rsa"] {
+        let dir = scratch(name);
+        let provider = dir.join("provider");
+        std::fs::create_dir(&provider).expect("provider");
+        std::fs::write(provider.join(name), b"secret").expect("credential");
+        let rev = commit(&dir, RECORD);
+        match observe_authority_transfer(SUBJECT, &coords(&dir, &rev, &provider)) {
+            Err(error) => assert_eq!(error.code, "provider-credential"),
+            Ok(_) => panic!("{name} admitted a receipt"),
+        }
+        std::fs::remove_dir_all(dir).ok();
+    }
+}
+
+#[test]
 fn authority_transfer_refuses_a_native_scope() {
     let dir = scratch("scope");
     let provider = dir.join("provider");

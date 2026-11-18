@@ -6,20 +6,20 @@
 //! Retirement guard executed from the repository that contains it.
 //!
 //! The caller names a repository root. This module runs
-//! `scripts/check-v3-retired.sh` in that root through `/bin/sh` and
-//! records the output hashes. It does not take a command string or a
-//! passed count. The result is `retirement-guard`. It is not
-//! `completion/claim-3`: the script is one owner's guard, not a scan of
-//! every production and conformance closure.
+//! `scripts/check-v3-retired.sh` through `/bin/sh` with that root as the
+//! working directory and records the output hashes. It does not take a
+//! command string or a passed count. The result is `retirement-guard`.
+//! It is not `completion/claim-3`: the script is one owner's guard, not
+//! a scan of every production and conformance closure.
 
 use std::path::{Path, PathBuf};
+use std::process::Command;
 
 use sha2::{Digest, Sha256};
 use sim_conformance_v02::{CheckScopeId, CheckedSubjectId, RevocationStatus};
 use sim_lib_roadmap_runner::{AdmittedEvidence, ProofCatalog};
 
 use super::receipt::{self, AdmitExecuted, PackageRow};
-use crate::packs::completion_claim::execute_process;
 use crate::{CheckObservation, MemorySubject, PackFailure, PackRequest, PackVerdict, find_pack};
 
 const SCOPE: &str = "release/retirement-guard";
@@ -53,7 +53,7 @@ pub struct ObservedRetirementGuard {
 /// # Errors
 ///
 /// Returns a refusal when the script is absent, leaves the root, or exits
-/// non-zero.
+/// non-zero. The script's working directory is the canonical root.
 pub fn observe_retirement_guard(
     subject: &str,
     root: &Path,
@@ -106,21 +106,16 @@ pub(super) fn observations(
 ) -> Result<Vec<CheckObservation>, PackFailure> {
     let root = decode_root(one_fact(request)?)?;
     let script = script_in_root(&root)?;
-    let ran = execute_process(
-        "/bin/sh",
-        &[script
-            .to_str()
-            .ok_or_else(|| fail("bad-record", "script"))?],
-    )?;
+    let (stdout, stderr) = run_in_root(&root, &script)?;
     let mut encoded = String::new();
     receipt::push_field(&mut encoded, &root.to_string_lossy());
     receipt::push_field(
         &mut encoded,
-        std::str::from_utf8(&ran.stdout).map_err(|_| fail("bad-record", "stdout"))?,
+        std::str::from_utf8(&stdout).map_err(|_| fail("bad-record", "stdout"))?,
     );
     receipt::push_field(
         &mut encoded,
-        std::str::from_utf8(&ran.stderr).map_err(|_| fail("bad-record", "stderr"))?,
+        std::str::from_utf8(&stderr).map_err(|_| fail("bad-record", "stderr"))?,
     );
     Ok(vec![observation("release.execution", encoded)])
 }
@@ -165,6 +160,32 @@ fn admit_rows(
         scope: admitted.scope,
         revocation: admitted.revocation,
     })
+}
+
+fn run_in_root(root: &Path, script: &Path) -> Result<(Vec<u8>, Vec<u8>), PackFailure> {
+    let program = "/bin/sh";
+    let script_text = script
+        .to_str()
+        .ok_or_else(|| fail("bad-record", "script"))?;
+    if script_text.contains('\0') {
+        return Err(fail("process-unrun", "argv"));
+    }
+    let output = Command::new(program)
+        .arg(script_text)
+        .current_dir(root)
+        .output()
+        .map_err(|_| fail("process-unrun", program))?;
+    if output.stdout.len() > 1_048_576 || output.stderr.len() > 1_048_576 {
+        return Err(fail("process-output", program));
+    }
+    let status = output
+        .status
+        .code()
+        .ok_or_else(|| fail("process-unrun", "signal"))?;
+    if status != 0 {
+        return Err(fail("process-failed", &status.to_string()));
+    }
+    Ok((output.stdout, output.stderr))
 }
 
 fn script_in_root(root: &Path) -> Result<PathBuf, PackFailure> {
