@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Canonical identity register and golden-vector checks.
 
 use sim_conformance_core::{IdKind, SemanticId, StorageId};
@@ -13,8 +18,27 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         "identity/journal-normalized" => journal_normalized(request),
         "identity/closure-final" => closure_final(request),
         "identity/store-roundtrip" => store_roundtrip(request),
+        "identity/final-seal" => final_seal(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
+}
+
+/// Boolean observations that accompany the final-seal content identity.
+pub const FINAL_SEAL_FACTS: [&str; 3] = [
+    "identity.final-seal-binds-claims",
+    "identity.final-seal-excludes-own-receipt",
+    "identity.open-gap-refuses-seal",
+];
+
+fn final_seal(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {
+    let mut observations = vec![harness::expect_content_identity(
+        request,
+        "identity.final-seal",
+    )?];
+    for key in FINAL_SEAL_FACTS {
+        observations.push(harness::expect_true(request, key)?);
+    }
+    Ok(observations)
 }
 
 fn closure_final(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {

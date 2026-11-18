@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Evidence conformance pack.
 
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
@@ -33,9 +38,35 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         match request.scope {
             "evidence/projection" => projection(request),
             "evidence/predicted-closure" => predicted_closure(request),
+            "evidence/composed" => composed(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })
+}
+
+/// Projection observations required on their own and inside the composed scope.
+pub const PROJECTION_FACTS: [&str; 12] = [
+    "evidence.projection-domain-tag-unique",
+    "evidence.provider-package-version-bound",
+    "evidence.provider-code-identity-bound",
+    "evidence.projector-policy-bound",
+    "evidence.checked-config-bound",
+    "evidence.consumed-semantic-inputs-bound",
+    "evidence.diagnostic-envelope-excluded",
+    "evidence.equal-input-cross-host-stable",
+    "evidence.semantic-delta-changes-digest",
+    "evidence.affected-closure-independently-expected",
+    "evidence.explanation-path-exact",
+    "evidence.qualification-revocation-scoped",
+];
+
+const COMPOSED_FACT: &str = "evidence.composed-partial-refused";
+
+fn composed(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
+    let mut observations = projection(request)?;
+    observations.extend(predicted_closure(request)?);
+    observations.push(harness::expect_true(request, COMPOSED_FACT)?);
+    Ok(observations)
 }
 
 fn predicted_closure(
@@ -48,21 +79,8 @@ fn predicted_closure(
 }
 
 fn projection(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
-    [
-        "evidence.projection-domain-tag-unique",
-        "evidence.provider-package-version-bound",
-        "evidence.provider-code-identity-bound",
-        "evidence.projector-policy-bound",
-        "evidence.checked-config-bound",
-        "evidence.consumed-semantic-inputs-bound",
-        "evidence.diagnostic-envelope-excluded",
-        "evidence.equal-input-cross-host-stable",
-        "evidence.semantic-delta-changes-digest",
-        "evidence.affected-closure-independently-expected",
-        "evidence.explanation-path-exact",
-        "evidence.qualification-revocation-scoped",
-    ]
-    .into_iter()
-    .map(|key| harness::expect_true(request, key))
-    .collect()
+    PROJECTION_FACTS
+        .into_iter()
+        .map(|key| harness::expect_true(request, key))
+        .collect()
 }

@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Durable-operation conformance pack.
 
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
@@ -8,8 +13,21 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         "operation/log" => operation_log(request),
         "operation/reconcile" => operation_reconcile(request),
         "operation/local" => operation_local(request),
+        "operation/composed" => operation_composed(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
+}
+
+const COMPOSED_FACT: &str = "operation.composed-partial-refused";
+
+fn operation_composed(
+    request: &PackRequest<'_>,
+) -> Result<Vec<CheckObservation>, crate::PackFailure> {
+    let mut observations = operation_log(request)?;
+    observations.extend(operation_reconcile(request)?);
+    observations.extend(operation_local(request)?);
+    observations.push(harness::expect_true(request, COMPOSED_FACT)?);
+    Ok(observations)
 }
 
 fn operation_reconcile(

@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 use std::collections::BTreeSet;
 
 use sim_artifact_facet::{
@@ -50,11 +55,9 @@ fn catalog_has_all_bindings_and_future_scopes_fail_closed() {
             "journal/composed",
             &evidence,
         )),
-        PackVerdict::UnimplementedPack {
-            checker: "checker/c-journal",
-            ref funded_phase,
-            ..
-        } if funded_phase == "NV12.26"
+        PackVerdict::Refused(ref failure)
+            if failure.code == "missing-evidence"
+                && failure.detail == "journal.old-only-replay"
     ));
     assert!(matches!(
         packs::facet::check(&request("checker/c-facet", "facet/landing", &evidence)),

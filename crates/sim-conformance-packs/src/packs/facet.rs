@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Pure artifact-facet conformance scenarios.
 
 use sim_artifact_facet::{
@@ -38,9 +43,19 @@ impl FacetLaw for CanonicalFacetLaw {
 
 /// Checks the exact requested facet scope.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
-    harness::check_registered("checker/c-facet", request, |_| {
-        check_implementation(&CanonicalFacetLaw)
+    harness::check_registered("checker/c-facet", request, |request| match request.scope {
+        "facet/pure" => check_implementation(&CanonicalFacetLaw),
+        "facet/composed" => composed(request),
+        _ => unreachable!("availability was checked before dispatch"),
     })
+}
+
+const COMPOSED_FACT: &str = "facet.composed-partial-refused";
+
+fn composed(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {
+    let mut observations = check_implementation(&CanonicalFacetLaw)?;
+    observations.push(harness::expect_true(request, COMPOSED_FACT)?);
+    Ok(observations)
 }
 
 /// Runs the complete bootstrap pure-facet scenarios through a public trait.

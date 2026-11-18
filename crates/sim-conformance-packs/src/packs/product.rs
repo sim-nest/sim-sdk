@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Loadable-product conformance pack.
 
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
@@ -8,9 +13,35 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         match request.scope {
             "product/world" => world(request),
             "product/query-latency" => query_latency(request),
+            "product/prove-plan"
+            | "product/prove"
+            | "product/convergence-queries"
+            | "product/landing-queries"
+            | "product/deliver"
+            | "product/roadmap"
+            | "product/installed"
+            | "product/composed" => portable(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })
+}
+
+/// Loadable-product observations required beyond the world and latency scopes.
+pub const PORTABLE_SCENARIOS: [&str; 7] = [
+    "product.loads-through-sim-run",
+    "product.stable-value",
+    "product.index-route",
+    "product.recipe-checked",
+    "product.brochure-present",
+    "product.boot-smoke-passed",
+    "product.verb-not-baked",
+];
+
+fn portable(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
+    PORTABLE_SCENARIOS
+        .into_iter()
+        .map(|key| harness::expect_true(request, key))
+        .collect()
 }
 
 fn world(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
