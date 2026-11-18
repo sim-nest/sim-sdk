@@ -31,6 +31,22 @@ pub(super) fn refuse_claim_values(observations: &[CheckObservation]) -> Result<(
     closure::refuse_claim_values(observations)
 }
 
+/// Closure observations shared by the funded release phase scopes.
+pub const CLOSURE_FACTS: [&str; 12] = [
+    "release.owner-validation-passed",
+    "release.owner-docs-passed",
+    "release.packages-assembled",
+    "release.audit-passed",
+    "release.authorship-passed",
+    "release.tags-exact",
+    "release.pins-exact",
+    "release.mirrors-current",
+    "release.generated-converged",
+    "release.boot-smoke-passed",
+    "release.publication-confirmed",
+    "release.standalone-ci-green",
+];
+
 /// Checks the exact requested release scope.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-release", request, |request| {
@@ -46,22 +62,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         if request.scope == "completion/replay" {
             return replay::observations(request);
         }
-        [
-            "release.owner-validation-passed",
-            "release.owner-docs-passed",
-            "release.packages-assembled",
-            "release.audit-passed",
-            "release.authorship-passed",
-            "release.tags-exact",
-            "release.pins-exact",
-            "release.mirrors-current",
-            "release.generated-converged",
-            "release.boot-smoke-passed",
-            "release.publication-confirmed",
-            "release.standalone-ci-green",
-        ]
-        .into_iter()
-        .map(|key| harness::expect_true(request, key))
-        .collect::<Result<Vec<CheckObservation>, _>>()
+        CLOSURE_FACTS
+            .into_iter()
+            .map(|key| harness::expect_true(request, key))
+            .collect::<Result<Vec<CheckObservation>, _>>()
     })
 }

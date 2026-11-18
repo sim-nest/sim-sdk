@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Pure bounded implementation-packet conformance scenarios.
 
 use sim_conformance_core::{
@@ -51,8 +56,18 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-work", request, |request| match request.scope {
         "work/packet-pure" => check_implementation(&CanonicalPacketLaw),
         "work/packet-effects" => packet_effects(request),
+        "work/composed" => composed(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
+}
+
+const COMPOSED_FACT: &str = "work.composed-partial-refused";
+
+fn composed(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {
+    let mut observations = check_implementation(&CanonicalPacketLaw)?;
+    observations.extend(packet_effects(request)?);
+    observations.push(harness::expect_true(request, COMPOSED_FACT)?);
+    Ok(observations)
 }
 
 fn packet_effects(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {

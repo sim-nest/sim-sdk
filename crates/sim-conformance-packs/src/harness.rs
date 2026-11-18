@@ -227,13 +227,6 @@ pub(crate) fn check_registered(
     }
 }
 
-pub(crate) fn unavailable(
-    expected_checker: &'static str,
-    request: &PackRequest<'_>,
-) -> PackVerdict {
-    check_registered(expected_checker, request, |_| Ok(Vec::new()))
-}
-
 pub(crate) fn expect_true(
     request: &PackRequest<'_>,
     key: &'static str,

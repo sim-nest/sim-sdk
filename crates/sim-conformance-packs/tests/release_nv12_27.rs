@@ -67,7 +67,7 @@ fn binding() -> String {
     );
     assert!(spec.implemented_scopes.contains(&"release/nv12-27"));
     assert!(spec.implemented_scopes.contains(&"release/nv12-28"));
-    assert!(!spec.implemented_scopes.contains(&"release/nv12-26"));
+    assert!(spec.implemented_scopes.contains(&"release/nv12-26"));
     render(spec.checker_binding().expect("binding").id().content_id())
 }
 
@@ -399,6 +399,6 @@ fn local_publication_flags_and_partial_closures_are_refused() {
             "release/nv12-26",
             &MemorySubject::default().with("release.closure", text),
         )),
-        "unimplemented"
+        "missing-evidence"
     );
 }

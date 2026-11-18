@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Causal-journal conformance pack.
 
 use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};
@@ -13,9 +18,20 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
             "journal/native-compatibility" => native_compatibility(request),
             "journal/performance" => performance(request),
             "journal/causal" => causal(request),
+            "journal/composed" => composed(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })
+}
+
+const COMPOSED_FACT: &str = "journal.composed-partial-refused";
+
+fn composed(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {
+    let mut observations = native_compatibility(request)?;
+    observations.extend(performance(request)?);
+    observations.extend(causal(request)?);
+    observations.push(harness::expect_true(request, COMPOSED_FACT)?);
+    Ok(observations)
 }
 
 fn native_compatibility(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {

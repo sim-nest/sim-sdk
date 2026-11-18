@@ -395,5 +395,22 @@ fn the_replay_scope_is_not_release_nv12_17() {
     let spec = crate::find_pack("checker/c-release").expect("checker");
     assert!(spec.allowed_scopes.contains(&"completion/replay"));
     assert!(spec.implemented_scopes.contains(&"completion/replay"));
-    assert!(!spec.implemented_scopes.contains(&"release/nv12-17"));
+    assert!(spec.allowed_scopes.contains(&"release/nv12-17"));
+    assert!(spec.implemented_scopes.contains(&"release/nv12-17"));
+    let binding = spec.checker_binding().expect("binding");
+    let binding = super::render(binding.id().content_id());
+    let evidence = MemorySubject::default();
+    match super::super::check(&PackRequest {
+        checker: "checker/c-release",
+        binding: &binding,
+        subject: "core/sha256-datum-v1:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        scope: "release/nv12-17",
+        evidence: &evidence,
+    }) {
+        PackVerdict::Refused(failure) => {
+            assert_eq!(failure.code, "missing-evidence");
+            assert_eq!(failure.detail, "release.owner-validation-passed");
+        }
+        other => panic!("phase 17 must require closure facts, got {other:?}"),
+    }
 }

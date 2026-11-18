@@ -92,7 +92,7 @@ fn value<'a>(verdict: &'a PackVerdict, key: &str) -> &'a str {
 fn derived_succession_does_not_claim_publication_or_completion() {
     let spec = find_pack("checker/c-release").expect("release pack");
     assert!(spec.implemented_scopes.contains(&"release/nv12-28"));
-    assert!(!spec.implemented_scopes.contains(&"release/nv12-26"));
+    assert!(spec.implemented_scopes.contains(&"release/nv12-26"));
     let evidence = MemorySubject::default()
         .with("release.closure", closure())
         .with("succession.record", succession());

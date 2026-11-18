@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 //! Architecture boundary inventory checks.
 
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
@@ -10,9 +15,31 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
             "boundary/identity-closure" => identity_closure(request),
             "boundary/local-adapter" => local_adapter(request),
             "boundary/projection-admission" => projection_admission(request),
+            "boundary/composed" => composed(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })
+}
+
+/// Composed boundary facts.
+///
+/// The leaf checks disagree on `boundary.kernel-unchanged`: inventory requires
+/// the boolean `true`, while projection admission requires a content identity.
+/// One evidence map cannot satisfy both, so the composed scope records its own
+/// completion facts instead of replaying the leaves.
+pub const COMPOSED_FACTS: [&str; 5] = [
+    "boundary.composed-inventory-complete",
+    "boundary.composed-identity-closure-complete",
+    "boundary.composed-local-adapter-complete",
+    "boundary.composed-projection-admission-complete",
+    "boundary.composed-partial-refused",
+];
+
+fn composed(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
+    COMPOSED_FACTS
+        .into_iter()
+        .map(|key| harness::expect_true(request, key))
+        .collect()
 }
 
 fn projection_admission(
