@@ -214,6 +214,27 @@ fn an_already_true_action_is_not_an_omission() {
 }
 
 #[test]
+fn a_second_record_on_the_same_line_is_not_the_delivery() {
+    let dir = scratch("trailing");
+    let line = format!("#(world/deliver-v1 ){}", lawful(0));
+    let program = write_sim(&dir, &line);
+    let (code, detail) = refusal(&execute("delivery/observation", &command(&program)));
+    assert_eq!(code, "marker-absent");
+    assert_eq!(detail, "extra");
+}
+
+#[test]
+fn an_unclosed_root_is_not_a_record() {
+    let dir = scratch("unclosed");
+    let line = lawful(0);
+    let line = line.strip_suffix(')').expect("root closes");
+    let program = write_sim(&dir, line);
+    let (code, detail) = refusal(&execute("delivery/plan", &command(&program)));
+    assert_eq!(code, "bad-record");
+    assert_eq!(detail, "unclosed");
+}
+
+#[test]
 fn installed_sim_records_the_delivery_laws() {
     let Some(path) = std::env::var_os("SIM_PRODUCT_BIN") else {
         let (code, detail) = refusal(&execute("delivery/composed", &MemorySubject::default()));

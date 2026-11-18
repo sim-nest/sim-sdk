@@ -5,8 +5,9 @@
 
 //! Runs `world deliver model` and reads the seven laws from its record.
 //!
-//! Nested action rows and quoted text are not the plan fields. An
-//! already-true action is a completed checkpoint that was not omitted.
+//! The stdout line is one closed `world/deliver-v1` root. Nested action rows
+//! and quoted text are not the plan fields. An already-true action is a
+//! completed checkpoint that was not omitted.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -282,6 +283,7 @@ fn at_depth_two<'a>(record: &'a str, name: &str) -> Result<&'a str, PackFailure>
     Err(fail("marker-absent", name))
 }
 
+/// One stdout line whose bytes are exactly one closed `world/deliver-v1` root.
 fn one_line(stdout: &str) -> Result<&str, PackFailure> {
     let Some(line) = stdout.strip_suffix('\n') else {
         return Err(fail("marker-absent", "record"));
@@ -289,10 +291,14 @@ fn one_line(stdout: &str) -> Result<&str, PackFailure> {
     if line.contains('\n') {
         return Err(fail("marker-absent", "extra"));
     }
-    if !line.starts_with("#(world/deliver-v1 ") {
+    if !line.starts_with("#(world/deliver-v1 ") && line != "#(world/deliver-v1)" {
         return Err(fail("marker-absent", "world/deliver-v1"));
     }
-    Ok(line)
+    let root = balanced(line)?;
+    if root.len() != line.len() {
+        return Err(fail("marker-absent", "extra"));
+    }
+    Ok(root)
 }
 
 fn program(request: &PackRequest<'_>) -> Result<PathBuf, PackFailure> {
