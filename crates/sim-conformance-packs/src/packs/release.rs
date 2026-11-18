@@ -13,6 +13,8 @@ mod boot;
 mod brochure;
 #[path = "release_closure.rs"]
 mod closure;
+#[path = "release_command.rs"]
+mod command;
 #[path = "release_index.rs"]
 mod index_guard;
 #[path = "release_observed.rs"]
