@@ -9,12 +9,20 @@
 mod binding;
 #[path = "release_boot.rs"]
 mod boot;
+#[path = "release_brochure.rs"]
+mod brochure;
 #[path = "release_closure.rs"]
 mod closure;
+#[path = "release_command.rs"]
+mod command;
+#[path = "release_index.rs"]
+mod index_guard;
 #[path = "release_observed.rs"]
 mod observed;
 #[path = "release_receipt.rs"]
 mod receipt;
+#[path = "release_recipe.rs"]
+mod recipe_guard;
 #[path = "release_replay.rs"]
 mod replay;
 #[path = "release_retirement.rs"]
@@ -37,10 +45,13 @@ pub use binding::{
     bind_identity_roundtrip, observe_binding_catalog, observe_identity_roundtrip,
 };
 pub use boot::{ObservedBootGuard, bind_boot_guard, observe_boot_guard};
+pub use brochure::{ObservedBrochureGuard, bind_brochure_guard, observe_brochure_guard};
+pub use index_guard::{ObservedIndexGuard, bind_index_guard, observe_index_guard};
 pub use observed::{
     ObservedPublished, ObservedReleaseObligations, PublishedObligation, ReleaseObligations,
     bind_release_obligations, observe_release_obligations,
 };
+pub use recipe_guard::{ObservedRecipeGuard, bind_recipe_guard, observe_recipe_guard};
 pub use replay::{
     ExecutedEntry, ExecutedJournal, ObservedJournalCompletion, format_executed_journal,
     observe_journal_completion,
@@ -121,6 +132,15 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/boot-guard" {
             return boot::observations(request);
+        }
+        if request.scope == "release/brochure-guard" {
+            return brochure::observations(request);
+        }
+        if request.scope == "release/index-guard" {
+            return index_guard::observations(request);
+        }
+        if request.scope == "release/recipe-guard" {
+            return recipe_guard::observations(request);
         }
         if request.scope == "release/authority-transfer" {
             return transfer::observations(request);
