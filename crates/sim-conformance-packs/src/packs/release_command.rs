@@ -96,20 +96,31 @@ pub(super) fn observations(
     spec: &GuardSpec,
     request: &PackRequest<'_>,
 ) -> Result<Vec<CheckObservation>, PackFailure> {
+    checked(spec, request, accept_any_stdout)
+}
+
+pub(super) fn checked(
+    spec: &GuardSpec,
+    request: &PackRequest<'_>,
+    accept_stdout: fn(&str) -> Result<(), PackFailure>,
+) -> Result<Vec<CheckObservation>, PackFailure> {
     let root = decode_root(spec, one_fact(spec, request)?)?;
     let script = script_in_root(spec, &root)?;
     let (stdout, stderr) = run_in_root(spec, &root, &script)?;
+    let stdout_text = std::str::from_utf8(&stdout).map_err(|_| fail("bad-record", "stdout"))?;
+    accept_stdout(stdout_text)?;
     let mut encoded = String::new();
     receipt::push_field(&mut encoded, &root.to_string_lossy());
-    receipt::push_field(
-        &mut encoded,
-        std::str::from_utf8(&stdout).map_err(|_| fail("bad-record", "stdout"))?,
-    );
+    receipt::push_field(&mut encoded, stdout_text);
     receipt::push_field(
         &mut encoded,
         std::str::from_utf8(&stderr).map_err(|_| fail("bad-record", "stderr"))?,
     );
     Ok(vec![observation("release.execution", encoded)])
+}
+
+fn accept_any_stdout(_: &str) -> Result<(), PackFailure> {
+    Ok(())
 }
 
 fn admit_rows(
