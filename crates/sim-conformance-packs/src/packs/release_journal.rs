@@ -5,10 +5,12 @@
 
 //! Re-execution of one injected journal export.
 //!
-//! The text names object bytes, entry references, and a side telemetry
-//! token. The pack publishes those objects through `sim-lib-journal` and
-//! checks replay, reopen, snapshot, shared payload identity, and telemetry
-//! removal by running them. A phase digest list is not an export.
+//! The text names one subject, that subject's bytes as the shared object,
+//! entry references, and a side telemetry token. The pack publishes those
+//! objects through `sim-lib-journal` and checks replay, reopen, snapshot,
+//! shared payload identity, and telemetry removal by running them. A phase
+//! digest list is not an export. An export that names no subject, or whose
+//! shared object is not that subject, is not evidence for any subject.
 
 use std::collections::BTreeMap;
 use std::sync::Arc;
@@ -34,6 +36,7 @@ struct ParsedEntry {
 }
 
 struct Parsed {
+    subject: String,
     objects: Vec<Vec<u8>>,
     entries: Vec<ParsedEntry>,
     telemetry: Vec<String>,
@@ -44,10 +47,13 @@ pub(super) struct Inspected {
     pub left: Vec<u8>,
     pub right: Vec<u8>,
     pub storage: String,
+    pub subject: String,
 }
 
-/// Object bytes, entries, and side telemetry from one executed journal.
+/// Subject, object bytes, entries, and side telemetry from one executed journal.
 pub struct ExecutedJournal {
+    /// Subject whose UTF-8 bytes are the shared object.
+    pub subject: String,
     /// Payload bytes passed to `JournalObject::from_bytes`, in ordinal order.
     pub objects: Vec<Vec<u8>>,
     /// Entries in sequence order. `object` is an index into `objects`.
@@ -70,7 +76,9 @@ pub struct ExecutedEntry {
 
 /// Renders `run` as the export text `observe_journal_completion` re-executes.
 pub fn format_executed_journal(run: &ExecutedJournal) -> String {
-    let mut text = String::from("journal-export-v1\n");
+    let mut text = String::from("journal-export-v1\nsubject ");
+    text.push_str(&run.subject);
+    text.push('\n');
     for object in &run.objects {
         text.push_str("object ");
         text.push_str(&hex_bytes(object));
@@ -125,6 +133,7 @@ pub(super) fn inspect(body: &str) -> Result<Inspected, PackFailure> {
         left: full.encoding.clone(),
         right: full.again,
         storage: hex_bytes(&full.encoding),
+        subject: parsed.subject,
     })
 }
 
@@ -347,13 +356,15 @@ fn parse(text: &str, require_telemetry: bool) -> Result<Parsed, PackFailure> {
     if lines.iter().all(|line| is_phase_digest(line)) {
         return Err(fail("fabricated-digest-list", FACT));
     }
-    if lines.first().copied() != Some(HEADER) {
+    let mut lines = lines.into_iter();
+    if lines.next() != Some(HEADER) {
         return Err(fail("bad-record", FACT));
     }
+    let subject = subject_line(lines.next().unwrap_or(""))?;
     let mut objects = Vec::new();
     let mut entries = Vec::new();
     let mut telemetry = Vec::new();
-    for line in lines.into_iter().skip(1) {
+    for line in lines {
         let mut parts = line.split(' ');
         match parts.next() {
             Some("object") => objects.push(object_bytes(parts)?),
@@ -368,12 +379,27 @@ fn parse(text: &str, require_telemetry: bool) -> Result<Parsed, PackFailure> {
     if require_telemetry && telemetry.is_empty() {
         return Err(fail("missing-journal", "telemetry"));
     }
-    check_entries(&objects, &entries, &telemetry)?;
+    check_entries(&subject, &objects, &entries, &telemetry)?;
     Ok(Parsed {
+        subject,
         objects,
         entries,
         telemetry,
     })
+}
+
+fn subject_line(line: &str) -> Result<String, PackFailure> {
+    let Some(value) = line.strip_prefix("subject ") else {
+        return Err(fail("bad-record", FACT));
+    };
+    if value.is_empty()
+        || !value.bytes().all(|byte| {
+            byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'-' || byte == b'/'
+        })
+    {
+        return Err(fail("bad-record", FACT));
+    }
+    Ok(value.to_owned())
 }
 
 fn content_lines(text: &str) -> Result<Vec<&str>, PackFailure> {
@@ -438,6 +464,7 @@ fn telemetry_token<'a>(mut parts: impl Iterator<Item = &'a str>) -> Result<Strin
 }
 
 fn check_entries(
+    subject: &str,
     objects: &[Vec<u8>],
     entries: &[ParsedEntry],
     telemetry: &[String],
@@ -471,6 +498,15 @@ fn check_entries(
     }
     if !counts.iter().any(|count| *count >= 2) {
         return Err(fail("missing-journal", "reference"));
+    }
+    let shared = counts
+        .iter()
+        .enumerate()
+        .filter(|(_, count)| **count >= 2)
+        .map(|(index, _)| index)
+        .collect::<Vec<_>>();
+    if shared.len() != 1 || objects[shared[0]].as_slice() != subject.as_bytes() {
+        return Err(fail("subject-mismatch", FACT));
     }
     Ok(())
 }

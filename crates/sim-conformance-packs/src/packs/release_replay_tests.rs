@@ -19,11 +19,11 @@ use super::observations;
 const SUBJECT: &str = "subject/replay-example";
 const RESULT: &str = "completion/claim-17";
 
-fn executed_body() -> String {
+fn executed_body(subject: &str) -> String {
     let backend = Arc::new(MemoryBackend::new());
     let journal = Journal::new(Arc::clone(&backend));
     let lease = journal.acquire_lease().expect("lease");
-    let object = JournalObject::from_bytes([9]);
+    let object = JournalObject::from_bytes(subject.as_bytes().to_vec());
     let kind = Symbol::qualified("world", "fact");
     let first = JournalEntry::new(0, None, kind.clone(), vec![object.id.clone()]);
     let head = journal
@@ -35,6 +35,7 @@ fn executed_body() -> String {
         .expect("reference");
     let qualified = object_kind();
     super::format_executed_journal(&super::ExecutedJournal {
+        subject: subject.to_owned(),
         objects: vec![object.bytes],
         entries: vec![entry(0, &qualified), entry(1, &qualified)],
         telemetry: vec!["side-channel".to_owned()],
@@ -63,10 +64,18 @@ fn digest_list() -> String {
 }
 
 fn refuses(text: &str, code: &str) {
-    match super::observe_journal_completion(SUBJECT, text) {
-        Err(error) => assert_eq!(error.code, code, "{text}"),
-        Ok(_) => panic!("{code} must not admit a receipt"),
+    refuses_for(SUBJECT, text, code);
+}
+
+fn refuses_for(subject: &str, text: &str, code: &str) {
+    match super::observe_journal_completion(subject, text) {
+        Err(error) => assert_eq!(error.code, code, "{subject}: {text}"),
+        Ok(_) => panic!("{code} must not admit a receipt for {subject}"),
     }
+}
+
+fn subject_object(subject: &str) -> String {
+    subject.bytes().map(|byte| format!("{byte:02x}")).collect()
 }
 
 fn request<'a>(evidence: &'a MemorySubject) -> PackRequest<'a> {
@@ -81,7 +90,9 @@ fn request<'a>(evidence: &'a MemorySubject) -> PackRequest<'a> {
 
 #[test]
 fn an_executed_journal_admits_claim_17() {
-    let text = executed_body();
+    let text = executed_body(SUBJECT);
+    assert!(text.contains(&format!("subject {SUBJECT}\n")));
+    assert!(text.contains(&format!("object {}\n", subject_object(SUBJECT))));
     let observed = super::observe_journal_completion(SUBJECT, &text).expect("admitted");
     assert_eq!(observed.subject, SUBJECT);
     assert_eq!(observed.result, RESULT);
@@ -141,41 +152,59 @@ fn a_fabricated_digest_list_cannot_discharge_claim_17() {
 }
 
 #[test]
-fn the_receipt_names_the_caller_subject() {
-    let text = executed_body();
+fn one_export_admits_only_its_bound_subject() {
+    let text = executed_body(SUBJECT);
     let first = super::observe_journal_completion(SUBJECT, &text).expect("first");
-    let second = super::observe_journal_completion("subject/other", &text).expect("second");
+    refuses_for("subject/other", &text, "subject-mismatch");
+    let other = "subject/other";
+    let other_text = executed_body(other);
+    refuses_for(SUBJECT, &other_text, "subject-mismatch");
+    let second = super::observe_journal_completion(other, &other_text).expect("second");
     assert_eq!(first.result, RESULT);
     assert_eq!(second.result, RESULT);
-    let first_receipt = first
-        .catalog
-        .checker_receipt(&first.checker, RevocationStatus::Current)
-        .expect("first receipt");
-    let second_receipt = second
-        .catalog
-        .checker_receipt(&second.checker, RevocationStatus::Current)
-        .expect("second receipt");
-    assert_ne!(first_receipt.subject(), second_receipt.subject());
     assert_ne!(first.checker, second.checker);
+    match (
+        first.catalog.leaf("journal-replay").expect("first leaf"),
+        second.catalog.leaf("journal-replay").expect("second leaf"),
+    ) {
+        (
+            ProofLeaf::ArtifactEquality { left: bound, .. },
+            ProofLeaf::ArtifactEquality { left: other, .. },
+        ) => assert_ne!(bound, other),
+        other => panic!("expected replay encodings, got {other:?}"),
+    }
 }
 
 #[test]
-fn a_changed_object_changes_the_receipt() {
-    let text = executed_body();
-    let first = super::observe_journal_completion(SUBJECT, &text).expect("first");
-    let changed = text.replacen("object 09\n", "object 0a\n", 1);
+fn an_unbound_export_admits_no_subject() {
+    let probe = "\
+journal-export-v1
+object 09
+entry 0 world fact 0
+entry 1 world fact 0
+telemetry side-channel
+";
+    refuses_for("subject/never-executed-a", probe, "bad-record");
+    refuses_for("subject/never-executed-b", probe, "bad-record");
+    let forged = "\
+journal-export-v1
+subject subject/never-executed-a
+object 09
+entry 0 world fact 0
+entry 1 world fact 0
+telemetry side-channel
+";
+    refuses_for("subject/never-executed-a", forged, "subject-mismatch");
+    refuses_for("subject/never-executed-b", forged, "subject-mismatch");
+}
+
+#[test]
+fn a_changed_object_refuses_the_bound_export() {
+    let text = executed_body(SUBJECT);
+    let marker = format!("object {}\n", subject_object(SUBJECT));
+    let changed = text.replacen(&marker, "object 0a\n", 1);
     assert_ne!(changed, text);
-    let second = super::observe_journal_completion(SUBJECT, &changed).expect("second");
-    assert_eq!(first.result, second.result);
-    assert_ne!(first.checker, second.checker);
-    match second.catalog.leaf("journal-replay").expect("leaf") {
-        ProofLeaf::ArtifactEquality { left, right, .. } => {
-            assert_eq!(left, right);
-            assert_ne!(left.as_slice(), changed.as_bytes());
-            assert_ne!(left.as_slice(), text.as_bytes());
-        }
-        other => panic!("expected two replay encodings, got {other:?}"),
-    }
+    refuses(&changed, "subject-mismatch");
 }
 
 #[test]
@@ -183,29 +212,31 @@ fn refused_exports_produce_no_receipt() {
     refuses("", "missing-journal");
     refuses("\n", "missing-journal");
     refuses("shade-1\n", "construction-specimen");
-    let mut shaded = executed_body();
+    let mut shaded = executed_body(SUBJECT);
     shaded.push_str("shade-1\n");
     refuses(&shaded, "construction-specimen");
     refuses("PortableClosed\n", "local-publication-claim");
     refuses("publication-confirmed\n", "local-publication-claim");
     refuses("completion/claim-17\n", "local-publication-claim");
-    let mut declared = executed_body();
+    let mut declared = executed_body(SUBJECT);
     declared.push_str("completion/claim-17\n");
     refuses(&declared, "local-publication-claim");
     refuses("not-a-journal\n", "bad-record");
-    let mut bare = executed_body();
+    let mut bare = executed_body(SUBJECT);
     bare.pop();
     refuses(&bare, "bad-record");
-    refuses(&executed_body().replace('\n', "\r\n"), "bad-record");
+    refuses(&executed_body(SUBJECT).replace('\n', "\r\n"), "bad-record");
     let kind = object_kind();
     let one = super::format_executed_journal(&super::ExecutedJournal {
-        objects: vec![vec![9]],
+        subject: SUBJECT.to_owned(),
+        objects: vec![SUBJECT.as_bytes().to_vec()],
         entries: vec![entry(0, &kind)],
         telemetry: vec!["side-channel".to_owned()],
     });
     refuses(&one, "missing-journal");
     let silent = super::format_executed_journal(&super::ExecutedJournal {
-        objects: vec![vec![9]],
+        subject: SUBJECT.to_owned(),
+        objects: vec![SUBJECT.as_bytes().to_vec()],
         entries: vec![entry(0, &kind), entry(1, &kind)],
         telemetry: Vec::new(),
     });
@@ -215,7 +246,7 @@ fn refused_exports_produce_no_receipt() {
 #[test]
 fn an_unexpected_fact_produces_no_observations() {
     let evidence = MemorySubject::default()
-        .with("journal.export", executed_body())
+        .with("journal.export", executed_body(SUBJECT))
         .with("release.manifest", "[package]\npublish = false\n");
     match observations(&request(&evidence)) {
         Err(error) => assert_eq!(error.code, "unexpected-fact"),
@@ -225,7 +256,7 @@ fn an_unexpected_fact_produces_no_observations() {
 
 #[test]
 fn observations_name_the_executed_journal_laws() {
-    let text = executed_body();
+    let text = executed_body(SUBJECT);
     let evidence = MemorySubject::default().with("journal.export", text.clone());
     let seen = observations(&request(&evidence)).expect("observations");
     let keys = seen

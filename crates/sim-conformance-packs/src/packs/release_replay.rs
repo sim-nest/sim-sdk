@@ -8,9 +8,10 @@
 //! The pack reads the injected export, republishes it, and checks replay,
 //! reopen, snapshot, shared references, and telemetry removal by executing
 //! them. It does not read a caller boolean, a phase digest list, a manifest,
-//! or a completion claim. The receipt subject is the subject the caller
-//! names. Its result is `completion/claim-17`. A missing or refused export
-//! produces no receipt.
+//! or a completion claim. The export names one subject and carries that
+//! subject's bytes as its shared object. The caller argument must equal
+//! that subject. The result is `completion/claim-17`. A missing or refused
+//! export produces no receipt.
 
 use std::collections::BTreeSet;
 
@@ -66,8 +67,8 @@ pub struct ObservedJournalCompletion {
 /// # Errors
 ///
 /// Returns a pack refusal when the export is missing a journal law, names a
-/// publication or the construction specimen, is a phase digest list, or the
-/// catalog refuses the constructed receipt.
+/// publication or the construction specimen, is a phase digest list, names a
+/// subject other than `subject`, or the catalog refuses the constructed receipt.
 pub fn observe_journal_completion(
     subject: &str,
     body: &str,
@@ -121,6 +122,9 @@ fn admit_parsed(
     observations: &[CheckObservation],
 ) -> Result<ObservedJournalCompletion, PackFailure> {
     let inspected = journal::inspect(body)?;
+    if inspected.subject != subject {
+        return Err(fail("subject-mismatch", journal::FACT));
+    }
     let mut observed = observations
         .iter()
         .map(|item| (item.key.as_str(), item.value.as_str()))
