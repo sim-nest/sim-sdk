@@ -8,6 +8,7 @@
 pub mod authoring;
 pub mod boundary;
 pub mod closure;
+pub mod completion_claim;
 pub mod control;
 pub mod convergence;
 pub mod delivery;

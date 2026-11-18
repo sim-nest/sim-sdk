@@ -7,15 +7,24 @@
 
 #[path = "release_closure.rs"]
 mod closure;
+#[path = "release_receipt.rs"]
+mod receipt;
 #[path = "release_replay.rs"]
 mod replay;
 #[path = "release_source.rs"]
 mod source;
+#[path = "release_validation.rs"]
+mod validation;
+#[path = "release_worktree.rs"]
+mod worktree;
 
 pub use replay::{
-    ExecutedEntry, ExecutedJournal, format_executed_journal, observe_journal_completion,
+    ExecutedEntry, ExecutedJournal, ObservedJournalCompletion, format_executed_journal,
+    observe_journal_completion,
 };
-pub use source::observe_source_identity;
+pub use source::{ObservedSourceRelease, observe_source_identity};
+pub use validation::{ObservedOwnerValidation, bind_owner_validation, observe_owner_validation};
+pub use worktree::{GitPackage, ObservedGitRelease, bind_git_release, observe_git_release};
 
 use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};
 
@@ -58,6 +67,12 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/source-identity" {
             return source::observations(request);
+        }
+        if request.scope == "release/git-worktree" {
+            return worktree::observations(request);
+        }
+        if request.scope == "release/owner-validation" {
+            return validation::observations(request);
         }
         if request.scope == "completion/replay" {
             return replay::observations(request);
