@@ -224,6 +224,16 @@ fn a_second_record_on_the_same_line_is_not_the_delivery() {
 }
 
 #[test]
+fn an_empty_root_glued_to_a_second_record_is_extra() {
+    let dir = scratch("glued");
+    let line = format!("#(world/deliver-v1){}", lawful(0));
+    let program = write_sim(&dir, &line);
+    let (code, detail) = refusal(&execute("delivery/adapters", &command(&program)));
+    assert_eq!(code, "marker-absent");
+    assert_eq!(detail, "extra");
+}
+
+#[test]
 fn an_unclosed_root_is_not_a_record() {
     let dir = scratch("unclosed");
     let line = lawful(0);

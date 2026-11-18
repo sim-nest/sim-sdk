@@ -291,7 +291,7 @@ fn one_line(stdout: &str) -> Result<&str, PackFailure> {
     if line.contains('\n') {
         return Err(fail("marker-absent", "extra"));
     }
-    if !line.starts_with("#(world/deliver-v1 ") && line != "#(world/deliver-v1)" {
+    if !line.starts_with("#(world/deliver-v1 ") && !line.starts_with("#(world/deliver-v1)") {
         return Err(fail("marker-absent", "world/deliver-v1"));
     }
     let root = balanced(line)?;
