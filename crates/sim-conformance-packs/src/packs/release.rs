@@ -9,6 +9,8 @@
 mod binding;
 #[path = "release_closure.rs"]
 mod closure;
+#[path = "release_observed.rs"]
+mod observed;
 #[path = "release_receipt.rs"]
 mod receipt;
 #[path = "release_replay.rs"]
@@ -29,6 +31,10 @@ mod worktree;
 pub use binding::{
     ObservedBindingCatalog, ObservedIdentityRoundtrip, bind_binding_catalog,
     bind_identity_roundtrip, observe_binding_catalog, observe_identity_roundtrip,
+};
+pub use observed::{
+    ObservedPublished, ObservedReleaseObligations, PublishedObligation, ReleaseObligations,
+    bind_release_obligations, observe_release_obligations,
 };
 pub use replay::{
     ExecutedEntry, ExecutedJournal, ObservedJournalCompletion, format_executed_journal,
@@ -89,6 +95,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/git-worktree" {
             return worktree::observations(request);
+        }
+        if request.scope == "release/observed-obligations" {
+            return observed::observations(request);
         }
         if request.scope == "release/owner-validation" {
             return validation::observations(request);
