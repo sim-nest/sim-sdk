@@ -41,6 +41,12 @@ const SCOPE: &str = "completion/replay";
 const RESULT: &str = "completion/claim-17";
 const DOMAIN: &str = "completion/replay";
 const PROOF: &str = "journal-replay";
+const RELEASE_SYMBOL: &str = "sim_conformance_packs::packs::release::check";
+const ACTIVATION_OWNER: &str =
+    "core/sha256-datum-v1:6fc0e9594fe3a592c1877d9034cc7a6b5f9aa9ce50e3251a705955b348ccf827";
+const REVOCATION_SOURCE: &str = "sim-sdk/sim-conformance-packs-revocations-v1";
+const OWNER_VALIDATION: &str = "cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps && cargo clippy --workspace --all-features --all-targets -- -D warnings && cargo test --workspace --all-features";
+const OWNER_DOCS: &str = "cargo run -p xtask -- simdoc --check";
 
 /// Receipt the proof catalog admitted for one re-executed journal.
 pub struct ObservedJournalCompletion {
@@ -179,17 +185,13 @@ fn admit_parsed(
         requested_grade: None,
     };
     let bound = input_closure(&leaf, &claim, &selected)?;
-    let binding = receipt_binding(&scope)?;
+    let spec = find_pack("checker/c-release")
+        .ok_or_else(|| fail("unknown-checker", "checker/c-release"))?;
+    let code = registered_code(spec)?;
+    let pack = registered_pack(spec)?;
+    let binding = receipt_binding(&scope, pack.clone())?;
     let invocation = binding
-        .instantiate(
-            ProofCodeId::from_text("code/journal-replay")
-                .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-            ConformancePackId::from_text("pack/release")
-                .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-            subject_id,
-            scope.clone(),
-            bound,
-        )
+        .instantiate(code, pack, subject_id, scope.clone(), bound)
         .map_err(|error| fail("receipt-refused", &error.to_string()))?;
     let receipt = CheckerReceipt::passing(
         &invocation,
@@ -216,9 +218,9 @@ fn admit_parsed(
         )
         .map_err(|error| fail("receipt-refused", &error.to_string()))?;
     let admitted = catalog
-        .admit_evidence(claim_with(&claim, checker.clone()), current)
+        .admit_evidence(claim_with(&claim, checker.clone()), issued(&checker))
         .map_err(|error| fail("receipt-refused", &error.to_string()))?;
-    match catalog.decide_evidence(&admitted.key, EvidenceGrade::Release, current) {
+    match catalog.decide_evidence(&admitted.key, EvidenceGrade::Release, issued(&checker)) {
         EvidenceDecision::Reuse { receipt } if receipt == admitted.id => {}
         EvidenceDecision::Reuse { .. }
         | EvidenceDecision::Recheck { .. }
@@ -255,41 +257,62 @@ fn claim_with(claim: &EvidenceClaim, checker: CheckerReceiptId) -> EvidenceClaim
     }
 }
 
-fn current(_: &CheckerReceiptId) -> RevocationStatus {
-    RevocationStatus::Current
+/// Current only for the receipt this call issued. Every other id stays unknown.
+fn issued(checker: &CheckerReceiptId) -> impl Fn(&CheckerReceiptId) -> RevocationStatus + '_ {
+    move |asked| {
+        if asked == checker {
+            RevocationStatus::Current
+        } else {
+            RevocationStatus::Unknown
+        }
+    }
 }
 
-fn receipt_binding(scope: &CheckScopeId) -> Result<CheckerBinding, PackFailure> {
+fn registered_code(spec: &crate::PackSpec) -> Result<ProofCodeId, PackFailure> {
+    ProofCodeId::from_text(&format!(
+        "sim-conformance-packs@{};build-inputs-sha256={}",
+        env!("CARGO_PKG_VERSION"),
+        spec.build_inputs_sha256(),
+    ))
+    .map_err(|error| fail("receipt-refused", &error.to_string()))
+}
+
+fn registered_pack(spec: &crate::PackSpec) -> Result<ConformancePackId, PackFailure> {
+    ConformancePackId::from_text(&format!("{}@{}", spec.pack, spec.activation_binding))
+        .map_err(|error| fail("receipt-refused", &error.to_string()))
+}
+
+fn receipt_binding(
+    scope: &CheckScopeId,
+    pack: ConformancePackId,
+) -> Result<CheckerBinding, PackFailure> {
     CheckerBinding::new(
         "checker/c-release".into(),
-        OwnerBindingId::from_text("owner/journal-replay")
+        OwnerBindingId::from_text(ACTIVATION_OWNER)
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-        "packs::release::check".into(),
-        vec![
-            ConformancePackId::from_text("pack/release")
-                .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-        ],
-        OutputShapeId::from_text("shape/check-receipt")
+        RELEASE_SYMBOL.into(),
+        vec![pack],
+        OutputShapeId::from_text("check/receipt-v1")
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-        RevocationSourceId::from_text("revocation/journal-replay")
+        RevocationSourceId::from_text(REVOCATION_SOURCE)
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-        CommandId::from_text("command/validate")
+        CommandId::from_text(OWNER_VALIDATION)
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-        CommandId::from_text("command/docs")
+        CommandId::from_text(OWNER_DOCS)
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
         BTreeSet::from([scope.clone()]),
         CheckTemplate::new(
-            "check".into(),
+            RELEASE_SYMBOL.into(),
             vec![
                 CheckArgument::BindingSlot,
                 CheckArgument::SubjectSlot,
                 CheckArgument::ScopeSlot,
             ],
-            WorkingDirectoryPolicyId::from_text("cwd/journal-replay")
+            WorkingDirectoryPolicyId::from_text("call/no-working-directory")
                 .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-            EnvironmentPolicyId::from_text("environment/sealed")
+            EnvironmentPolicyId::from_text("call/native-rust-v1")
                 .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-            OutputShapeId::from_text("shape/check-result")
+            OutputShapeId::from_text("check/result-v1")
                 .map_err(|error| fail("receipt-refused", &error.to_string()))?,
         )
         .map_err(|error| fail("receipt-refused", &error.to_string()))?,

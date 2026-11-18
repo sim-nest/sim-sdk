@@ -6,7 +6,8 @@
 use std::sync::Arc;
 
 use sim_conformance_v02::{
-    CheckScopeId, CheckedSubjectId, CheckerResultId, EvidenceGrade, RevocationStatus,
+    CheckScopeId, CheckedSubjectId, CheckerReceiptId, CheckerResultId, ConformancePackId,
+    EvidenceGrade, ProofCodeId, RevocationStatus,
 };
 use sim_kernel::Symbol;
 use sim_lib_journal::{Journal, JournalEntry, JournalObject, MemoryBackend};
@@ -147,6 +148,34 @@ fn an_executed_journal_admits_claim_17() {
         }
         other => panic!("expected two replay encodings, got {other:?}"),
     }
+    let spec = crate::find_pack("checker/c-release").expect("checker");
+    let code = ProofCodeId::from_text(&format!(
+        "sim-conformance-packs@{};build-inputs-sha256={}",
+        env!("CARGO_PKG_VERSION"),
+        spec.build_inputs_sha256(),
+    ))
+    .expect("registered code");
+    let pack = ConformancePackId::from_text(&format!("{}@{}", spec.pack, spec.activation_binding))
+        .expect("activation pack");
+    assert_eq!(receipt.checker_code(), &code);
+    assert_eq!(receipt.pack(), &pack);
+    assert_ne!(
+        receipt.checker_code(),
+        &ProofCodeId::from_text("code/journal-replay").expect("literal code")
+    );
+    assert_ne!(
+        receipt.pack(),
+        &ConformancePackId::from_text("pack/release").expect("literal pack")
+    );
+    let other = CheckerReceiptId::from_text("receipt/other").expect("other");
+    assert_eq!(
+        super::issued(&observed.checker)(&observed.checker),
+        RevocationStatus::Current
+    );
+    assert_eq!(
+        super::issued(&observed.checker)(&other),
+        RevocationStatus::Unknown
+    );
     match observed
         .catalog
         .decide_evidence(&observed.admitted.key, EvidenceGrade::Release, |_| {
@@ -154,6 +183,22 @@ fn an_executed_journal_admits_claim_17() {
         }) {
         EvidenceDecision::Reuse { receipt } => assert_eq!(receipt, observed.admitted.id),
         other => panic!("expected release reuse, got {other:?}"),
+    }
+    match observed
+        .catalog
+        .decide_evidence(&observed.admitted.key, EvidenceGrade::Release, |_| {
+            RevocationStatus::Unknown
+        }) {
+        EvidenceDecision::Refuse { reason } => assert_eq!(reason, "unknown-revocation"),
+        other => panic!("unknown revocation must refuse, got {other:?}"),
+    }
+    match observed
+        .catalog
+        .decide_evidence(&observed.admitted.key, EvidenceGrade::Release, |_| {
+            RevocationStatus::Revoked
+        }) {
+        EvidenceDecision::Refuse { reason } => assert_eq!(reason, "revoked-support"),
+        other => panic!("revoked authority must refuse, got {other:?}"),
     }
 }
 
