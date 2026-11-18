@@ -85,6 +85,32 @@ fn two_commits_are_sorted_from_their_objects() {
     std::fs::remove_dir_all(right).ok();
 }
 
+#[test]
+fn a_replacement_ref_does_not_change_the_commit_manifest() {
+    let dir = scratch("replace");
+    let original = commit_package(&dir, "sim-original", true);
+    std::fs::write(
+        dir.join("Cargo.toml"),
+        package_toml("sim-replacement", false),
+    )
+    .expect("manifest");
+    git(&dir, &["add", "Cargo.toml"]);
+    git(&dir, &["commit", "-m", "replacement"]);
+    let replacement = head(&dir);
+    git(&dir, &["replace", &original, &replacement]);
+    match observe_git_release(SUBJECT, &[package(&dir, &original, "Cargo.toml")]) {
+        Err(error) => assert_eq!(error.code, "local-publication-claim"),
+        Ok(receipt) => panic!("published commit admitted {}", receipt.result),
+    }
+    let observed =
+        observe_git_release(SUBJECT, &[package(&dir, &replacement, "Cargo.toml")]).expect("own");
+    assert_eq!(
+        observed.identities,
+        vec![format!("git+{replacement}:sim-replacement@0.1.0")]
+    );
+    std::fs::remove_dir_all(dir).ok();
+}
+
 fn package(dir: &Path, rev: &str, manifest: &str) -> GitPackage {
     GitPackage {
         repository: dir.to_path_buf(),
@@ -107,8 +133,12 @@ fn commit_package(dir: &Path, name: &str, publish: bool) -> String {
     std::fs::write(dir.join("Cargo.toml"), package_toml(name, publish)).expect("manifest");
     git(dir, &["add", "Cargo.toml"]);
     git(dir, &["commit", "-m", "package"]);
+    head(dir)
+}
+
+fn head(dir: &Path) -> String {
     let output = Command::new("git")
-        .args(["rev-parse", "HEAD"])
+        .args(["--no-replace-objects", "rev-parse", "HEAD"])
         .current_dir(dir)
         .output()
         .expect("rev-parse");

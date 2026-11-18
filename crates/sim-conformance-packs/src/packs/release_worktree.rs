@@ -7,7 +7,9 @@
 //!
 //! Each package names a repository, a commit, and a manifest path. `git
 //! rev-parse` verifies the commit and `git show` reads that commit's
-//! manifest. The name, version, and `publish = false` come from that blob.
+//! manifest. Both commands pass `--no-replace-objects`, so a replacement
+//! ref cannot substitute another manifest. The name, version, and
+//! `publish = false` come from that blob.
 //! The result is `completion/claim-21` plus those identities, sorted.
 //! Tags, mirrors, pins, and a registry are not read. A caller-supplied
 //! identity list is not an input, and this scope is not
@@ -238,6 +240,7 @@ fn read_package(package: &GitPackage) -> Result<ReadPackage, PackFailure> {
     let verified = execute_process(
         "git",
         &[
+            "--no-replace-objects",
             "-C",
             repo,
             "rev-parse",
@@ -255,6 +258,7 @@ fn read_package(package: &GitPackage) -> Result<ReadPackage, PackFailure> {
     let shown = execute_process(
         "git",
         &[
+            "--no-replace-objects",
             "-C",
             repo,
             "show",
