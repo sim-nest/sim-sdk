@@ -250,7 +250,8 @@ fn release_contained(checkout: &Path, release: &str, selected: &str) -> Result<(
     }
     match output.status.code() {
         Some(0) => Ok(()),
-        Some(1) => Err(super::fail("release-uncontained", release)),
+        // 1: the object is present and is not an ancestor. 128: it is absent.
+        Some(1) | Some(128) => Err(super::fail("release-uncontained", release)),
         Some(status) => Err(super::fail("process-failed", &status.to_string())),
         None => Err(super::fail("process-unrun", "signal")),
     }

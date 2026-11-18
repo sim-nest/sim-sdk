@@ -33,6 +33,7 @@ struct Lab {
     root: PathBuf,
     repo: PathBuf,
     mirror: PathBuf,
+    mirror_left: PathBuf,
     index: PathBuf,
     krate: PathBuf,
     pin: PathBuf,
@@ -58,6 +59,7 @@ impl Lab {
         std::fs::create_dir_all(repo.join("sim-base")).expect("repo");
         let mut lab = Self {
             mirror: root.join("mirror.git"),
+            mirror_left: repo.clone(),
             index: root.join("index"),
             krate: root.join("sim-top.crate"),
             pin: root.join("repos.toml"),
@@ -155,7 +157,7 @@ impl Lab {
             pin_manifest: self.pin.clone(),
             checkout: self.checkout.clone(),
             pin_name: "sim-top".to_owned(),
-            mirror_left: self.repo.display().to_string(),
+            mirror_left: self.mirror_left.display().to_string(),
             mirror_right: self.mirror.display().to_string(),
         }
     }
@@ -183,6 +185,38 @@ impl Lab {
                 &format!("{selected}:refs/heads/main"),
             ],
         );
+        selected
+    }
+
+    fn select_foreign_repository(&mut self) -> String {
+        let foreign = self.root.join("foreign");
+        std::fs::create_dir_all(&foreign).expect("foreign");
+        git(&foreign, &["init", "-b", "main"]);
+        git(&foreign, &["config", "user.email", "nv12@example.com"]);
+        git(&foreign, &["config", "user.name", "nv12"]);
+        std::fs::write(foreign.join("note"), b"foreign").expect("note");
+        git(&foreign, &["add", "note"]);
+        git(&foreign, &["commit", "-m", "foreign"]);
+        let selected = head(&foreign);
+        let mirror = self.root.join("foreign.git");
+        let cloned = Command::new("git")
+            .args([
+                "clone",
+                "--bare",
+                foreign.to_str().expect("foreign"),
+                mirror.to_str().expect("mirror"),
+            ])
+            .output()
+            .expect("clone");
+        assert!(
+            cloned.status.success(),
+            "{}",
+            String::from_utf8_lossy(&cloned.stderr)
+        );
+        self.checkout = foreign.clone();
+        self.mirror_left = foreign;
+        self.mirror = mirror;
+        self.write_pin(&selected);
         selected
     }
 
@@ -323,6 +357,15 @@ fn obligations_accept_a_release_contained_in_a_later_revision() {
 fn obligations_refuse_a_release_outside_the_selected_revision() {
     let lab = Lab::open("uncontained", false);
     let selected = lab.select_unrelated_revision();
+    assert_ne!(selected, lab.commit);
+    refuse(&lab.obligations(), "release-uncontained");
+    assert!(!lab.mark.exists(), "boot ran for an uncontained release");
+}
+
+#[test]
+fn obligations_refuse_a_release_absent_from_the_selected_repository() {
+    let mut lab = Lab::open("foreign", false);
+    let selected = lab.select_foreign_repository();
     assert_ne!(selected, lab.commit);
     refuse(&lab.obligations(), "release-uncontained");
     assert!(!lab.mark.exists(), "boot ran for an uncontained release");
