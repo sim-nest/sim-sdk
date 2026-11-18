@@ -21,6 +21,8 @@ mod index_guard;
 mod observed;
 #[path = "release_receipt.rs"]
 mod receipt;
+#[path = "release_recipe.rs"]
+mod recipe_guard;
 #[path = "release_replay.rs"]
 mod replay;
 #[path = "release_retirement.rs"]
@@ -49,6 +51,7 @@ pub use observed::{
     ObservedPublished, ObservedReleaseObligations, PublishedObligation, ReleaseObligations,
     bind_release_obligations, observe_release_obligations,
 };
+pub use recipe_guard::{ObservedRecipeGuard, bind_recipe_guard, observe_recipe_guard};
 pub use replay::{
     ExecutedEntry, ExecutedJournal, ObservedJournalCompletion, format_executed_journal,
     observe_journal_completion,
@@ -135,6 +138,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/index-guard" {
             return index_guard::observations(request);
+        }
+        if request.scope == "release/recipe-guard" {
+            return recipe_guard::observations(request);
         }
         if request.scope == "release/authority-transfer" {
             return transfer::observations(request);
