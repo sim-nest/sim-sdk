@@ -165,16 +165,13 @@ fn boolean_facts_are_not_product_execution() {
         "product/prove",
         "product/deliver",
         "product/roadmap",
+        "product/landing-queries",
         "product/convergence-queries",
     ] {
         let (code, _) = refusal(&execute(scope, &truths));
         assert_eq!(code, "unexpected-fact", "{scope}");
     }
-    for scope in [
-        "product/landing-queries",
-        "product/installed",
-        "product/composed",
-    ] {
+    for scope in ["product/installed", "product/composed"] {
         let (code, detail) = refusal(&execute(scope, &truths));
         assert_eq!(code, "unexecuted", "{scope} {detail}");
     }
