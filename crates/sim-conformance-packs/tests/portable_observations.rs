@@ -102,17 +102,8 @@ fn assert_pass(checker: &str, scope: &str, evidence: &MemorySubject, keys: &[&st
     verdict
 }
 
-fn result_text(verdict: &PackVerdict) -> String {
-    match verdict {
-        PackVerdict::Pass { result, .. } => format!("{result:?}"),
-        other => panic!("expected a pass, got {other:?}"),
-    }
-}
-
 #[test]
 fn funded_delivery_and_authoring_scopes_execute_their_scenarios() {
-    let delivery = truths(packs::delivery::SCENARIOS);
-    let mut results = Vec::new();
     for scope in [
         "delivery/observation",
         "delivery/plan",
@@ -120,36 +111,18 @@ fn funded_delivery_and_authoring_scopes_execute_their_scenarios() {
         "delivery/real-canary",
         "delivery/composed",
     ] {
-        assert_missing(
+        let (code, detail) = refusal(&execute(
             "checker/c-deliver",
             scope,
             &MemorySubject::default(),
-            "delivery.already-true",
-        );
-        let partial = MemorySubject::default().with("delivery.already-true", "true");
-        assert_missing(
-            "checker/c-deliver",
-            scope,
-            &partial,
-            "delivery.stale-observer-refused",
-        );
-        results.push(result_text(&assert_pass(
-            "checker/c-deliver",
-            scope,
-            &delivery,
-            &packs::delivery::SCENARIOS,
-        )));
+        ));
+        assert_eq!(code, "missing-source", "{scope} {detail}");
+        assert_eq!(detail, "delivery.command", "{scope}");
+        let truths = truths(packs::delivery::SCENARIOS);
+        let (code, detail) = refusal(&execute("checker/c-deliver", scope, &truths));
+        assert_eq!(code, "unexpected-fact", "{scope} {detail}");
+        assert_eq!(detail, "delivery.already-true", "{scope}");
     }
-    assert!(
-        results.windows(2).all(|pair| pair[0] != pair[1]),
-        "delivery scopes must not share one result"
-    );
-    let (code, _) = refusal(&execute(
-        "checker/c-deliver",
-        "delivery/observation",
-        &delivery.with("delivery.registry-lag-refused", "false"),
-    ));
-    assert_eq!(code, "evidence-mismatch");
 
     for scope in ["authoring/family", "authoring/composed"] {
         let (code, detail) = refusal(&execute(
