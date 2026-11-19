@@ -15,6 +15,8 @@ mod brochure;
 mod closure;
 #[path = "release_command.rs"]
 mod command;
+#[path = "release_converge.rs"]
+mod converge;
 #[path = "release_facet.rs"]
 mod facet_tx;
 #[path = "release_index.rs"]
@@ -56,6 +58,9 @@ pub use binding::{
 };
 pub use boot::{ObservedBootGuard, bind_boot_guard, observe_boot_guard};
 pub use brochure::{ObservedBrochureGuard, bind_brochure_guard, observe_brochure_guard};
+pub use converge::{
+    ObservedSealedConvergence, bind_sealed_convergence, observe_sealed_convergence,
+};
 pub use facet_tx::{ObservedFacetTransaction, bind_facet_transaction, observe_facet_transaction};
 pub use index_guard::{ObservedIndexGuard, bind_index_guard, observe_index_guard};
 pub use neutral::{ObservedNeutralInput, bind_neutral_input, observe_neutral_input};
@@ -183,6 +188,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "completion/facet-transaction" {
             return facet_tx::observations(request);
+        }
+        if request.scope == "completion/sealed-convergence" {
+            return converge::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()

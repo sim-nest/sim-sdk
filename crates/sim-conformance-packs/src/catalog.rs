@@ -275,7 +275,7 @@ impl PackSpec {
             "work/native-dispatch" => "NV12.23",
             "work/composed" => "NV12.26",
             "drive/composed" => "NV12.26",
-            "convergence/fixed-point" => "NV12.16",
+            "convergence/fixed-point" | "completion/sealed-convergence" => "NV12.16",
             "convergence/composed" => "NV12.26",
             "facet/generated" => "NV12.16",
             "facet/transaction" | "completion/facet-transaction" => "NV12.17",
