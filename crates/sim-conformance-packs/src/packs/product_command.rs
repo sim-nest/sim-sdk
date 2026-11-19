@@ -75,10 +75,9 @@ pub(super) fn portable(request: &PackRequest<'_>) -> Result<Vec<CheckObservation
         "product/prove" => prove(request),
         "product/deliver" => deliver(request),
         "product/roadmap" => roadmap(request),
-        "product/convergence-queries"
-        | "product/landing-queries"
-        | "product/installed"
-        | "product/composed" => Err(fail("unexecuted", request.scope)),
+        "product/landing-queries" | "product/installed" | "product/composed" => {
+            Err(fail("unexecuted", request.scope))
+        }
         _ => unreachable!("availability was checked before dispatch"),
     }
 }
