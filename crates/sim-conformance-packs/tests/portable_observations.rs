@@ -432,12 +432,52 @@ fn composed_scopes_run_their_leaf_checks() {
 }
 
 #[test]
+fn facet_transaction_runs_the_published_law() {
+    let verdict = execute(
+        "checker/c-facet",
+        "facet/transaction",
+        &MemorySubject::default(),
+    );
+    let PackVerdict::Pass { observations, .. } = verdict else {
+        panic!("facet transaction did not pass: {verdict:?}");
+    };
+    assert_eq!(observations.len(), 1);
+    assert_eq!(observations[0].key, "facet.transaction");
+    let value = observations[0].value.as_str();
+    assert!(!value.contains("completion/claim-"));
+    for token in [
+        "apply-preimage",
+        "apply-postimage",
+        "apply-second",
+        "wrong-head",
+        "dirt",
+        "private-flow",
+        "generated-owner-bypass",
+        "stale-base",
+        "region-escape",
+        "invalid-region",
+        "overlap",
+        "recover-applied",
+        "recover-held",
+        "rollback-restored",
+        "rollback-kept",
+    ] {
+        assert!(value.contains(token), "{token} missing from {value}");
+    }
+    let (code, _) = refusal(&execute(
+        "checker/c-facet",
+        "facet/transaction",
+        &MemorySubject::default().with("facet.transaction", "true"),
+    ));
+    assert_eq!(code, "unexpected-fact");
+}
+
+#[test]
 fn scopes_left_out_of_this_change_stay_unimplemented() {
     for (checker, scope) in [
         ("checker/c-drive", "drive/native"),
         ("checker/c-facet", "facet/landing"),
         ("checker/c-facet", "facet/generated"),
-        ("checker/c-facet", "facet/transaction"),
         ("checker/c-work", "work/native-dispatch"),
         ("checker/c-work", "work/convergence"),
         ("checker/c-boundary", "boundary/observation"),

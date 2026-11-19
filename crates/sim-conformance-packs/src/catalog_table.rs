@@ -238,7 +238,7 @@ pub(super) const PACKS: &[PackSpec] = &[
             "facet/landing",
             "facet/composed"
         ],
-        ["facet/pure", "facet/composed"]
+        ["facet/pure", "facet/transaction", "facet/composed"]
     ),
     spec!(
         "checker/c-disclose",
@@ -371,7 +371,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "completion/replay",
             "completion/seams",
             "completion/roadmap",
-            "completion/neutral-input"
+            "completion/neutral-input",
+            "completion/facet-transaction"
         ],
         [
             "release/nv12-01",
@@ -420,7 +421,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "completion/replay",
             "completion/seams",
             "completion/roadmap",
-            "completion/neutral-input"
+            "completion/neutral-input",
+            "completion/facet-transaction"
         ]
     ),
     spec!(
