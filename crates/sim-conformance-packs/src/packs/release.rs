@@ -13,6 +13,8 @@ mod boot;
 mod brochure;
 #[path = "release_closure.rs"]
 mod closure;
+#[path = "release_cold.rs"]
+mod cold;
 #[path = "release_command.rs"]
 mod command;
 #[path = "release_converge.rs"]
@@ -58,6 +60,7 @@ pub use binding::{
 };
 pub use boot::{ObservedBootGuard, bind_boot_guard, observe_boot_guard};
 pub use brochure::{ObservedBrochureGuard, bind_brochure_guard, observe_brochure_guard};
+pub use cold::{ObservedColdStage, bind_cold_stage, observe_cold_stage};
 pub use converge::{
     ObservedSealedConvergence, bind_sealed_convergence, observe_sealed_convergence,
 };
@@ -188,6 +191,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "completion/facet-transaction" {
             return facet_tx::observations(request);
+        }
+        if request.scope == "completion/cold-stage" {
+            return cold::observations(request);
         }
         if request.scope == "completion/sealed-convergence" {
             return converge::observations(request);
