@@ -32,6 +32,7 @@ const SOURCE_PATH: &str = "docs/workbench/NO_V3_18.md";
 const SOURCE_DIGEST: &str = "4c0b9ad283be893cf4ccbe87e49bf2adc3e206a923c78b05e1dcaaf554fb0052";
 const CONTRACT: &str = "`NO_V3_18.md` remains the selected product contract";
 const RUN_MARKER: &str = "docs/workbench/NV12_RUN_";
+const RUN_PATH: &str = "docs/workbench/NV12_RUN_01a1edd9.md";
 
 /// Receipt admitted after the owner records authorize the source.
 pub struct ObservedRoadmapAuthority {
@@ -168,7 +169,7 @@ fn load_records(selected: &SelectedSource, rev: &str) -> Result<BoundRecords, Pa
         return Err(fail("bad-record", "source"));
     }
     let run_path = one_run_path(&handoff)?;
-    if run_path == handoff_path || run_path == SOURCE_PATH {
+    if run_path != RUN_PATH || run_path == handoff_path || run_path == SOURCE_PATH {
         return Err(fail("bad-record", "begin-authority"));
     }
     let run = selection::git_show(&selected.repository, rev, &run_path)?;
@@ -245,6 +246,9 @@ fn one_run_path(handoff: &str) -> Result<String, PackFailure> {
         if path == SOURCE_PATH {
             return Err(fail("bad-record", "begin-authority"));
         }
+        if path != RUN_PATH {
+            return Err(fail("bad-record", "begin-authority"));
+        }
         match &found {
             Some(previous) if previous != &path => {
                 return Err(fail("bad-record", "begin-authority"));
@@ -286,7 +290,7 @@ fn admit_rows(
     let decoded = decode_execution(encoded)?;
     if !records(&decoded.handoff, HUMAN)
         || !records(&decoded.handoff, CONTRACT)
-        || one_run_path(&decoded.handoff).is_err()
+        || one_run_path(&decoded.handoff).ok().as_deref() != Some(RUN_PATH)
         || confirm_begin(&decoded.run).is_err()
     {
         return Err(fail("evidence-mismatch", "completion.execution"));

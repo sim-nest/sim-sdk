@@ -16,7 +16,7 @@ use super::{
 };
 
 const SUBJECT: &str = "subject/roadmap-authority";
-const RUN_PATH: &str = "docs/workbench/NV12_RUN_01a1edd9.md";
+const RUN_PATH: &str = super::RUN_PATH;
 
 #[test]
 fn copied_sentences_and_an_example_source_supply_nothing() {
@@ -73,6 +73,31 @@ fn equal_acts_supply_nothing() {
     match observe_roadmap_authority(SUBJECT, &owner_coords(&dir, &rev)) {
         Err(error) => assert_eq!(error.code, "selection-begin"),
         Ok(_) => panic!("equal acts admitted a receipt"),
+    }
+    std::fs::remove_dir_all(&dir).ok();
+}
+
+#[test]
+fn a_substituted_run_record_supplies_nothing() {
+    let dir = scratch("run");
+    let other = "docs/workbench/NV12_RUN_deadbeef.md";
+    let rev = commit_files(
+        &dir,
+        &[
+            (SOURCE_PATH, &source_text(18, None)),
+            (
+                act_path(HUMAN).expect("path"),
+                &handoff_for(SOURCE_DIGEST, other),
+            ),
+            (other, &format!("{BEGIN}\n")),
+        ],
+    );
+    match observe_roadmap_authority(SUBJECT, &owner_coords(&dir, &rev)) {
+        Err(error) => {
+            assert_eq!(error.code, "bad-record");
+            assert_eq!(error.detail, "begin-authority");
+        }
+        Ok(_) => panic!("a substituted run record admitted claim 1"),
     }
     std::fs::remove_dir_all(&dir).ok();
 }
@@ -265,8 +290,12 @@ fn copied_wording_is_refused_and_owner_records_bind_their_source() {
 }
 
 fn handoff(stated_digest: &str) -> String {
+    handoff_for(stated_digest, RUN_PATH)
+}
+
+fn handoff_for(stated_digest: &str, run_path: &str) -> String {
     format!(
-        "{HUMAN}\n\n`NO_V3_18.md` remains the selected product contract, under `AGENTS.md`.\n\nIts record is `{RUN_PATH}`.\n\nSHA-256 `{stated_digest}`\n"
+        "{HUMAN}\n\n`NO_V3_18.md` remains the selected product contract, under `AGENTS.md`.\n\nIts record is `{run_path}`.\n\nSHA-256 `{stated_digest}`\n"
     )
 }
 
