@@ -27,6 +27,8 @@ mod recipe_guard;
 mod replay;
 #[path = "release_retirement.rs"]
 mod retirement;
+#[path = "release_roadmap.rs"]
+mod roadmap;
 #[path = "release_roundtrip.rs"]
 mod roundtrip;
 #[path = "release_route.rs"]
@@ -61,6 +63,7 @@ pub use replay::{
     observe_journal_completion,
 };
 pub use retirement::{ObservedRetirementGuard, bind_retirement_guard, observe_retirement_guard};
+pub use roadmap::{ObservedRoadmapAuthority, bind_roadmap_authority, observe_roadmap_authority};
 pub use roundtrip::{
     ObservedSourceRoundtrip, SourceRoundtrip, bind_source_roundtrip, observe_source_roundtrip,
 };
@@ -165,6 +168,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "completion/seams" {
             return seams::observations(request);
+        }
+        if request.scope == "completion/roadmap" {
+            return roadmap::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()

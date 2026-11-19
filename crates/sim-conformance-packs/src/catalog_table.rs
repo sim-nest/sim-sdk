@@ -369,7 +369,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "release/identity-roundtrip",
             "release/source-identity",
             "completion/replay",
-            "completion/seams"
+            "completion/seams",
+            "completion/roadmap"
         ],
         [
             "release/nv12-01",
@@ -416,7 +417,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "release/identity-roundtrip",
             "release/source-identity",
             "completion/replay",
-            "completion/seams"
+            "completion/seams",
+            "completion/roadmap"
         ]
     ),
     spec!(
