@@ -5,12 +5,14 @@
 
 //! Loadable-product conformance pack.
 //!
-//! World, prove, deliver, roadmap, and cached query latency run the program
-//! named by [`COMMAND_FACT`] and record that program's output. The remaining
-//! portable product scopes have no executed command.
+//! World, prove, deliver, roadmap, cached query latency, and converge run the
+//! program named by [`COMMAND_FACT`] and record that program's output. The
+//! remaining portable product scopes have no executed command.
 
 #[path = "product_command.rs"]
 mod command;
+#[path = "product_converge.rs"]
+mod converge;
 #[path = "product_query.rs"]
 mod query;
 
@@ -25,9 +27,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         match request.scope {
             "product/world" => world(request),
             "product/query-latency" => query_latency(request),
+            "product/convergence-queries" => converge::queries(request),
             "product/prove-plan"
             | "product/prove"
-            | "product/convergence-queries"
             | "product/landing-queries"
             | "product/deliver"
             | "product/roadmap"

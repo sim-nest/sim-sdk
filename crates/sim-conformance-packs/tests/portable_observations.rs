@@ -201,12 +201,12 @@ fn portable_product_scopes_do_not_accept_caller_supplied_truths() {
         "product/prove",
         "product/deliver",
         "product/roadmap",
+        "product/convergence-queries",
     ] {
         let (code, detail) = refusal(&execute("checker/c-product", scope, &portable));
         assert_eq!(code, "unexpected-fact", "{scope} {detail}");
     }
     for scope in [
-        "product/convergence-queries",
         "product/landing-queries",
         "product/installed",
         "product/composed",
