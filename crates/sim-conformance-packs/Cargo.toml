@@ -1,6 +1,6 @@
 [package]
 name = "sim-conformance-packs"
-version = "0.8.8"
+version = "0.8.9"
 edition.workspace = true
 license.workspace = true
 description = "Public neutral conformance packs and bootstrap checkers for SIM."
@@ -23,7 +23,12 @@ external-resolver-lock = []
 sha2 = "0.10"
 toml = "0.8"
 sim-artifact-facet = "0.2.0"
+sim-codec = "0.3.0"
+sim-codec-lisp = "0.4.1"
 sim-conformance-core = "0.3.0"
+# The neutral-input owner is 0.4.0. The 0.3 crate stays for the
+# five-argument issuer. 0.3.1 was yanked and is not a dependency.
+sim-conformance-neutral = { package = "sim-conformance-core", version = "0.4.0" }
 # The frozen executor's proof receipts use the 0.2 contract crate. The 0.3
 # crate above keeps the pack's own checker types. Cargo treats them as two
 # packages because their versions differ.
