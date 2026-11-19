@@ -79,12 +79,23 @@ pub fn observe_cold_stage(subject: &str) -> Result<ObservedColdStage, PackFailur
 
 /// Re-checks a cold-stage receipt against the catalog that admitted it.
 ///
+/// The execution string has to be the loaded comparison. A claim label in
+/// that string is refused before the comparison runs again.
+///
 /// # Errors
 ///
-/// Returns a refusal when the result or scope is no longer claim 9.
+/// Returns a refusal when the result, scope, or execution string is no
+/// longer the loaded comparison.
 pub fn bind_cold_stage(observation: &ObservedColdStage) -> Result<(), PackFailure> {
-    if observation.result != RESULT || observation.scope != scope_id()? {
+    if observation.result != RESULT
+        || observation.scope != scope_id()?
+        || observation.execution.contains("completion/claim-")
+    {
         return Err(fail("claim-relabelled", SCOPE));
+    }
+    let again = execute()?;
+    if observation.execution != again {
+        return Err(fail("evidence-mismatch", FACT));
     }
     receipt::bind_executed(
         &observation.subject,

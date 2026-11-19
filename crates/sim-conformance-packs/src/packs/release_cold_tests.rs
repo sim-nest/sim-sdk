@@ -34,12 +34,23 @@ fn the_loaded_cold_comparison_is_admitted_as_claim_9() {
     );
     assert_eq!(observed.revocation, RevocationStatus::Current);
     super::bind_cold_stage(&observed).expect("bind");
-    let mut relabelled = observed;
-    relabelled.result = "completion/claim-8".to_owned();
+    let mut forged = observed;
+    forged.execution = "scripted-result".to_owned();
     assert_eq!(
-        super::bind_cold_stage(&relabelled)
-            .expect_err("relabel")
+        super::bind_cold_stage(&forged).expect_err("forged").code,
+        "evidence-mismatch"
+    );
+    forged.execution = "completion/claim-9".to_owned();
+    assert_eq!(
+        super::bind_cold_stage(&forged)
+            .expect_err("labelled execution")
             .code,
+        "claim-relabelled"
+    );
+    forged.execution = EXECUTION.to_owned();
+    forged.result = "completion/claim-8".to_owned();
+    assert_eq!(
+        super::bind_cold_stage(&forged).expect_err("relabel").code,
         "claim-relabelled"
     );
 }
