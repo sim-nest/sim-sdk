@@ -190,7 +190,7 @@ fn admit_rows(
     })
 }
 
-fn parse_source(blob: &str) -> Result<(u32, String), PackFailure> {
+pub(in crate::packs::release) fn parse_source(blob: &str) -> Result<(u32, String), PackFailure> {
     if blob.len() > 1_048_576 || blob.contains('\0') || blob.contains('\r') {
         return Err(fail("bound", "source"));
     }
@@ -286,7 +286,9 @@ fn mentioned_rounds(text: &str) -> Result<Vec<u32>, PackFailure> {
     Ok(found)
 }
 
-fn verify_commit(source: &SelectedSource) -> Result<String, PackFailure> {
+pub(in crate::packs::release) fn verify_commit(
+    source: &SelectedSource,
+) -> Result<String, PackFailure> {
     if !is_rev(&source.commit) {
         return Err(fail("bad-record", "commit"));
     }
@@ -321,7 +323,11 @@ fn verify_commit(source: &SelectedSource) -> Result<String, PackFailure> {
     Ok(rev)
 }
 
-fn git_show(repository: &Path, rev: &str, path: &str) -> Result<String, PackFailure> {
+pub(in crate::packs::release) fn git_show(
+    repository: &Path,
+    rev: &str,
+    path: &str,
+) -> Result<String, PackFailure> {
     let repository =
         std::fs::canonicalize(repository).map_err(|_| fail("bad-record", "repository"))?;
     let repo = repository
