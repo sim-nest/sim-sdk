@@ -124,19 +124,20 @@ fn funded_delivery_and_authoring_scopes_execute_their_scenarios() {
         assert_eq!(detail, "delivery.already-true", "{scope}");
     }
 
-    let authoring = truths(packs::authoring::SCENARIOS);
     for scope in ["authoring/family", "authoring/composed"] {
-        assert_missing(
+        let (code, detail) = refusal(&execute(
             "checker/c-author",
             scope,
             &MemorySubject::default(),
-            "authoring.family-self-contained",
-        );
-        assert_pass(
-            "checker/c-author",
-            scope,
-            &authoring,
-            &packs::authoring::SCENARIOS,
+        ));
+        assert_eq!(code, "missing-source", "{scope} {detail}");
+        assert_eq!(detail, "authoring.command", "{scope}");
+        let authoring = truths(packs::authoring::SCENARIOS);
+        let (code, detail) = refusal(&execute("checker/c-author", scope, &authoring));
+        assert_eq!(code, "unexpected-fact", "{scope} {detail}");
+        assert_eq!(
+            detail, "authoring.consultation-not-a-requirement",
+            "{scope}"
         );
     }
 }

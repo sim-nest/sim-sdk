@@ -4,10 +4,19 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 //! Versioned-ensemble authoring conformance pack.
+//!
+//! Each funded scope runs `world author` and admits those records only when
+//! the six authoring laws are printed in them. A caller fact is not an authoring.
 
-use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};
+#[path = "authoring_execute.rs"]
+mod execute;
 
-/// Scenarios every funded authoring scope must execute.
+use crate::{PackRequest, PackVerdict, harness};
+
+/// Fact whose value is the filesystem path of the `sim` program.
+pub const COMMAND_FACT: &str = "authoring.command";
+
+/// Laws the author records must show. These names are not caller facts.
 pub const SCENARIOS: [&str; 6] = [
     "authoring.family-self-contained",
     "authoring.consultation-not-a-requirement",
@@ -20,14 +29,7 @@ pub const SCENARIOS: [&str; 6] = [
 /// Checks one funded authoring scope.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-author", request, |request| match request.scope {
-        "authoring/family" | "authoring/composed" => scenarios(request),
+        "authoring/family" | "authoring/composed" => execute::record(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
-}
-
-fn scenarios(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {
-    SCENARIOS
-        .into_iter()
-        .map(|key| harness::expect_true(request, key))
-        .collect()
 }
