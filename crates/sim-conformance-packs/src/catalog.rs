@@ -278,7 +278,7 @@ impl PackSpec {
             "convergence/fixed-point" => "NV12.16",
             "convergence/composed" => "NV12.26",
             "facet/generated" => "NV12.16",
-            "facet/transaction" => "NV12.17",
+            "facet/transaction" | "completion/facet-transaction" => "NV12.17",
             "facet/landing" => "NV12.18",
             "facet/composed" => "NV12.26",
             "disclosure/transaction" => "NV12.17",

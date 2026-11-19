@@ -13,6 +13,9 @@ use sim_artifact_facet::{
 
 use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};
 
+#[path = "facet_transaction.rs"]
+pub(crate) mod transaction;
+
 /// Public seam used to judge the canonical law and foreign implementations.
 pub trait FacetLaw {
     /// Applies one already role-checked three-way facet comparison.
@@ -45,6 +48,7 @@ impl FacetLaw for CanonicalFacetLaw {
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-facet", request, |request| match request.scope {
         "facet/pure" => check_implementation(&CanonicalFacetLaw),
+        "facet/transaction" => transaction::observe(request),
         "facet/composed" => composed(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
