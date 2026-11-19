@@ -200,7 +200,7 @@ fn require_text(text: &str, marker: &str, detail: &str) -> Result<(), PackFailur
     }
 }
 
-fn program(request: &PackRequest<'_>) -> Result<PathBuf, PackFailure> {
+pub(super) fn program(request: &PackRequest<'_>) -> Result<PathBuf, PackFailure> {
     let mut body = None;
     for key in request.evidence.fact_keys() {
         if key == COMMAND_FACT {
@@ -224,7 +224,7 @@ fn program(request: &PackRequest<'_>) -> Result<PathBuf, PackFailure> {
     Ok(canonical)
 }
 
-fn run(program: &Path, args: &[impl AsRef<str>]) -> Result<String, PackFailure> {
+pub(super) fn run(program: &Path, args: &[impl AsRef<str>]) -> Result<String, PackFailure> {
     let mut command = Command::new(program);
     if let Some(dir) = checkout_dir(program) {
         command.current_dir(dir);
@@ -311,7 +311,7 @@ fn view_of(record: &str) -> Result<String, PackFailure> {
     Err(fail("view-absent", "unclosed"))
 }
 
-fn field<'a>(record: &'a str, name: &str) -> Result<&'a str, PackFailure> {
+pub(super) fn field<'a>(record: &'a str, name: &str) -> Result<&'a str, PackFailure> {
     let key = format!("({name} ");
     let mut rest = record;
     let mut quoted = false;
@@ -347,7 +347,7 @@ fn field<'a>(record: &'a str, name: &str) -> Result<&'a str, PackFailure> {
     Err(fail("marker-absent", name))
 }
 
-fn require_field(record: &str, name: &str, expected: &str) -> Result<(), PackFailure> {
+pub(super) fn require_field(record: &str, name: &str, expected: &str) -> Result<(), PackFailure> {
     if field(record, name)? != expected {
         return Err(fail("record-mismatch", name));
     }
@@ -378,14 +378,14 @@ fn with_prefix(prefix: &[&str], parts: &[&str]) -> Vec<String> {
         .collect()
 }
 
-fn observation(key: &str, stdout: &str) -> CheckObservation {
+pub(super) fn observation(key: &str, stdout: &str) -> CheckObservation {
     CheckObservation {
         key: key.to_owned(),
         value: stdout.to_owned(),
     }
 }
 
-fn fail(code: &'static str, detail: &str) -> PackFailure {
+pub(super) fn fail(code: &'static str, detail: &str) -> PackFailure {
     PackFailure {
         code,
         detail: detail.chars().take(256).collect(),
