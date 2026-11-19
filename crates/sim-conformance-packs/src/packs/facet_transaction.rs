@@ -10,8 +10,10 @@
 //! commit. Wrong head, dirt, a private disclosure sent to a public sink, a
 //! generated-owner bypass, a stale base, a region escape, and an escaping
 //! path all refuse and leave the preimage. Overlap refuses. One repository
-//! can commit while another refuses. Rollback restores the pointer and
-//! keeps the commit it leaves. The observation is `facet.transaction`.
+//! can commit while another refuses, and both live branch pointers stay on
+//! the commits that recovery names. Rollback moves the live branch and head
+//! back to the original tip and keeps the commit it leaves. The observation
+//! is `facet.transaction`.
 //! It is not `completion/claim-13`.
 
 use std::collections::BTreeMap;
@@ -320,6 +322,18 @@ fn recover(tokens: &mut Vec<&'static str>) -> Result<(), PackFailure> {
     let RepoOutcome::Applied { tip: alpha_tip, .. } = outcome(&batch, 0) else {
         return Err(gap("transaction-gap", "recover-applied"));
     };
+    let alpha_held = pointer_matches(&store, "alpha", alpha_tip);
+    let beta_held = pointer_matches(&store, "beta", &beta_tip);
+    if !alpha_held || !beta_held {
+        return Err(gap(
+            "transaction-gap",
+            if !alpha_held {
+                "recover-applied"
+            } else {
+                "recover-held"
+            },
+        ));
+    }
     if batch.settled()
         || reason_at(&batch, 1) != "overlap"
         || store.image_at("alpha", &alpha_tip.head, "src/a.txt") != file("new\n")?
@@ -340,8 +354,13 @@ fn rollback(tokens: &mut Vec<&'static str>) -> Result<(), PackFailure> {
     let Rollback::Restored { tip: current } = restored else {
         return Err(gap("transaction-gap", "rollback-restored"));
     };
-    if current.head != tip.head
-        || store.image_at("alpha", &current.head, "src/a.txt") != file("old\n")?
+    if !pointer_matches(&store, "alpha", &tip)
+        || current.branch != tip.branch
+        || current.head != tip.head
+    {
+        return Err(gap("transaction-gap", "rollback-restored"));
+    }
+    if store.image_at("alpha", &current.head, "src/a.txt") != file("old\n")?
         || store.image_at("alpha", &next.head, "src/a.txt") != file("new\n")?
     {
         return Err(gap("transaction-gap", "rollback-kept"));
@@ -387,6 +406,12 @@ fn commit_exact(
 
 fn transact(store: &mut ModelStore, request: &RepoRequest) -> Result<ModelBatch, PackFailure> {
     transact_facets(store, std::slice::from_ref(request)).map_err(law_error)
+}
+
+fn pointer_matches(store: &ModelStore, repository: &str, expected: &ModelTip) -> bool {
+    store
+        .tip(repository)
+        .is_some_and(|live| live.branch == expected.branch && live.head == expected.head)
 }
 
 fn held(store: &ModelStore, tip: &ModelTip, path: &str, body: &str) -> Result<(), PackFailure> {
