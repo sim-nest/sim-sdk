@@ -5,14 +5,18 @@
 
 //! Loadable-product conformance pack.
 //!
-//! World, prove, deliver, roadmap, cached query latency, land, and converge run the
-//! program named by [`COMMAND_FACT`] and record that program's output. The
-//! remaining portable product scopes have no executed command.
+//! World, prove, deliver, roadmap, cached query latency, land, converge,
+//! qualify, and promote run the program named by [`COMMAND_FACT`] and record
+//! that program's output.
 
 #[path = "product_command.rs"]
 mod command;
+#[path = "product_compose.rs"]
+mod compose;
 #[path = "product_converge.rs"]
 mod converge;
+#[path = "product_install.rs"]
+mod install;
 #[path = "product_land.rs"]
 mod land;
 #[path = "product_query.rs"]
@@ -31,8 +35,11 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
             "product/query-latency" => query_latency(request),
             "product/landing-queries" => land::queries(request),
             "product/convergence-queries" => converge::queries(request),
-            "product/prove-plan" | "product/prove" | "product/deliver" | "product/roadmap"
-            | "product/installed" | "product/composed" => portable(request),
+            "product/composed" => compose::records(request),
+            "product/installed" => install::records(request),
+            "product/prove-plan" | "product/prove" | "product/deliver" | "product/roadmap" => {
+                portable(request)
+            }
             _ => unreachable!("availability was checked before dispatch"),
         }
     })

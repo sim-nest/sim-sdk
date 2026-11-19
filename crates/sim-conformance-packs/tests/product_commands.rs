@@ -167,13 +167,11 @@ fn boolean_facts_are_not_product_execution() {
         "product/roadmap",
         "product/landing-queries",
         "product/convergence-queries",
+        "product/installed",
+        "product/composed",
     ] {
         let (code, _) = refusal(&execute(scope, &truths));
         assert_eq!(code, "unexpected-fact", "{scope}");
-    }
-    for scope in ["product/installed", "product/composed"] {
-        let (code, detail) = refusal(&execute(scope, &truths));
-        assert_eq!(code, "unexecuted", "{scope} {detail}");
     }
     let pasted = MemorySubject::default().with(
         packs::product::COMMAND_FACT,
