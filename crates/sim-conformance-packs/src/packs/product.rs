@@ -5,13 +5,14 @@
 
 //! Loadable-product conformance pack.
 //!
-//! World, prove, deliver, and roadmap run the program named by
-//! [`COMMAND_FACT`] and record that program's output. Query latency compares
-//! its measurement facts. The remaining portable product scopes have no
-//! executed command.
+//! World, prove, deliver, roadmap, and cached query latency run the program
+//! named by [`COMMAND_FACT`] and record that program's output. The remaining
+//! portable product scopes have no executed command.
 
 #[path = "product_command.rs"]
 mod command;
+#[path = "product_query.rs"]
+mod query;
 
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
 
@@ -46,15 +47,5 @@ fn world(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::Pack
 }
 
 fn query_latency(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, crate::PackFailure> {
-    let mut observations = harness::expect_eq(request, "product.query-command", "world/why")
-        .map(|observation| vec![observation])?;
-    for key in [
-        "product.query-warmups-20",
-        "product.query-samples-200",
-        "product.query-p95-at-most-200ms",
-        "product.query-effect-calls-zero",
-    ] {
-        observations.push(harness::expect_true(request, key)?);
-    }
-    Ok(observations)
+    query::measure(request)
 }
