@@ -373,7 +373,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "completion/roadmap",
             "completion/neutral-input",
             "completion/facet-transaction",
-            "completion/sealed-convergence"
+            "completion/sealed-convergence",
+            "completion/cold-stage"
         ],
         [
             "release/nv12-01",
@@ -424,7 +425,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "completion/roadmap",
             "completion/neutral-input",
             "completion/facet-transaction",
-            "completion/sealed-convergence"
+            "completion/sealed-convergence",
+            "completion/cold-stage"
         ]
     ),
     spec!(
