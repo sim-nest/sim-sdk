@@ -31,6 +31,8 @@ mod retirement;
 mod roundtrip;
 #[path = "release_route.rs"]
 mod route_guard;
+#[path = "release_seams.rs"]
+mod seams;
 #[path = "release_selection.rs"]
 mod selection;
 #[path = "release_source.rs"]
@@ -63,6 +65,7 @@ pub use roundtrip::{
     ObservedSourceRoundtrip, SourceRoundtrip, bind_source_roundtrip, observe_source_roundtrip,
 };
 pub use route_guard::{ObservedRouteGuard, bind_route_guard, observe_route_guard};
+pub use seams::{ObservedPortableSeams, bind_portable_seams, observe_portable_seams};
 pub use selection::{
     ObservedSourceSelection, SelectedSource, bind_source_selection, observe_source_selection,
 };
@@ -159,6 +162,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "completion/replay" {
             return replay::observations(request);
+        }
+        if request.scope == "completion/seams" {
+            return seams::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()
