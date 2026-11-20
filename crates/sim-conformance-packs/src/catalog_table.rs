@@ -375,7 +375,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "completion/facet-transaction",
             "completion/sealed-convergence",
             "completion/cold-stage",
-            "completion/stage-one"
+            "completion/stage-one",
+            "completion/consumers"
         ],
         [
             "release/nv12-01",
@@ -428,7 +429,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "completion/facet-transaction",
             "completion/sealed-convergence",
             "completion/cold-stage",
-            "completion/stage-one"
+            "completion/stage-one",
+            "completion/consumers"
         ]
     ),
     spec!(

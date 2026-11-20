@@ -17,6 +17,8 @@ mod closure;
 mod cold;
 #[path = "release_command.rs"]
 mod command;
+#[path = "release_consumers.rs"]
+mod consumers;
 #[path = "release_converge.rs"]
 mod converge;
 #[path = "release_facet.rs"]
@@ -63,6 +65,7 @@ pub use binding::{
 pub use boot::{ObservedBootGuard, bind_boot_guard, observe_boot_guard};
 pub use brochure::{ObservedBrochureGuard, bind_brochure_guard, observe_brochure_guard};
 pub use cold::{ObservedColdStage, bind_cold_stage, observe_cold_stage};
+pub use consumers::{ObservedConsumers, bind_consumers, observe_consumers};
 pub use converge::{
     ObservedSealedConvergence, bind_sealed_convergence, observe_sealed_convergence,
 };
@@ -200,6 +203,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "completion/stage-one" {
             return stage_one::observations(request);
+        }
+        if request.scope == "completion/consumers" {
+            return consumers::observations(request);
         }
         if request.scope == "completion/sealed-convergence" {
             return converge::observations(request);
