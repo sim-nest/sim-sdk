@@ -55,6 +55,8 @@ mod source;
 mod stage_one;
 #[path = "release_transfer.rs"]
 mod transfer;
+#[path = "release_universe.rs"]
+mod universe;
 #[path = "release_validation.rs"]
 mod validation;
 #[path = "release_worktree.rs"]
@@ -99,6 +101,7 @@ pub use stage_one::{ObservedStageOne, bind_stage_one, observe_stage_one};
 pub use transfer::{
     ObservedAuthorityTransfer, TransferSource, bind_authority_transfer, observe_authority_transfer,
 };
+pub use universe::{ObservedSourceUniverse, bind_source_universe, observe_source_universe};
 pub use validation::{ObservedOwnerValidation, bind_owner_validation, observe_owner_validation};
 pub use worktree::{GitPackage, ObservedGitRelease, bind_git_release, observe_git_release};
 
@@ -212,6 +215,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "completion/negatives" {
             return negatives::observations(request);
+        }
+        if request.scope == "completion/source-universe" {
+            return universe::observations(request);
         }
         if request.scope == "completion/sealed-convergence" {
             return converge::observations(request);
