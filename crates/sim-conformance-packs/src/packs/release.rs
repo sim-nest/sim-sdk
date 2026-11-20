@@ -32,7 +32,7 @@ mod neutral;
 #[path = "release_observed.rs"]
 mod observed;
 #[path = "release_receipt.rs"]
-mod receipt;
+pub(in crate::packs) mod receipt;
 #[path = "release_recipe.rs"]
 mod recipe_guard;
 #[path = "release_replay.rs"]

@@ -27,21 +27,20 @@ use sim_lib_roadmap_runner::{
 
 use crate::{PackFailure, find_pack};
 
-const RELEASE_SYMBOL: &str = "sim_conformance_packs::packs::release::check";
 const ACTIVATION_OWNER: &str =
     "core/sha256-datum-v1:6fc0e9594fe3a592c1877d9034cc7a6b5f9aa9ce50e3251a705955b348ccf827";
 const REVOCATION_SOURCE: &str = "sim-sdk/sim-conformance-packs-revocations-v1";
 const OWNER_VALIDATION: &str = "cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps && cargo clippy --workspace --all-features --all-targets -- -D warnings && cargo test --workspace --all-features";
 const OWNER_DOCS: &str = "cargo run -p xtask -- simdoc --check";
 
-pub(super) struct PackageRow {
+pub(in crate::packs) struct PackageRow {
     pub name: String,
     pub version: String,
     pub url: String,
     pub rev: String,
 }
 
-pub(super) struct ExecutedReceipt {
+pub(in crate::packs) struct ExecutedReceipt {
     pub catalog: ProofCatalog,
     pub admitted: AdmittedEvidence,
     pub checker: CheckerReceiptId,
@@ -49,7 +48,7 @@ pub(super) struct ExecutedReceipt {
     pub revocation: RevocationStatus,
 }
 
-pub(super) struct AdmitExecuted<'a> {
+pub(in crate::packs) struct AdmitExecuted<'a> {
     pub subject: &'a str,
     pub result: &'a str,
     pub scope: &'a str,
@@ -65,7 +64,21 @@ pub(super) struct AdmitExecuted<'a> {
     pub definitions: &'a [DiscoveredDefinition],
 }
 
-pub(super) fn admit_executed(request: AdmitExecuted<'_>) -> Result<ExecutedReceipt, PackFailure> {
+pub(in crate::packs) fn admit_executed(
+    request: AdmitExecuted<'_>,
+) -> Result<ExecutedReceipt, PackFailure> {
+    admit_for("checker/c-release", request)
+}
+
+/// Admits one execution receipt for the named checker.
+///
+/// Release callers keep `checker/c-release`. Another checker, including
+/// ownership, passes its own id so the pack and entrypoint stay that
+/// checker's.
+pub(in crate::packs) fn admit_for(
+    checker: &str,
+    request: AdmitExecuted<'_>,
+) -> Result<ExecutedReceipt, PackFailure> {
     if request.definitions.is_empty() {
         return Err(fail("missing-source", request.proof));
     }
@@ -105,8 +118,10 @@ pub(super) fn admit_executed(request: AdmitExecuted<'_>) -> Result<ExecutedRecei
     };
     let selected = request.definitions.iter().collect::<Vec<_>>();
     let bound = input_closure(&leaf, &claim, &selected)?;
-    let spec = find_pack("checker/c-release")
-        .ok_or_else(|| fail("unknown-checker", "checker/c-release"))?;
+    let spec = find_pack(checker).ok_or_else(|| fail("unknown-checker", checker))?;
+    let symbol = spec
+        .public_symbol()
+        .map_err(|error| fail("receipt-refused", &error.to_string()))?;
     let code = ProofCodeId::from_text(&format!(
         "sim-conformance-packs@{};build-inputs-sha256={}",
         env!("CARGO_PKG_VERSION"),
@@ -115,7 +130,7 @@ pub(super) fn admit_executed(request: AdmitExecuted<'_>) -> Result<ExecutedRecei
     .map_err(|error| fail("receipt-refused", &error.to_string()))?;
     let pack = ConformancePackId::from_text(&format!("{}@{}", spec.pack, spec.activation_binding))
         .map_err(|error| fail("receipt-refused", &error.to_string()))?;
-    let binding = receipt_binding(&scope, pack.clone())?;
+    let binding = receipt_binding(checker, symbol, &scope, pack.clone())?;
     let invocation = binding
         .instantiate(code, pack, subject_id, scope.clone(), bound)
         .map_err(|error| fail("receipt-refused", &error.to_string()))?;
@@ -163,7 +178,7 @@ pub(super) fn admit_executed(request: AdmitExecuted<'_>) -> Result<ExecutedRecei
     })
 }
 
-pub(super) fn bind_executed(
+pub(in crate::packs) fn bind_executed(
     subject: &str,
     result: &str,
     scope: &CheckScopeId,
@@ -203,7 +218,7 @@ pub(super) fn bind_executed(
     }
 }
 
-pub(super) fn package_source(domain: &str, root: &str, rows: &[PackageRow]) -> String {
+pub(in crate::packs) fn package_source(domain: &str, root: &str, rows: &[PackageRow]) -> String {
     let mut text =
         format!("sim-world-inputs-v1\nroot-package {root}\ndomain {domain} . compiling source\n");
     for row in rows {
@@ -222,7 +237,10 @@ pub(super) fn package_source(domain: &str, root: &str, rows: &[PackageRow]) -> S
     text
 }
 
-pub(super) fn package_definitions(domain: &str, rows: &[PackageRow]) -> Vec<DiscoveredDefinition> {
+pub(in crate::packs) fn package_definitions(
+    domain: &str,
+    rows: &[PackageRow],
+) -> Vec<DiscoveredDefinition> {
     rows.iter()
         .map(|row| DiscoveredDefinition {
             class: "package",
@@ -243,14 +261,14 @@ pub(super) fn package_definitions(domain: &str, rows: &[PackageRow]) -> Vec<Disc
         .collect()
 }
 
-pub(super) fn push_field(out: &mut String, field: &str) {
+pub(in crate::packs) fn push_field(out: &mut String, field: &str) {
     out.push_str(&field.len().to_string());
     out.push(':');
     out.push_str(field);
     out.push(';');
 }
 
-pub(super) fn take_field(input: &str) -> Result<(&str, &str), PackFailure> {
+pub(in crate::packs) fn take_field(input: &str) -> Result<(&str, &str), PackFailure> {
     let (len_text, rest) = input
         .split_once(':')
         .ok_or_else(|| fail("bad-record", "field"))?;
@@ -270,7 +288,7 @@ pub(super) fn take_field(input: &str) -> Result<(&str, &str), PackFailure> {
     Ok((&rest[..len], &rest[len + 1..]))
 }
 
-pub(super) fn render(id: &ContentId) -> String {
+pub(in crate::packs) fn render(id: &ContentId) -> String {
     let digest = id
         .bytes
         .iter()
@@ -308,14 +326,16 @@ fn issued(checker: &CheckerReceiptId) -> impl Fn(&CheckerReceiptId) -> Revocatio
 }
 
 fn receipt_binding(
+    checker: &str,
+    symbol: &str,
     scope: &CheckScopeId,
     pack: ConformancePackId,
 ) -> Result<CheckerBinding, PackFailure> {
     CheckerBinding::new(
-        "checker/c-release".into(),
+        checker.into(),
         OwnerBindingId::from_text(ACTIVATION_OWNER)
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-        RELEASE_SYMBOL.into(),
+        symbol.into(),
         vec![pack],
         OutputShapeId::from_text("check/receipt-v1")
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
@@ -327,7 +347,7 @@ fn receipt_binding(
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
         BTreeSet::from([scope.clone()]),
         CheckTemplate::new(
-            RELEASE_SYMBOL.into(),
+            symbol.into(),
             vec![
                 CheckArgument::BindingSlot,
                 CheckArgument::SubjectSlot,

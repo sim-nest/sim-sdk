@@ -8,6 +8,11 @@
 use super::succession_record::{self, fail};
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
 
+#[path = "ownership_surfaces.rs"]
+mod surfaces;
+
+pub use surfaces::{ObservedOwnershipFinal, bind_ownership_final, observe_ownership_final};
+
 /// Checks the exact requested ownership scope.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-own", request, |request| match request.scope {
@@ -16,6 +21,7 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         "ownership/bootstrap" => bootstrap(request),
         "ownership/produced" => produced(request),
         "ownership/roadmap-final" => roadmap_final(request),
+        "completion/ownership-final" => surfaces::observations(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
 }
