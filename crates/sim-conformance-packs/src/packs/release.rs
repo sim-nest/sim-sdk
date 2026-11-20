@@ -47,6 +47,8 @@ mod seams;
 mod selection;
 #[path = "release_source.rs"]
 mod source;
+#[path = "release_stage.rs"]
+mod stage_one;
 #[path = "release_transfer.rs"]
 mod transfer;
 #[path = "release_validation.rs"]
@@ -87,6 +89,7 @@ pub use selection::{
     ObservedSourceSelection, SelectedSource, bind_source_selection, observe_source_selection,
 };
 pub use source::{ObservedSourceRelease, observe_source_identity};
+pub use stage_one::{ObservedStageOne, bind_stage_one, observe_stage_one};
 pub use transfer::{
     ObservedAuthorityTransfer, TransferSource, bind_authority_transfer, observe_authority_transfer,
 };
@@ -194,6 +197,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "completion/cold-stage" {
             return cold::observations(request);
+        }
+        if request.scope == "completion/stage-one" {
+            return stage_one::observations(request);
         }
         if request.scope == "completion/sealed-convergence" {
             return converge::observations(request);
