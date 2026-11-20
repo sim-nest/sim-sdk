@@ -34,14 +34,14 @@ const REVOCATION_SOURCE: &str = "sim-sdk/sim-conformance-packs-revocations-v1";
 const OWNER_VALIDATION: &str = "cargo fmt --all --check && cargo test --workspace && cargo clippy --workspace --all-targets -- -D warnings && cargo doc --workspace --no-deps && cargo clippy --workspace --all-features --all-targets -- -D warnings && cargo test --workspace --all-features";
 const OWNER_DOCS: &str = "cargo run -p xtask -- simdoc --check";
 
-pub(super) struct PackageRow {
+pub(in crate::packs) struct PackageRow {
     pub name: String,
     pub version: String,
     pub url: String,
     pub rev: String,
 }
 
-pub(super) struct ExecutedReceipt {
+pub(in crate::packs) struct ExecutedReceipt {
     pub catalog: ProofCatalog,
     pub admitted: AdmittedEvidence,
     pub checker: CheckerReceiptId,
@@ -49,7 +49,7 @@ pub(super) struct ExecutedReceipt {
     pub revocation: RevocationStatus,
 }
 
-pub(super) struct AdmitExecuted<'a> {
+pub(in crate::packs) struct AdmitExecuted<'a> {
     pub subject: &'a str,
     pub result: &'a str,
     pub scope: &'a str,
@@ -65,7 +65,9 @@ pub(super) struct AdmitExecuted<'a> {
     pub definitions: &'a [DiscoveredDefinition],
 }
 
-pub(super) fn admit_executed(request: AdmitExecuted<'_>) -> Result<ExecutedReceipt, PackFailure> {
+pub(in crate::packs) fn admit_executed(
+    request: AdmitExecuted<'_>,
+) -> Result<ExecutedReceipt, PackFailure> {
     if request.definitions.is_empty() {
         return Err(fail("missing-source", request.proof));
     }
@@ -163,7 +165,7 @@ pub(super) fn admit_executed(request: AdmitExecuted<'_>) -> Result<ExecutedRecei
     })
 }
 
-pub(super) fn bind_executed(
+pub(in crate::packs) fn bind_executed(
     subject: &str,
     result: &str,
     scope: &CheckScopeId,
@@ -203,7 +205,7 @@ pub(super) fn bind_executed(
     }
 }
 
-pub(super) fn package_source(domain: &str, root: &str, rows: &[PackageRow]) -> String {
+pub(in crate::packs) fn package_source(domain: &str, root: &str, rows: &[PackageRow]) -> String {
     let mut text =
         format!("sim-world-inputs-v1\nroot-package {root}\ndomain {domain} . compiling source\n");
     for row in rows {
@@ -222,7 +224,10 @@ pub(super) fn package_source(domain: &str, root: &str, rows: &[PackageRow]) -> S
     text
 }
 
-pub(super) fn package_definitions(domain: &str, rows: &[PackageRow]) -> Vec<DiscoveredDefinition> {
+pub(in crate::packs) fn package_definitions(
+    domain: &str,
+    rows: &[PackageRow],
+) -> Vec<DiscoveredDefinition> {
     rows.iter()
         .map(|row| DiscoveredDefinition {
             class: "package",
@@ -243,14 +248,14 @@ pub(super) fn package_definitions(domain: &str, rows: &[PackageRow]) -> Vec<Disc
         .collect()
 }
 
-pub(super) fn push_field(out: &mut String, field: &str) {
+pub(in crate::packs) fn push_field(out: &mut String, field: &str) {
     out.push_str(&field.len().to_string());
     out.push(':');
     out.push_str(field);
     out.push(';');
 }
 
-pub(super) fn take_field(input: &str) -> Result<(&str, &str), PackFailure> {
+pub(in crate::packs) fn take_field(input: &str) -> Result<(&str, &str), PackFailure> {
     let (len_text, rest) = input
         .split_once(':')
         .ok_or_else(|| fail("bad-record", "field"))?;
@@ -270,7 +275,7 @@ pub(super) fn take_field(input: &str) -> Result<(&str, &str), PackFailure> {
     Ok((&rest[..len], &rest[len + 1..]))
 }
 
-pub(super) fn render(id: &ContentId) -> String {
+pub(in crate::packs) fn render(id: &ContentId) -> String {
     let digest = id
         .bytes
         .iter()

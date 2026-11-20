@@ -64,14 +64,16 @@ pub(super) const PACKS: &[PackSpec] = &[
             "ownership/dependencies",
             "ownership/bootstrap",
             "ownership/produced",
-            "ownership/roadmap-final"
+            "ownership/roadmap-final",
+            "completion/ownership-final"
         ],
         [
             "ownership/activation",
             "ownership/dependencies",
             "ownership/bootstrap",
             "ownership/produced",
-            "ownership/roadmap-final"
+            "ownership/roadmap-final",
+            "completion/ownership-final"
         ]
     ),
     spec!(
