@@ -25,6 +25,8 @@ mod converge;
 mod facet_tx;
 #[path = "release_index.rs"]
 mod index_guard;
+#[path = "release_negatives.rs"]
+mod negatives;
 #[path = "release_neutral.rs"]
 mod neutral;
 #[path = "release_observed.rs"]
@@ -71,6 +73,7 @@ pub use converge::{
 };
 pub use facet_tx::{ObservedFacetTransaction, bind_facet_transaction, observe_facet_transaction};
 pub use index_guard::{ObservedIndexGuard, bind_index_guard, observe_index_guard};
+pub use negatives::{ObservedNegatives, bind_negatives, observe_negatives};
 pub use neutral::{ObservedNeutralInput, bind_neutral_input, observe_neutral_input};
 pub use observed::{
     ObservedPublished, ObservedReleaseObligations, PublishedObligation, ReleaseObligations,
@@ -206,6 +209,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "completion/consumers" {
             return consumers::observations(request);
+        }
+        if request.scope == "completion/negatives" {
+            return negatives::observations(request);
         }
         if request.scope == "completion/sealed-convergence" {
             return converge::observations(request);
