@@ -26,8 +26,12 @@ pub(super) const PACKS: &[PackSpec] = &[
         "core/sha256-datum-v1:683334ada045fdb5fdfd3709100a703557df210835040bfe623d7b94ec00b01f",
         "pack/retirement",
         "NV12.01",
-        ["retirement/bootstrap", "retirement/final"],
-        ["retirement/bootstrap"]
+        [
+            "retirement/bootstrap",
+            "retirement/final",
+            "completion/closure-final"
+        ],
+        ["retirement/bootstrap", "completion/closure-final"]
     ),
     spec!(
         "checker/c-id",
