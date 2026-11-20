@@ -205,7 +205,8 @@ impl PackSpec {
         )
     }
 
-    fn public_symbol(&self) -> Result<&'static str, ConformanceError> {
+    /// Returns the public Rust entrypoint for this checker.
+    pub(crate) fn public_symbol(&self) -> Result<&'static str, ConformanceError> {
         Ok(match self.checker {
             "checker/c-v3" => "sim_conformance_packs::packs::retirement::check",
             "checker/c-id" => "sim_conformance_packs::packs::identity::check",

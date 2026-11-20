@@ -27,7 +27,6 @@ use sim_lib_roadmap_runner::{
 
 use crate::{PackFailure, find_pack};
 
-const RELEASE_SYMBOL: &str = "sim_conformance_packs::packs::release::check";
 const ACTIVATION_OWNER: &str =
     "core/sha256-datum-v1:6fc0e9594fe3a592c1877d9034cc7a6b5f9aa9ce50e3251a705955b348ccf827";
 const REVOCATION_SOURCE: &str = "sim-sdk/sim-conformance-packs-revocations-v1";
@@ -66,6 +65,18 @@ pub(in crate::packs) struct AdmitExecuted<'a> {
 }
 
 pub(in crate::packs) fn admit_executed(
+    request: AdmitExecuted<'_>,
+) -> Result<ExecutedReceipt, PackFailure> {
+    admit_for("checker/c-release", request)
+}
+
+/// Admits one execution receipt for the named checker.
+///
+/// Release callers keep `checker/c-release`. Another checker, including
+/// ownership, passes its own id so the pack and entrypoint stay that
+/// checker's.
+pub(in crate::packs) fn admit_for(
+    checker: &str,
     request: AdmitExecuted<'_>,
 ) -> Result<ExecutedReceipt, PackFailure> {
     if request.definitions.is_empty() {
@@ -107,8 +118,10 @@ pub(in crate::packs) fn admit_executed(
     };
     let selected = request.definitions.iter().collect::<Vec<_>>();
     let bound = input_closure(&leaf, &claim, &selected)?;
-    let spec = find_pack("checker/c-release")
-        .ok_or_else(|| fail("unknown-checker", "checker/c-release"))?;
+    let spec = find_pack(checker).ok_or_else(|| fail("unknown-checker", checker))?;
+    let symbol = spec
+        .public_symbol()
+        .map_err(|error| fail("receipt-refused", &error.to_string()))?;
     let code = ProofCodeId::from_text(&format!(
         "sim-conformance-packs@{};build-inputs-sha256={}",
         env!("CARGO_PKG_VERSION"),
@@ -117,7 +130,7 @@ pub(in crate::packs) fn admit_executed(
     .map_err(|error| fail("receipt-refused", &error.to_string()))?;
     let pack = ConformancePackId::from_text(&format!("{}@{}", spec.pack, spec.activation_binding))
         .map_err(|error| fail("receipt-refused", &error.to_string()))?;
-    let binding = receipt_binding(&scope, pack.clone())?;
+    let binding = receipt_binding(checker, symbol, &scope, pack.clone())?;
     let invocation = binding
         .instantiate(code, pack, subject_id, scope.clone(), bound)
         .map_err(|error| fail("receipt-refused", &error.to_string()))?;
@@ -313,14 +326,16 @@ fn issued(checker: &CheckerReceiptId) -> impl Fn(&CheckerReceiptId) -> Revocatio
 }
 
 fn receipt_binding(
+    checker: &str,
+    symbol: &str,
     scope: &CheckScopeId,
     pack: ConformancePackId,
 ) -> Result<CheckerBinding, PackFailure> {
     CheckerBinding::new(
-        "checker/c-release".into(),
+        checker.into(),
         OwnerBindingId::from_text(ACTIVATION_OWNER)
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
-        RELEASE_SYMBOL.into(),
+        symbol.into(),
         vec![pack],
         OutputShapeId::from_text("check/receipt-v1")
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
@@ -332,7 +347,7 @@ fn receipt_binding(
             .map_err(|error| fail("receipt-refused", &error.to_string()))?,
         BTreeSet::from([scope.clone()]),
         CheckTemplate::new(
-            RELEASE_SYMBOL.into(),
+            symbol.into(),
             vec![
                 CheckArgument::BindingSlot,
                 CheckArgument::SubjectSlot,

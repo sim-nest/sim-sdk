@@ -3,7 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-use sim_conformance_v02::{CheckScopeId, CheckedSubjectId, RevocationStatus};
+use sim_conformance_v02::{CheckScopeId, CheckedSubjectId, ConformancePackId, RevocationStatus};
 use sim_lib_roadmap_runner::ProofLeaf;
 
 use crate::packs::release::receipt;
@@ -24,6 +24,16 @@ fn the_loaded_surfaces_are_admitted_as_claim_2() {
     assert_ne!(loaded.overlap_seal, loaded.exact_seal);
     assert_ne!(loaded.unimplemented_seal, loaded.exact_seal);
     let observed = super::observe_ownership_final(SUBJECT).expect("ownership surfaces");
+    let owned = find_pack("checker/c-own").expect("ownership");
+    let receipt = observed
+        .catalog
+        .checker_receipt(&observed.checker, RevocationStatus::Current)
+        .expect("retained receipt");
+    let ownership_pack = ConformancePackId::from_text(&format!("pack/ownership@{ACTIVATION}"))
+        .expect("ownership pack");
+    assert_eq!(receipt.pack(), &ownership_pack);
+    assert_eq!(owned.pack, "pack/ownership");
+    assert_eq!(owned.activation_binding, ACTIVATION);
     let carried = receipt_seal(&observed);
     let execution = format!("{REASONS} {}", carried);
     let exact = sim_lib_world::surfaces::surfaces_digest("exact").expect("assess exact");

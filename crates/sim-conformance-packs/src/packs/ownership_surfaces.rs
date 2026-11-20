@@ -141,21 +141,24 @@ fn admit(
         url: format!("git://{PROOF}"),
         rev: again.seal.clone(),
     }];
-    let admitted = receipt::admit_executed(AdmitExecuted {
-        subject,
-        result: RESULT,
-        scope: SCOPE,
-        proof: PROOF,
-        domain: DOMAIN,
-        policy: "policy/ownership-final",
-        provenance: "provenance/ownership-final",
-        support: "support/ownership-final",
-        projection: "projection/ownership-final",
-        environment: "environment/ownership-final",
-        leaf: again.seal.as_bytes(),
-        source_text: &receipt::package_source(DOMAIN, PROOF, &rows),
-        definitions: &receipt::package_definitions(DOMAIN, &rows),
-    })?;
+    let admitted = receipt::admit_for(
+        "checker/c-own",
+        AdmitExecuted {
+            subject,
+            result: RESULT,
+            scope: SCOPE,
+            proof: PROOF,
+            domain: DOMAIN,
+            policy: "policy/ownership-final",
+            provenance: "provenance/ownership-final",
+            support: "support/ownership-final",
+            projection: "projection/ownership-final",
+            environment: "environment/ownership-final",
+            leaf: again.seal.as_bytes(),
+            source_text: &receipt::package_source(DOMAIN, PROOF, &rows),
+            definitions: &receipt::package_definitions(DOMAIN, &rows),
+        },
+    )?;
     Ok(ObservedOwnershipFinal {
         subject: subject.to_owned(),
         result: RESULT.to_owned(),
