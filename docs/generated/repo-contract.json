@@ -7622,20 +7622,20 @@
         }
       }
     },
-    "generation_timestamp": "2026-11-20T04:50:59+01:00",
+    "generation_timestamp": "2026-11-20T09:45:56+01:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "913eb871f0ddd70ee3a3eb4861db6e9b64512879",
+    "git_commit": "306400e0c214f177a121eb75e39bbf24cd1e5461",
     "regeneration_command": "cargo run -p xtask -- simdoc",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "913eb871f0ddd70ee3a3eb4861db6e9b64512879",
+    "source_commit": "306400e0c214f177a121eb75e39bbf24cd1e5461",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo run -p xtask -- simdoc --check"
     ],
-    "workspace_hash": "9eea19d7ea7f9ab3",
+    "workspace_hash": "8e981ec973740bee",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 505,
+    "workspace_hash_input_count": 507,
     "workspace_hash_inputs": [
       ".github/workflows/authorship.yml",
       ".github/workflows/ci.yml",
@@ -7738,6 +7738,8 @@
       "crates/sim-conformance-packs/src/packs/release_index.rs",
       "crates/sim-conformance-packs/src/packs/release_index_tests.rs",
       "crates/sim-conformance-packs/src/packs/release_journal.rs",
+      "crates/sim-conformance-packs/src/packs/release_negatives.rs",
+      "crates/sim-conformance-packs/src/packs/release_negatives_tests.rs",
       "crates/sim-conformance-packs/src/packs/release_neutral.rs",
       "crates/sim-conformance-packs/src/packs/release_neutral_tests.rs",
       "crates/sim-conformance-packs/src/packs/release_observed.rs",
