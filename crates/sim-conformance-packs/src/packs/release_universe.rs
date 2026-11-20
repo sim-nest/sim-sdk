@@ -205,8 +205,19 @@ fn load() -> Result<Loaded, PackFailure> {
         return Err(fail("source-gap", SCOPE));
     }
     let seal = loaded.exact_seal;
+    let exact_assessed = assessed("exact")?;
+    let unread_assessed = assessed("unread-policy")?;
+    let fact_assessed = assessed("changed-fact")?;
+    let policy_assessed = assessed("changed-policy")?;
     if !hex_seal(&seal)
         || loaded.unread_seal != seal
+        || seal != exact_assessed
+        || unread_assessed != exact_assessed
+        || loaded.changed_fact_seal != fact_assessed
+        || loaded.changed_policy_seal != policy_assessed
+        || fact_assessed == seal
+        || policy_assessed == seal
+        || fact_assessed == policy_assessed
         || loaded.changed_fact_seal == seal
         || loaded.changed_policy_seal == seal
         || loaded.changed_fact_seal == loaded.changed_policy_seal
@@ -221,6 +232,11 @@ fn load() -> Result<Loaded, PackFailure> {
         return Err(fail("claim-relabelled", SCOPE));
     }
     Ok(Loaded { executed, seal })
+}
+
+fn assessed(case: &str) -> Result<String, PackFailure> {
+    sim_lib_world::universe::source_digest(case)
+        .map_err(|error| fail("source-gap", &error.to_string()))
 }
 
 fn hex_seal(value: &str) -> bool {
