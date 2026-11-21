@@ -26,6 +26,7 @@ mod load;
 #[path = "product_query.rs"]
 mod query;
 
+pub(crate) use command::{program, prove_record, require_field, run};
 pub use load::{bind_product_load, observe_product_load};
 
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};

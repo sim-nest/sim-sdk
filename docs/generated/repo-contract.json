@@ -3766,6 +3766,16 @@
           "kind": [
             "test"
           ],
+          "name": "release_plan",
+          "src": "crates/sim-conformance-packs/tests/release_plan.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "revocation_policy",
           "src": "crates/sim-conformance-packs/tests/revocation_policy.rs"
         },
@@ -7632,20 +7642,20 @@
         }
       }
     },
-    "generation_timestamp": "2026-11-21T17:17:14+01:00",
+    "generation_timestamp": "2026-11-21T20:10:43+01:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "883469877ddb30e05a0e3f09d5990029bbd8e212",
+    "git_commit": "a2d1a022c3ce4b9bf124b50ee7d0bdcee40cac93",
     "regeneration_command": "cargo run -p xtask -- simdoc",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "883469877ddb30e05a0e3f09d5990029bbd8e212",
+    "source_commit": "a2d1a022c3ce4b9bf124b50ee7d0bdcee40cac93",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo run -p xtask -- simdoc --check"
     ],
-    "workspace_hash": "31e3d74c09f93e7a",
+    "workspace_hash": "d70163a3dc161e96",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 524,
+    "workspace_hash_input_count": 526,
     "workspace_hash_inputs": [
       ".github/workflows/authorship.yml",
       ".github/workflows/ci.yml",
@@ -7767,6 +7777,7 @@
       "crates/sim-conformance-packs/src/packs/release_observed.rs",
       "crates/sim-conformance-packs/src/packs/release_observed_read.rs",
       "crates/sim-conformance-packs/src/packs/release_observed_tests.rs",
+      "crates/sim-conformance-packs/src/packs/release_plan.rs",
       "crates/sim-conformance-packs/src/packs/release_receipt.rs",
       "crates/sim-conformance-packs/src/packs/release_recipe.rs",
       "crates/sim-conformance-packs/src/packs/release_recipe_tests.rs",
@@ -7833,6 +7844,7 @@
       "crates/sim-conformance-packs/tests/projection_reference.rs",
       "crates/sim-conformance-packs/tests/release_nv12_27.rs",
       "crates/sim-conformance-packs/tests/release_nv12_28.rs",
+      "crates/sim-conformance-packs/tests/release_plan.rs",
       "crates/sim-conformance-packs/tests/revocation_policy.rs",
       "crates/sim-conformance-packs/tests/succession_cold.rs",
       "crates/sim-projection-admission-protocol/Cargo.toml",
