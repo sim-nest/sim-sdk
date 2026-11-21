@@ -29,6 +29,8 @@ mod index_guard;
 mod negatives;
 #[path = "release_neutral.rs"]
 mod neutral;
+#[path = "release_observe.rs"]
+mod observe;
 #[path = "release_observed.rs"]
 mod observed;
 #[path = "release_plan.rs"]
@@ -226,6 +228,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/nv12-08" {
             return plan::observations(request);
+        }
+        if request.scope == "release/nv12-09" {
+            return observe::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()
