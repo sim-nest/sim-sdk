@@ -114,7 +114,11 @@ pub(super) fn read_specimen(root: &Path, token: &str) -> Result<(), PackFailure>
     if !file.is_file() {
         return Err(command::fail("specimen-absent", token));
     }
-    contained(root, &file, "specimen-absent")?;
+    let file = contained(root, &file, "specimen-absent")?;
+    let bytes = std::fs::read(&file).map_err(|_| command::fail("specimen-absent", token))?;
+    if bytes.is_empty() {
+        return Err(command::fail("specimen-absent", token));
+    }
     if !brochure.is_file() {
         return Err(command::fail("brochure-absent", token));
     }

@@ -108,6 +108,30 @@ fn a_missing_specimen_is_refused() {
 }
 
 #[test]
+fn an_unreadable_specimen_is_refused() {
+    let made = fixture("unreadable", "pass", true, true);
+    let specimen = world_recipe(&made.root);
+    let mut permissions = std::fs::metadata(&specimen).unwrap().permissions();
+    permissions.set_mode(0o0);
+    std::fs::set_permissions(&specimen, permissions).unwrap();
+    let error = packs::product::observe_product_load(SUBJECT, &made.sim, &made.root)
+        .expect_err("unreadable");
+    assert_eq!(error.code, "specimen-absent");
+    let mut restored = std::fs::metadata(&specimen).unwrap().permissions();
+    restored.set_mode(0o644);
+    std::fs::set_permissions(&specimen, restored).unwrap();
+}
+
+#[test]
+fn an_empty_specimen_is_refused() {
+    let made = fixture("empty", "pass", true, true);
+    std::fs::write(world_recipe(&made.root), "").unwrap();
+    let error =
+        packs::product::observe_product_load(SUBJECT, &made.sim, &made.root).expect_err("empty");
+    assert_eq!(error.code, "specimen-absent");
+}
+
+#[test]
 fn a_route_without_the_frame_phrase_is_refused() {
     let made = fixture("frame", "frame", true, true);
     let error =
@@ -351,6 +375,10 @@ fn refusal(verdict: &PackVerdict) -> (String, String) {
         PackVerdict::Refused(failure) => (failure.code.to_owned(), failure.detail.clone()),
         other => panic!("expected a refusal, got {other:?}"),
     }
+}
+
+fn world_recipe(root: &Path) -> PathBuf {
+    root.join("sim-runtime/crates/sim-lib-world/recipes/01-projection/world-explain/recipe.toml")
 }
 
 fn scratch(name: &str) -> PathBuf {
