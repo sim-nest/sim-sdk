@@ -49,6 +49,8 @@ mod roadmap;
 mod roundtrip;
 #[path = "release_route.rs"]
 mod route_guard;
+#[path = "release_seal.rs"]
+mod seal;
 #[path = "release_seams.rs"]
 mod seams;
 #[path = "release_selection.rs"]
@@ -231,6 +233,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/nv12-09" {
             return observe::observations(request);
+        }
+        if request.scope == "release/nv12-10" {
+            return seal::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()

@@ -1,0 +1,275 @@
+// SPDX-License-Identifier: MPL-2.0
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+//! `release/nv12-10` runs `world measure seal` on the named program.
+//!
+//! Missing, corrupt, stub-only, and wrong-target inputs refuse before a
+//! compiler. Equal seals stay, and a changed lock moves. Caller closure
+//! facts do not supply the scope.
+
+use std::path::Path;
+
+use crate::{CheckObservation, PackFailure, PackRequest};
+
+const FIELDS: usize = 10;
+
+struct Node {
+    tag: String,
+    fields: Vec<(String, String)>,
+}
+
+pub(super) fn observations(
+    request: &PackRequest<'_>,
+) -> Result<Vec<CheckObservation>, PackFailure> {
+    let program = crate::packs::product::program(request)?;
+    let stdout = run_stable(&program, &["world", "measure", "seal"])?;
+    require_measure(&stdout)?;
+    Ok(vec![observation("release.observe.seal", &stdout)])
+}
+
+fn run_stable(program: &Path, args: &[&str]) -> Result<String, PackFailure> {
+    let first = crate::packs::product::run(program, args)?;
+    let second = crate::packs::product::run(program, args)?;
+    if first != second {
+        return Err(fail("observation-unstable", "seal"));
+    }
+    Ok(first)
+}
+
+fn require_measure(stdout: &str) -> Result<(), PackFailure> {
+    let node = require_tag(stdout, "world/seal-measure-v1")?;
+    require_string(&node, "compile", "checked")?;
+    require_string(&node, "corrupt", "corrupt-input")?;
+    require_bare(&node, "effects", "0")?;
+    require_string(&node, "lock", "moved")?;
+    require_string(&node, "missing", "missing-input")?;
+    require_bare(&node, "resident", "true")?;
+    require_string(&node, "seal", "same")?;
+    require_string(&node, "stub", "stub-only")?;
+    require_bare(&node, "subprocesses", "1")?;
+    require_string(&node, "target", "wrong-target")?;
+    if node.fields.len() != FIELDS {
+        return Err(fail("record-mismatch", "fields"));
+    }
+    Ok(())
+}
+
+fn require_tag(stdout: &str, tag: &str) -> Result<Node, PackFailure> {
+    let node = record_node(stdout)?;
+    if node.tag != tag {
+        return Err(fail("marker-absent", tag));
+    }
+    Ok(node)
+}
+
+fn record_node(stdout: &str) -> Result<Node, PackFailure> {
+    let mut lines = stdout.lines();
+    let line = lines
+        .next()
+        .filter(|line| !line.is_empty())
+        .ok_or_else(|| fail("marker-absent", "record"))?;
+    if let Some(extra) = lines.next() {
+        let receipt = extra.starts_with("#(world/load-receipt-v1 ")
+            || extra.starts_with("#(prove/load-receipt-v1 ");
+        if !receipt || !extra.ends_with(')') || lines.next().is_some() {
+            return Err(fail("marker-absent", "load-receipt"));
+        }
+    }
+    parse_node(line)
+}
+
+fn parse_node(text: &str) -> Result<Node, PackFailure> {
+    let mut cursor = Cursor { text, pos: 0 };
+    if !cursor.rest().starts_with("#(") {
+        return Err(fail("bad-record", "node"));
+    }
+    cursor.pos += 2;
+    let tag_start = cursor.pos;
+    while cursor
+        .peek()
+        .is_some_and(|ch| !ch.is_whitespace() && ch != ')')
+    {
+        cursor.bump();
+    }
+    if tag_start == cursor.pos {
+        return Err(fail("bad-record", "tag"));
+    }
+    let tag = text[tag_start..cursor.pos].to_owned();
+    cursor.skip_ws();
+    let mut fields = Vec::new();
+    loop {
+        match cursor.peek() {
+            Some(')') => {
+                cursor.bump();
+                break;
+            }
+            Some('(') => fields.push(cursor.field()?),
+            _ => return Err(fail("bad-record", "field")),
+        }
+        cursor.skip_ws();
+    }
+    if cursor.pos != text.len() {
+        return Err(fail("bad-record", "node"));
+    }
+    Ok(Node { tag, fields })
+}
+
+struct Cursor<'a> {
+    text: &'a str,
+    pos: usize,
+}
+
+impl<'a> Cursor<'a> {
+    fn rest(&self) -> &'a str {
+        &self.text[self.pos..]
+    }
+
+    fn peek(&self) -> Option<char> {
+        self.rest().chars().next()
+    }
+
+    fn bump(&mut self) -> Option<char> {
+        let ch = self.peek()?;
+        self.pos += ch.len_utf8();
+        Some(ch)
+    }
+
+    fn skip_ws(&mut self) {
+        while self.peek().is_some_and(char::is_whitespace) {
+            self.bump();
+        }
+    }
+
+    fn field(&mut self) -> Result<(String, String), PackFailure> {
+        self.bump();
+        let name_start = self.pos;
+        while self
+            .peek()
+            .is_some_and(|ch| !ch.is_whitespace() && ch != ')')
+        {
+            self.bump();
+        }
+        if name_start == self.pos {
+            return Err(fail("bad-record", "field"));
+        }
+        let name = self.text[name_start..self.pos].to_owned();
+        if !self.peek().is_some_and(char::is_whitespace) {
+            return Err(fail("bad-record", &name));
+        }
+        self.skip_ws();
+        let value_start = self.pos;
+        let mut depth = 0i32;
+        let mut quoted = false;
+        let mut escaped = false;
+        loop {
+            let Some(ch) = self.peek() else {
+                return Err(fail("bad-record", &name));
+            };
+            if quoted {
+                self.bump();
+                if escaped {
+                    escaped = false;
+                } else if ch == '\\' {
+                    escaped = true;
+                } else if ch == '"' {
+                    quoted = false;
+                }
+                continue;
+            }
+            match ch {
+                '"' => {
+                    quoted = true;
+                    self.bump();
+                }
+                '(' => {
+                    depth += 1;
+                    self.bump();
+                }
+                ')' if depth == 0 => {
+                    let value = self.text[value_start..self.pos].to_owned();
+                    self.bump();
+                    return Ok((name, value));
+                }
+                ')' => {
+                    depth -= 1;
+                    self.bump();
+                }
+                _ => {
+                    self.bump();
+                }
+            }
+        }
+    }
+}
+
+fn one<'a>(node: &'a Node, name: &str) -> Result<&'a str, PackFailure> {
+    let mut found = None;
+    for (field, value) in &node.fields {
+        if field == name {
+            if found.is_some() {
+                return Err(fail("bad-record", name));
+            }
+            found = Some(value.as_str());
+        }
+    }
+    found.ok_or_else(|| fail("marker-absent", name))
+}
+
+fn require_bare(node: &Node, name: &str, expected: &str) -> Result<(), PackFailure> {
+    if one(node, name)? != expected {
+        return Err(fail("record-mismatch", name));
+    }
+    Ok(())
+}
+
+fn require_string(node: &Node, name: &str, expected: &str) -> Result<(), PackFailure> {
+    if unquote(one(node, name)?)? != expected {
+        return Err(fail("record-mismatch", name));
+    }
+    Ok(())
+}
+
+fn unquote(value: &str) -> Result<String, PackFailure> {
+    let mut chars = value.chars();
+    if chars.next() != Some('"') {
+        return Err(fail("bad-record", "string"));
+    }
+    let mut out = String::new();
+    let mut escaped = false;
+    let mut closed = false;
+    for ch in chars {
+        if closed {
+            return Err(fail("bad-record", "string"));
+        }
+        if escaped {
+            out.push(ch);
+            escaped = false;
+            continue;
+        }
+        match ch {
+            '\\' => escaped = true,
+            '"' => closed = true,
+            other => out.push(other),
+        }
+    }
+    if !closed || escaped {
+        return Err(fail("bad-record", "string"));
+    }
+    Ok(out)
+}
+
+fn observation(key: &str, stdout: &str) -> CheckObservation {
+    CheckObservation {
+        key: key.to_owned(),
+        value: stdout.to_owned(),
+    }
+}
+
+fn fail(code: &'static str, detail: &str) -> PackFailure {
+    PackFailure {
+        code,
+        detail: detail.chars().take(256).collect(),
+    }
+}
