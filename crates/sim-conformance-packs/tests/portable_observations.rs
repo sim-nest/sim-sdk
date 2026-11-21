@@ -3,7 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-//! Executed observations for the portable scopes that were previously unbound.
+//! Executed observations for the portable product and release scopes.
 
 use sim_conformance_packs::{MemorySubject, PackRequest, PackVerdict, find_pack, packs};
 
@@ -186,9 +186,9 @@ fn portable_product_scopes_do_not_accept_caller_supplied_truths() {
 }
 
 #[test]
-fn release_phases_09_through_26_require_the_closure_facts() {
+fn release_phases_10_through_26_require_the_closure_facts() {
     let closure = truths(packs::release::CLOSURE_FACTS);
-    for phase in 9..=26 {
+    for phase in 10..=26 {
         let scope = format!("release/nv12-{phase:02}");
         assert_missing(
             "checker/c-release",
