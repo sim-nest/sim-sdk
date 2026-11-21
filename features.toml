@@ -32,6 +32,7 @@ claims_anchors = [
   "anchor/crate/sim-projection-admission-protocol",
   "anchor/export/sim-conformance-packs/model/direction",
   "anchor/export/sim-conformance-packs/model/landing",
+  "anchor/export/sim-conformance-packs/model/local",
   "anchor/export/sim-conformance-packs/model/snapshot",
   "anchor/export/sim-conformance-packs/shape/check-receipt",
   "anchor/export/sim-conformance-packs/shape/check-result",
