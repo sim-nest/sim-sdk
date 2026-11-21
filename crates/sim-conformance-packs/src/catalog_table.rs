@@ -47,7 +47,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "identity/fixed-point",
             "identity/world-seal",
             "identity/evidence",
-            "identity/final-seal"
+            "identity/final-seal",
+            "completion/constructor-final"
         ],
         [
             "identity/register",
@@ -55,7 +56,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "identity/journal-normalized",
             "identity/closure-final",
             "identity/store-roundtrip",
-            "identity/final-seal"
+            "identity/final-seal",
+            "completion/constructor-final"
         ]
     ),
     spec!(

@@ -10,6 +10,13 @@ use sim_kernel::{Datum, NumberLiteral, Symbol};
 
 use crate::{CheckObservation, PackFailure, PackRequest, PackVerdict, harness};
 
+#[path = "identity_constructors.rs"]
+mod constructors;
+
+pub use constructors::{
+    ObservedConstructorFinal, bind_constructor_final, observe_constructor_final,
+};
+
 /// Checks the exact requested identity scope.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
     harness::check_registered("checker/c-id", request, |request| match request.scope {
@@ -19,6 +26,7 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         "identity/closure-final" => closure_final(request),
         "identity/store-roundtrip" => store_roundtrip(request),
         "identity/final-seal" => final_seal(request),
+        "completion/constructor-final" => constructors::observations(request),
         _ => unreachable!("availability was checked before dispatch"),
     })
 }
