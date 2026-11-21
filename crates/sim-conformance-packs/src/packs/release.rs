@@ -23,6 +23,8 @@ mod consumers;
 mod converge;
 #[path = "release_facet.rs"]
 mod facet_tx;
+#[path = "release_foreign.rs"]
+mod foreign;
 #[path = "release_index.rs"]
 mod index_guard;
 #[path = "release_negatives.rs"]
@@ -236,6 +238,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/nv12-10" {
             return seal::observations(request);
+        }
+        if request.scope == "release/nv12-11" {
+            return foreign::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()
