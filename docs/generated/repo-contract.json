@@ -3746,6 +3746,16 @@
           "kind": [
             "test"
           ],
+          "name": "release_foreign",
+          "src": "crates/sim-conformance-packs/tests/release_foreign.rs"
+        },
+        {
+          "crate_types": [
+            "bin"
+          ],
+          "kind": [
+            "test"
+          ],
           "name": "release_nv12_27",
           "src": "crates/sim-conformance-packs/tests/release_nv12_27.rs"
         },
@@ -7662,20 +7672,20 @@
         }
       }
     },
-    "generation_timestamp": "2026-11-21T22:31:42+01:00",
+    "generation_timestamp": "2026-11-21T23:04:35+01:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "756b1225b6908d802cd8f23144633d82785b7737",
+    "git_commit": "e6f64f0fc1316acd0370b44e4c0898adc5bcd6b3",
     "regeneration_command": "cargo run -p xtask -- simdoc",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "756b1225b6908d802cd8f23144633d82785b7737",
+    "source_commit": "e6f64f0fc1316acd0370b44e4c0898adc5bcd6b3",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo run -p xtask -- simdoc --check"
     ],
-    "workspace_hash": "b88afe5631f2ce0f",
+    "workspace_hash": "17535be4a7a764aa",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 530,
+    "workspace_hash_input_count": 532,
     "workspace_hash_inputs": [
       ".github/workflows/authorship.yml",
       ".github/workflows/ci.yml",
@@ -7787,6 +7797,7 @@
       "crates/sim-conformance-packs/src/packs/release_converge_tests.rs",
       "crates/sim-conformance-packs/src/packs/release_facet.rs",
       "crates/sim-conformance-packs/src/packs/release_facet_tests.rs",
+      "crates/sim-conformance-packs/src/packs/release_foreign.rs",
       "crates/sim-conformance-packs/src/packs/release_index.rs",
       "crates/sim-conformance-packs/src/packs/release_index_tests.rs",
       "crates/sim-conformance-packs/src/packs/release_journal.rs",
@@ -7864,6 +7875,7 @@
       "crates/sim-conformance-packs/tests/product_load.rs",
       "crates/sim-conformance-packs/tests/product_query.rs",
       "crates/sim-conformance-packs/tests/projection_reference.rs",
+      "crates/sim-conformance-packs/tests/release_foreign.rs",
       "crates/sim-conformance-packs/tests/release_nv12_27.rs",
       "crates/sim-conformance-packs/tests/release_nv12_28.rs",
       "crates/sim-conformance-packs/tests/release_observe.rs",
