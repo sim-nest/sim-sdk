@@ -120,8 +120,12 @@ fn require_gap(stdout: &str) -> Result<(), PackFailure> {
 
 fn require_body(node: &Node, project: &str) -> Result<(), PackFailure> {
     let body = unquote(one(node, "record")?)?;
-    let names_project = body.contains(&format!("project {project}"));
-    if body.contains('\n') || !names_project || !body.contains("closed portable") {
+    if body.contains('\n') {
+        return Err(fail("record-mismatch", "record"));
+    }
+    let parts = body.split("; ").collect::<Vec<_>>();
+    let project_part = format!("project {project}");
+    if !parts.contains(&project_part.as_str()) || !parts.contains(&"closed portable") {
         return Err(fail("record-mismatch", "record"));
     }
     Ok(())
@@ -129,10 +133,56 @@ fn require_body(node: &Node, project: &str) -> Result<(), PackFailure> {
 
 fn require_ids(node: &Node) -> Result<(), PackFailure> {
     let value = one(node, "input-ids")?;
-    if !value.starts_with('[') || !value.ends_with(']') || value == "[]" {
+    let inner = value
+        .strip_prefix('[')
+        .and_then(|text| text.strip_suffix(']'))
+        .ok_or_else(|| fail("record-mismatch", "input-ids"))?;
+    let mut rest = inner.trim();
+    let mut ids = Vec::new();
+    while !rest.is_empty() {
+        if !rest.starts_with('"') {
+            return Err(fail("record-mismatch", "input-ids"));
+        }
+        let quoted = take_quoted_prefix(rest)?;
+        ids.push(quoted.value);
+        rest = quoted.rest.trim();
+    }
+    if ids.is_empty() || ids.iter().any(|id| id.trim().is_empty()) {
         return Err(fail("record-mismatch", "input-ids"));
     }
     Ok(())
+}
+
+struct Quoted<'a> {
+    value: String,
+    rest: &'a str,
+}
+
+fn take_quoted_prefix(text: &str) -> Result<Quoted<'_>, PackFailure> {
+    let mut chars = text.char_indices();
+    if chars.next().map(|(_, ch)| ch) != Some('"') {
+        return Err(fail("record-mismatch", "input-ids"));
+    }
+    let mut value = String::new();
+    let mut escaped = false;
+    for (index, ch) in chars {
+        if escaped {
+            value.push(ch);
+            escaped = false;
+            continue;
+        }
+        match ch {
+            '\\' => escaped = true,
+            '"' => {
+                return Ok(Quoted {
+                    value,
+                    rest: &text[index + ch.len_utf8()..],
+                });
+            }
+            other => value.push(other),
+        }
+    }
+    Err(fail("record-mismatch", "input-ids"))
 }
 
 fn require_hex(node: &Node, name: &str) -> Result<String, PackFailure> {

@@ -258,6 +258,31 @@ fn an_extra_field_is_refused() {
 }
 
 #[test]
+fn a_blank_input_list_is_refused() {
+    let populated = format!(
+        "(input-ids [\"{}\" \"{}\"])",
+        "c".repeat(64),
+        "b".repeat(64)
+    );
+    let blank = closed("lantern").replace(&populated, "(input-ids [ ])");
+    assert!(blank.contains("(input-ids [ ])"), "{blank}");
+    let (_dir, program) = prepare("blank", &format!("printf '%s\\n' '{blank}'\n"));
+    let (code, detail) = refusal(&execute(&command(&program)));
+    assert_eq!(code, "record-mismatch", "{detail}");
+    assert_eq!(detail, "input-ids");
+}
+
+#[test]
+fn a_prefixed_project_name_is_refused() {
+    let prefixed = closed("lantern").replace("project lantern;", "project lantern-other;");
+    assert!(prefixed.contains("project lantern-other;"), "{prefixed}");
+    let (_dir, program) = prepare("prefix", &format!("printf '%s\\n' '{prefixed}'\n"));
+    let (code, detail) = refusal(&execute(&command(&program)));
+    assert_eq!(code, "record-mismatch", "{detail}");
+    assert_eq!(detail, "record");
+}
+
+#[test]
 fn empty_input_ids_are_refused() {
     let populated = format!(
         "(input-ids [\"{}\" \"{}\"])",
