@@ -7,9 +7,9 @@
 //!
 //! The scope runs `prove plan` twice and `world why` on the program named by
 //! `product.command`. The two plans must match. The plan record keeps a zero
-//! effect count and lists the native leaves in its excluded set. The
-//! explanation names the disclosure owner. The recorded values are that
-//! program output.
+//! effect count and names each native leaf as an exact member of its excluded
+//! set. The explanation names the disclosure owner. The recorded values are
+//! that program output.
 
 use crate::{CheckObservation, PackFailure, PackRequest};
 
@@ -33,11 +33,7 @@ pub(super) fn observations(
     crate::packs::product::require_field(record, "subprocesses", "0")?;
     crate::packs::product::require_field(record, "owner-commands", "0")?;
     crate::packs::product::require_field(record, "resident", "true")?;
-    for leaf in NATIVE_LEAVES {
-        if !record.contains(leaf) {
-            return Err(fail("marker-absent", leaf));
-        }
-    }
+    require_exact_leaves(record)?;
     let why = crate::packs::product::run(
         &program,
         &[
@@ -71,4 +67,112 @@ fn fail(code: &'static str, detail: &str) -> PackFailure {
         code,
         detail: detail.chars().take(256).collect(),
     }
+}
+
+fn require_exact_leaves(record: &str) -> Result<(), PackFailure> {
+    let names = excluded_names(record)?;
+    for leaf in NATIVE_LEAVES {
+        if !names.iter().any(|name| name == leaf) {
+            return Err(fail("marker-absent", leaf));
+        }
+    }
+    Ok(())
+}
+
+fn excluded_names(record: &str) -> Result<Vec<String>, PackFailure> {
+    quoted_names(field_body(record, "excluded")?)
+}
+
+fn field_body<'a>(record: &'a str, name: &str) -> Result<&'a str, PackFailure> {
+    let key = format!("({name} ");
+    let mut rest = record;
+    let mut quoted = false;
+    let mut escaped = false;
+    while !rest.is_empty() {
+        if quoted {
+            let ch = rest.chars().next().expect("quoted character");
+            if escaped {
+                escaped = false;
+            } else if ch == '\\' {
+                escaped = true;
+            } else if ch == '"' {
+                quoted = false;
+            }
+            rest = &rest[ch.len_utf8()..];
+            continue;
+        }
+        if rest.starts_with('"') {
+            quoted = true;
+            rest = &rest[1..];
+            continue;
+        }
+        if rest.starts_with(&key) {
+            let value = &rest[key.len()..];
+            let end = field_end(value).ok_or_else(|| fail("marker-absent", name))?;
+            return Ok(&value[..end]);
+        }
+        let ch = rest.chars().next().expect("record character");
+        rest = &rest[ch.len_utf8()..];
+    }
+    Err(fail("marker-absent", name))
+}
+
+fn field_end(value: &str) -> Option<usize> {
+    let mut quoted = false;
+    let mut escaped = false;
+    let mut depth = 0i32;
+    for (index, ch) in value.char_indices() {
+        if quoted {
+            if escaped {
+                escaped = false;
+            } else if ch == '\\' {
+                escaped = true;
+            } else if ch == '"' {
+                quoted = false;
+            }
+            continue;
+        }
+        match ch {
+            '"' => quoted = true,
+            '(' => depth += 1,
+            ')' if depth == 0 => return Some(index),
+            ')' => depth -= 1,
+            _ => {}
+        }
+    }
+    None
+}
+
+fn quoted_names(body: &str) -> Result<Vec<String>, PackFailure> {
+    let mut names = Vec::new();
+    let mut rest = body;
+    while let Some(start) = rest.find('"') {
+        let after = &rest[start + 1..];
+        let mut name = String::new();
+        let mut consumed = 0;
+        let mut closed = false;
+        let mut chars = after.char_indices();
+        while let Some((offset, ch)) = chars.next() {
+            if ch == '\\' {
+                let Some((next_offset, next)) = chars.next() else {
+                    return Err(fail("marker-absent", "excluded"));
+                };
+                name.push(next);
+                consumed = next_offset + next.len_utf8();
+                continue;
+            }
+            if ch == '"' {
+                consumed = offset + ch.len_utf8();
+                closed = true;
+                break;
+            }
+            name.push(ch);
+        }
+        if !closed {
+            return Err(fail("marker-absent", "excluded"));
+        }
+        names.push(name);
+        rest = &after[consumed..];
+    }
+    Ok(names)
 }

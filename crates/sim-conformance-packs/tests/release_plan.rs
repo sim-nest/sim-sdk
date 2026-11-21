@@ -211,6 +211,17 @@ fn a_plan_missing_a_native_leaf_is_refused() {
 }
 
 #[test]
+fn a_longer_leaf_name_is_not_the_required_leaf() {
+    let dir = scratch("prefix");
+    init_checkout(&dir);
+    let other = PLAN.replace("\"leaf/native-assay\"", "\"leaf/native-assay-disabled\"");
+    let program = stub(&dir, &other, &other);
+    let (code, detail) = refusal(&execute(&command(&program)));
+    assert_eq!(code, "marker-absent", "{detail}");
+    assert_eq!(detail, "leaf/native-assay");
+}
+
+#[test]
 fn a_sealed_word_in_program_output_is_refused() {
     let dir = scratch("sealed");
     init_checkout(&dir);
