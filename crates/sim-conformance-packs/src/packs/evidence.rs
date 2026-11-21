@@ -7,6 +7,11 @@
 
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
 
+#[path = "evidence_grades.rs"]
+mod grades;
+
+pub use grades::{ObservedGradesFinal, bind_grades_final, observe_grades_final};
+
 /// Exact pre-materialized facts required by the stage-one closure assay checker.
 pub const PREDICTED_CLOSURE_FACTS: [&str; 21] = [
     "evidence.oracle-frozen-before-implementation",
@@ -39,6 +44,7 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
             "evidence/projection" => projection(request),
             "evidence/predicted-closure" => predicted_closure(request),
             "evidence/composed" => composed(request),
+            "completion/grades-final" => grades::observations(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })
