@@ -318,7 +318,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "product/roadmap",
             "product/query-latency",
             "product/installed",
-            "product/composed"
+            "product/composed",
+            "completion/product-load"
         ],
         [
             "product/world",
@@ -330,7 +331,8 @@ pub(super) const PACKS: &[PackSpec] = &[
             "product/roadmap",
             "product/query-latency",
             "product/installed",
-            "product/composed"
+            "product/composed",
+            "completion/product-load"
         ]
     ),
     spec!(
