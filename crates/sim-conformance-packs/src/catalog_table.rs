@@ -125,14 +125,16 @@ pub(super) const PACKS: &[PackSpec] = &[
             "evidence/convergence",
             "evidence/composed",
             "completion/grades-final",
-            "completion/domains-final"
+            "completion/domains-final",
+            "completion/effects-final"
         ],
         [
             "evidence/projection",
             "evidence/predicted-closure",
             "evidence/composed",
             "completion/grades-final",
-            "completion/domains-final"
+            "completion/domains-final",
+            "completion/effects-final"
         ]
     ),
     spec!(

@@ -9,10 +9,13 @@ use crate::{CheckObservation, PackRequest, PackVerdict, harness};
 
 #[path = "evidence_domains.rs"]
 mod domains;
+#[path = "evidence_effects.rs"]
+mod effects;
 #[path = "evidence_grades.rs"]
 mod grades;
 
 pub use domains::{ObservedDomainsFinal, bind_domains_final, observe_domains_final};
+pub use effects::{ObservedEffectsFinal, bind_effects_final, observe_effects_final};
 pub use grades::{ObservedGradesFinal, bind_grades_final, observe_grades_final};
 
 /// Exact pre-materialized facts required by the stage-one closure assay checker.
@@ -49,6 +52,7 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
             "evidence/composed" => composed(request),
             "completion/grades-final" => grades::observations(request),
             "completion/domains-final" => domains::observations(request),
+            "completion/effects-final" => effects::observations(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })
