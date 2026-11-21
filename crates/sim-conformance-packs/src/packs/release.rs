@@ -21,6 +21,8 @@ mod command;
 mod consumers;
 #[path = "release_converge.rs"]
 mod converge;
+#[path = "release_evidence.rs"]
+mod evidence_scope;
 #[path = "release_facet.rs"]
 mod facet_tx;
 #[path = "release_foreign.rs"]
@@ -241,6 +243,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/nv12-11" {
             return foreign::observations(request);
+        }
+        if request.scope == "release/nv12-12" {
+            return evidence_scope::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()
