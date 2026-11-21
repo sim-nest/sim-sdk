@@ -7,7 +7,9 @@
 //!
 //! World, prove, deliver, roadmap, cached query latency, land, converge,
 //! qualify, and promote run the program named by [`COMMAND_FACT`] and record
-//! that program's output.
+//! that program's output. The joined load records those four commands, their
+//! index routes, and the specimen files under `product.root`. Boot, recipe,
+//! brochure, index, and route guards stay their own results.
 
 #[path = "product_command.rs"]
 mod command;
@@ -19,8 +21,12 @@ mod converge;
 mod install;
 #[path = "product_land.rs"]
 mod land;
+#[path = "product_load.rs"]
+mod load;
 #[path = "product_query.rs"]
 mod query;
+
+pub use load::{bind_product_load, observe_product_load};
 
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
 
@@ -40,6 +46,7 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
             "product/prove-plan" | "product/prove" | "product/deliver" | "product/roadmap" => {
                 portable(request)
             }
+            "completion/product-load" => load::observations(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })

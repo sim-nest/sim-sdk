@@ -17,8 +17,8 @@ use crate::{CheckObservation, PackFailure, PackRequest};
 
 const MAX_OUTPUT: usize = 16 * 1024 * 1024;
 const CHUNK: usize = 100_000;
-const LOAD_RECEIPT: &str = "#(prove/load-receipt-v1 (provider \"platform/site/model\") (loader \"loader/static-v1\") (artifact \"lib/prove-command\"))";
-const ROADMAP_LINE: &str = "#(roadmap/local-result-v1 (outcome \"ok\") (execution \"local/no-model\") (conduct \"conduct/local\") (model-pick \"model/local\") (proof-catalog \"proof/local\") (runner-generation \"generation/local\") (journal-acknowledged true) (detail \"execution not started\"))";
+pub(super) const LOAD_RECEIPT: &str = "#(prove/load-receipt-v1 (provider \"platform/site/model\") (loader \"loader/static-v1\") (artifact \"lib/prove-command\"))";
+pub(super) const ROADMAP_LINE: &str = "#(roadmap/local-result-v1 (outcome \"ok\") (execution \"local/no-model\") (conduct \"conduct/local\") (model-pick \"model/local\") (proof-catalog \"proof/local\") (runner-generation \"generation/local\") (journal-acknowledged true) (detail \"execution not started\"))";
 
 pub(super) fn world(request: &PackRequest<'_>) -> Result<Vec<CheckObservation>, PackFailure> {
     let program = program(request)?;
