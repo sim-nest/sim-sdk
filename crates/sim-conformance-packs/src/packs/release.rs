@@ -31,6 +31,8 @@ mod negatives;
 mod neutral;
 #[path = "release_observed.rs"]
 mod observed;
+#[path = "release_plan.rs"]
+mod plan;
 #[path = "release_receipt.rs"]
 pub(in crate::packs) mod receipt;
 #[path = "release_recipe.rs"]
@@ -221,6 +223,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "completion/sealed-convergence" {
             return converge::observations(request);
+        }
+        if request.scope == "release/nv12-08" {
+            return plan::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()

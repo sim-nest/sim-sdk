@@ -196,7 +196,7 @@ fn require_text(text: &str, marker: &str, detail: &str) -> Result<(), PackFailur
     }
 }
 
-pub(super) fn program(request: &PackRequest<'_>) -> Result<PathBuf, PackFailure> {
+pub(crate) fn program(request: &PackRequest<'_>) -> Result<PathBuf, PackFailure> {
     let mut body = None;
     for key in request.evidence.fact_keys() {
         if key == COMMAND_FACT {
@@ -220,7 +220,7 @@ pub(super) fn program(request: &PackRequest<'_>) -> Result<PathBuf, PackFailure>
     Ok(canonical)
 }
 
-pub(super) fn run(program: &Path, args: &[impl AsRef<str>]) -> Result<String, PackFailure> {
+pub(crate) fn run(program: &Path, args: &[impl AsRef<str>]) -> Result<String, PackFailure> {
     let mut command = Command::new(program);
     if let Some(dir) = checkout_dir(program) {
         command.current_dir(dir);
@@ -267,7 +267,7 @@ fn checkout_dir(program: &Path) -> Option<PathBuf> {
     }
 }
 
-fn prove_record(stdout: &str) -> Result<&str, PackFailure> {
+pub(crate) fn prove_record(stdout: &str) -> Result<&str, PackFailure> {
     let mut lines = stdout.lines();
     let record = lines
         .next()
@@ -343,7 +343,7 @@ pub(super) fn field<'a>(record: &'a str, name: &str) -> Result<&'a str, PackFail
     Err(fail("marker-absent", name))
 }
 
-pub(super) fn require_field(record: &str, name: &str, expected: &str) -> Result<(), PackFailure> {
+pub(crate) fn require_field(record: &str, name: &str, expected: &str) -> Result<(), PackFailure> {
     if field(record, name)? != expected {
         return Err(fail("record-mismatch", name));
     }
