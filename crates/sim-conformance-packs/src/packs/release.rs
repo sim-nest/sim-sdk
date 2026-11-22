@@ -39,6 +39,8 @@ mod observe;
 mod observed;
 #[path = "release_plan.rs"]
 mod plan;
+#[path = "release_postimage.rs"]
+mod postimage_scope;
 #[path = "release_prove.rs"]
 mod prove_scope;
 #[path = "release_receipt.rs"]
@@ -256,6 +258,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/nv12-14" {
             return prove_scope::observations(request);
+        }
+        if request.scope == "release/nv12-15" {
+            return postimage_scope::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()
