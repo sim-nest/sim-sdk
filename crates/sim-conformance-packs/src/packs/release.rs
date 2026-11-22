@@ -21,10 +21,18 @@ mod command;
 mod consumers;
 #[path = "release_converge.rs"]
 mod converge;
+#[path = "release_evidence.rs"]
+mod evidence_scope;
 #[path = "release_facet.rs"]
 mod facet_tx;
+#[path = "release_fixed.rs"]
+mod fixed_scope;
+#[path = "release_foreign.rs"]
+mod foreign;
 #[path = "release_index.rs"]
 mod index_guard;
+#[path = "release_land.rs"]
+mod land_scope;
 #[path = "release_negatives.rs"]
 mod negatives;
 #[path = "release_neutral.rs"]
@@ -35,6 +43,10 @@ mod observe;
 mod observed;
 #[path = "release_plan.rs"]
 mod plan;
+#[path = "release_postimage.rs"]
+mod postimage_scope;
+#[path = "release_prove.rs"]
+mod prove_scope;
 #[path = "release_receipt.rs"]
 pub(in crate::packs) mod receipt;
 #[path = "release_recipe.rs"]
@@ -49,6 +61,10 @@ mod roadmap;
 mod roundtrip;
 #[path = "release_route.rs"]
 mod route_guard;
+#[path = "release_schedule.rs"]
+mod schedule_scope;
+#[path = "release_seal.rs"]
+mod seal;
 #[path = "release_seams.rs"]
 mod seams;
 #[path = "release_selection.rs"]
@@ -57,6 +73,8 @@ mod selection;
 mod source;
 #[path = "release_stage.rs"]
 mod stage_one;
+#[path = "release_transact.rs"]
+mod transact_scope;
 #[path = "release_transfer.rs"]
 mod transfer;
 #[path = "release_universe.rs"]
@@ -231,6 +249,33 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/nv12-09" {
             return observe::observations(request);
+        }
+        if request.scope == "release/nv12-10" {
+            return seal::observations(request);
+        }
+        if request.scope == "release/nv12-11" {
+            return foreign::observations(request);
+        }
+        if request.scope == "release/nv12-12" {
+            return evidence_scope::observations(request);
+        }
+        if request.scope == "release/nv12-13" {
+            return schedule_scope::observations(request);
+        }
+        if request.scope == "release/nv12-14" {
+            return prove_scope::observations(request);
+        }
+        if request.scope == "release/nv12-15" {
+            return postimage_scope::observations(request);
+        }
+        if request.scope == "release/nv12-16" {
+            return fixed_scope::observations(request);
+        }
+        if request.scope == "release/nv12-17" {
+            return transact_scope::observations(request);
+        }
+        if request.scope == "release/nv12-18" {
+            return land_scope::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()

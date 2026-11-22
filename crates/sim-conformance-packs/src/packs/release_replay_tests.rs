@@ -408,9 +408,19 @@ fn the_replay_scope_is_not_release_nv12_17() {
         evidence: &evidence,
     }) {
         PackVerdict::Refused(failure) => {
-            assert_eq!(failure.code, "missing-evidence");
-            assert_eq!(failure.detail, "release.owner-validation-passed");
+            assert_eq!(failure.code, "missing-source");
+            assert_eq!(failure.detail, crate::packs::product::COMMAND_FACT);
         }
-        other => panic!("phase 17 must require closure facts, got {other:?}"),
+        other => panic!("phase 17 must name its program, got {other:?}"),
+    }
+    match super::super::check(&PackRequest {
+        checker: "checker/c-release",
+        binding: &binding,
+        subject: "core/sha256-datum-v1:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        scope: "completion/replay",
+        evidence: &evidence,
+    }) {
+        PackVerdict::Refused(failure) => assert_eq!(failure.code, "missing-journal"),
+        other => panic!("replay must keep its journal, got {other:?}"),
     }
 }
