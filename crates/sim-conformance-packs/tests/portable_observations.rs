@@ -186,9 +186,9 @@ fn portable_product_scopes_do_not_accept_caller_supplied_truths() {
 }
 
 #[test]
-fn release_phases_16_through_26_require_the_closure_facts() {
+fn release_phases_17_through_26_require_the_closure_facts() {
     let closure = truths(packs::release::CLOSURE_FACTS);
-    for phase in 16..=26 {
+    for phase in 17..=26 {
         let scope = format!("release/nv12-{phase:02}");
         assert_missing(
             "checker/c-release",

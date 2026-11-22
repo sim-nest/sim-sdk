@@ -25,6 +25,8 @@ mod converge;
 mod evidence_scope;
 #[path = "release_facet.rs"]
 mod facet_tx;
+#[path = "release_fixed.rs"]
+mod fixed_scope;
 #[path = "release_foreign.rs"]
 mod foreign;
 #[path = "release_index.rs"]
@@ -261,6 +263,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/nv12-15" {
             return postimage_scope::observations(request);
+        }
+        if request.scope == "release/nv12-16" {
+            return fixed_scope::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()
