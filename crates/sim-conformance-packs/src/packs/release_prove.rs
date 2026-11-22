@@ -310,12 +310,18 @@ fn require_delta(node: &Node, law: &Law) -> Result<(), PackFailure> {
 fn require_partition(reused: &[String], rerun: &[String]) -> Result<(), PackFailure> {
     let mut seen = BTreeSet::new();
     for name in reused.iter().chain(rerun) {
-        if !seen.insert(name) {
+        if !seen.insert(name.as_str()) {
             return Err(fail("record-mismatch", "partition"));
         }
     }
     if seen.len() != DENOMINATOR {
         return Err(fail("record-mismatch", "partition"));
+    }
+    for index in 1..=DENOMINATOR {
+        let leaf = format!("conclusion/{index:02}");
+        if !seen.contains(leaf.as_str()) {
+            return Err(fail("record-mismatch", "partition"));
+        }
     }
     Ok(())
 }

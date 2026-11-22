@@ -27,6 +27,7 @@ enum Fault {
     MissingReceipt,
     OpenFrontier,
     NativeReason,
+    NativePartition,
 }
 
 fn render(id: &sim_kernel::ContentId) -> String {
@@ -254,7 +255,14 @@ fn law_record(delta: &str, fault: Fault) -> String {
         "D6" => (0, 1, &[]),
         _ => panic!("delta"),
     };
-    reuse_record(delta, basis, requests, revision, rerun)
+    let record = reuse_record(delta, basis, requests, revision, rerun);
+    if fault == Fault::NativePartition {
+        let replaced = record.replacen("\"conclusion/39\"", "\"leaf/native-worker-adapter\"", 1);
+        assert_ne!(replaced, record, "{delta} kept conclusion/39");
+        replaced
+    } else {
+        record
+    }
 }
 
 fn script(log: &Path, fault: Fault) -> String {
@@ -523,4 +531,12 @@ fn a_native_leaf_stays_outside_the_denominator() {
     let (code, detail) = refusal(&execute(&command(&program)));
     assert_eq!(code, "record-mismatch", "{detail}");
     assert_eq!(detail, "reason");
+}
+
+#[test]
+fn a_native_leaf_cannot_join_the_reuse_partition() {
+    let (_dir, program) = prepare("partition", Fault::NativePartition);
+    let (code, detail) = refusal(&execute(&command(&program)));
+    assert_eq!(code, "record-mismatch", "{detail}");
+    assert_eq!(detail, "partition");
 }
