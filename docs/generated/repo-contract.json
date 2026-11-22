@@ -7742,20 +7742,20 @@
         }
       }
     },
-    "generation_timestamp": "2026-11-22T03:33:25+01:00",
+    "generation_timestamp": "2026-11-22T09:02:17+01:00",
     "generator": "xtask repo-contract v1",
-    "git_commit": "b82938097a7f90aff489f066ca4bb44568270556",
+    "git_commit": "78423e84c09fc6dd87abde743a76742496bab58f",
     "regeneration_command": "cargo run -p xtask -- simdoc",
     "repo": "sim-sdk",
     "schema": "sim.provenance.v1",
-    "source_commit": "b82938097a7f90aff489f066ca4bb44568270556",
+    "source_commit": "78423e84c09fc6dd87abde743a76742496bab58f",
     "source_remote": "https://github.com/sim-nest/sim-sdk",
     "validation_commands": [
       "cargo run -p xtask -- simdoc --check"
     ],
-    "workspace_hash": "a055dc56dddf08e5",
+    "workspace_hash": "9fdbc33837938490",
     "workspace_hash_algorithm": "fnv1a64",
-    "workspace_hash_input_count": 547,
+    "workspace_hash_input_count": 549,
     "workspace_hash_inputs": [
       ".github/workflows/authorship.yml",
       ".github/workflows/ci.yml",
@@ -7924,6 +7924,8 @@
       "crates/sim-conformance-packs/src/packs/retirement_closures_tests.rs",
       "crates/sim-conformance-packs/src/packs/source.rs",
       "crates/sim-conformance-packs/src/packs/succession.rs",
+      "crates/sim-conformance-packs/src/packs/succession_fresh.rs",
+      "crates/sim-conformance-packs/src/packs/succession_fresh_tests.rs",
       "crates/sim-conformance-packs/src/packs/succession_record.rs",
       "crates/sim-conformance-packs/src/packs/work.rs",
       "crates/sim-conformance-packs/src/projection_authority.rs",
