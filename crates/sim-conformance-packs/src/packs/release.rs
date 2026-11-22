@@ -45,6 +45,8 @@ mod observed;
 mod plan;
 #[path = "release_postimage.rs"]
 mod postimage_scope;
+#[path = "release_profile.rs"]
+mod profile;
 #[path = "release_prove.rs"]
 mod prove_scope;
 #[path = "release_receipt.rs"]
@@ -103,6 +105,7 @@ pub use observed::{
     ObservedPublished, ObservedReleaseObligations, PublishedObligation, ReleaseObligations,
     bind_release_obligations, observe_release_obligations,
 };
+pub use profile::{ObservedOwnerProfile, bind_owner_profile, observe_owner_profile};
 pub use recipe_guard::{ObservedRecipeGuard, bind_recipe_guard, observe_recipe_guard};
 pub use replay::{
     ExecutedEntry, ExecutedJournal, ObservedJournalCompletion, format_executed_journal,
@@ -177,6 +180,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/owner-validation" {
             return validation::observations(request);
+        }
+        if request.scope == profile::SCOPE {
+            return profile::observations(request);
         }
         if request.scope == "release/source-selection" {
             return selection::observations(request);
