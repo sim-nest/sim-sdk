@@ -31,6 +31,8 @@ mod fixed_scope;
 mod foreign;
 #[path = "release_index.rs"]
 mod index_guard;
+#[path = "release_land.rs"]
+mod land_scope;
 #[path = "release_negatives.rs"]
 mod negatives;
 #[path = "release_neutral.rs"]
@@ -271,6 +273,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/nv12-17" {
             return transact_scope::observations(request);
+        }
+        if request.scope == "release/nv12-18" {
+            return land_scope::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()
