@@ -302,7 +302,7 @@ impl PackSpec {
             "product/composed" => "NV12.26",
             "product/installed" => "NV12.27",
             "succession/composed-precheck" => "NV12.27",
-            "succession/cold-change" => "NV12.28",
+            "succession/cold-change" | "completion/fresh-command" => "NV12.28",
             _ => self.producing_phase,
         }
         .into()

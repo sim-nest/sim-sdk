@@ -458,7 +458,15 @@ pub(super) const PACKS: &[PackSpec] = &[
         "core/sha256-datum-v1:f14267fae4d45eb57c175546ebd809831a0cfa9510bd109f04ec9a280269feab",
         "pack/succession",
         "NV12.28",
-        ["succession/composed-precheck", "succession/cold-change"],
-        ["succession/composed-precheck", "succession/cold-change"]
+        [
+            "succession/composed-precheck",
+            "succession/cold-change",
+            "completion/fresh-command"
+        ],
+        [
+            "succession/composed-precheck",
+            "succession/cold-change",
+            "completion/fresh-command"
+        ]
     ),
 ];

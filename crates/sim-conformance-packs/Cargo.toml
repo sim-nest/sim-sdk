@@ -1,6 +1,6 @@
 [package]
 name = "sim-conformance-packs"
-version = "0.8.23"
+version = "0.8.24"
 edition.workspace = true
 license.workspace = true
 description = "Public neutral conformance packs and bootstrap checkers for SIM."
@@ -37,7 +37,7 @@ sim-kernel = "0.4.0"
 sim-lib-exec = "0.3.0"
 sim-lib-journal = "0.3.0"
 sim-lib-roadmap-runner = "0.3.0"
-sim-lib-world = "0.1.26"
+sim-lib-world = "0.1.30"
 sim-roadmap-core = "0.3.0"
 sim-roadmap-exec-core = "0.3.0"
 sim-source-deck = "0.2.0"

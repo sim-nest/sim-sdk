@@ -6,11 +6,17 @@
 //! Cold-succession conformance pack.
 //!
 //! The precheck derives a release closure and refuses a cold-change record.
-//! The cold-change scope derives that record. Neither scope accepts a
-//! publication flag or derives completion.
+//! The cold-change scope derives that record. The fresh-command scope reads
+//! the installed later change. None of these scopes accepts a publication
+//! flag or derives completion.
+
+#[path = "succession_fresh.rs"]
+mod fresh;
 
 use super::succession_record::{self, fail};
 use crate::{CheckObservation, PackRequest, PackVerdict, harness};
+
+pub use fresh::observe_fresh_command;
 
 /// Checks the exact requested succession scope.
 pub fn check(request: &PackRequest<'_>) -> PackVerdict {
@@ -18,6 +24,7 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         match request.scope {
             "succession/composed-precheck" => composed_precheck(request),
             "succession/cold-change" => cold_change(request),
+            fresh::SCOPE => fresh::observations(request),
             _ => unreachable!("availability was checked before dispatch"),
         }
     })
