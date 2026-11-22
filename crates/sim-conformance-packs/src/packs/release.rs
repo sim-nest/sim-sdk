@@ -71,6 +71,8 @@ mod selection;
 mod source;
 #[path = "release_stage.rs"]
 mod stage_one;
+#[path = "release_transact.rs"]
+mod transact_scope;
 #[path = "release_transfer.rs"]
 mod transfer;
 #[path = "release_universe.rs"]
@@ -266,6 +268,9 @@ pub fn check(request: &PackRequest<'_>) -> PackVerdict {
         }
         if request.scope == "release/nv12-16" {
             return fixed_scope::observations(request);
+        }
+        if request.scope == "release/nv12-17" {
+            return transact_scope::observations(request);
         }
         CLOSURE_FACTS
             .into_iter()
